@@ -198,7 +198,7 @@ main {
     margin-bottom: 30px;
 }
 
-  .close {
+    .close {
       position: absolute;
       right: 15px;
       top: 10px;
@@ -294,28 +294,32 @@ header {
 }
 
 .search-bar {
+    margin-bottom: 1rem;
+}
+
+.search-bar form {
     display: flex;
-    flex-grow: 1;
-    margin-right: 20px;
-    justify-content: flex-end;
+    align-items: center;
 }
 
 .search-bar input {
-    flex-grow: 1;
-    padding: 5px;
+    padding: 0.5rem 1rem;
     border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    flex: 1;
 }
 
-.search-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    padding: 5px 10px;
+.search-bar button {
+    background-color: #c98d83;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0 5px 5px 0;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.search-btn:hover {
-    background-color: #e0e0e0;
+.search-bar button:hover {
+    background-color: #b37b70;
 }
 
 .add-customer {
@@ -345,43 +349,53 @@ header {
 }
 
 .table-container {
-    overflow-x: auto;
-    max-height: calc(100vh - 250px);
-    position: relative;
-    
+    margin-top: 2rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-table {
+.table-container table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px;
-    background-color: white;
+    font-size: 1.2rem;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
+.table-container th, .table-container td {
+    padding: 1rem;
     text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-th {
-    background-color: #f0f0f0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+.table-container th {
+    background-color: #f9f4f2;
+    color: #783b31;
 }
 
-.edit-btn, .delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    margin: 0 2px;
-}
-
-.user-info span {
-    font-family: 'Arial Black', sans-serif;
-    font-weight: 700;
+.table-container .rating {
+    color: gold;
     font-size: 1.5rem;
-    color: var(--white);
+}
+
+.table-container .btn {
+    background-color: #c98d83;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-container .btn.delete {
+    background-color: #f44336;
+}
+
+.table-container .btn:hover {
+    background-color: #783b31;
+}
+
+.table-container img {
+    height: 100px;
+    width: 100px;
 }

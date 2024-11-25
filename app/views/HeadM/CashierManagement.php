@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frostine Cashier Management</title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/CashierManagement.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
@@ -16,13 +16,16 @@
                 </div>
                 <nav>
                 <ul>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i class="fas fa-cash-register icon-cashier"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/supplierManagement"><i class="fas fa-truck"></i></a></li>
-                    <li><a href="#"><i class="fas fa-birthday-cake"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i class="fas fa-warehouse icon-inventory"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i class="fas fa-user-tie icon-branch-manager"></i></a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list icon-order"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i class="fas fa-cash-register icon-cashier"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i class="fas fa-warehouse icon-inventory"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i class="fas fa-user-tie icon-branch-manager"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/customization"><i class="fas fa-palette"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/viewOrder"><i class="fas fa-clipboard-list"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/preOrder"><i class="fas fa-clock"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i class="fas fa-calendar-check"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
                 </ul>
                 </nav>
                 <div class="logout">
@@ -35,7 +38,7 @@
                 <header class="header">
                     <h1><i class="fas fa-cash-register icon-cashier"></i> Cashiers</h1>
                     <div class="user-info">
-                        <span>Head Manager</span>
+                        <span><b>HEAD MANAGER</b></span>
                     </div>
                 </header>
                 <div class="content">
@@ -142,8 +145,8 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn">Edit</button>
-                                        <button class="btn">Delete</button>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -210,10 +213,7 @@
                                         <button class="btn edit">Edit</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
-                                </tr>
-                                
-                    
-                                    
+                                </tr>     
                             </tbody>
                         </table>
                     </div>

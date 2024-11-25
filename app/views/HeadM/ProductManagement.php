@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frostine Inventory Management</title>
+    <title>Frostine Product Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -36,13 +36,13 @@
             <!-- Main Content -->
             <main>
                 <header class="header">
-                    <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp Inventory</h1>
+                    <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp Products</h1>
                     <div class="user-info">
-                        <span><b>HEAD MANAGER</b></span>
+                        <span><b>HEAD MANAGER</span></b></span>
                     </div>
                 </header>
                 <div class="content">
-                <button class="btn">+ Add New Item</button>
+                <button class="btn">+ Add New Product</button>
                 <!-- Add employee Modal -->
                 <div id="employeeModal" class="modal">
                     <div class="modal-content">
@@ -125,95 +125,64 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item ID</th>
-                                    <th>Name</th>
-                                    <th>Stock</th>
-                                    <th>Price(1kg)</th>
-                                    <th>Status</th>
-                                    <th>Expiry Date</th>
-                                    <th>Total</th>
+                                    <th>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Image</th>
                                     <th>Edit/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>  
-                                   <tr>
-                                        <td>I001</td>
-                                        <td>Wheat Flour</td>
-                                        <td>100kg</td>
-                                        <td>Rs. 100</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 10000</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>I002</td>
-                                        <td>Sugar</td>
-                                        <td>50kg</td>
-                                        <td>Rs. 80</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 4000</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>I003</td>
-                                        <td>Tea Leaves</td>
-                                        <td>20kg</td>
-                                        <td>Rs. 200</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 4000</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>I004</td>
-                                        <td>Butter</td>
-                                        <td>10kg</td>
-                                        <td>Rs. 150</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 1500</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>I005</td>
-                                        <td>Milk</td>
-                                        <td>50kg</td>
-                                        <td>Rs. 50</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 2500</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>I006</td>
-                                        <td>Yogurt</td>
-                                        <td>20kg</td>
-                                        <td>Rs. 60</td>
-                                        <td>Available</td>
-                                        <td>2022-12-31</td>
-                                        <td>Rs. 1200</td>
-                                        <td>
-                                            <button class="btn edit">Edit</button>
-                                            <button class="btn delete">Delete</button>
-                                        </td>
-                                    </tr>  
+                                <tr>
+                                    <td>P001</td>
+                                    <td>Chocolate Cake</td>
+                                    <td>Rs. 1500.00</td>
+                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/chocolatecake.png" alt="Chocolate Cake"></td>
+                                    <td>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P002</td>
+                                    <td>Strawberry Cake</td>
+                                    <td>Rs. 1800.00</td>
+                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/strawberrycake.png" alt="Strawberry Cake"></td>
+                                    <td>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P003</td>
+                                    <td>Vanilla Cake</td>
+                                    <td>Rs. 1200.00</td>
+                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/vanillacake.png" alt="Vanilla Cake"></td>
+                                    <td>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
+                                    </td>   
+                                </tr>
+                                <tr>
+                                    <td>P004</td>
+                                    <td>Red Velvet Cake</td>
+                                    <td>Rs. 1600.00</td>
+                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/redvelvetcake.png" alt="Red Velvet Cake"></td>
+                                    <td>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
+                                    </td>  
+                                </tr>
+                                <tr>
+                                    <td>P005</td>
+                                    <td>Chicken Submarine</td>
+                                    <td>Rs. 1400.00</td>
+                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/pchickensubmarine.png" alt="Lemon Cake"></td>
+                                    <td>
+                                        <button class="btn edit">Edit</button>
+                                        <button class="btn delete">Delete</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -222,7 +191,9 @@
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/InventoryManagement.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/HeadM/ProductManagement.js"></script>
 
 </body>
 </html>
+
+
