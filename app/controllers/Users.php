@@ -7,6 +7,7 @@ class Users extends Controller {
         $data = [
             'users' => $this->userModel->getUsers() // Example function to retrieve user data
         ];
+        
         $this->view('pages/v_index', $data);
     }
     
