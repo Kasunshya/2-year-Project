@@ -26,7 +26,7 @@
                     <input type="password" name="password" placeholder="Password" value="<?php echo $data['password']; ?>">
                     <span class="form-invalid"> <?php echo $data['password_err']; ?></span>
                 </div>
-                <button type="submit" name="login" class="login-btn">Login</button>
+                <button id="submit" type="submit" name="login" class="login-btn">Login</button>
             </form>
             <a href="forgotPassword.php" class="forgot-password">Forgot Password?</a>
             <a href="<?php echo URLROOT; ?>/Users/register" class="forgot-password">New Account</a>

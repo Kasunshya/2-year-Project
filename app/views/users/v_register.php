@@ -33,9 +33,10 @@
                     <input type="password" name="confirm_password" placeholder="Confirm Password" value="<?php echo $data['confirm_password'];?>">
                     <span class="form-invalid"><?php echo $data['confirm_password_err'];?></span>
                 </div>
+
                 <button type="submit" name="submit" class="signup-btn">Sign Up</button>
             </form>
-            <a href="<?php echo URLROOT; ?>/Users/login" class="login-link">Already have an account? Log in</a>
+            <a href="<?php echo URLROOT; ?>/users/v_login" class="login-link">Already have an account? Log in</a>
         </div>
     </div>
   <?php require APPROOT.'/views/inc/footer.php'?>

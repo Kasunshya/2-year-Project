@@ -1,0 +1,296 @@
+:root {
+  --primary-color: #c98d83;
+  --secondary: #783b31;
+  --bg: #f2f1ec;
+  --white: #ffffff;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* General Styles */
+body, html {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /*overflow: hidden;
+  /*background-color: var(--bg);*/
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  
+}
+
+/* Sidebar */
+.sidebar {
+  width: 100px;
+  background-color: var(--secondary);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.sidebar .logo {
+  width: 60px;
+  margin-bottom: 20px;
+}
+
+.sidebar nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; /* Distribute icons evenly */
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar nav ul li {
+  text-align: center;
+}
+
+.sidebar nav ul li a {
+  text-decoration: none;
+  color: var(--white);
+  display: block;
+  font-size: 30px; /* Larger icon size */
+  transition: color 0.3s, background-color 0.3s;
+  padding: 15px;
+  text-align: center;
+}
+
+.sidebar nav ul li a:hover {
+  color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.logout {
+  margin-top: auto; /* Push logout button to the bottom */
+  width: 90%;
+  width: 90%;
+  text-align: center;
+}
+
+.logout a {
+  text-decoration: none;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  padding: 15px;
+  transition: color 0.3s, background-color 0.3s;
+  background: var(--primary-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--box-shadow);
+}
+
+.logout a:hover {
+  color: var(--white);
+  background: var(--secondary);
+}
+/* Main Content */
+main {
+  margin-left: 100px; /* Matches sidebar width */
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  /*background-image: url('background.jpg');  Replace with your image path */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat; /* Avoid repeating if the image is small */
+}
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.8); /* Set transparency to 0.8 */
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+/* Table Styles */
+.table-container {
+  background-color: rgba(255, 255, 255,1); /* Set transparency to 0.8 */
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 1px solid #b48773; /* Match your theme */
+  border-radius: 10px; /* Smooth corners */
+  overflow: hidden; /* Avoid sharp edges */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Elegant shadow */
+}
+
+thead {
+  background-color: #b48773;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table tr:hover {
+  /*background-color: #f1f1f1;*/
+}
+
+th {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.add-btn {
+  background-color: #5cb85c; /* Green */
+}
+
+.update-btn {
+  background-color: #0275d8; /* Blue */
+}
+
+.delete-btn {
+  background-color: #d9534f; /* Red */
+}
+h1 {
+  text-align: center;
+  font-size: 2rem; /* Reduced size for the heading */
+  background: linear-gradient(to right, #783b31, #c98d83); /* Gradient */
+  -webkit-background-clip: text; /* For WebKit-based browsers */
+  background-clip: text; /* For other browsers */
+  color: transparent; 
+  margin-bottom: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+table tbody tr:hover {
+  background-color: rgba(200, 141, 131, 0.3); /* Soft highlight color */
+  transform: scale(1.02); /* Slightly enlarge row */
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+table tbody tr:nth-child(odd) {
+  background-color: rgba(200, 141, 131, 0.1); /* Light tint for alternate rows */
+}
+table tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.8); /* Lighter alternate rows */
+}
+.update-btn::before {
+  content: "\f044"; /* FontAwesome edit icon */
+  font-family: "Font Awesome 5 Free";
+  margin-right: 5px;
+}
+
+.delete-btn::before {
+  content: "\f2ed"; /* FontAwesome trash-alt icon */
+  font-family: "Font Awesome 5 Free";
+  margin-right: 5px;
+}
+/*responsiveness*/
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 0.9rem; /* Adjust font size */
+  }
+  thead {
+    display: none; /* Hide headers for small screens */
+  }
+  tbody tr {
+    display: block;
+    margin-bottom: 15px;
+  }
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  tbody td::before {
+    content: attr(data-label); /* Add labels for each cell */
+    font-weight: bold;
+    color: #555;
+  }
+}
+thead {
+  background: linear-gradient(90deg, #c98d83 0%, #783b31 100%);
+}
+.btn:hover {
+  opacity: 0.9;
+  transform: scale(1.1); /* Slightly larger on hover */
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+
+/*alternative*/
+table tbody tr.new-row {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+table tbody tr.deleted-row {
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+
+
