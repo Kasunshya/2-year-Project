@@ -13,7 +13,7 @@ class Users extends Controller {
 
     public function register() {
         // Check if the request is POST
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Sanitize input
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -62,7 +62,7 @@ class Users extends Controller {
 
                 // Register the user
                 if ($this->userModel->register($data)) {
-                    redirect('Users/login');
+                    redirect('Users/loginuser');
                 } else {
                     die('Something went wrong during registration');
                 }
@@ -87,7 +87,6 @@ class Users extends Controller {
             $this->view('users/v_register', $data);
         }
     }
-
     public function login() {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             //form is submiting
@@ -174,6 +173,5 @@ class Users extends Controller {
         }
 
     }
-
 }
 ?>

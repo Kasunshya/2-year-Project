@@ -1,11 +1,29 @@
-<?php require APPROOT.'/views/inc/header.php'?>
-  <?php require APPROOT.'/views/inc/components/verticalnavbar.php'?>
-
-<div class="container">
-   <!-- Main Content -->
-   <div class="main-content">
-            <h1>ADD CASHIER</h1>
+<!--?php require APPROOT.'/views/inc/header.php'?-->
+  <!--php require APPROOT.'/views/inc/components/verticalnavbar.php'?-->
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/BranchManager/addcashier.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-container">
+        <img src="<?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="<?php echo URLROOT;?>/BranchM/addCashier"><i class="fas fa-home"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/BranchM/editTable"><i class="fas fa-boxes"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/BranchM/DailyOrder"><i class="fas fa-edit"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/BranchM/salesReport"><i class="fas fa-chart-bar"></i></a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </aside>
+    <main style="margin-left: 100px; padding: 20px; flex: 1; overflow-y: auto; background-image: url(' <?php echo URLROOT;?>/public/img/BranchManger/background.jpg'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
             <div class="form-container">
+            <h1>ADD CASHIER</h1>
                 <form action="<?php echo URLROOT ;?>/BranchM/addCashier" method="POST">
 
                     <label for="name">Name:</label>
@@ -33,11 +51,32 @@
                     <span class="form-invalid"><?php echo $data['Password_err'];?></span>
 
                     <div class="buttons">
-                        <button type="submit" class="add-btn" name="ADD">ADD</button>
-                        <button type="button" class="cancel-btn">CANCEL</button>
+                        <button type="submit" class="submit-btn" name="ADD">ADD</button>
+                        <button type="button" class="submit-btn">CANCEL</button>
                     </div>
                 </form>
+              </main>
+            </div>
+            <div id="successToast" class="toast hidden">
+                <p>Successfully Submitted!</p>
             </div>
         </div>
     </div>
-    <?php require APPROOT.'/views/inc/footer.php'?>
+    <script>
+    function showSuccessToast() {
+        const toast = document.getElementById('successToast');
+        toast.classList.remove('hidden');
+        toast.classList.add('show');
+
+        // Automatically hide the toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('hidden');
+        }, 3000);
+    }
+
+    // Show the toast on successful submission
+    if (window.location.search.includes('success=true')) {
+        showSuccessToast();
+    }
+</script>
