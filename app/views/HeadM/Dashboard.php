@@ -92,8 +92,4 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </html>
 
-<style>
-.dashboard-content {
-    background: url('<?php echo URLROOT; ?>/public/img/HeadM/background2.jpg') no-repeat center center/cover;
-}
-</style>
+
