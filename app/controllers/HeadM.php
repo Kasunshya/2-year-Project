@@ -53,36 +53,28 @@ class HeadM extends Controller
         }
     }
 
-    public function editBranchManager($id)
+    public function editBranchManager()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'branchmanager_id' => $_POST['branchmanager_id'],
-                'branch_id' => trim($_POST['branch_id']),
-                'branchmanager_name' => trim($_POST['branchmanager_name']),
-                'address' => trim($_POST['address']),
-                'email' => trim($_POST['email']),
-                'contact_number' => trim($_POST['contact_number']),
-                'password' => trim($_POST['password']),
-                'user_id' => $_POST['user_id']
+                'user_id' => $_POST['user_id'],
+                'branch_id' => $_POST['branch_id'],
+                'branchmanager_name' => $_POST['branchmanager_name'],
+                'address' => $_POST['address'],
+                'email' => $_POST['email'],
+                'contact_number' => $_POST['contact_number'],
+                'password' => $_POST['password']
             ];
 
             if ($this->headManagerModel->updateBranchManager($data)) {
-                echo "<script>alert('Branch Manager updated successfully!');</script>";
                 $this->redirect('HeadM/branchManager');
-            } else {
-                echo "<script>alert('Something went wrong!');</script>";
             }
-        } else {
-            $branchManager = $this->headManagerModel->getBranchManagerById($id);
-            $branches = $this->headManagerModel->getAllBranches();
-            $data = [
-                'branchmanager' => $branchManager,
-                'branches' => $branches
-            ];
-            $this->view('HeadM/BranchManagers', $data);
         }
+        // If not POST request, redirect to branch manager page
+        $this->redirect('HeadM/branchManager');
     }
+    
     public function deleteBranchManager()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {

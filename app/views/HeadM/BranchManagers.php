@@ -119,40 +119,40 @@
                         <div class="modal-content">
                             <span class="close">&times;</span>
                             <h2>Edit Branch Manager</h2>
-                            <form method="post" action="">
-                                <input type="hidden" id="edit_branchmanager_id" name="branchmanager_id">
-                                <input type="hidden" id="edit_user_id" name="user_id">
+                                                        <form action="<?php echo URLROOT; ?>/HeadM/editBranchManager" method="post">
+                                                            <input type="hidden" id="edit_branchmanager_id" name="branchmanager_id">
+                                                            <input type="hidden" id="edit_user_id" name="user_id">
+                                
+                                                            <label for="edit_branch_id">Branch:</label>
+                                                            <select id="edit_branch_id" name="branch_id" required>
+                                                                <?php foreach ($data['branches'] as $branch): ?>
+                                                                    <option value="<?php echo $branch->branch_id; ?>">
+                                                                        <?php echo $branch->branch_name; ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
 
-                                <label for="edit_branch_id">Branch:</label>
-                                <select id="edit_branch_id" name="branch_id" required>
-                                    <?php foreach ($data['branches'] as $branch): ?>
-                                        <option value="<?php echo $branch->branch_id; ?>">
-                                            <?php echo $branch->branch_name; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                                                            <label for="edit_branchmanager_name">Name:</label>
+                                                            <input type="text" id="edit_branchmanager_name" name="branchmanager_name" required>
 
-                                <label for="edit_branchmanager_name">Name:</label>
-                                <input type="text" id="edit_branchmanager_name" name="branchmanager_name" required>
+                                                            <label for="edit_address">Address:</label>
+                                                            <input type="text" id="edit_address" name="address" required>
 
-                                <label for="edit_address">Address:</label>
-                                <input type="text" id="edit_address" name="address" required>
+                                                            <label for="edit_email">Email:</label>
+                                                            <input type="email" id="edit_email" name="email" required>
 
-                                <label for="edit_email">Email:</label>
-                                <input type="email" id="edit_email" name="email" required>
+                                                            <label for="edit_contact_number">Contact Number:</label>
+                                                            <input type="text" id="edit_contact_number" name="contact_number" required>
 
-                                <label for="edit_contact_number">Contact Number:</label>
-                                <input type="text" id="edit_contact_number" name="contact_number" required>
+                                                            <label for="edit_password">Password (leave empty to keep current):</label>
+                                                            <input type="password" id="edit_password" name="password">
 
-                                <label for="edit_password">Password:</label>
-                                <input type="password" id="edit_password" name="password" required>
-
-                                <div class="buttons">
-                                    <button type="submit" name="edit_employee" class="btn submit">Save Changes</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                                            <div class="buttons">
+                                                                <button type="submit" class="btn submit">Save Changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                     <!-- Table to display branch managers -->
                     <div class="table-container">
                         <table>
