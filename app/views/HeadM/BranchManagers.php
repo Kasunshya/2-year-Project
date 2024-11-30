@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frostine Branch Managers</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
@@ -12,33 +13,7 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo-container">
-                <img src="<?php echo URLROOT; ?>/public/img/HeadM/FrostineLogo2.png" alt="Logo" class="logo">
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i
-                                class="fas fa-cash-register icon-cashier"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i
-                                class="fas fa-birthday-cake"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i
-                                class="fas fa-warehouse icon-inventory"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i
-                                class="fas fa-user-tie icon-branch-manager"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/customization"><i class="fas fa-palette"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/viewOrder"><i class="fas fa-clipboard-list"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/preOrder"><i class="fas fa-clock"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i
-                                class="fas fa-calendar-check"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
-                </ul>
-            </nav>
-            <div class="logout">
-                <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-            </div>
-        </aside>
+        <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
 
         <!-- Main Content -->
         <main>
@@ -66,19 +41,23 @@
                             </select>
 
                             <label for="branchmanager_name">Name:</label>
-                            <input type="text" id="branchmanager_name" name="branchmanager_name" required>
+                            <input type="text" id="branchmanager_name" name="branchmanager_name" required
+                                pattern="[A-Za-z\s]+">
 
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" required>
+                            <input type="text" id="address" name="address" required pattern="[A-Za-z\s]{2,}">
+
 
                             <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" required
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}">
 
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" required>
+                            <input type="text" id="contact_number" name="contact_number" required pattern="[0-9]+">
 
                             <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" required>
+                            <input type="password" id="password" name="password" required
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -118,41 +97,46 @@
                     <div id="editemployeeModal" class="modal">
                         <div class="modal-content">
                             <span class="close">&times;</span>
-                            <h2>Edit Branch Manager</h2>
-                                                        <form action="<?php echo URLROOT; ?>/HeadM/editBranchManager" method="post">
-                                                            <input type="hidden" id="edit_branchmanager_id" name="branchmanager_id">
-                                                            <input type="hidden" id="edit_user_id" name="user_id">
-                                
-                                                            <label for="edit_branch_id">Branch:</label>
-                                                            <select id="edit_branch_id" name="branch_id" required>
-                                                                <?php foreach ($data['branches'] as $branch): ?>
-                                                                    <option value="<?php echo $branch->branch_id; ?>">
-                                                                        <?php echo $branch->branch_name; ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                            <h2>Update Branch Manager</h2>
+                            <form action="<?php echo URLROOT; ?>/HeadM/editBranchManager" method="post">
+                                <input type="hidden" id="edit_branchmanager_id" name="branchmanager_id">
+                                <input type="hidden" id="edit_user_id" name="user_id">
 
-                                                            <label for="edit_branchmanager_name">Name:</label>
-                                                            <input type="text" id="edit_branchmanager_name" name="branchmanager_name" required>
+                                <label for="edit_branch_id">Branch:</label>
+                                <select id="edit_branch_id" name="branch_id" required>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>">
+                                            <?php echo $branch->branch_name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
 
-                                                            <label for="edit_address">Address:</label>
-                                                            <input type="text" id="edit_address" name="address" required>
+                                <label for="edit_branchmanager_name">Name:</label>
+                                <input type="text" id="edit_branchmanager_name" name="branchmanager_name" required
+                                    pattern="[A-Za-z\s]+" title="Please enter a valid name">
 
-                                                            <label for="edit_email">Email:</label>
-                                                            <input type="email" id="edit_email" name="email" required>
+                                <label for="edit_address">Address:</label>
+                                <input type="text" id="edit_address" name="address" required pattern="[A-Za-z\s]+"
+                                    title="Please enter a valid address">
 
-                                                            <label for="edit_contact_number">Contact Number:</label>
-                                                            <input type="text" id="edit_contact_number" name="contact_number" required>
+                                <!--label for="edit_email">Email:</label-->
+                                <!--input type="email" id="edit_email" name="email" required-->
 
-                                                            <label for="edit_password">Password (leave empty to keep current):</label>
-                                                            <input type="password" id="edit_password" name="password">
+                                <label for="edit_contact_number">Contact Number:</label>
+                                <input type="text" id="edit_contact_number" name="contact_number" required
+                                    pattern="[0-9]+">
 
-                                                            <div class="buttons">
-                                                                <button type="submit" class="btn submit">Save Changes</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                <label for="edit_password">Password (leave empty to keep current):</label>
+                                <input type="password" id="edit_password" name="password">
+
+                                <div class="buttons">
+                                    <button type="reset" class="btn reset">Reset</button>
+                                    <button type="submit" name="submit" class="btn submit">Update Branch
+                                        Manager</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <!-- Table to display branch managers -->
                     <div class="table-container">
                         <table>
@@ -162,9 +146,9 @@
                                     <th>Branch Name</th>
                                     <th>Name</th>
                                     <th>Address</th>
-                                    <th>Email</th>
+                                    <!--th>Email</th-->
                                     <th>Contact Number</th>
-                                    <th>Edit/Delete</th>
+                                    <th>Update/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,11 +161,11 @@
                                         </td>
                                         <td><?php echo $branchManager->branchmanager_name; ?></td>
                                         <td><?php echo $branchManager->address; ?></td>
-                                        <td><?php echo $branchManager->email; ?></td>
+                                        <!--td><!-?php echo $branchManager->email; ?></td-->
                                         <td><?php echo $branchManager->contact_number; ?></td>
                                         <td>
                                             <button class="btn edit"
-                                                onclick="editEmployee(<?php echo $branchManager->branchmanager_id; ?>)">Edit</button>
+                                                onclick="editEmployee(<?php echo $branchManager->branchmanager_id; ?>)">Update</button>
                                             <button class="btn delete"
                                                 onclick="deleteEmployee(<?php echo $branchManager->branchmanager_id; ?>)">Delete</button>
                                         </td>

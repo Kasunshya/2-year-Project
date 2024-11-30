@@ -1,47 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frostine Cashier Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
-        <div class="container">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="logo-container">
-                    <img src="<?php echo URLROOT; ?>/public/img/HeadM/FrostineLogo2.png" alt="Logo" class="logo">
-                </div>
-                <nav>
-                <ul>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i class="fas fa-cash-register icon-cashier"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i class="fas fa-warehouse icon-inventory"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i class="fas fa-user-tie icon-branch-manager"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/customization"><i class="fas fa-palette"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/viewOrder"><i class="fas fa-clipboard-list"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/preOrder"><i class="fas fa-clock"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i class="fas fa-calendar-check"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
-                </ul>
-                </nav>
-                <div class="logout">
-                    <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-                </div>
-            </aside>
 
-            <!-- Main Content -->
-            <main>
-                <header class="header">
-                    <h1><i class="fas fa-cash-register icon-cashier"></i>&nbsp CASHIERS</h1>
-                    <div class="user-info">
-                        <span><b>HEAD MANAGER</b></span>
-                    </div>
-                </header>
-                <div class="content">
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
+
+        <!-- Main Content -->
+        <main>
+            <header class="header">
+                <h1><i class="fas fa-cash-register icon-cashier"></i>&nbsp CASHIERS</h1>
+                <div class="user-info">
+                    <span><b>HEAD MANAGER</b></span>
+                </div>
+            </header>
+            <div class="content">
                 <button class="btn add-employee">+ Add New Cashier</button>
                 <!-- Add employee Modal -->
                 <div id="employeeModal" class="modal">
@@ -50,19 +32,25 @@
                         <h2>Add New Cashier</h2>
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                             <label for="first_Name">First Name:</label>
-                            <input type="text" id="first_Name" name="first_Name" required pattern="[A-Za-z]{1,}" title="Please enter a valid first name(letters only)">
+                            <input type="text" id="first_Name" name="first_Name" required pattern="[A-Za-z]{1,}"
+                                title="Please enter a valid first name(letters only)">
 
                             <label for="last_Name">Last Name:</label>
-                            <input type="text" id="last_Name" name="last_Name" required pattern="[A-Za-z]{1,}" title="Please enter a valid last name(letters only)">
+                            <input type="text" id="last_Name" name="last_Name" required pattern="[A-Za-z]{1,}"
+                                title="Please enter a valid last name(letters only)">
 
                             <label for="user_Name">User Name:</label>
-                            <input type="text" id="user_Name" name="user_Name" required pattern="[A-Za-z0-9]{1,}" title="Please enter a valid user name(letters and numbers only)">
+                            <input type="text" id="user_Name" name="user_Name" required pattern="[A-Za-z0-9]{1,}"
+                                title="Please enter a valid user name(letters and numbers only)">
 
                             <label for="employee_Password">Password:</label>
-                            <input type="password" id="employee_Password" name="employee_Password" required pattern="[A-Za-z0-9]{1,}" title="Please enter a valid password(letters and numbers only)">
+                            <input type="password" id="employee_Password" name="employee_Password" required
+                                pattern="[A-Za-z0-9]{1,}"
+                                title="Please enter a valid password(letters and numbers only)">
 
                             <label for="contact_Number">Contact No:</label>
-                            <input type="text" id="contact_Number" name="contact_Number" required pattern="[0-9]{10}" title="Please enter a 10-digit contact number">
+                            <input type="text" id="contact_Number" name="contact_Number" required pattern="[0-9]{10}"
+                                title="Please enter a 10-digit contact number">
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -76,7 +64,7 @@
                 <div id="editemployeeModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Edit Employee</h2>
+                        <h2>Update Employee</h2>
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                             <input type="hidden" id="edit_employee_ID" name="employee_ID">
                             <label for="edit_first_Name">First Name:</label>
@@ -88,7 +76,7 @@
                             <label for="edit_user_Name">User Name:</label>
                             <input type="text" id="edit_user_Name" name="user_Name" required>
 
-                            <label for="edit_employee_Password">Password:</label>  
+                            <label for="edit_employee_Password">Password:</label>
                             <input type="password" id="edit_employee_Password" name="employee_Password" required>
 
                             <label for="edit_contact_Number">Contact No:</label>
@@ -132,7 +120,7 @@
                                     <th>Email</th>
                                     <th>Join Date</th>
                                     <th>Password</th>
-                                    <th>Edit/Delete</th>
+                                    <th>Update/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -145,7 +133,7 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
@@ -158,7 +146,7 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
@@ -171,7 +159,7 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
@@ -184,7 +172,7 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
@@ -197,7 +185,7 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
                                 </tr>
@@ -210,10 +198,10 @@
                                     <td>2023-08-01</td>
                                     <td>password123</td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
+                                        <button class="btn edit">Update</button>
                                         <button class="btn delete">Delete</button>
                                     </td>
-                                </tr>     
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -225,4 +213,5 @@
     <script src="<?php echo URLROOT; ?>/public/js/HeadM/CashierManagement.js"></script>
 
 </body>
+
 </html>
