@@ -36,7 +36,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-clock"></i> View Preorders</h1>
+                <h1><i class="fas fa-clock"></i>&nbsp VIEW PRE ORDERS</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>

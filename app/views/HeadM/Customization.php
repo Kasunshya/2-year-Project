@@ -36,7 +36,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-palette icon-customization"></i> Customization Orders</h1>
+                <h1><i class="fas fa-palette icon-customization"></i> CUSTOMIZED ORDERS</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>

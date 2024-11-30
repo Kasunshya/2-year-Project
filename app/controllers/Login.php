@@ -61,7 +61,7 @@ class Login extends Controller {
                 header('Location: /dashboards/inventory_keeper');
                 break;
             case 'headmanager':
-                header('Location: /dashboards/head_manager');
+                header('Location: ' . URLROOT . '/HeadM/dashboard');
                 break;
             case 'systemadmin':
                 header('Location: /dashboards/system_admin');
