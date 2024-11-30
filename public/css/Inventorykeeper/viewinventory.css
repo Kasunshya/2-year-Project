@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Vidaloka&display=swap');
+:root {
+    --primary-color: #c98d83;
+    --secondary-color: #783b31;
+    --background-color: #f2f1ec;
+    --white-color: #ffffff;
+    --text-color: #333333;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.sidebar nav ul li a {
+    color: var(--white-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    transition: background 0.3s;
+    font-size: 2rem;
+}
+
+.sidebar nav ul li a:hover {
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}
+
+.sidebar nav ul li a i {
+    font-size: 2rem;
+}
+
+.sidebar .logout {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar .logout a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    color: var(--white-color);
+    text-decoration: none;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    margin: 20px auto;
+    transition: background 0.3s;
+}
+
+.sidebar .logout a:hover {
+    background-color: var(--white-color);
+    color: var(--secondary-color);
+}
+
+/* Main Content */
+main {
+    margin-left: 200px;
+    padding: 20px;
+    flex: 1;
+    background-color: var(--background-color);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 20px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 0 5px 5px 0;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+    position: fixed;
+    top: 0;
+    left: 200px;
+    right: 0;
+    z-index: 1000;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.header h1 a {
+    color: var(--white-color);
+    text-decoration: none;
+}
+
+.header h1 i {
+    margin-right: 10px;
+}
+
+.header .user-info {
+    text-align: right;
+    font-size: 1rem;
+    color: var(--white-color);
+}
+
+/* Content Section */
+section {
+    padding-top: 120px;
+}
+
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.chart-container {
+    width: 45%;
+    background-color: var(--white-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+}
+
+.chart-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+.inventory-table-container {
+    width: 50%;
+    background-color: var(--white-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inventory-table th, .inventory-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.inventory-table th {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.inventory-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}

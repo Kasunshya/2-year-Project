@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Vidaloka&display=swap');
+    :root {
+        --primary-color: #c98d83;
+        --secondary-color: #783b31;
+        --background-color: #f2f1ec;
+        --white-color: #ffffff;
+        --text-color: #333333;
+        --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    body, html {
+        font-family: 'Arial', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        height: 100%;
+    }
+
+    .container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 200px;
+        background-color: var(--secondary-color);
+        color: var(--white-color);
+        padding: 20px 0;
+        position: fixed;
+        height: 100%;
+    }
+
+    .sidebar .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .sidebar nav ul li a {
+        color: var(--white-color);
+        padding: 10px;
+        display: block;
+        text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover {
+        background-color: var(--primary-color);
+    }
+
+    main {
+        margin-left: 200px;
+        padding: 20px;
+        flex: 1;
+        background-color: var(--background-color);
+    }
+
+    .header {
+        padding: 20px;
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        border-radius: 5px;
+    }
+
+    .form {
+        background-color: var(--white-color);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: var(--box-shadow);
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    .form h2 {
+        text-align: center;
+        color: var(--secondary-color);
+    }
+
+    .form .form-group label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form .form-group input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form button {
+        width: 100%;
+        padding: 10px;
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .form button:hover {
+        background-color: var(--secondary-color);
+    }
