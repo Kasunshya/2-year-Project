@@ -16,25 +16,26 @@
                 <p>From Oven to Doorstep, Effortlessly YC</p-->
             </div>
             <h2>Create an Account</h2>
-            <form action="<?php echo URLROOT?>/Users/register" method="POST">
+            <form action="<?php echo URLROOT?>/Register/signup" method="POST">
                 <div class="input-group">
-                    <input type="text" name="name" placeholder="User Name" value="<?php echo $data['name'];?>" >
-                    <span class="form-invalid"><?php echo $data['name_err'];?></span>
+                <input type="text" name="customer_name" id="customer_name" placeholder="Username" value="<?= htmlspecialchars($data['customer_name'] ?? '') ?>">
+                <span><?= $data['errors']['customer_name'] ?? '' ?></span>
                 </div>
                 <div class="input-group">
-                    <input type="email" name="email" placeholder="Email" value="<?php echo $data['email'];?>">
-                    <span class="form-invalid"><?php echo $data['email_err'];?></span>
+                <input type="email" name="email" id="email" placeholder="Email" value="<?= htmlspecialchars($data['email'] ?? '') ?>">
+                <span><?= $data['errors']['email'] ?? '' ?></span>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" placeholder="Password"  value="<?php echo $data['password'];?>">
-                    <span class="form-invalid"><?php echo $data['password_err'];?></span>
+                <input type="password" name="password" placeholder="Password" id="password">
+                <span><?= $data['errors']['password'] ?? '' ?></span>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="confirm_password" placeholder="Confirm Password" value="<?php echo $data['confirm_password'];?>">
-                    <span class="form-invalid"><?php echo $data['confirm_password_err'];?></span>
+                <input type="password" name="confirm_password" placeholder="Confirmed Password"id="confirm_password">
+                <span><?= $data['errors']['confirm_password'] ?? '' ?></span>
                 </div>
 
-                <button type="submit" name="submit" class="signup-btn">Sign Up</button>
+                <button type="submit" name="submit" class="signup-btn">Sign Up</button></a>
+                <span><?= $data['errors']['general'] ?? '' ?></span>
             </form>
             <a href="<?php echo URLROOT; ?>/users/v_login" class="login-link">Already have an account? Log in</a>
         </div>

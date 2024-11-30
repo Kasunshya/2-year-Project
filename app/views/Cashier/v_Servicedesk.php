@@ -16,20 +16,32 @@
         </div>
         <nav>
         <ul>
-                <li><a href="<?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-home"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-edit"></i></a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Cashier/cashierdashboard"><i class="fas fa-home"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-boxes"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-edit"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-chart-bar"></i></a></li>
             </ul>
-        </nav>
+        </div>
         <div class="logout">
             <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
         </div>
+    
     </aside>
+
+    <header>
+      <div class="header-container">
+        <h7>Service Desk</h7> 
+        </div>
+      </div>
+    </header>
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-input">
+      <button class="search-button"><i class="fas fa-search"></i></button>
+    </div>
     <!-- Main Content -->
-    <div class="main-content">
+<div class="main-content">
     <!-- Product Grid -->
-    <center> <header>Cake</p></header></center><br>
+    <h1 class="product-header">Bread</h1>
             <div class="product-grid">
                 <div class="product-card">
                     <img src="<?php echo URLROOT;?>/img/CashierImg/d1.jpg" alt="Hazelnut Cake">
@@ -82,8 +94,7 @@
                 </div>
             </div><br>
             <div>
-                <header>Pancake</p></header><br>
-
+            <h1 class="product-header">Cake</h1>
                 <!-- Product Grid -->
             <div class="product-grid">
                 <div class="product-card">
@@ -135,8 +146,7 @@
                     <button class="plus-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
-            <header>Bread</p></header><br>
-
+            <h1 class="product-header">Waffels</h1>
                 <!-- Product Grid -->
             <div class="product-grid">
                 <div class="product-card">
@@ -188,8 +198,7 @@
                     <button class="plus-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
-            <header>Waffels</p></header><br>
-
+            <h1 class="product-header">Pancake</h1>
                 <!-- Product Grid -->
             <div class="product-grid">
                 <div class="product-card">

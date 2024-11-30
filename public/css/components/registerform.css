@@ -112,4 +112,10 @@ h2 {
   font-size: 16px;
   padding: 10px;
 }
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 

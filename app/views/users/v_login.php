@@ -17,16 +17,17 @@
             <?php if (!empty($loginError)) : ?>
                 <div class="error-message"><?= htmlspecialchars($loginError); ?></div>
             <?php endif; ?>
-            <form action="<?php echo URLROOT; ?>/Users/login" method="POST">
+            <form action="<?php echo URLROOT; ?>/Login/indexx" method="POST">
                 <div class="input-group">
-                    <input type="email" name="email" placeholder="Email" value="<?php echo $data['email']; ?>" >
-                    <span class="form-invalid"> <?php echo $data['email_err']; ?></span>
+                <input type="email" name="email"placeholder="Email" id="email" value="<?php echo htmlspecialchars($data['email']); ?>" required>
+                <span><?php echo $data['errors']['email'] ?? ''; ?></span>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" placeholder="Password" value="<?php echo $data['password']; ?>">
-                    <span class="form-invalid"> <?php echo $data['password_err']; ?></span>
+                <input type="password" placeholder="Password" name="password" id="password" required>
+                <span><?php echo $data['errors']['password'] ?? ''; ?></span>
                 </div>
                 <button id="submit" type="submit" name="login" class="login-btn">Login</button>
+                <span><?php echo $data['errors']['general'] ?? ''; ?></span>
             </form>
             <a href="forgotPassword.php" class="forgot-password">Forgot Password?</a>
             <a href="<?php echo URLROOT; ?>/Users/register" class="forgot-password">New Account</a>

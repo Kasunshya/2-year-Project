@@ -64,5 +64,9 @@ class Database{
   public function rowCount(){
     return $this->statement->rowCount();
   }
+  // New method to get the PDO object
+  public function getDbh() {
+    return $this->dbh;
+}
 }
 ?>
