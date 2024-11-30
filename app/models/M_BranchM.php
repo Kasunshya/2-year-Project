@@ -5,22 +5,7 @@
      public function __construct(){
          $this->db = new Database();
      }
-     public function addCashier($data){
-         $this->db->query('INSERT INTO cashier (Name, Contact, Address, Email, Join_Date, Password) VALUES(:Name, :Contact, :Address, :Email, :Join_Date, :Password)');
-         $this->db->bind(':Name', $data['Name']);
-         $this->db->bind(':Contact', $data['Contact']);
-         $this->db->bind(':Address', $data['Address']);
-         $this->db->bind(':Email', $data['Email']);
-         $this->db->bind(':Join_Date', $data['Join_Date']);
-         $this->db->bind(':Password', $data['Password']);
-
-         //execute query
-         if($this->db->execute()){
-             return true;
-         } else {
-             return false;
-         }
-     }
+    
      public function DailyOrder($data) {
         $this->db->query('INSERT INTO dailybranchorder (branchid, branchname, date, orderdescription) VALUES (:branchid, :branchname, :date, :orderdescription)');
         // Bind values
@@ -41,46 +26,37 @@
         $this->db->query('SELECT * FROM cashier');
         return $this->db->resultSet();  // Returns an array of all cashiers
     }
+
     // Fetch a single cashier by ID
     public function getCashierById($id) {
-    $this->db->query('SELECT * FROM cashier WHERE ID = :id');
+    $this->db->query('SELECT * FROM cashier WHERE cashier_id = :id');
     $this->db->bind(':id', $id);
     return $this->db->single(); // Return the row as an object
 }
-    public function updateCashier($data) {
-        $this->db->query('UPDATE cashier SET Name = :Name, Contact = :Contact, Address = :Address, Email = :Email, Join_Date = :Join_Date, Password = :Password WHERE ID = :ID');
-        
-        // Bind the parameters
-        $this->db->bind(':ID', $data['ID']);
-        $this->db->bind(':Name', $data['Name']);
-        $this->db->bind(':Contact', $data['Contact']);
-        $this->db->bind(':Address', $data['Address']);
-        $this->db->bind(':Email', $data['Email']);
-        $this->db->bind(':Join_Date', $data['Join_Date']);
-        $this->db->bind(':Password', $data['Password']);
-    
-        // Execute the query
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
-        }
-    }public function deleteCashierById($id) {
-        $this->db->query('DELETE FROM cashier WHERE ID = :id');
-        $this->db->bind(':id', $id);
-    
-        // Execute the query and return true if it is successful
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
     public function getSalesData() {
         
     
         // Return the result set (array of sales data)
         return $this->db->resultSet();
+    }
+    // Update cashier data
+    public function updateCashier($data) {
+        $this->db->query("UPDATE cashier 
+                          SET address = :address, 
+                             cashier_name = :cashier_name,
+                              contacts = :contacts, 
+                              join_date = :join_date, 
+                              branch_name = :branch_name 
+                          WHERE cashier_id = :cashier_id");
+        $this->db->bind(':cashier_id', $data['cashier_id']);  // Use cashier_id for identifying the row
+        $this->db->bind(':cashier_name', $data['cashier_name']);
+        $this->db->bind(':address', $data['address']);
+        $this->db->bind(':contacts', $data['contacts']);
+        $this->db->bind(':join_date', $data['join_date']);
+        $this->db->bind(':branch_name', $data['branch_name']);
+
+        return $this->db->execute();  // Execute the query
     }
     
     

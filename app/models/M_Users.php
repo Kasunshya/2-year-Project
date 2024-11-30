@@ -1,5 +1,6 @@
 <?php
  class M_Users{
+  
      private $db;
 
      public function __construct(){
@@ -41,8 +42,8 @@
 
      
       //login the user
-     public function login($email,$password){
-        $this->db->query("SELECT * FROM Users WHERE email = :email");
+     public function loginn($email,$password){
+        $this->db->query("SELECT * FROM users WHERE email = :email");
         $this->db->bind(':email', $email);
  
         $row = $this->db->single();

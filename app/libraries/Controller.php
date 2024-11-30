@@ -15,5 +15,6 @@ class Controller{
       die('coressponding  view not appear');
      }
   }
+ 
 }
 ?>
