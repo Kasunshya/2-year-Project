@@ -44,9 +44,6 @@
     return $this->db->execute();
 }*/
 
-
-
-
 public function getCashiers() {
     $this->db->query("SELECT cashier_id, cashier_name, address, contacts, join_date, branch_name 
                       FROM cashier");
