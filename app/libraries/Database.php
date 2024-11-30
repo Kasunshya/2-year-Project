@@ -1,6 +1,7 @@
 <?php
-class Database{
-  private $host =DB_HOST;
+class Database
+{
+  private $host = DB_HOST;
   private $user = DB_USER;
   private $password = DB_PASSWORD;
   private $dbname = DB_NAME;
@@ -9,13 +10,14 @@ class Database{
   private $statement;
   private $error;
 
-  public function __construct(){
-    $dsn ='mysql:host='. $this->host.';dbname='. $this->dbname;
+  public function __construct()
+  {
+    $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
     $options = array(
       PDO::ATTR_PERSISTENT => true,
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
-    //initiate PDO
+    // Initiate PDO
     try {
       $this->dbh = new PDO($dsn, $this->user, $this->password, $options);
     } catch (PDOException $e) {
@@ -23,12 +25,16 @@ class Database{
       echo $this->error;
     }
   }
-  //prepared statement
-  public function query($sql){
+
+  // Prepared statement
+  public function query($sql)
+  {
     $this->statement = $this->dbh->prepare($sql);
   }
-  //bind parameters
-  public function bind($param, $value, $type = null){
+
+  // Bind parameters
+  public function bind($param, $value, $type = null)
+  {
     if (is_null($type)) {
       switch (true) {
         case is_int($value):
@@ -46,27 +52,56 @@ class Database{
     }
     $this->statement->bindValue($param, $value, $type);
   }
-  //execute statement
-  public function execute(){
+
+  // Execute statement
+  public function execute()
+  {
     return $this->statement->execute();
   }
-  //get multiple results set
-  public function resultSet(){
+
+  // Get multiple results set
+  public function resultSet()
+  {
     $this->execute();
     return $this->statement->fetchAll(PDO::FETCH_OBJ);
   }
-  //get single result
-  public function single(){
+
+  // Get single result
+  public function single()
+  {
     $this->execute();
     return $this->statement->fetch(PDO::FETCH_OBJ);
   }
-  //get row count
-  public function rowCount(){
+
+  // Get row count
+  public function rowCount()
+  {
     return $this->statement->rowCount();
   }
+
+
+  // Get the last inserted ID
+  public function lastInsertId()
+  {
+    return $this->dbh->lastInsertId();
+  }
+
+  public function beginTransaction() {
+    return $this->dbh->beginTransaction();
+}
+
+  public function commit() {
+      return $this->dbh->commit();
+  }
+
+  public function rollBack() {
+      return $this->dbh->rollBack();
+  }
+
   // New method to get the PDO object
   public function getDbh() {
     return $this->dbh;
 }
+
 }
 ?>

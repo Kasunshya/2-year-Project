@@ -207,6 +207,7 @@ body, html {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #c98d83;
 }
 .metric:hover {
   transform: translateY(-5px);
@@ -217,7 +218,7 @@ body, html {
   margin-bottom: 10px;
 }
 .metric p {
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: 600;
 }
 .recent-orders {
@@ -239,8 +240,8 @@ body, html {
             text-align: left;
         }
         .recent-orders table th {
-          background-color: var(--secondary);
           color: var(--white);
+          background-color: #f9f4f2;
         }
         .recent-orders tr:hover {
           background-color: rgba(0, 0, 0, 0.05);

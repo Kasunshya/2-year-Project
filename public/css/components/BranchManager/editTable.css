@@ -192,7 +192,7 @@ table {
 }
 
 thead {
-  background-color: #b48773;
+  /*background-color: #b48773;*/
   color: white;
 }
 
@@ -231,7 +231,7 @@ th {
 }
 
 .update-btn {
-  background-color: #0275d8; /* Blue */
+  background-color: #c98d83 /* Blue */
 }
 
 .delete-btn {
@@ -254,10 +254,10 @@ table tbody tr:hover {
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 table tbody tr:nth-child(odd) {
-  background-color: rgba(200, 141, 131, 0.1); /* Light tint for alternate rows */
+  background-color: #f2f1ec/* Light tint for alternate rows */
 }
 table tbody tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.8); /* Lighter alternate rows */
+  background-color: #f2f1ec; /* Lighter alternate rows */
 }
 .update-btn::before {
   content: "\f044"; /* FontAwesome edit icon */
@@ -293,8 +293,9 @@ table tbody tr:nth-child(even) {
     color: #555;
   }
 }
-thead {
-  background: linear-gradient(90deg, #c98d83 0%, #783b31 100%);
+table th {
+  background-color: #f9f4f2;
+
 }
 .btn:hover {
   opacity: 0.9;

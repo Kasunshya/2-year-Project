@@ -197,7 +197,7 @@ main {
 
 .date-selection button {
   padding: 8px 15px;
-  background-color: #7d3f3f;
+  background-color: #b98472;
   color: white;
   border: none;
   border-radius: 5px;
@@ -205,7 +205,7 @@ main {
 }
 
 .date-selection button:hover {
-  background-color: #b98472;
+  background-color:#7d3f3f
 }
 /* Modal */
 .modal {

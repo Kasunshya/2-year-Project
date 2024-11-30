@@ -57,7 +57,6 @@
         return $this->db->execute();  // Execute the query
     }
     
-    
-    
- }
+
+}
 ?>

@@ -74,5 +74,7 @@ public function deleteCashier($cashier_id) {
     }
 }
 
+
 }
 ?>
+

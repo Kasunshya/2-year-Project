@@ -31,7 +31,7 @@ class Register extends Controller {
                 }
             }
             if (empty($data['password']) || strlen($data['password']) < 8) {
-                $data['errors']['password'] = 'Password must be at least 6 characters';
+                $data['errors']['password'] = 'Password must be at least 8 characters';
             }
             if ($data['password'] != $data['confirm_password']) {
                 $data['errors']['confirm_password'] = 'Passwords do not match';

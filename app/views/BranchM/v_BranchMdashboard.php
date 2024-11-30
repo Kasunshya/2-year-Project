@@ -30,7 +30,7 @@
 
     <header>
       <div class="header-container">
-        <h7>Dashboard</h7>
+        <h7> <i class="fas fa-home">&nbsp</i>Dashboard</h7>
         <div class="user-profile-header">
           <i class="fas fa-user avatar"></i>
           <h7 class="username">John Doe</h7>
@@ -41,11 +41,11 @@
     <main>
       <div class="chart-container">
           <div class="card">
-              <h3>Sales Performance</h3>
+              <h3 style="color: #783b31;">Sales Performance</h3>
               <canvas id="salesChart"></canvas>
           </div>
           <div class="card">
-              <h3>Revenue Growth</h3>
+              <h3 style="color: #783b31;">Revenue Growth</h3>
               <canvas id="revenueChart"></canvas>
           </div>
       </div>
@@ -69,14 +69,14 @@
           </div>
       </div>
       <div class="recent-orders">
-        <h3>Recent Orders</h3>
+        <h3 style="color: #783b31;">Recent Orders</h3>
         <table>
             <thead>
                 <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Customer</th>
-                    <th>Status</th>
+                    <th style="color: #783b31;">Order ID</th>
+                    <th style="color: #783b31;">Product</th>
+                    <th style="color: #783b31;">Customer</th>
+                    <th style="color: #783b31;">Status</th>
                 </tr>
             </thead>
             <tbody>

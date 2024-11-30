@@ -32,12 +32,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Contacts</th>
-                            <th>Join_Date</th>
-                            <th>Branch Name</th>
-                            <th>Action</th>
+                            <th style="color: #783b31;">Name</th>
+                            <th style="color: #783b31;">Address</th>
+                            <th style="color: #783b31;">Contacts</th>
+                            <th style="color: #783b31;">Join_Date</th>
+                            <th style="color: #783b31;">Branch Name</th>
+                            <th style="color: #783b31;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,9 @@
                         <td>
 
     <a href="<?php echo URLROOT; ?>/BranchM/updateCashier/<?php echo htmlspecialchars($cashier->cashier_id); ?>" class="btn update-btn">Update</a>
-    <a href="<?php echo URLROOT; ?> /BranchM/deleteCashier/<?php echo htmlspecialchars($cashier->cashier_id);?> "class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this cashier?');">Delete</a>
+    <form action="<?php echo URLROOT; ?>/BranchM/deleteCashier/<?php echo htmlspecialchars($cashier->cashier_id); ?>" method="POST" style="display:inline;">
+    <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this cashier?');">Delete</button>
+</form>
 </td>
 
                     </td>
