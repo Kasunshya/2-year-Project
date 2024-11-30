@@ -1,47 +1,82 @@
 <?php
-class M_Cashier {
-    private $db;
+ class M_Cashier{
+     private $db;
 
-    public function __construct() {
-        $this->db = new Database;
-    }
-
-    public function getAllCashiers() {
-        $this->db->query('SELECT * FROM cashier');
-        $result = $this->db->resultSet();
-        return $result;
-    }
-
-    public function addCashier($data) {
-        $this->db->query('INSERT INTO cashier (Name, Contact, Address, Email, Join_Date, Password) VALUES (:name, :contact, :address, :email, :joindate, :password)');
-        
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':contact', $data['contact']);
+     public function __construct(){
+         $this->db = new Database();
+     }
+     public function addCashier($data) {
+        $this->db->query("INSERT INTO cashier (id, cashier_name, contacts, address, join_date, branch_name) 
+                          VALUES (:id, :cashier_name, :contacts, :address, :join_date, :branch_name)");
+        $this->db->bind(':id', $data['id']); // Use id from users table
+        $this->db->bind(':cashier_name', $data['cashier_name']);
+        $this->db->bind(':contacts', $data['contacts']);
         $this->db->bind(':address', $data['address']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':joindate', $data['joindate']);
-        $this->db->bind(':password', $data['password']);
+        $this->db->bind(':join_date', $data['join_date']);
+        $this->db->bind(':branch_name', $data['branch_name']);
 
-        return $this->db->execute();
-    }
+        return $this->db->execute(); // Return true if successful
+}
+/*public function deleteCashierById($cashierId)
+{
+    $this->db->query('DELETE FROM cashier WHERE cashier_id = :cashier_id');
+    $this->db->bind(':cashier_id', $cashierId);
 
-    public function updateCashier($data) {
-        $this->db->query('UPDATE cashier SET Name = :name, Contact = :contact, Address = :address, Email = :email, Join_Date = :joindate, Password = :password WHERE ID = :id');
-        
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':contact', $data['contact']);
-        $this->db->bind(':address', $data['address']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':joindate', $data['joindate']);
-        $this->db->bind(':password', $data['password']);
+    // Execute the query
+    return $this->db->execute();
+}*/
 
-        return $this->db->execute();
-    }
 
-    public function deleteCashier($id) {
-        $this->db->query('DELETE FROM cashier WHERE ID = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->execute();
+
+/*public function updateCashier($data) {
+    $this->db->query("UPDATE cashier 
+                      SET address = :address, 
+                          contacts = :contacts, 
+                          join_date = :join_date, 
+                          branch_name = :branch_name 
+                      WHERE cashier_name = :cashier_name");
+    $this->db->bind(':cashier_name', $data['cashier_name']); // Assuming cashier_name is unique
+    $this->db->bind(':address', $data['address']);
+    $this->db->bind(':contacts', $data['contacts']);
+    $this->db->bind(':join_date', $data['join_date']);
+    $this->db->bind(':branch_name', $data['branch_name']);
+
+    return $this->db->execute();
+}*/
+
+
+
+
+public function getCashiers() {
+    $this->db->query("SELECT cashier_id, cashier_name, address, contacts, join_date, branch_name 
+                      FROM cashier");
+    return $this->db->resultSet(); // Fetch all results as an array of objects
+}
+// Fetch a specific cashier by their ID
+public function getCashierById($cashierId) {
+    $this->db->query("SELECT * FROM cashier WHERE cashier_id = :cashier_id");
+    $this->db->bind(':cashier_id', $cashierId);
+    return $this->db->single(); // Fetch single row
+}
+
+public function deleteCashier($cashier_id) {
+    // Prepare the SQL statement
+    $sql = "DELETE FROM cashier WHERE cashier_id = :cashier_id";
+
+    // Call the query method to prepare the statement
+    $this->db->query($sql);
+
+    // Bind the cashier_id parameter
+    $this->db->bind(':cashier_id', $cashier_id, PDO::PARAM_INT);
+
+    // Execute the query and return the result
+    if ($this->db->execute()) {
+        return true;
+    } else {
+        return false;
     }
 }
+
+}
+?>
+

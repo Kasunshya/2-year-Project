@@ -79,6 +79,7 @@ class Database
     return $this->statement->rowCount();
   }
 
+
   // Get the last inserted ID
   public function lastInsertId()
   {
@@ -96,6 +97,11 @@ class Database
   public function rollBack() {
       return $this->dbh->rollBack();
   }
+
+  // New method to get the PDO object
+  public function getDbh() {
+    return $this->dbh;
+}
 
 }
 ?>

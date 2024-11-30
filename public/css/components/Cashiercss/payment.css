@@ -4,23 +4,8 @@
   --bg: #f2f1ec;
   --white: #ffffff;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  --dark-bg: #1a1a1a;
-    --dark-text: #e0e0e0;
-}
-body.dark-mode {
-  background-color: var(--dark-bg);
-  color: var(--dark-text);
 }
 
-body.dark-mode .sidebar {
-  background-color: var(--dark-bg);
-  color: var(--dark-text);
-}
-
-body.dark-mode header {
-  background-color: var(--secondary);
-  color: var(--dark-text);
-}
 /* General Styles */
 body, html {
   font-family: 'Arial', sans-serif;
@@ -38,13 +23,13 @@ body, html {
 }header {
   background-color: var(--primary-color);
   padding: 2rem;
-  text-align: center;
+  text-align: left;
   color: var(--white);
   font-size: 2.5rem;
   text-transform: uppercase;
   margin-top: 10px;
   margin-left: 120px;
-  margin-right: 20px;
+  margin-right: 10px;
   border-radius: 5px;
 }
 
@@ -115,6 +100,8 @@ body, html {
   width: 90%;
   width: 90%;
   text-align: center;
+  margin-bottom:1px;
+
 }
 
 .logout a {
@@ -135,77 +122,98 @@ body, html {
   color: var(--white);
   background: var(--secondary);
 }
-
-/* Style for header container */
-.header-container {
-  display: flex; /* Align items horizontally */
-  justify-content: space-between; /* Space out the elements */
-  align-items: center; /* Vertically center items */
+.cart-header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/* Style for profile picture and text */
-.user-profile-header {
-  display: flex;
-  align-items: center; /* Align profile image and text vertically */
+.cart-header h1 {
+  font-size: 28px;
+  color: var(--secondary-color);
 }
 
-.avatar {
-  font-size: 40px; /* Size of the avatar icon */
-  color: #333; /* Icon color */
-  background-color: #f0f0f0; /* Avatar background color */
-  border-radius: 50%; /* Make the avatar circular */
-  padding: 8px; /* Padding to make the icon look like a circle */
-  margin-right: 10px; /* Space between icon and text */
-}
-
-.username, .role {
-  margin: 0; /* Remove default margin from text */
-  padding: 0 5px; /* Padding between the username and role */
-}
-.user-profile-header i.avatar {
-  font-size: 10px; /* Adjust size of the avatar */
-}
-
-.username, .role {
-  margin: 0; /* Remove any default margin from the text */
-  font-size: 1.2rem;
-}
-.search-container {
-  display: flex;
-  align-items: center;
-  border: 2px solid var(--primary-color);
-  border-radius: 5px;
-  background-color: var(--white);
-  box-shadow: var(--box-shadow);
-  overflow: hidden;
-  width: 215px;
+.cart-table {
+  width: 91.5%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
   margin-left: 120px;
-  margin-top: 10px;
+  margin-right: 5px;
+  margin-top:30px;
+  box-shadow: var(--box-shadow);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.search-input {
-  border: none;
-  padding: 8px 12px;
+.cart-table th, .cart-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
   font-size: 14px;
-  outline: none;
-  width: 180px;
-  color: var(--secondary);
 }
 
-.search-input::placeholder {
-  color: var(--secondary);
-  opacity: 0.7;
-}
-
-.search-button {
-  background-color: var(--primary-color);
+.cart-table th {
+  background: var(--primary-color);
   color: var(--white);
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 14px;
 }
 
-.search-button:hover {
-  background-color: var(--secondary);
+.cart-table td .actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cart-table td .actions i {
+  cursor: pointer;
+  color: var(--primary-color);
+  font-size: 18px;
+  transition: transform 0.2s ease, color 0.2s ease;
+
+}
+
+.cart-table td .actions i:hover {
+  color: var(--secondary-color);
+  transform: scale(1.2);
+}
+/* Table Rows Styling */
+.cart-table tr {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cart-table tr:hover {
+  color: var(--bg-color);
+  transform: scale(1.02); /* Slightly enlarges the row */
+}
+
+
+.cart-summary {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.cart-summary span {
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+
+.proceed-btn {
+  display: block;
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  width: fit-content;
+  margin-left: 150px;
+}
+.proceed-btn:hover {
+  background: var(--secondary);
+
 }

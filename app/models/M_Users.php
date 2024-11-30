@@ -1,5 +1,6 @@
 <?php
  class M_Users{
+  
      private $db;
 
      public function __construct(){
@@ -19,6 +20,11 @@
         return false;
        }
      }
+     public function getUsers() {
+      $this->db->query("SELECT * FROM users");
+      return $this->db->resultSet(); // Assuming `resultSet` fetches all rows
+  }
+  
      //find the user
      public function findUserByEmail($email){
        $this->db->query("SELECT * FROM Users WHERE email = :email");
@@ -33,26 +39,25 @@
         return false;
        }
      }
-     //login the user
-     public function login($email,$password){
-       $this->db->query("SELECT * FROM Users WHERE email = :email");
-       $this->db->bind(':email', $email);
 
-       $row = $this->db->single();
-       
-       $hashed_password = $row->password;
-       if(password_verify($password, $hashed_password)){
-        return $row;
-       }else{
-        return false;
-       }
-
-     }
-     public function getUsers() {
-      $this->db->query("SELECT * FROM users"); // Adjust the table name
-      return $this->db->resultSet();
-  }
-  
-    }
+     
+      //login the user
+     public function loginn($email,$password){
+        $this->db->query("SELECT * FROM users WHERE email = :email");
+        $this->db->bind(':email', $email);
  
+        $row = $this->db->single();
+        
+        $hashed_password = $row->password;
+        if(password_verify($password, $hashed_password)){
+         return $row;
+        }else{
+         return false;
+        }
+ 
+      }
+     
+  
+}
 ?>
+     

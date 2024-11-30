@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/verticalnavbar.css">
 <!-- Navigation Sidebar -->
 <div class="sidebar">
             <img src="<?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo"><br><br>
