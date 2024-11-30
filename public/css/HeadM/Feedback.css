@@ -1,0 +1,167 @@
+/* General Styles */
+body {
+    font-family: 'Vidaloka', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f1ec;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #783b31;
+    color: white;
+    height: 100vh;
+    width: 200px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar .logo-container {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.sidebar .logo {
+    max-width: 100px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 1.5rem 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar nav ul li a.active {
+    color: #c98d83;
+}
+
+.sidebar .logout {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.sidebar .logout .btn {
+    color: white;
+    background-color: #c98d83;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* Main Content */
+main {
+    margin-left: 200px;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: #783b31;
+    display: flex;
+    align-items: center;
+}
+
+.header h1 i {
+    margin-right: 0.5rem;
+}
+
+.header .user-info {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+/* Table */
+.table-container {
+    margin-top: 2rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.2rem;
+}
+
+.table-container th, .table-container td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container th {
+    background-color: #f9f4f2;
+    color: #783b31;
+}
+
+.table-container .rating {
+    color: gold;
+    font-size: 1.5rem;
+}
+
+.table-container .btn {
+    background-color: #c98d83;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-container .btn.delete {
+    background-color: #f44336;
+}
+
+.table-container .btn:hover {
+    background-color: #783b31;
+}
+
+/* Search Bar */
+.search-bar {
+    margin-bottom: 1rem;
+}
+
+.search-bar form {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    flex: 1;
+}
+
+.search-bar button {
+    background-color: #c98d83;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
