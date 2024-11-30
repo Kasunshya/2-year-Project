@@ -1,5 +1,5 @@
 <?php
-class Customer {
+class M_SysAdmin {
   private $db;
 
      public function __construct(){
