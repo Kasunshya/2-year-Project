@@ -42,22 +42,22 @@
 
                             <label for="branchmanager_name">Name:</label>
                             <input type="text" id="branchmanager_name" name="branchmanager_name" required
-                                pattern="[A-Za-z\s]+">
+                                pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
 
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" required pattern="[A-Za-z\s]{2,}">
+                            <input type="text" id="address" name="address" required pattern="^[A-Za-z0-9\s,.-/]{5,100}$" title="Address should only contain letters, numbers, spaces, and special characters">
 
 
                             <label for="email">Email:</label>
                             <input type="email" id="email" name="email" required
-                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}">
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" title="Please enter a valid email address">
 
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" required pattern="[0-9]+">
+                            <input type="text" id="contact_number" name="contact_number" required pattern="[0-9]{10}" title="Contact number should be 10 digits">
 
                             <label for="password">Password:</label>
                             <input type="password" id="password" name="password" required
-                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit">
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -113,10 +113,10 @@
 
                                 <label for="edit_branchmanager_name">Name:</label>
                                 <input type="text" id="edit_branchmanager_name" name="branchmanager_name" required
-                                    pattern="[A-Za-z\s]+" title="Please enter a valid name">
+                                    pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
 
                                 <label for="edit_address">Address:</label>
-                                <input type="text" id="edit_address" name="address" required pattern="[A-Za-z\s]+"
+                                <input type="text" id="edit_address" name="address" required pattern="^[A-Za-z0-9\s,.-/]{5,100}$"
                                     title="Please enter a valid address">
 
                                 <!--label for="edit_email">Email:</label-->
@@ -124,10 +124,11 @@
 
                                 <label for="edit_contact_number">Contact Number:</label>
                                 <input type="text" id="edit_contact_number" name="contact_number" required
-                                    pattern="[0-9]+">
+                                    pattern="[0-9]{10}" title="Please enter a valid 10-digit contact number">
 
                                 <label for="edit_password">Password (leave empty to keep current):</label>
-                                <input type="password" id="edit_password" name="password">
+                                <input type="password" id="edit_password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.">
 
                                 <div class="buttons">
                                     <button type="reset" class="btn reset">Reset</button>
