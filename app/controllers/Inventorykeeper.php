@@ -111,7 +111,7 @@ public function updateInventory() {
 
             // Update Inventory
             if ($this->InventoryModel->updateInventory($data)) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/manageInventory');
+                header('Location: ' . URLROOT . '/Inventorykeeper/v_viewinventory');
                 exit;
             } else {
                 die('Something went wrong.');
