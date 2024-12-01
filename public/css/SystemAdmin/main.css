@@ -145,7 +145,6 @@
 
 .body-elements-1 {
     background-color: var(--bg);
-    box-shadow: var(--box-shadow);
     border-radius: 34px;
     width: 80%;
     padding: 20px;
