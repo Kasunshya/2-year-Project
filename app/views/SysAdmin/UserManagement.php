@@ -29,7 +29,7 @@
                 <div class="user-info">
                     <div>
                         <span>Danuka Kalhara</span>
-                        <span>System Administrator</span>
+                        <span>SystemAdministrator</span>
                     </div>
                     <div>
                         <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
@@ -137,15 +137,18 @@
                                             <td><?php echo $user->contact_no; ?></td>
                                             <td><?php echo $user->user_role; ?></td>
                                             <td>
-                                                <button class="btn edit" 
-                                                    onclick="editEmployee(<?php echo $user->employee_id; ?>)"
+                                                <button class="btn edit-btn" 
                                                     data-id="<?php echo $user->employee_id; ?>"
                                                     data-name="<?php echo $user->full_name; ?>"
                                                     data-address="<?php echo $user->address; ?>"
                                                     data-contact="<?php echo $user->contact_no; ?>"
-                                                    data-role="<?php echo $user->user_role; ?>">Edit</button>
-                                                <button class="btn delete" 
-                                                    onclick="deleteEmployee(<?php echo $user->employee_id; ?>)">Delete</button>
+                                                    data-role="<?php echo $user->user_role; ?>">
+                                                    Edit
+                                                </button>
+                                                <button class="btn delete-btn" 
+                                                    data-id="<?php echo $user->employee_id; ?>">
+                                                    Delete
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

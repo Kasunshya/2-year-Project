@@ -4,7 +4,7 @@ var editModal = document.getElementById("editCustomerModal");
 var deleteModal = document.getElementById("deleteCustomerModal");
 
 // Get the button that opens the modal
-var addBtn = document.querySelector(".add-customer");
+var addBtn = document.querySelector(".add-new");
 
 // Get the <span> element that closes the modal
 var closeBtns = document.querySelectorAll(".close");

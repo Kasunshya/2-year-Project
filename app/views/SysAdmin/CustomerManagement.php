@@ -29,7 +29,7 @@
                 <div class="user-info">
                     <div>
                         <span>Danuka Kalhara</span>
-                        <span>System Administrator</span>
+                        <span>SystemAdministrator</span>
                     </div>
                     <div>
                         <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
@@ -137,15 +137,18 @@
                                             <td><?php echo $customer->contact_no; ?></td>
                                             <td><?php echo $customer->email; ?></td>
                                             <td>
-                                                <button class="btn edit" 
-                                                    onclick="editCustomer(<?php echo $customer->customer_id; ?>)"
+                                                <button class="btn edit-btn" 
                                                     data-id="<?php echo $customer->customer_id; ?>"
                                                     data-name="<?php echo $customer->full_name; ?>"
                                                     data-address="<?php echo $customer->address; ?>"
                                                     data-contact="<?php echo $customer->contact_no; ?>"
-                                                    data-email="<?php echo $customer->email; ?>">Edit</button>
-                                                <button class="btn delete" 
-                                                    onclick="deleteCustomer(<?php echo $customer->customer_id; ?>)">Delete</button>
+                                                    data-email="<?php echo $customer->email; ?>">
+                                                    Edit
+                                                </button>
+                                                <button class="btn delete-btn" 
+                                                    data-id="<?php echo $customer->customer_id; ?>">
+                                                    Delete
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
