@@ -14,17 +14,14 @@
 
         <div class="sub-container-2">
             <div class="header">
+                <div class="page-title">
+                    <span>&nbsp;&nbsp;<i class="fas fa-th"></i>&nbsp;Dashboard</span>
+                </div>
                 <div class="user-info">
                     <div>
-                        <span>System-Administrator</span>
-                    </div>
-                    <div>
-                        <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
+                        <span>System Administrator</span>
                     </div>
                 </div>
-            </div>
-            <div class="dashboard">
-                <p><i class="fas fa-th"></i>&nbsp; Dashboard</p>
             </div>
             <div class="body-elements">
                 <div class="body-elements-1">

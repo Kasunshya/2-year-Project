@@ -14,14 +14,14 @@
         
         <div class="sub-container-2">
             <div class="header">
+                <div class="page-title">
+                    <span>&nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;Employee Management</span>
+                </div>
                 <div class="user-info">
                     <div>
-                        <span>SystemAdministrator</span>
+                        <span>System Administrator</span>
                     </div>
                 </div>
-            </div>
-            <div class="dashboard">
-                <p><i class="fas fa-user"></i>&nbsp; Employee Management</p>
             </div>
             <div class="table-elements">
                 <div class="role-details">
@@ -32,7 +32,7 @@
                         <div class="modal-content">
                             <span class="close">&times;</span>
                             <h2>Add New User</h2>
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                            <form action="<?php echo URLROOT; ?>/SysAdmin/addUser" method="POST">
                                 <label for="full_name">Full Name:</label>
                                 <input type="text" id="full_name" name="full_name" required>
 
@@ -58,7 +58,7 @@
                         <div class="modal-content">
                             <span class="close">&times;</span>
                             <h2>Update User</h2>
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                            <form action="<?php echo URLROOT; ?>/SysAdmin/editUser" method="POST">
                                 <input type="hidden" id="edit_employee_id" name="employee_id">
                                 
                                 <label for="edit_full_name">Full Name:</label>
@@ -74,7 +74,7 @@
                                 <input type="text" id="edit_user_role" name="user_role" required>
 
                                 <div class="buttons">
-                                    <button type="submit" name="edit_user" class="btn submit">Save Changes</button>
+                                    <button type="submit" class="btn submit">Save Changes</button>
                                 </div>
                             </form>
                         </div>
@@ -86,10 +86,13 @@
                             <span class="close">&times;</span>
                             <h2>Delete User</h2>
                             <p>Are you sure you want to delete this user?</p>
-                            <div class="buttons">
-                                <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
-                                <button type="reset" class="btn submit">No</button>
-                            </div>
+                            <form action="<?php echo URLROOT; ?>/SysAdmin/deleteUser" method="POST">
+                                <input type="hidden" id="delete_employee_id" name="employee_id">
+                                <div class="buttons">
+                                    <button type="submit" class="btn reset">Yes</button>
+                                    <button type="button" class="btn submit" onclick="closeDeleteModal()">No</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -122,15 +125,18 @@
                                             <td><?php echo $user->user_role; ?></td>
                                             <td>
                                                 <button class="btn edit-btn" 
-                                                    data-id="<?php echo $user->employee_id; ?>"
-                                                    data-name="<?php echo $user->full_name; ?>"
-                                                    data-address="<?php echo $user->address; ?>"
-                                                    data-contact="<?php echo $user->contact_no; ?>"
-                                                    data-role="<?php echo $user->user_role; ?>">
+                                                    onclick="editUser(
+                                                        '<?php echo $user->employee_id; ?>', 
+                                                        '<?php echo $user->full_name; ?>', 
+                                                        '<?php echo $user->address; ?>', 
+                                                        '<?php echo $user->contact_no; ?>', 
+                                                        '<?php echo $user->user_role; ?>'
+                                                    )">
                                                     Update
                                                 </button>
                                                 <button class="btn delete-btn" 
-                                                    data-id="<?php echo $user->employee_id; ?>">
+                                                    data-id="<?php echo $user->employee_id; ?>"
+                                                    onclick="deleteUser(<?php echo $user->employee_id; ?>)">
                                                     Delete
                                                 </button>
                                             </td>

@@ -82,7 +82,7 @@ class SysAdmin extends Controller {
 
             if ($this->sysAdminModel->addProduct($data)) {
                 echo "<script>alert('Product added successfully!');</script>";
-                $this->redirect('SysAdmin/productManagement');
+                $this->redirect('SysAdmin/ProductManagement');
             }
         }
     }
@@ -97,7 +97,7 @@ class SysAdmin extends Controller {
             ];
 
             if ($this->sysAdminModel->updateProduct($data)) {
-                $this->redirect('SysAdmin/productManagement');
+                $this->redirect('SysAdmin/ProductManagement');
             }
         }
     }
@@ -107,7 +107,7 @@ class SysAdmin extends Controller {
             $id = $_POST['product_id'];
             if ($this->sysAdminModel->deleteProduct($id)) {
                 echo "<script>alert('Product deleted successfully!');</script>";
-                $this->redirect('SysAdmin/productManagement');
+                $this->redirect('SysAdmin/ProductManagement');
             }
         }
     }
@@ -132,7 +132,7 @@ class SysAdmin extends Controller {
 
             if ($this->sysAdminModel->addUser($data)) {
                 echo "<script>alert('User added successfully!');</script>";
-                $this->redirect('SysAdmin/userManagement');
+                $this->redirect('SysAdmin/UserManagement');
             }
         }
     }
@@ -148,7 +148,7 @@ class SysAdmin extends Controller {
             ];
 
             if ($this->sysAdminModel->updateUser($data)) {
-                $this->redirect('SysAdmin/userManagement');
+                $this->redirect('SysAdmin/UserManagement');
             }
         }
     }
@@ -158,7 +158,7 @@ class SysAdmin extends Controller {
             $id = $_POST['employee_id'];
             if ($this->sysAdminModel->deleteUser($id)) {
                 echo "<script>alert('User deleted successfully!');</script>";
-                $this->redirect('SysAdmin/userManagement');
+                $this->redirect('SysAdmin/UserManagement');
             }
         }
     }

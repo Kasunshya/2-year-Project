@@ -14,20 +14,19 @@
 
         <div class="sub-container-2">
             <div class="header">
+                <div class="page-title">
+                    <span>&nbsp;&nbsp;<i class="fas fa-truck"></i>&nbsp;Product Management</span>
+                </div>
                 <div class="user-info">
                     <div>
                         <span>System Administrator</span>
                     </div>
                 </div>
             </div>
-            <div class="dashboard">
-                <p><i class="fas fa-truck"></i>&nbsp; Product Management</p>
-            </div>
             <div class="table-elements">
                 <div class="role-details">
                     <button class="btn add-new">+ Add New Product</button>
 
-                    <!-- Add Product Modal -->
                     <div id="customerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">×</span>
@@ -53,7 +52,6 @@
                         </div>
                     </div>
 
-                    <!-- Update Product Modal -->
                     <div id="editCustomerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">×</span>
@@ -80,7 +78,6 @@
                         </div>
                     </div>
 
-                    <!-- Delete Confirmation Modal -->
                     <div id="deleteCustomerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">×</span>

@@ -147,3 +147,21 @@ document.addEventListener('DOMContentLoaded', function() {
     attachEditListeners();
     attachDeleteListeners();
 });
+
+function deleteUser(id) {
+    document.getElementById('delete_employee_id').value = id;
+    document.getElementById('deleteCustomerModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteCustomerModal').style.display = 'none';
+}
+
+function editUser(id, name, address, contact, role) {
+    document.getElementById('edit_employee_id').value = id;
+    document.getElementById('edit_full_name').value = name;
+    document.getElementById('edit_address').value = address;
+    document.getElementById('edit_contact_no').value = contact;
+    document.getElementById('edit_user_role').value = role;
+    document.getElementById('editCustomerModal').style.display = 'block';
+}
