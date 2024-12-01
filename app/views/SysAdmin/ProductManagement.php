@@ -11,11 +11,11 @@
     <div class="container">
         <div class="sidebar">
             <ul>
-                <li><a href="<?php echo URLROOT; ?>/Dashboard"><i class="fas fa-th"></i>Dashboard</a></li>
-                <li><a href="<?php echo URLROOT; ?>/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i>Dashboard</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
                 <li><a href="#"><i class="fas fa-truck"></i>Product Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/CustomerManagement"><i class="fas fa-users"></i>Customer Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/CustomerManagement"><i class="fas fa-users"></i>Customer Management</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
             </ul>
             <div class="logo">
             <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/logo.jpg" alt="Logo">
@@ -129,25 +129,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if ($result->num_rows > 0): ?>
-                                        <?php while ($row = $result->fetch_assoc()): ?>
-                                            <tr>
-                                                <td><?= htmlspecialchars($row['product_id']) ?></td>
-                                                <td><?= htmlspecialchars($row['product_name']) ?></td>
-                                                <td><?= htmlspecialchars($row['category']) ?></td>
-                                                <td><?= htmlspecialchars($row['quantity']) ?></td>
-                                                <td><?= htmlspecialchars($row['price']) ?></td>
-                                                <td class="action-icons">
-                                                    <a href="<?php echo URLROOT; ?>/editProduct/<?= $row['product_id'] ?>" class="edit" title="Edit">&#9998;</a>
-                                                    <a href="<?php echo URLROOT; ?>/deleteProduct/<?= $row['product_id'] ?>" class="delete" title="Delete" onclick="return confirm('Are you sure you want to delete this product?');">&#128465;</a>
-                                                </td>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="6">No products available</td>
+                                    <?php foreach ($data['products'] as $product): ?>
+                                        <tr data-id="<?php echo $product->product_id; ?>">
+                                            <td><?php echo $product->product_id; ?></td>
+                                            <td><?php echo $product->product_name; ?></td>
+                                            <td><?php echo $product->category; ?></td>
+                                            <td><?php echo $product->quantity; ?></td>
+                                            <td><?php echo $product->price; ?></td>
+                                            <td>
+                                                <button class="btn edit" 
+                                                    onclick="editProduct(<?php echo $product->product_id; ?>)"
+                                                    data-id="<?php echo $product->product_id; ?>"
+                                                    data-name="<?php echo $product->product_name; ?>"
+                                                    data-category="<?php echo $product->category; ?>"
+                                                    data-quantity="<?php echo $product->quantity; ?>"
+                                                    data-price="<?php echo $product->price; ?>">Edit</button>
+                                                <button class="btn delete" 
+                                                    onclick="deleteProduct(<?php echo $product->product_id; ?>)">Delete</button>
+                                            </td>
                                         </tr>
-                                    <?php endif; ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

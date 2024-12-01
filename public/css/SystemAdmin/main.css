@@ -1,5 +1,13 @@
+:root {
+    --primary-color: #c98d83;
+    --secondary: #783b31;
+    --bg: #f2f1ec;
+    --white: #ffffff;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .container {
-    background-color: #F5F5F5; 
+    background-color: var(--bg);
     margin: 20px;
     padding: 20px; 
     display: flex;
@@ -11,11 +19,10 @@
     width: 20%;
     background-color: #fff;
     padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     bottom: 20px;
     padding-top: 150px;
     border-radius: 34px;
-
 }
 .sidebar .logo {
     text-align: center;
@@ -76,7 +83,7 @@
 }
 
 .sub-container-2 {
-    background-color: rgb(255, 203, 135);
+    background-color: var(--bg);
     padding: 20px;
     width: 80%;
     display: flex;
@@ -85,7 +92,8 @@
 }
 
 .header{
-    background-color: rgb(255, 180, 82);
+    background-color: var(--primary-color);
+    color: var(--white);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 34px;
@@ -113,31 +121,36 @@
 }
 
 .dashboard {
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     font-size: 50px;
     padding-left: 2%;
 }
 
 .body-elements{
-    background-color: rgb(255, 180, 82);
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     display: flex;
     padding: 20px;
-    border-radius: 34px;
 }
 
 .table-elements{
-    background-color: rgb(244, 244, 244);
+    background-color: var(--white);
     display: flex;
     padding: 20px;
     border-radius: 34px;
 }
 
 .body-elements-1 {
-    /* background-color: rgb(255, 162, 39); */
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     width: 80%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    border-radius: 34px;
 }
 
 .role-details {
@@ -150,10 +163,11 @@
 }
 
 .users {
-    background-color: rgb(255, 145, 0);
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 34px;
 }
 
 .users h2 {
@@ -168,30 +182,27 @@
     width: 55px;
 }
 
+.table-container {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+}
+
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 16px;
+    border-spacing: 0;
 }
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 12px;
 }
 
-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
 }
 
 .action-icons {
@@ -219,10 +230,11 @@ table tr:hover {
 }
 
 .products {
-    background-color: rgb(255, 145, 0);
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 34px;
 }
 
 .table {
@@ -242,7 +254,9 @@ table tr:hover {
 }
 
 .item {
-    background-color: rgb(255, 145, 0);
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     padding: 20px;
     margin-bottom: 20px;
     width: 100px;
@@ -285,10 +299,11 @@ table tr:hover {
 }
 
 .calendar {
-    background-color: rgb(255, 162, 39);
+    background-color: var(--bg);
+    box-shadow: var(--box-shadow);
+    border-radius: 34px;
     width: 20%;
     padding: 20px;
-    border-radius: 34px;
 }
 
 /* Newly Adding */
@@ -403,11 +418,11 @@ table tr:hover {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background: var(--white);
     margin: 5% auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid #888;
-    width: 50%;
+    width: 30%;
     border-radius: 10px;
 }
 
@@ -442,20 +457,20 @@ table tr:hover {
 
 .search-btn {
     padding: 8px 15px;
-    background-color: #d29990;
+    background-color: var(--primary-color);
     border: none;
     border-radius: 4px;
-    color: white;
+    color: var(--white);
     cursor: pointer;
 }
 
 .search-btn:hover {
-    background-color: #b67d72;
+    background-color: var(--secondary);
 }
 
 .add-new {
-    background-color: #d29990;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -464,7 +479,7 @@ table tr:hover {
 }
 
 .add-new:hover {
-    background-color: #b67d72;
+    background-color: var(--secondary);
 }
 
 .edit-btn, .delete-btn {
@@ -496,10 +511,11 @@ table tr:hover {
 }
 
 .modal form input {
-    padding: 8px;
-    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
 .modal .buttons {

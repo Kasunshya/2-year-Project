@@ -11,11 +11,11 @@
     <div class="container">
         <div class="sidebar">
             <ul>
-                <li><a href="<?php echo URLROOT; ?>/index"><i class="fas fa-th"></i>Dashboard</a></li>
-                <li><a href="<?php echo URLROOT; ?>/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/ProductManagement"><i class="fas fa-truck"></i>Product Management</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i>Dashboard</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-truck"></i>Product Management</a></li>
                 <li><a href="#"><i class="fas fa-users"></i>Customer Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
+                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
             </ul>
             <div class="logo">
                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/logo.jpg" alt="Logo">
@@ -129,35 +129,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            echo "<tr>
-                                                    <td>{$row['customer_id']}</td>
-                                                    <td>{$row['full_name']}</td>
-                                                    <td>{$row['address']}</td>
-                                                    <td>{$row['contact_no']}</td>
-                                                    <td>{$row['email']}</td>
-                                                    <td>
-                                                        <button class='btn edit-btn' 
-                                                            data-id='{$row['customer_id']}'
-                                                            data-fullName='{$row['full_name']}'
-                                                            data-address='{$row['address']}'
-                                                            data-contactNo='{$row['contact_no']}'
-                                                            data-email='{$row['email']}'>
-                                                            Edit
-                                                        </button>
-                                                        <button class='btn delete-btn' 
-                                                            data-id='{$row['customer_id']}'>
-                                                            Delete
-                                                        </button>
-                                                    </td>
-                                                </tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='6'>No customers found</td></tr>";
-                                    }
-                                    ?>
+                                    <?php foreach ($data['customers'] as $customer): ?>
+                                        <tr data-id="<?php echo $customer->customer_id; ?>">
+                                            <td><?php echo $customer->customer_id; ?></td>
+                                            <td><?php echo $customer->full_name; ?></td>
+                                            <td><?php echo $customer->address; ?></td>
+                                            <td><?php echo $customer->contact_no; ?></td>
+                                            <td><?php echo $customer->email; ?></td>
+                                            <td>
+                                                <button class="btn edit" 
+                                                    onclick="editCustomer(<?php echo $customer->customer_id; ?>)"
+                                                    data-id="<?php echo $customer->customer_id; ?>"
+                                                    data-name="<?php echo $customer->full_name; ?>"
+                                                    data-address="<?php echo $customer->address; ?>"
+                                                    data-contact="<?php echo $customer->contact_no; ?>"
+                                                    data-email="<?php echo $customer->email; ?>">Edit</button>
+                                                <button class="btn delete" 
+                                                    onclick="deleteCustomer(<?php echo $customer->customer_id; ?>)">Delete</button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
