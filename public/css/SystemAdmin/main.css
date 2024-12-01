@@ -193,13 +193,17 @@ table {
     border-spacing: 0;
 }
 
-th {
+table th {
+    text-align: center;
+    vertical-align: middle;
     background-color: var(--primary-color);
     color: var(--white);
     padding: 12px;
 }
 
-td {
+table td {
+    text-align: center;
+    vertical-align: middle;
     padding: 12px;
     border-bottom: 1px solid #ddd;
 }

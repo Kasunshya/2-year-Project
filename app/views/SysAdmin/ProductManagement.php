@@ -69,11 +69,11 @@
                         </div>
                     </div>
 
-                    <!-- Edit Product Modal -->
+                    <!-- Update Product Modal -->
                     <div id="editCustomerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">×</span>
-                            <h2>Edit Product</h2>
+                            <h2>Update Product</h2>
                             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                                 <input type="hidden" id="edit_product_id" name="product_id">
                                 
@@ -125,7 +125,7 @@
                                         <th>Category</th>
                                         <th>Quantity</th>
                                         <th>Price (Rs.)</th>
-                                        <th>Action</th>
+                                        <th>Update/Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -143,7 +143,7 @@
                                                     data-category="<?php echo $product->category; ?>"
                                                     data-quantity="<?php echo $product->quantity; ?>"
                                                     data-price="<?php echo $product->price; ?>">
-                                                    Edit
+                                                    Update
                                                 </button>
                                                 <button class="btn delete-btn" 
                                                     data-id="<?php echo $product->product_id; ?>">

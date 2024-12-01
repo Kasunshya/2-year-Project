@@ -69,11 +69,11 @@
                         </div>
                     </div>
 
-                    <!-- Edit User Modal -->
+                    <!-- Update User Modal -->
                     <div id="editCustomerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">&times;</span>
-                            <h2>Edit User</h2>
+                            <h2>Update User</h2>
                             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                                 <input type="hidden" id="edit_employee_id" name="employee_id">
                                 
@@ -125,7 +125,7 @@
                                         <th>Address</th>
                                         <th>Contact No</th>
                                         <th>User Role</th>
-                                        <th>Action</th>
+                                        <th>Update/Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -143,7 +143,7 @@
                                                     data-address="<?php echo $user->address; ?>"
                                                     data-contact="<?php echo $user->contact_no; ?>"
                                                     data-role="<?php echo $user->user_role; ?>">
-                                                    Edit
+                                                    Update
                                                 </button>
                                                 <button class="btn delete-btn" 
                                                     data-id="<?php echo $user->employee_id; ?>">
