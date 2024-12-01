@@ -48,7 +48,7 @@ body, html {
   border-radius: 5px;
 }
 
-/* Sidebar */
+/* Sidebar 
 .sidebar {
   width: 100px;
   background-color: var(--secondary);
@@ -77,7 +77,7 @@ body, html {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly; /* Distribute icons evenly */
+  justify-content: space-evenly; /
   align-items: center;
   width: 100%;
 }
@@ -98,7 +98,7 @@ body, html {
   text-decoration: none;
   color: var(--white);
   display: block;
-  font-size: 30px; /* Larger icon size */
+  font-size: 30px; 
   transition: color 0.3s, background-color 0.3s;
   padding: 15px;
   text-align: center;
@@ -111,7 +111,7 @@ body, html {
 }
 
 .logout {
-  margin-top: 100px; /* Push logout button to the bottom */
+  margin-top: 100px; 
   width: 90%;
   width: 90%;
   text-align: center;
@@ -134,7 +134,7 @@ body, html {
 .logout a:hover {
   color: var(--white);
   background: var(--secondary);
-}
+}*/
 
 /* Style for header container */
 .header-container {
