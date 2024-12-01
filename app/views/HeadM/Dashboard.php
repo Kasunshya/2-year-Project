@@ -22,8 +22,8 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-tachometer-alt"></i>&nbsp DASHBOARD</h1>
-                <div class="user-info">
-                    <span>Head Manager</span>
+                <div>
+                    <span><b>HEAD MANAGER</b></span>
                 </div>
             </header>
             <section class="dashboard-content">

@@ -24,6 +24,21 @@
                 </div>
             </header>
             <div class="content">
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteemployeeModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Delete Feedback</h2>
+                    <p>Are you sure you want to delete this feedback?</p>
+                    <div class="buttons">
+                        <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
+                        <button type="reset" class="btn submit">No</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="emplooyee-list">
                 <div class="search-bar">
                     <form method="GET" action="">
                         <input type="text" placeholder="Search by Customer Name">
@@ -51,7 +66,7 @@
                                 <td>The cake was amazing!</td>
                                 <td><span class="rating">★★★★★</span></td>
                                 <td>2024-11-20</td>
-                                <td><button class="btn delete">Delete</button></td>
+                                <td><button class="btn delete" onclick="deleteEmployee()">Delete</button></td>
                             </tr>
                             <tr>
                                 <td>F002</td>
@@ -60,7 +75,7 @@
                                 <td>Delivery was on time and perfect.</td>
                                 <td><span class="rating">★★★★★</span></td>
                                 <td>2024-11-21</td>
-                                <td><button class="btn delete">Delete</button></td>
+                                <td><button class="btn delete"onclick="deleteEmployee()">Delete</button></td>
                             </tr>
                             <tr>
                                 <td>F003</td>
@@ -69,14 +84,18 @@
                                 <td>Great customization options!</td>
                                 <td><span class="rating">★★★★★</span></td>
                                 <td>2024-11-22</td>
-                                <td><button class="btn delete">Delete</button></td>
+                                <td><button class="btn delete"onclick="deleteEmployee()">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                </div>
             </div>
         </main>
     </div>
+    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
 </body>
 
 </html>
+
+

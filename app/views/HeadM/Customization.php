@@ -94,7 +94,7 @@
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/Customization.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
 </body>
 
 </html>

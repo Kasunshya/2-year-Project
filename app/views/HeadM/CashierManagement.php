@@ -28,29 +28,25 @@
                 <!-- Add employee Modal -->
                 <div id="employeeModal" class="modal">
                     <div class="modal-content">
-                        <span class="close">&times;</span>
+                        <span class="close">×</span>
                         <h2>Add New Cashier</h2>
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <label for="first_Name">First Name:</label>
-                            <input type="text" id="first_Name" name="first_Name" required pattern="[A-Za-z]{1,}"
-                                title="Please enter a valid first name(letters only)">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required pattern="[A-Za-z\s]{1,}" 
+                                title="Please enter a valid name (letters only)">
 
-                            <label for="last_Name">Last Name:</label>
-                            <input type="text" id="last_Name" name="last_Name" required pattern="[A-Za-z]{1,}"
-                                title="Please enter a valid last name(letters only)">
-
-                            <label for="user_Name">User Name:</label>
-                            <input type="text" id="user_Name" name="user_Name" required pattern="[A-Za-z0-9]{1,}"
-                                title="Please enter a valid user name(letters and numbers only)">
-
-                            <label for="employee_Password">Password:</label>
-                            <input type="password" id="employee_Password" name="employee_Password" required
-                                pattern="[A-Za-z0-9]{1,}"
-                                title="Please enter a valid password(letters and numbers only)">
-
-                            <label for="contact_Number">Contact No:</label>
-                            <input type="text" id="contact_Number" name="contact_Number" required pattern="[0-9]{10}"
+                            <label for="contact">Contact:</label>
+                            <input type="text" id="contact" name="contact" required pattern="[0-9]{10}"
                                 title="Please enter a 10-digit contact number">
+
+                            <label for="address">Address:</label>
+                            <input type="text" id="address" name="address" required>
+
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required>
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -63,24 +59,25 @@
                 <!-- Edit employee Modal -->
                 <div id="editemployeeModal" class="modal">
                     <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Update Employee</h2>
+                        <span class="close">×</span>
+                        <h2>Update Cashier</h2>
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <input type="hidden" id="edit_employee_ID" name="employee_ID">
-                            <label for="edit_first_Name">First Name:</label>
-                            <input type="text" id="edit_first_Name" name="first_Name" required>
+                            <input type="hidden" id="edit_cashier_id" name="cashier_id">
+                            
+                            <label for="edit_name">Name:</label>
+                            <input type="text" id="edit_name" name="name" required>
 
-                            <label for="edit_last_Name">Last Name:</label>
-                            <input type="text" id="edit_last_Name" name="last_Name" required>
+                            <label for="edit_contact">Contact:</label>
+                            <input type="text" id="edit_contact" name="contact" required>
 
-                            <label for="edit_user_Name">User Name:</label>
-                            <input type="text" id="edit_user_Name" name="user_Name" required>
+                            <label for="edit_address">Address:</label>
+                            <input type="text" id="edit_address" name="address" required>
 
-                            <label for="edit_employee_Password">Password:</label>
-                            <input type="password" id="edit_employee_Password" name="employee_Password" required>
+                            <label for="edit_email">Email:</label>
+                            <input type="email" id="edit_email" name="email" required>
 
-                            <label for="edit_contact_Number">Contact No:</label>
-                            <input type="text" id="edit_contact_Number" name="contact_Number" required>
+                            <label for="edit_password">Password:</label>
+                            <input type="password" id="edit_password" name="password" required>
 
                             <div class="buttons">
                                 <button type="submit" name="edit_employee" class="btn submit">Save Changes</button>
@@ -88,13 +85,12 @@
                         </form>
                     </div>
                 </div>
-
                 <!-- Delete Confirmation Modal -->
                 <div id="deleteemployeeModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Delete employee</h2>
-                        <p>Are you sure you want to delete this employee?</p>
+                        <h2>Delete cashier</h2>
+                        <p>Are you sure you want to delete this cashier?</p>
                         <div class="buttons">
                             <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
                             <button type="reset" class="btn submit">No</button>
@@ -119,7 +115,7 @@
                                     <th>Address</th>
                                     <th>Email</th>
                                     <th>Join Date</th>
-                                    <th>Password</th>
+                                    <!--th>Password</th-->
                                     <th>Update/Delete</th>
                                 </tr>
                             </thead>
@@ -131,10 +127,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                        <button class="btn edit"onclick="editEmployee()">Update</button>
+                                        <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -144,10 +140,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -157,10 +153,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -170,10 +166,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -183,10 +179,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -196,10 +192,10 @@
                                     <td>123 Main St, New York</td>
                                     <td>john@example.com</td>
                                     <td>2023-08-01</td>
-                                    <td>password123</td>
+                                    <!--td>password123</td-->
                                     <td>
-                                        <button class="btn edit">Update</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -210,7 +206,7 @@
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/CashierManagement.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
 
 </body>
 
