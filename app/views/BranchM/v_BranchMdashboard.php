@@ -75,10 +75,10 @@
         <table>
             <thead>
                 <tr>
-                    <th style="color: #783b31;">Order ID</th>
-                    <th style="color: #783b31;">Product</th>
-                    <th style="color: #783b31;">Customer</th>
-                    <th style="color: #783b31;">Status</th>
+                    <th >Order ID</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+                    <th >Status</th>
                 </tr>
             </thead>
             <tbody>

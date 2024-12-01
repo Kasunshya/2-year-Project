@@ -8,7 +8,7 @@
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-truck"></i></a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
 

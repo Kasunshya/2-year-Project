@@ -140,7 +140,6 @@ body, html {
   margin-right: 5px;
   margin-top:30px;
   box-shadow: var(--box-shadow);
-  border-radius: 10px;
   overflow: hidden;
 }
 
