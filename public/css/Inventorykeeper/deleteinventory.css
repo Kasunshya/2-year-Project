@@ -20,28 +20,6 @@
         min-height: 100vh;
     }
 
-    .sidebar {
-        width: 200px;
-        background-color: var(--secondary-color);
-        color: var(--white-color);
-        padding: 20px 0;
-        position: fixed;
-        height: 100%;
-    }
-
-    .sidebar .logo {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .sidebar nav ul li a {
-        color: var(--white-color);
-        padding: 10px;
-        display: block;
-        text-decoration: none;
-    }
 
     .sidebar nav ul li a:hover {
         background-color: var(--primary-color);

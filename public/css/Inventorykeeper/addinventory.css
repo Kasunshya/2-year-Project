@@ -28,83 +28,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 200px;
-            background-color: var(--secondary-color);
-            color: var(--white-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            position: fixed;
-            height: 100%;
-        }
-
-        .sidebar .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .sidebar nav ul {
-            list-style: none;
-            width: 100%;
-            padding: 0;
-        }
-
-        .sidebar nav ul li {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .sidebar nav ul li a {
-            color: var(--white-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            transition: background 0.3s;
-            font-size: 2rem;
-        }
-
-        .sidebar nav ul li a:hover {
-            background-color: var(--primary-color);
-            border-radius: 50%;
-        }
-
-        .sidebar nav ul li a i {
-            font-size: 2rem;
-        }
-
-        .sidebar .logout {
-            margin-top: auto;
-            width: 100%;
-            text-align: center;
-        }
-
-        .sidebar .logout a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            color: var(--white-color);
-            text-decoration: none;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            font-size: 2rem;
-            width: 60px;
-            height: 60px;
-            margin: 20px auto;
-            transition: background 0.3s;
-        }
-
-        .sidebar .logout a:hover {
-            background-color: var(--white-color);
-            color: var(--secondary-color);
-        }
 
         /* Main Content */
         main {
@@ -121,12 +44,13 @@
             padding: 30px 20px;
             background-color: var(--primary-color);
             color: var(--white-color);
-            border-radius: 0 5px 5px 0; /* Rounded edges for alignment */
+            border-radius: 5px 5px 5px 5px; /* Rounded edges for alignment */
             margin-bottom: 30px;
+            margin-top: 10px;
             box-shadow: var(--box-shadow);
             position: fixed;
             top: 0;
-            left: 200px; /* Align with the sidebar */
+            left: 140px; /* Align with the sidebar */
             right: 0;
             z-index: 1000;
         }
