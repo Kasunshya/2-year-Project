@@ -62,11 +62,11 @@
             margin-right: 10px;
         }
 
-        .header .user-info {
+        /* .header .user-info {
             text-align: right;
             font-size: 1rem;
             color: var(--white-color);
-        }
+        } */
 
         /* Content Section */
         section {
@@ -78,9 +78,10 @@
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            background-color: white;
         }
 
-        .form {
+        form {
             background-color: var(--white-color);
             padding: 30px;
             border-radius: 10px;
@@ -89,26 +90,26 @@
             width: 100%;
         }
 
-        .form h2 {
+        form h2 {
             text-align: center;
             margin-bottom: 30px;
             color: var(--secondary-color);
             font-size: 1.8rem;
         }
 
-        .form .form-group {
+        form .form-group {
             margin-bottom: 20px;
         }
 
-        .form label {
+        form label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: var(--text-color);
         }
 
-        .form input,
-        .form select {
+        form input,
+        form select {
             width: 100%;
             padding: 12px;
             font-size: 1rem;
@@ -116,13 +117,13 @@
             border-radius: 5px;
         }
 
-        .form input:focus,
-        .form select:focus {
+        form input:focus,
+        form select:focus {
             border-color: var(--primary-color);
             outline: none;
         }
 
-        .form button {
+        form button {
             display: block;
             width: 100%;
             padding: 15px;
@@ -136,6 +137,6 @@
             margin-top: 20px auto;
         }
 
-        .form button:hover {
+        form button:hover {
             background-color: var(--secondary-color);
         }
