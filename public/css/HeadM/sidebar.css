@@ -137,6 +137,7 @@
     align-items: center;
     cursor: pointer;
     transition: transform 0.3s ease;
+    margin-bottom: 25px;
 }
 
 .sidebar .toggle-btn:hover {
