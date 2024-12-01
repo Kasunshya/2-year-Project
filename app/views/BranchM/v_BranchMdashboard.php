@@ -41,18 +41,19 @@
     <main>
       <div class="chart-container">
           <div class="card">
-              <h3>Sales Performance</h3>
+              <h3 style="color: #783b31;">Sales Performance</h3>
               <canvas id="salesChart"></canvas>
           </div>
           <div class="card">
-              <h3>Revenue Growth</h3>
+              <h3 style="color: #783b31;">Revenue Growth</h3>
               <canvas id="revenueChart"></canvas>
           </div>
       </div>
 
       <div class="metrics-container">
           <div class="metric">
-              <h3>Total Sales</h3>
+              <h3>Total <br>
+                Sales</h3>
               <p>$2000</p>
           </div>
           <div class="metric">

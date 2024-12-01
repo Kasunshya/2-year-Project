@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frostine Product Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
@@ -10,103 +11,70 @@
 <body>
         <div class="container">
             <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="logo-container">
-                    <img src="<?php echo URLROOT; ?>/public/img/HeadM/FrostineLogo2.png" alt="Logo" class="logo">
-                </div>
-                <nav>
-                <ul>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i class="fas fa-cash-register icon-cashier"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i class="fas fa-warehouse icon-inventory"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i class="fas fa-user-tie icon-branch-manager"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/customization"><i class="fas fa-palette"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/viewOrder"><i class="fas fa-clipboard-list"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/preOrder"><i class="fas fa-clock"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i class="fas fa-calendar-check"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
-                </ul>
-                </nav>
-                <div class="logout">
-                    <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-                </div>
-            </aside>
-
+            <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
             <!-- Main Content -->
             <main>
                 <header class="header">
-                    <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp Products</h1>
+                    <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp PRODUCTS</h1>
                     <div class="user-info">
                         <span><b>HEAD MANAGER</span></b></span>
                     </div>
                 </header>
                 <div class="content">
-                <button class="btn">+ Add New Product</button>
-                <!-- Add employee Modal -->
+                <button class="btn add-employee">+ Add New Product</button>
+            
+                <!-- Add Product Modal -->
                 <div id="employeeModal" class="modal">
                     <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Add New employee</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <label for="first_Name">First Name:</label>
-                            <input type="text" id="first_Name" name="first_Name" required pattern="[A-Za-z]{1,}" title="Please enter a valid first name(letters only)">
+                        <span class="close">×</span>
+                        <h2>Add New Product</h2>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+                            <label for="product_name">Product Name:</label>
+                            <input type="text" id="product_name" name="product_name" required>
 
-                            <label for="last_Name">Last Name:</label>
-                            <input type="text" id="last_Name" name="last_Name" required pattern="[A-Za-z]{1,}" title="Please enter a valid last name(letters only)">
+                            <label for="price">Price (Rs.):</label>
+                            <input type="number" id="price" name="price" required min="0" step="0.01">
 
-                            <label for="user_Name">User Name:</label>
-                            <input type="text" id="user_Name" name="user_Name" required pattern="[A-Za-z0-9]{1,}" title="Please enter a valid user name(letters and numbers only)">
-
-                            <label for="employee_Password">Password:</label>
-                            <input type="password" id="employee_Password" name="employee_Password" required pattern="[A-Za-z0-9]{1,}" title="Please enter a valid password(letters and numbers only)">
-
-                            <label for="contact_Number">Contact No:</label>
-                            <input type="text" id="contact_Number" name="contact_Number" required pattern="[0-9]{10}" title="Please enter a 10-digit contact number">
+                            <label for="product_image">Product Image:</label>
+                            <input type="file" id="product_image" name="product_image" accept="image/*" required>
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
-                                <button type="submit" name="add_employee" class="btn submit">Register</button>
+                                <button type="submit" name="add_product" class="btn submit">Add Product</button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Edit employee Modal -->
+                <!-- Edit Product Modal -->
                 <div id="editemployeeModal" class="modal">
                     <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Edit Employee</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <input type="hidden" id="edit_employee_ID" name="employee_ID">
-                            <label for="edit_first_Name">First Name:</label>
-                            <input type="text" id="edit_first_Name" name="first_Name" required>
+                        <span class="close">×</span>
+                        <h2>Update Product</h2>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+                            <input type="hidden" id="edit_product_id" name="product_id">
+            
+                            <label for="edit_product_name">Product Name:</label>
+                            <input type="text" id="edit_product_name" name="product_name" required>
 
-                            <label for="edit_last_Name">Last Name:</label>
-                            <input type="text" id="edit_last_Name" name="last_Name" required>
+                            <label for="edit_price">Price (Rs.):</label>
+                            <input type="number" id="edit_price" name="price" required min="0" step="0.01">
 
-                            <label for="edit_user_Name">User Name:</label>
-                            <input type="text" id="edit_user_Name" name="user_Name" required>
-
-                            <label for="edit_employee_Password">Password:</label>  
-                            <input type="password" id="edit_employee_Password" name="employee_Password" required>
-
-                            <label for="edit_contact_Number">Contact No:</label>
-                            <input type="text" id="edit_contact_Number" name="contact_Number" required>
+                            <label for="edit_product_image">Product Image:</label>
+                            <input type="file" id="edit_product_image" name="product_image" accept="image/*">
 
                             <div class="buttons">
-                                <button type="submit" name="edit_employee" class="btn submit">Save Changes</button>
+                                <button type="submit" name="edit_product" class="btn submit">Save Changes</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
                 <!-- Delete Confirmation Modal -->
                 <div id="deleteemployeeModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Delete employee</h2>
-                        <p>Are you sure you want to delete this employee?</p>
+                        <h2>Delete Product</h2>
+                        <p>Are you sure you want to delete this product?</p>
                         <div class="buttons">
                             <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
                             <button type="reset" class="btn submit">No</button>
@@ -129,7 +97,7 @@
                                     <th>Product Name</th>
                                     <th>Price</th>
                                     <th>Image</th>
-                                    <th>Edit/Delete</th>
+                                    <th>Update/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>  
@@ -139,8 +107,10 @@
                                     <td>Rs. 1500.00</td>
                                     <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/chocolatecake.png" alt="Chocolate Cake"></td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
-                                        <button class="btn delete">Delete</button>
+                                        <button class="btn edit"onclick="editEmployee()">Update</button>
+                                        <button class="btn delete"onclick="deleteEmployee()">Delete</button>
+                                    
+                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -149,8 +119,8 @@
                                     <td>Rs. 1800.00</td>
                                     <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/strawberrycake.png" alt="Strawberry Cake"></td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -159,8 +129,8 @@
                                     <td>Rs. 1200.00</td>
                                     <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/vanillacake.png" alt="Vanilla Cake"></td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
                                     </td>   
                                 </tr>
                                 <tr>
@@ -169,8 +139,8 @@
                                     <td>Rs. 1600.00</td>
                                     <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/redvelvetcake.png" alt="Red Velvet Cake"></td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
                                     </td>  
                                 </tr>
                                 <tr>
@@ -179,8 +149,8 @@
                                     <td>Rs. 1400.00</td>
                                     <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/pchickensubmarine.png" alt="Lemon Cake"></td>
                                     <td>
-                                        <button class="btn edit">Edit</button>
-                                        <button class="btn delete">Delete</button>
+                                    <button class="btn edit"onclick="editEmployee()">Update</button>
+                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -191,7 +161,7 @@
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/ProductManagement.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
 
 </body>
 </html>
