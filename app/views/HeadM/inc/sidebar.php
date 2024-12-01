@@ -1,26 +1,33 @@
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/verticalnavbar.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head>
-<body>
- 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo-container">
-            <img src="<?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
-        </div>
-        <nav>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
+<aside class="sidebar">
+    <div class="logo-container">
+        <img src="<?php echo URLROOT; ?>/public/img/HeadM/FrostineLogo2.png" alt="Logo" class="logo">
+    </div>
+    <nav>
         <ul>
-        <li><a href="<?php echo URLROOT;?>/BranchM/branchmdashboard"><i class="fas fa-home"></i></a></li>
-        <li><a href="<?php echo URLROOT;?>/BranchM/viewCashiers"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/addCashier"><i class="fas fa-edit"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/DailyOrder"><i class="fas fa-tasks"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/salesReport"><i class="fas fa-chart-bar"></i></a></li>
-                <li><a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a></i></a></li>
-            </ul>
-        </div>
-       
-    </aside>
-    <script>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a>
+            </li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i
+                        class="fas fa-cash-register icon-cashier"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a>
+            </li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i
+                        class="fas fa-warehouse icon-inventory"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i
+                        class="fas fa-user-tie icon-branch-manager"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/customization"><i class="fas fa-palette"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/viewOrder"><i class="fas fa-clipboard-list"></i></a>
+            </li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/preOrder"><i class="fas fa-clock"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i class="fas fa-calendar-check"></i></a>
+            </li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i></a></li>
+        </ul>
+    </nav>
+
+</aside>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.createElement('div');
@@ -36,11 +43,16 @@
 
             // Map of icons to labels
             const labelMap = {
-                'fa-home': 'Dashboard',
-                'fa-boxes': 'Cashier Profiles',
-                'fa-edit': 'Add cashier',
-                'fa-tasks': 'Daily Order',
-                'fa-chart-bar': 'Sales Reports',
+                'fa-tachometer-alt': 'Dashboard',
+                'fa-cash-register': 'Cashier',
+                'fa-birthday-cake': 'Products',
+                'fa-warehouse': 'Inventory',
+                'fa-user-tie': 'Branch Managers',
+                'fa-palette': 'Customization',
+                'fa-clipboard-list': 'View Orders',
+                'fa-clock': 'Pre-Orders',
+                'fa-calendar-check': 'Daily Orders',
+                'fa-comments': 'Feedback',
                 'fa-sign-out-alt': 'Logout'
             };
 
@@ -65,8 +77,8 @@
         toggleBtn.addEventListener('click', function () {
             sidebar.classList.toggle('expanded');
 
-             // Rotate toggle button icon
-             const chevronIcon = toggleBtn.querySelector('i');
+            // Rotate toggle button icon
+            const chevronIcon = toggleBtn.querySelector('i');
             if (sidebar.classList.contains('expanded')) {
                 chevronIcon.classList.remove('fa-chevron-right');
                 chevronIcon.classList.add('fa-chevron-left');
@@ -95,6 +107,5 @@
                 alert('Logout functionality to be implemented');
             });
         }
-});
+    });
 </script>
-
