@@ -22,7 +22,7 @@ body, html {
   
 }
 
-/* Sidebar */
+/* Sidebar 
 .sidebar {
   width: 100px;
   background-color: var(--secondary);
@@ -51,7 +51,7 @@ body, html {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly; /* Distribute icons evenly */
+  justify-content: space-evenly; /* Distribute icons evenly 
   align-items: center;
   width: 100%;
 }
@@ -72,7 +72,7 @@ body, html {
   text-decoration: none;
   color: var(--white);
   display: block;
-  font-size: 30px; /* Larger icon size */
+  font-size: 30px; /* Larger icon size 
   transition: color 0.3s, background-color 0.3s;
   padding: 15px;
   text-align: center;
@@ -88,7 +88,7 @@ body, html {
 }
 
 .logout {
-  margin-top: auto; /* Push logout button to the bottom */
+  margin-top: auto; /* Push logout button to the bottom 
   width: 90%;
   width: 90%;
   text-align: center;

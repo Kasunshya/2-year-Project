@@ -135,11 +135,7 @@ public function DailyOrder() {
             // Check for no errors
             if (empty($data['branchid_err']) && empty($data['branchname_err']) && empty($data['date_err']) && empty($data['orderdescription_err'])) {
                 // Perform database action if needed
-                if ($this->BranchMModel->DailyOrder($data)) {
-                    // Redirect on success
-                    header('Location: ' . URLROOT . '/BranchM/DailyOrder?success=true');
-                    exit;
-                } else {
+                {
                     die('Something went wrong while saving the order');
                 }
             } else {
@@ -222,6 +218,7 @@ public function deleteCashier($cashier_id) {
         if ($this->CashierModel->deleteCashier($cashier_id)) {
             // Redirect after successful deletion
             header('location: ' . URLROOT . '/BranchM/viewCashiers?success=true');
+            exit;
         } else {
             die('Something went wrong.');
         }
