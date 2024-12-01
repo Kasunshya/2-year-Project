@@ -35,8 +35,6 @@
 }
 
     public function getSalesData() {
-        
-    
         // Return the result set (array of sales data)
         return $this->db->resultSet();
     }

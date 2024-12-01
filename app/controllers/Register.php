@@ -30,13 +30,30 @@ class Register extends Controller {
                     $data['errors']['email'] = 'Email is already registered';
                 }
             }
-            if (empty($data['password']) || strlen($data['password']) < 8) {
-                $data['errors']['password'] = 'Password must be at least 6 characters';
+            // Validate password
+            if (empty($data['password'])) {
+                $data['errors']['password'] = 'Password is required';
+            } elseif (strlen($data['password']) < 8) {
+                $data['errors']['password'] = 'Password must be at least 8 characters';
+            } elseif (!preg_match('/[A-Z]/', $data['password'])) {
+                $data['errors']['password'] = 'Password must include at least one uppercase letter';
+            } elseif (!preg_match('/[a-z]/', $data['password'])) {
+                $data['errors']['password'] = 'Password must include at least one lowercase letter';
+            } elseif (!preg_match('/[0-9]/', $data['password'])) {
+                $data['errors']['password'] = 'Password must include at least one number';
+            } elseif (!preg_match('/[\W_]/', $data['password'])) {
+                $data['errors']['password'] = 'Password must include at least one special character';
             }
-            if ($data['password'] != $data['confirm_password']) {
+
+            // Validate confirm password
+            if (empty($data['confirm_password'])) {
+                $data['errors']['confirm_password'] = 'Please confirm your password';
+            } elseif ($data['password'] !== $data['confirm_password']) {
                 $data['errors']['confirm_password'] = 'Passwords do not match';
             }
 
+
+            
             // Proceed if there are no errors
             if (empty($data['errors'])) {
                 $userModel = $this->model('User');

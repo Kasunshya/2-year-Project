@@ -5,7 +5,7 @@
 
   <div class="login-container">
         <div class="image-section">
-            <img src="<?php echo URLROOT;?>/img/login-signup/login.jpg" alt="Cookies" class="cookies-image">
+            <img src="<?php echo URLROOT;?>/img/login-signup/about.png" alt="Cookies" class="cookies-image">
         </div>
         <div class="login-section">
             <div class="logo">
