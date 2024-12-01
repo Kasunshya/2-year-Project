@@ -6,14 +6,14 @@
 
   <div class="signup-container">
         <div class="image-section">
-            <img src="<?php echo URLROOT;?>/img/login-signup/login.jpg" alt="Cookies" class="cookies-image">
+            <img src="<?php echo URLROOT;?>/img/login-signup/about.png" alt="Cookies" class="cookies-image">
         </div>
         <div class="signup-section">
             <div class="logo">
                 <!-- Add your logo image here-->
                 <img src="<?php echo URLROOT;?>/img/login-signup/frostineLogo.png" alt="Logo" class="logo-image">
-                <!--h1>FROSTINE</h1>
-                <p>From Oven to Doorstep, Effortlessly YC</p-->
+                <h1>FROSTINE</h1>
+                <p>From Oven to Doorstep, Effortlessly YC</p>
             </div>
             <h2>Create an Account</h2>
             <form action="<?php echo URLROOT?>/Register/signup" method="POST">
@@ -37,7 +37,7 @@
                 <button type="submit" name="submit" class="signup-btn">Sign Up</button></a>
                 <span><?= $data['errors']['general'] ?? '' ?></span>
             </form>
-            <a href="<?php echo URLROOT; ?>/users/v_login" class="login-link">Already have an account? Log in</a>
+            <a href="<?php echo URLROOT; ?>/Login/indexx" class="login-link">Already have an account? Log in</a>
         </div>
     </div>
   <?php require APPROOT.'/views/inc/footer.php'?>

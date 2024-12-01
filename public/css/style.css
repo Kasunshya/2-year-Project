@@ -3,6 +3,9 @@
 
 
 /*COMPONENTS */
+@import url('components/verticalnavbar.css');
+@import url('components/cverticalbar.css');
+
 /*@import url('components/topnavbar.css');
 @import url('components/registerform.css');
 @import url('components/buttons.css');

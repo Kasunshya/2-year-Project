@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frostine Supplier Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/SupplierManagement.css">
@@ -10,25 +11,7 @@
 <body>
         <div class="container">
             <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="logo-container">
-                    <img src="<?php echo URLROOT; ?>/public/img/HeadM/FrostineLogo2.png" alt="Logo" class="logo">
-                </div>
-                <nav>
-                <ul>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i class="fas fa-cash-register icon-cashier"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/supplierManagement"><i class="fas fa-truck"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/inventoryManagement"><i class="fas fa-warehouse icon-inventory"></i></a></li>
-                    <li><a href="<?php echo URLROOT; ?>/HeadM/branchManager"><i class="fas fa-user-tie icon-branch-manager"></i></a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list icon-order"></i></a></li>
-                </ul>
-                </nav>
-                <div class="logout">
-                    <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-                </div>
-            </aside>
+            <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
 
             <!-- Main Content -->
             <main>
