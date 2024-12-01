@@ -49,7 +49,7 @@ class Login extends Controller {
     private function redirectToDashboard($role) {
         switch ($role) {
             case 'customer':
-              header('Location: ' . URLROOT . '');
+              header('Location: ' . URLROOT . 'Customer/customerhomepage');
             break;
             case 'cashier':
               header('Location: ' . URLROOT . '/Cashier/cashierdashboard');
@@ -82,7 +82,7 @@ class Login extends Controller {
 
     
         // Redirect to the login page
-        header('Location: ' . URLROOT . '/register/signup');
+        header('Location: ' . URLROOT . '/Login/indexx');
         exit;
     }
        

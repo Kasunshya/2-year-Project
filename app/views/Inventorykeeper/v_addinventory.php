@@ -5,27 +5,12 @@
     <title>Inventory Keeper - Add Inventory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../public/css/Inventorykeeper/addinventory.css">
+    <?php require APPROOT.'/views/inc/components/ivertical.php'?>
 </head>
 <body>
     
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">FROSTINE</div>
-            <nav>
-                <ul>
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="#"><i class="fas fa-plus-circle"></i></a></li>
-                    <li><a href="#"><i class="fas fa-warehouse"></i></a></li>
-                    <li><a href="#"><i class="fas fa-edit"></i></a></li>
-                    <li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-                </ul>
-            </nav>
-            <div class="logout">
-                <a href="#"><i class="fas fa-sign-out-alt"></i></a>
-            </div>
-        </aside>
 
         <!-- Main Content -->
         <main>
@@ -34,7 +19,6 @@
                 <h1><i class="fas fa-plus-circle"></i> Add Inventory Item</h1>
                 <div class="user-info">
                     Inventory Keeper<br>
-                    Dasun Shanaka
                 </div>
             </header>
 

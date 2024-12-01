@@ -7,26 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../public/css/Inventorykeeper/viewinventory.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <?php require APPROOT.'/views/inc/components/ivertical.php'?>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">FROSTINE</div>
-            <nav>
-                <ul>
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i></a></li>
-                    <li><a href="#"><i class="fas fa-plus-circle"></i></a></li>
-                    <li><a href="#"><i class="fas fa-warehouse"></i></a></li>
-                    <li><a href="#"><i class="fas fa-edit"></i></a></li>
-                    <li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-                </ul>
-            </nav>
-            <div class="logout">
-                <a href="#"><i class="fas fa-sign-out-alt"></i></a>
-            </div>
-        </aside>
-
+    
         <!-- Main Content -->
         <main>
             <!-- Header Section -->

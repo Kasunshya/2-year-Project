@@ -5,24 +5,17 @@
     <title>Inventory Keeper - Delete Inventory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../public/css/Inventorykeeper/deleteinventory.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <?php require APPROOT.'/views/inc/components/ivertical.php'?>
+
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">FROSTINE</div>
-            <nav>
-                <ul>
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-trash-alt"></i> Delete Inventory</a></li>
-                </ul>
-            </nav>
-        </aside>
+    
 
         <!-- Main Content -->
         <main>
             <div class="header">
-                <h1>Delete Inventory Item</h1>
+                <h1>DELETE INVENTORY</h1>
             </div>
 
             <div class="form">
