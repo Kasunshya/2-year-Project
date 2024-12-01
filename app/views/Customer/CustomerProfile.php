@@ -103,17 +103,19 @@
 
         .profile-info label {
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
             display: block;
+            margin-left: 500px;
         }
 
         .profile-info input {
-            width: 100%;
+            width: 40%;
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
+            margin-left: 500px;
         }
 
         .tabs {
@@ -187,7 +189,7 @@
         }
 
         .reset-password button:hover {
-            background: var(--secondary-color);
+            background: #783b31;
         }
     </style>
 </head>

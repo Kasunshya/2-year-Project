@@ -196,18 +196,15 @@
     <div class="navbar">
         <a href="#" class="logo">FROSTINE</a>
         <ul>
-            <li><a href="<?php echo URLROOT ?>/Customer/customerhomepage">Home</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="<?php echo URLROOT ?>Customer/customerproducts" class="active">Products</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerproducts" class="active">Products</a></li>
             <li><a href="#gallery">Gallery</a></li>
             <li><a href="#reviews">Reviews</a></li>
             <li><a href="#order">Pre Order</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-
         </ul>
         <div class="icons">
-            <i class="fas fa-shopping-cart" onclick="navigateTo('<?php echo URLROOT; ?>/Customer/customercart')"></i>
+            <i class="fas fa-shopping-cart" onclick="navigateTo('<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomercart')"></i>
         </div>
     </div>
 

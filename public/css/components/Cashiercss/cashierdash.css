@@ -216,13 +216,16 @@ canvas {
 }
 .recent-orders table th,
 .recent-orders table td {
-  padding: 12px;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-size: 14px;
 }
 .recent-orders table th {
-background-color: var(--secondary);
+background-color: var(--primary-color);
 color: var(--white);
 }
+
 .recent-orders tr:hover {
 background-color: rgba(0, 0, 0, 0.05);
 

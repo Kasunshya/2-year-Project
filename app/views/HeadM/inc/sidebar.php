@@ -22,7 +22,7 @@
             <li><a href="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder"><i class="fas fa-calendar-check"></i></a>
             </li>
             <li><a href="<?php echo URLROOT; ?>/HeadM/feedback"><i class="fas fa-comments"></i></a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
 

@@ -33,12 +33,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="color: #783b31;">Name</th>
-                            <th style="color: #783b31;">Address</th>
-                            <th style="color: #783b31;">Contacts</th>
-                            <th style="color: #783b31;">Join_Date</th>
-                            <th style="color: #783b31;">Branch Name</th>
-                            <th style="color: #783b31;">Action</th>
+                            <th >Name</th>
+                            <th >Address</th>
+                            <th >Contacts</th>
+                            <th >Join_Date</th>
+                            <th>Branch Name</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>

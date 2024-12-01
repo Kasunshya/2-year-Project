@@ -148,7 +148,7 @@
         }
 
         .btn:hover {
-            background: var(--secondary-color);
+            background: #783b31;
         }
 
         /* Feedback Modal */
@@ -274,7 +274,9 @@
 
         <!-- Buttons -->
         <div class="buttons">
-            <a href="index.html" class="btn">Back to Home</a>
+        <a href="<?php echo URLROOT ?>/Customer/customerhomepage" class="btn" style="text-align: center;">
+    Back to Home
+</a>
             <button class="btn" id="add-feedback-btn">Add Feedback</button>
         </div>
     </div>

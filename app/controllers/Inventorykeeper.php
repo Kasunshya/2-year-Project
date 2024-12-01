@@ -111,7 +111,7 @@ public function updateInventory() {
 
             // Update Inventory
             if ($this->InventoryModel->updateInventory($data)) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/v_viewinventory');
+                header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory');
                 exit;
             } else {
                 die('Something went wrong.');
@@ -140,6 +140,48 @@ public function updateInventory() {
 }
 
 // Delete Inventory
+/*public function deleteInventory() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        // Get the Inventory ID
+        $data = [
+            'delete_inventory_id' => trim($_POST['delete_inventory_id']),
+            'delete_inventory_id_err' => ''
+        ];
+
+        // Validate the Inventory ID
+        if (empty($data['delete_inventory_id'])) {
+            $data['delete_inventory_id_err'] = 'Please enter the Inventory ID.';
+        } elseif (!is_numeric($data['delete_inventory_id'])) {
+            $data['delete_inventory_id_err'] = 'Inventory ID must be numeric.';
+        }
+
+        // Check for errors
+        if (empty($data['delete_inventory_id_err'])) {
+            // Attempt to delete inventory
+            if ($this->InventoryModel->deleteInventory($data['delete_inventory_id'])) {
+                header('Location: ' . URLROOT . '/Inventorykeeper/deleteinventory');
+                exit;
+            } else {
+                die('Something went wrong.');
+            }
+        } else {
+            // Load view with errors
+            $this->view('Inventorykeeper/v_deleteinventory', $data);
+        }
+    } else {
+        // Load empty form
+        $data = [
+            'delete_inventory_id' => '',
+            'delete_inventory_id_err' => ''
+        ];
+
+        $this->view('Inventorykeeper/v_deleteinventory', $data);
+    }
+}*/
+// Delete Inventory
 public function deleteInventory() {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Sanitize POST data
@@ -162,7 +204,7 @@ public function deleteInventory() {
         if (empty($data['delete_inventory_id_err'])) {
             // Attempt to delete inventory
             if ($this->InventoryModel->deleteInventory($data['delete_inventory_id'])) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/manageInventory');
+                header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory');
                 exit;
             } else {
                 die('Something went wrong.');
@@ -178,9 +220,10 @@ public function deleteInventory() {
             'delete_inventory_id_err' => ''
         ];
 
-        $this->view('Inventorykeeper/v_deleteinventory', $data);
-    }
+        $this->view('Inventorykeeper/v_deleteinventory',$data);
 }
+}
+
 
 // View Inventory
 public function viewInventory() {

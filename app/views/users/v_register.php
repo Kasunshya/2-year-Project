@@ -11,9 +11,7 @@
         <div class="signup-section">
             <div class="logo">
                 <!-- Add your logo image here-->
-                <img src="<?php echo URLROOT;?>/img/login-signup/frostineLogo.png" alt="Logo" class="logo-image">
-                <h1>FROSTINE</h1>
-                <p>From Oven to Doorstep, Effortlessly YC</p>
+                <img src="<?php echo URLROOT;?>/img/login-signup/frostineLogo.png" alt="Logo" class="logo-image"><br><br>
             </div>
             <h2>Create an Account</h2>
             <form action="<?php echo URLROOT?>/Register/signup" method="POST">

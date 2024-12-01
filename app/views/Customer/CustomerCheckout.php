@@ -133,7 +133,7 @@
         }
 
         .checkout-btn:hover {
-            background: var(--secondary-color);
+            background:#783b31;
         }
 
         .secure-info {
@@ -186,7 +186,11 @@
                     <input type="text" id="cvv" name="cvv" placeholder="123" required>
                 </div>
             </div>
-            <button type="submit" class="checkout-btn">Checkout</button>
+            
+            <a href="<?php echo URLROOT ?>/Customer/customerfeedback" class="checkout-btn" style="text-align: center;">
+    Checkout
+</a>
+
         </form>
         <div class="secure-info">
             <p><i class="fas fa-lock"></i> Your payment is secure and encrypted.</p>

@@ -15,17 +15,15 @@
     <header class="header">
         <a href="#" class="logo">FROSTINE</a>
         <nav class="navbar">
-            <a href="<?php echo URLROOT;?>/customer/customerhomepage">Home</a></li>
+            <a href="<?php echo URLROOT;?>/UnregisteredCustomer/unregisteredcustomerhomepage">Home</a></li>
             <a href="#about">about</a>
-            <a href="<?php echo URLROOT ?>/customer/customerproducts">product</a>
+            <a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerproducts">product</a>
             <a href="#gallery">gallery</a>
             <a href="#review">review</a>
             <a href="#pre-order">pre order</a>
-            <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-        </nav>
+            </nav>
         <div class="icons">
-            <div id="cart-btn" class="fas fa-shopping-cart" onclick = "navigateTo('<?php echo URLROOT;?>/Customer/customercart')">
+            <div id="cart-btn" class="fas fa-shopping-cart" onclick = "navigateTo('<?php echo URLROOT;?>/UnregisteredCustomer/unregisteredcustomercart')">
         </div>
     </header>
 
@@ -41,7 +39,12 @@
                             Welcome to FROSTINE Bakery! Your One-Stop Destination for Freshly Baked Delights!
                         </h2>
                     <!-- Welcome Section -->
-                   
+                    <div class="welcome-section">
+                        <div class="home-buttons" style="gap: 7rem; margin-top: 2rem; display: flex; justify-content: center;">
+                            <a href="#" class="btn new-user">I'm a New User</a>
+                            <a href="#" class="btn existing-user">I'm Already a User</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
