@@ -58,13 +58,13 @@ class Login extends Controller {
                 header('Location: ' . URLROOT . '/BranchM/branchmdashboard');
                 break;
             case 'inventorykeeper':
-                header('Location: /dashboards/inventory_keeper');
+                header('Location: ' . URLROOT . '/Inventorykeeper/viewInventory');
                 break;
             case 'headmanager':
                 header('Location: ' . URLROOT . '/HeadM/dashboard');
                 break;
-            case 'systemadmin':
-                header('Location: /dashboards/system_admin');
+            case 'admin':
+                header('Location: ' . URLROOT . '/SysAdmin/dashboard');
                 break;
             default:
                 header('Location: /login/unauthorized');
