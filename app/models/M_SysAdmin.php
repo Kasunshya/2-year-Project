@@ -43,29 +43,27 @@ class M_SysAdmin {
 
     // Product Management Methods
     public function getAllProducts() {
-        $this->db->query('SELECT product_id, product_name, category, quantity, price FROM product');
+        $this->db->query('SELECT product_id, product_name, price, quantity, star_rating, created_at FROM product');
         return $this->db->resultSet();
     }
 
     public function addProduct($data) {
-        $this->db->query('INSERT INTO product (product_name, category, quantity, price) VALUES (:product_name, :category, :quantity, :price)');
+        $this->db->query('INSERT INTO product (product_name, price, quantity) VALUES (:product_name, :price, :quantity)');
         
         $this->db->bind(':product_name', $data['product_name']);
-        $this->db->bind(':category', $data['category']);
-        $this->db->bind(':quantity', $data['quantity']);
         $this->db->bind(':price', $data['price']);
+        $this->db->bind(':quantity', $data['quantity']);
 
         return $this->db->execute();
     }
 
     public function updateProduct($data) {
-        $this->db->query('UPDATE product SET product_name = :product_name, category = :category, quantity = :quantity, price = :price WHERE product_id = :id');
+        $this->db->query('UPDATE product SET product_name = :product_name, price = :price, quantity = :quantity WHERE product_id = :id');
         
         $this->db->bind(':id', $data['product_id']);
         $this->db->bind(':product_name', $data['product_name']);
-        $this->db->bind(':category', $data['category']);
-        $this->db->bind(':quantity', $data['quantity']);
         $this->db->bind(':price', $data['price']);
+        $this->db->bind(':quantity', $data['quantity']);
 
         return $this->db->execute();
     }

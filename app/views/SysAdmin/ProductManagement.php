@@ -16,10 +16,7 @@
             <div class="header">
                 <div class="user-info">
                     <div>
-                        <span>SystemAdministrator</span>
-                    </div>
-                    <div>
-                        <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
+                        <span>System Administrator</span>
                     </div>
                 </div>
             </div>
@@ -109,28 +106,29 @@
                                     <tr>
                                         <th>Product Id</th>
                                         <th>Product Name</th>
-                                        <th>Category</th>
-                                        <th>Quantity</th>
                                         <th>Price (Rs.)</th>
-                                        <th>Update/Delete</th>
+                                        <th>Quantity</th>
+                                        <th>Star Rating</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($data['products'] as $product): ?>
-                                        <tr data-id="<?php echo $product->product_id; ?>">
+                                        <tr>
                                             <td><?php echo $product->product_id; ?></td>
                                             <td><?php echo $product->product_name; ?></td>
-                                            <td><?php echo $product->category; ?></td>
-                                            <td><?php echo $product->quantity; ?></td>
                                             <td><?php echo $product->price; ?></td>
+                                            <td><?php echo $product->quantity; ?></td>
+                                            <td><?php echo $product->star_rating; ?></td>
+                                            <td><?php echo $product->created_at; ?></td>
                                             <td>
                                                 <button class="btn edit-btn" 
                                                     data-id="<?php echo $product->product_id; ?>"
                                                     data-name="<?php echo $product->product_name; ?>"
-                                                    data-category="<?php echo $product->category; ?>"
-                                                    data-quantity="<?php echo $product->quantity; ?>"
-                                                    data-price="<?php echo $product->price; ?>">
-                                                    Update
+                                                    data-price="<?php echo $product->price; ?>"
+                                                    data-quantity="<?php echo $product->quantity; ?>">
+                                                    Edit
                                                 </button>
                                                 <button class="btn delete-btn" 
                                                     data-id="<?php echo $product->product_id; ?>">

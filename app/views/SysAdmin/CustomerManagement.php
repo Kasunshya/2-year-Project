@@ -16,10 +16,7 @@
             <div class="header">
                 <div class="user-info">
                     <div>
-                        <span>SystemAdministrator</span>
-                    </div>
-                    <div>
-                        <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
+                        <span>System Administrator</span>
                     </div>
                 </div>
             </div>

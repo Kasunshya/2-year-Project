@@ -18,17 +18,14 @@
                     <div>
                         <span>SystemAdministrator</span>
                     </div>
-                    <div>
-                        <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/admin-profile.png" alt="User Avatar">
-                    </div>
                 </div>
             </div>
             <div class="dashboard">
-                <p><i class="fas fa-user"></i>&nbsp; User Management</p>
+                <p><i class="fas fa-user"></i>&nbsp; Employee Management</p>
             </div>
             <div class="table-elements">
                 <div class="role-details">
-                    <button class="btn add-new">+ Add New User</button>
+                    <button class="btn add-new">+ Add New Employee</button>
 
                     <!-- Add User Modal -->
                     <div id="customerModal" class="modal">

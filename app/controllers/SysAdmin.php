@@ -76,9 +76,8 @@ class SysAdmin extends Controller {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'product_name' => trim($_POST['product_name']),
-                'category' => trim($_POST['category']),
-                'quantity' => trim($_POST['quantity']),
-                'price' => trim($_POST['price'])
+                'price' => trim($_POST['price']),
+                'quantity' => trim($_POST['quantity'])
             ];
 
             if ($this->sysAdminModel->addProduct($data)) {
@@ -93,9 +92,8 @@ class SysAdmin extends Controller {
             $data = [
                 'product_id' => $_POST['product_id'],
                 'product_name' => trim($_POST['product_name']),
-                'category' => trim($_POST['category']),
-                'quantity' => trim($_POST['quantity']),
-                'price' => trim($_POST['price'])
+                'price' => trim($_POST['price']),
+                'quantity' => trim($_POST['quantity'])
             ];
 
             if ($this->sysAdminModel->updateProduct($data)) {
