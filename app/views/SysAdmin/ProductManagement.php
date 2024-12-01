@@ -9,26 +9,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i>Dashboard</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
-                <li><a href="#"><i class="fas fa-truck"></i>Product Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/CustomerManagement"><i class="fas fa-users"></i>Customer Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
-            </ul>
-            <div class="logo">
-            <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/logo.jpg" alt="Logo">
-            </div>
-            <div class="logout">
-                <button onclick="window.location.href='<?php echo URLROOT; ?>/logout'">Logout</button>
-            </div>
-        </div>
+        
+        <?php require_once APPROOT.'/views/SysAdmin/SideNavBar.php'; ?>
+
         <div class="sub-container-2">
             <div class="header">
                 <div class="user-info">
                     <div>
-                        <span>Danuka Kalhara</span>
                         <span>SystemAdministrator</span>
                     </div>
                     <div>

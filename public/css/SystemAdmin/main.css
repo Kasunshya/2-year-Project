@@ -14,7 +14,7 @@
 }
 
 /* Navigation Side Bar */
-
+/*
 .sidebar {
     width: 20%;
     background-color: #fff;
@@ -24,6 +24,7 @@
     padding-top: 150px;
     border-radius: 34px;
 }
+
 .sidebar .logo {
     text-align: center;
     margin-top: 30px;
@@ -80,12 +81,12 @@
 }
 .sidebar .logout button:hover {
     background-color: #b67d72;
-}
+} */
 
 .sub-container-2 {
     background-color: var(--bg);
     padding: 20px;
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 34px;
@@ -231,51 +232,119 @@ table td {
     width: 18px;
     height: 18px;
 }
+  .users {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+  }
 
+  .users:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .users h2 {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      margin-bottom: 20px;
+  }
+
+  .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      padding: 10px;
+  }
+
+  .team-member {
+      background: var(--white);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.3s;
+      box-shadow: var(--box-shadow);
+  }
+
+  .team-member:hover {
+      transform: translateY(-5px);
+  }
+
+  .team-member img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      border: 2px solid var(--primary-color);
+      margin-bottom: 10px;
+  }
+
+  .member-name {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--secondary);
+      font-weight: bold;
+      margin-bottom: 5px;
+  }
+
+  .member-role {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--primary-color);
+  }
 .products {
-    background-color: var(--bg);
+    background: var(--white);
+    padding: 30px;
+    border-radius: 8px;
     box-shadow: var(--box-shadow);
-    border-radius: 34px;
-    padding: 20px;
     margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.table {
-    background-color: rgb(255, 145, 0);
-    padding: 20px;
-    margin-bottom: 20px;
+.products:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .products h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #333;
+    font-size: 1.5rem;
+    color: var(--secondary);
+    margin-bottom: 20px;
 }
 
 .product-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
 }
 
 .item {
-    background-color: var(--bg);
-    box-shadow: var(--box-shadow);
-    border-radius: 34px;
-    padding: 20px;
-    margin-bottom: 20px;
-    width: 100px;
+    background: var(--bg);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.item:hover {
+    transform: translateY(-5px);
 }
 
 .item img {
-    border-radius: 10px;
-    margin: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .item p {
-    font-size: 14px;
-    color: #555;
-    padding-left: 1%;
+    color: var(--secondary);
+    font-size: 1rem;
+    margin: 0;
 }
-
 .summary {
     background-color: rgb(255, 145, 0);
     padding: 20px;
@@ -542,4 +611,36 @@ table td {
 .modal .submit {
     background-color: #4CAF50;
     color: white;
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+    font-size: 3rem;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.card p {
+    font-size: 1.2rem;
+    color: var(--secondary);
+    margin-top: 10px;
 }

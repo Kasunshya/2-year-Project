@@ -9,26 +9,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li><a href="#"><i class="fas fa-th"></i>Dashboard</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i>User Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-truck"></i>Product Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/CustomerManagement"><i class="fas fa-users"></i>Customer Management</a></li>
-                <li><a href="<?php echo URLROOT; ?>/SysAdmin/ViewOrders"><i class="fas fa-eye"></i>View Orders</a></li>
-            </ul>
-            <div class="logo">
-            <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/logo.jpg" alt="Logo">
-            </div>
-            <div class="logout">
-                <button onclick="window.location.href='<?php echo URLROOT; ?>/logout'">Logout</button>
-            </div>
-        </div>
+    
+        <?php require_once APPROOT.'/views/SysAdmin/SideNavBar.php'; ?>
+
         <div class="sub-container-2">
             <div class="header">
                 <div class="user-info">
                     <div>
-                        <span>Danuka Kalhara</span>
                         <span>System-Administrator</span>
                     </div>
                     <div>
@@ -43,39 +30,70 @@
                 <div class="body-elements-1">
                     <div class="users">
                         <h2>Team Members</h2>
-                            <div>
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Sachini">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Jerom">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Ann">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Maya">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Sachini">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Jerom">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Ann">
-                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Maya">
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team1.jpeg" alt="Sarah">
+                                <span class="member-name">Sarah Chen</span>
+                                <span class="member-role">UI Designer</span>
                             </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team2.jpg" alt="Jerome">
+                                <span class="member-name">Jerome Phillips</span>
+                                <span class="member-role">Developer</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Anna">
+                                <span class="member-name">Anna Smith</span>
+                                <span class="member-role">Project Manager</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team3.jpg" alt="Maya">
+                                <span class="member-name">Maya Patel</span>
+                                <span class="member-role">UX Designer</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team4.jpg" alt="David">
+                                <span class="member-name">David Kim</span>
+                                <span class="member-role">Backend Dev</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team5.jpg" alt="Lisa">
+                                <span class="member-name">Lisa Wang</span>
+                                <span class="member-role">Data Analyst</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team6.jpg" alt="Michael">
+                                <span class="member-name">Michael Torres</span>
+                                <span class="member-role">Frontend Dev</span>
+                            </div>
+                            <div class="team-member">
+                                <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Emma">
+                                <span class="member-name">Emma Wilson</span>
+                                <span class="member-role">QA Engineer</span>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="products">
                         <h2>Top Products</h2>
                         <div class="product-item">
                             <div class="item">
-                                <img src="https://via.placeholder.com/80" alt="Honey Waffles">
+                                <img src="<?php echo URLROOT; ?>/public/img/Customer/product-2.jpg" alt="Honey Waffles">
                                 <p>Honey Waffles</p>
                             </div>
                             <div class="item">
-                                <img src="https://via.placeholder.com/80" alt="Butter & Honey Bread">
+                                <img src="<?php echo URLROOT; ?>/public/img/Customer/product-3.jpg" alt="Butter & Honey Bread">
                                 <p>Butter & Honey Bread</p>
                             </div>
                             <div class="item">
-                                <img src="https://via.placeholder.com/80" alt="Strawberry Pancake">
+                                <img src="<?php echo URLROOT; ?>/public/img/Customer/product-6.jpg" alt="Strawberry Pancake">
                                 <p>Strawberry Pancake</p>
                             </div>
                             <div class="item">
-                                <img src="https://via.placeholder.com/80" alt="Honey Waffles">
+                                <img src="<?php echo URLROOT; ?>/public/img/Customer/product-2.jpg" alt="Honey Waffles">
                                 <p>Honey Waffles</p>
                             </div>
                             <div class="item">
-                                <img src="https://via.placeholder.com/80" alt="Butter & Honey Bread">
+                                <img src="<?php echo URLROOT; ?>/public/img/Customer/product-3.jpg" alt="Butter & Honey Bread">
                                 <p>Butter & Honey Bread</p>
                             </div>
                         </div>
