@@ -10,8 +10,7 @@
         <div class="login-section">
             <div class="logo">
                 <img src="<?php echo URLROOT;?>/img/login-signup/frostineLogo.png" alt="Logo" class="logo-image">
-                <h1>FROSTINE</h1>
-                <p>From Oven to Doorstep, Effortlessly YC</p>
+
             </div>
             <h2>Welcome Back!</h2>
             <?php if (!empty($loginError)) : ?>
