@@ -76,35 +76,37 @@ class M_SysAdmin {
 
     // User Management Methods
     public function getAllUsers() {
-        $this->db->query('SELECT employee_id, full_name, address, contact_no, user_role FROM employee');
+        $this->db->query('SELECT id, email, password, created_at, user_role FROM users');
         return $this->db->resultSet();
     }
-
+    
     public function addUser($data) {
-        $this->db->query('INSERT INTO employee (full_name, address, contact_no, user_role) VALUES (:full_name, :address, :contact_no, :user_role)');
+        $this->db->query('INSERT INTO users (email, password, user_role) VALUES (:email, :password, :user_role)');
         
-        $this->db->bind(':full_name', $data['full_name']);
-        $this->db->bind(':address', $data['address']);
-        $this->db->bind(':contact_no', $data['contact_no']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
         $this->db->bind(':user_role', $data['user_role']);
-
+    
         return $this->db->execute();
     }
-
+    
     public function updateUser($data) {
-        $this->db->query('UPDATE employee SET full_name = :full_name, address = :address, contact_no = :contact_no, user_role = :user_role WHERE employee_id = :id');
+        $passwordQuery = $data['password'] ? ', password = :password' : '';
+        $this->db->query('UPDATE users SET email = :email, user_role = :user_role' . $passwordQuery . ' WHERE id = :id');
         
-        $this->db->bind(':id', $data['employee_id']);
-        $this->db->bind(':full_name', $data['full_name']);
-        $this->db->bind(':address', $data['address']);
-        $this->db->bind(':contact_no', $data['contact_no']);
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':email', $data['email']);
         $this->db->bind(':user_role', $data['user_role']);
-
+        
+        if ($data['password']) {
+            $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        }
+    
         return $this->db->execute();
     }
-
+    
     public function deleteUser($id) {
-        $this->db->query('DELETE FROM employee WHERE employee_id = :id');
+        $this->db->query('DELETE FROM users WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }

@@ -33,17 +33,20 @@
                             <span class="close">&times;</span>
                             <h2>Add New User</h2>
                             <form action="<?php echo URLROOT; ?>/SysAdmin/addUser" method="POST">
-                                <label for="full_name">Full Name:</label>
-                                <input type="text" id="full_name" name="full_name" required>
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" required>
 
-                                <label for="address">Address:</label>
-                                <input type="text" id="address" name="address" required>
-
-                                <label for="contact_no">Contact No:</label>
-                                <input type="text" id="contact_no" name="contact_no" required>
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" required>
 
                                 <label for="user_role">User Role:</label>
-                                <input type="text" id="user_role" name="user_role" required>
+                                <select id="user_role" name="user_role" required>
+                                    <option value="cashier">Cashier</option>
+                                    <option value="inventorykeeper">Inventory Keeper</option>
+                                    <option value="branchmanager">Branch Manager</option>
+                                    <option value="headmanager">Head Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
 
                                 <div class="buttons">
                                     <button type="reset" class="btn reset">Reset</button>
@@ -57,24 +60,27 @@
                     <div id="editCustomerModal" class="modal">
                         <div class="modal-content">
                             <span class="close">&times;</span>
-                            <h2>Update User</h2>
-                            <form action="<?php echo URLROOT; ?>/SysAdmin/editUser" method="POST">
-                                <input type="hidden" id="edit_employee_id" name="employee_id">
+                            <h2>Edit User</h2>
+                            <form action="<?php echo URLROOT; ?>/SysAdmin/editUser" method="post">
+                                <input type="hidden" id="edit_id" name="id">
                                 
-                                <label for="edit_full_name">Full Name:</label>
-                                <input type="text" id="edit_full_name" name="full_name" required>
+                                <label for="edit_email">Email:</label>
+                                <input type="email" id="edit_email" name="email" required>
 
-                                <label for="edit_address">Address:</label>
-                                <input type="text" id="edit_address" name="address" required>
-
-                                <label for="edit_contact_no">Contact No:</label>
-                                <input type="text" id="edit_contact_no" name="contact_no" required>
+                                <label for="edit_password">Password:</label>
+                                <input type="password" id="edit_password" name="password" placeholder="Leave empty to keep current password">
 
                                 <label for="edit_user_role">User Role:</label>
-                                <input type="text" id="edit_user_role" name="user_role" required>
+                                <select id="edit_user_role" name="user_role" required>
+                                    <option value="cashier">Cashier</option>
+                                    <option value="inventorykeeper">Inventory Keeper</option>
+                                    <option value="branchmanager">Branch Manager</option>
+                                    <option value="headmanager">Head Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
 
                                 <div class="buttons">
-                                    <button type="submit" class="btn submit">Save Changes</button>
+                                    <button type="submit" name="edit_user" class="btn submit">Save Changes</button>
                                 </div>
                             </form>
                         </div>
@@ -107,36 +113,31 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Employee Id</th>
-                                        <th>Employee Name</th>
-                                        <th>Address</th>
-                                        <th>Contact No</th>
+                                        <th>User ID</th>
+                                        <th>Email</th>
                                         <th>User Role</th>
-                                        <th>Update/Delete</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($data['users'] as $user): ?>
-                                        <tr data-id="<?php echo $user->employee_id; ?>">
-                                            <td><?php echo $user->employee_id; ?></td>
-                                            <td><?php echo $user->full_name; ?></td>
-                                            <td><?php echo $user->address; ?></td>
-                                            <td><?php echo $user->contact_no; ?></td>
+                                        <tr>
+                                            <td><?php echo $user->id; ?></td>
+                                            <td><?php echo $user->email; ?></td>
                                             <td><?php echo $user->user_role; ?></td>
+                                            <td><?php echo $user->created_at; ?></td>
                                             <td>
                                                 <button class="btn edit-btn" 
-                                                    onclick="editUser(
-                                                        '<?php echo $user->employee_id; ?>', 
-                                                        '<?php echo $user->full_name; ?>', 
-                                                        '<?php echo $user->address; ?>', 
-                                                        '<?php echo $user->contact_no; ?>', 
-                                                        '<?php echo $user->user_role; ?>'
-                                                    )">
-                                                    Update
+                                                    onclick="editUser('<?php echo $user->id; ?>')"
+                                                    data-id="<?php echo $user->id; ?>"
+                                                    data-email="<?php echo $user->email; ?>"
+                                                    data-role="<?php echo $user->user_role; ?>">
+                                                    Edit
                                                 </button>
                                                 <button class="btn delete-btn" 
-                                                    data-id="<?php echo $user->employee_id; ?>"
-                                                    onclick="deleteUser(<?php echo $user->employee_id; ?>)">
+                                                    onclick="deleteUser('<?php echo $user->id; ?>')"
+                                                    data-id="<?php echo $user->id; ?>">
                                                     Delete
                                                 </button>
                                             </td>
