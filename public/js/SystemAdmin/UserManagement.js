@@ -155,6 +155,11 @@ function editUser(id) {
 }
 
 function deleteUser(id) {
+    // Show delete confirmation modal
+    const deleteModal = document.getElementById('deleteCustomerModal');
+    deleteModal.style.display = 'block';
     document.getElementById('delete_employee_id').value = id;
-    document.getElementById('deleteCustomerModal').style.display = 'block';
+    document.getElementById('confirmDelete').onclick = function() {
+        window.location.href = URLROOT + '/SysAdmin/deleteUser/' + id;
+    };
 }

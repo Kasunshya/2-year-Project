@@ -93,7 +93,7 @@
                             <h2>Delete User</h2>
                             <p>Are you sure you want to delete this user?</p>
                             <form action="<?php echo URLROOT; ?>/SysAdmin/deleteUser" method="POST">
-                                <input type="hidden" id="delete_employee_id" name="employee_id">
+                                <input type="hidden" id="delete_employee_id" name="id">
                                 <div class="buttons">
                                     <button type="submit" class="btn reset">Yes</button>
                                     <button type="button" class="btn submit" onclick="closeDeleteModal()">No</button>
@@ -136,7 +136,7 @@
                                                     Edit
                                                 </button>
                                                 <button class="btn delete-btn" 
-                                                    onclick="deleteUser('<?php echo $user->id; ?>')"
+                                                    onclick="deleteUser(<?php echo $user->id; ?>)"
                                                     data-id="<?php echo $user->id; ?>">
                                                     Delete
                                                 </button>
