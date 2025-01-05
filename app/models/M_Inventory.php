@@ -1,82 +1,57 @@
 <?php
-class M_Inventory
-{
+class M_Inventory {
     private $db;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = new Database();
     }
 
-    // Add Inventory
-    public function addinventory($data)
-    {
+    public function getInventory() {
+        $this->db->query('SELECT * FROM inventory');
+        return $this->db->resultSet();
+    }
+
+    public function getInventoryById($id) {
+        $this->db->query('SELECT * FROM inventory WHERE inventory_id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    public function addInventory($data) {
         $this->db->query('INSERT INTO inventory (name, quantity_available, Expiry_date, Price_per_kg) 
-                          VALUES(:name, :quantity_available, :Expiry_date, :Price_per_kg)');
+                          VALUES (:name, :quantity_available, :Expiry_date, :Price_per_kg)');
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':quantity_available', $data['quantity_available']);
         $this->db->bind(':Expiry_date', $data['Expiry_date']);
         $this->db->bind(':Price_per_kg', $data['Price_per_kg']);
-
-        // Execute query
-        return $this->db->execute();
+    
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            error_log('Database Error: ' . print_r($this->db->errorInfo(), true)); // Log detailed error
+            return false;
+        }
     }
+        
 
-    // Update Inventory
-    public function updateInventory($data)
-    {
+    public function updateInventory($data) {
         $this->db->query('UPDATE inventory 
-                      SET name = :name, 
-                          quantity_available = :quantity_available, 
-                          Price_per_kg = :Price_per_kg, 
-                          Expiry_date = :Expiry_date 
-                      WHERE inventory_id = :inventory_id');
-
-        // Bind values
-        $this->db->bind(':inventory_id', $data['inventory_id']);
+                          SET name = :name, 
+                              quantity_available = :quantity, 
+                              Price_per_kg = :price, 
+                              Expiry_date = :expiry_date 
+                          WHERE inventory_id = :id');
+        $this->db->bind(':id', $data['inventory_id']);
         $this->db->bind(':name', $data['update_inventory_name']);
-        $this->db->bind(':quantity_available', $data['update_quantity']);
-        $this->db->bind(':Price_per_kg', $data['update_price']);
-        $this->db->bind(':Expiry_date', $data['update_expiry_date']);
-
-        // Execute query
+        $this->db->bind(':quantity', $data['update_quantity']);
+        $this->db->bind(':price', $data['update_price']);
+        $this->db->bind(':expiry_date', $data['update_expiry_date']);
         return $this->db->execute();
     }
 
-
-    // Delete Inventory
-    public function deleteInventory($inventory_id)
-    {
+    public function deleteInventory($inventory_id) {
         $this->db->query('DELETE FROM inventory WHERE inventory_id = :inventory_id');
-
-        // Bind the inventory_id
         $this->db->bind(':inventory_id', $inventory_id);
-
-        // Execute the query
         return $this->db->execute();
-    }
-
-
-    // View Inventory
-    public function getInventory()
-    {
-        $this->db->query('SELECT * FROM inventory');
-
-        // Execute and fetch results
-        return $this->db->resultSet();
-    }
-
-    public function getInventoryStorageStats()
-    {
-        $this->db->query('SELECT 
-                        SUM(CASE WHEN quantity_available < 50 THEN 1 ELSE 0 END) AS low_storage,
-                        SUM(CASE WHEN quantity_available >= 50 THEN 1 ELSE 0 END) AS sufficient_storage
-                      FROM inventory');
-
-        // Execute and fetch single row
-        return $this->db->single();
-    }
-
-
 }
-?>
+}

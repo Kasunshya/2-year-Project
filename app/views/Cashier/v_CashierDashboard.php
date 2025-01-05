@@ -29,7 +29,6 @@
         <h7><i class="fas fa-home">&nbsp</i> Dashboard</h7>
         <div class="user-profile-header">
           <i class="fas fa-user avatar"></i>
-          <h7 class="username">John Doe</h7>
           <h7 class="role">Cashier</h7>
         </div>
       </div>

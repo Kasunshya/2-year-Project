@@ -1,248 +1,186 @@
 <?php
-class Inventorykeeper extends Controller {
-    private $InventoryModel;
+class InventoryKeeper extends Controller {
+    private $inventoryModel;
 
-    public function __construct() { 
-        // Load the Inventory Model
-        $this->InventoryModel = $this->model('M_Inventory');
+    public function __construct() {
+        $this->inventoryModel = $this->model('M_Inventory');
+    }
+public function index(){
+    $data = [
+        
+    ];
+    $this->view('Inventorykeeper/v_viewinventory');
+}
+    // View Inventory
+    public function viewinventory() {
+        $inventory = $this->inventoryModel->getInventory();
+        $data = ['inventory' => $inventory];
+        $this->view('Inventorykeeper/v_viewinventory', $data);
     }
 
-    // Add Inventory
     public function addinventory() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check what data is being receive
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
+    
             // Prepare data
             $data = [
                 'name' => trim($_POST['name']),
                 'quantity_available' => trim($_POST['quantity_available']),
-                'Price_per_kg' => trim($_POST['Price_per_kg']),
                 'Expiry_date' => trim($_POST['Expiry_date']),
+                'Price_per_kg' => trim($_POST['Price_per_kg']),
                 'name_err' => '',
                 'quantity_available_err' => '',
                 'Price_per_kg_err' => '',
                 'Expiry_date_err' => ''
             ];
-
-            // Validate inputs
+    
+            // Validate Inventory Name
             if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter a product name.';
+                $data['name_err'] = 'Inventory name is required.';
+            } elseif (strlen($data['name']) < 3) {
+                $data['name_err'] = 'Inventory name must be at least 3 characters.';
             }
-
-            if (empty($data['quantity_available']) || !is_numeric($data['quantity_available'])) {
-                $data['quantity_available_err'] = 'Please enter a valid quantity.';
+    
+            // Validate Quantity
+            if (empty($data['quantity_available'])) {
+                $data['quantity_available_err'] = 'Quantity is required.';
+            } elseif (!is_numeric($data['quantity_available']) || $data['quantity_available'] <= 0) {
+                $data['quantity_available_err'] = 'Quantity must be a positive number.';
             }
-
-            if (empty($data['Price_per_kg']) || !is_numeric($data['Price_per_kg'])) {
-                $data['Price_per_kg_err'] = 'Please enter a valid price.';
+    
+            // Validate Price
+            if (empty($data['Price_per_kg'])) {
+                $data['Price_per_kg_err'] = 'Price is required.';
+            } elseif (!is_numeric($data['Price_per_kg']) || $data['Price_per_kg'] <= 0) {
+                $data['Price_per_kg_err'] = 'Price must be a positive number.';
             }
-
+    
+            // Validate Expiry Date
             if (empty($data['Expiry_date'])) {
-                $data['Expiry_date_err'] = 'Please select an expiry date.';
+                $data['Expiry_date_err'] = 'Expiry date is required.';
+            } elseif (strtotime($data['Expiry_date']) < time()) {
+                $data['Expiry_date_err'] = 'Expiry date must be a future date.';
             }
-
-            // Check for errors
+    
+            // Check if all validations passed
             if (empty($data['name_err']) && empty($data['quantity_available_err']) && empty($data['Price_per_kg_err']) && empty($data['Expiry_date_err'])) {
                 // Add Inventory
-                if ($this->InventoryModel->addinventory($data)) {
-                    header('Location: ' . URLROOT . '/Inventorykeeper/addinventory');
+                if ($this->inventoryModel->addInventory($data)) {
+                    header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory?success=true');
                     exit;
                 } else {
                     die('Something went wrong.');
                 }
             } else {
-                // Load view with errors
+                // Reload the addinventory view with error messages
                 $this->view('Inventorykeeper/v_addinventory', $data);
             }
         } else {
-            // Load empty form
+            // Load the empty form
             $data = [
                 'name' => '',
                 'quantity_available' => '',
-                'Price_per_kg' => '',
                 'Expiry_date' => '',
+                'Price_per_kg' => '',
                 'name_err' => '',
                 'quantity_available_err' => '',
                 'Price_per_kg_err' => '',
                 'Expiry_date_err' => ''
             ];
+    
             $this->view('Inventorykeeper/v_addinventory', $data);
         }
     }
+    
 
     // Update Inventory
-public function updateInventory() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Sanitize POST data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    public function updateinventory($id = null) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-        // Prepare data
-        $data = [
-            'inventory_id' => trim($_POST['inventory_id']),
-            'update_inventory_name' => trim($_POST['update_inventory_name']),
-            'update_quantity' => trim($_POST['update_quantity']),
-            'update_price' => trim($_POST['update_price']),
-            'update_expiry_date' => trim($_POST['update_expiry_date']),
-            'inventory_id_err' => '',
-            'update_inventory_name_err' => '',
-            'update_quantity_err' => '',
-            'update_price_err' => '',
-            'update_expiry_date_err' => ''
-        ];
+            $data = [
+                'inventory_id' => $id,
+                'update_inventory_name' => trim($_POST['update_inventory_name']),
+                'update_quantity' => trim($_POST['update_quantity']),
+                'update_price' => trim($_POST['update_price']),
+                'update_expiry_date' => trim($_POST['update_expiry_date']),
+                'name_err' => '',
+                'quantity_err' => '',
+                'price_err' => '',
+                'expiry_date_err' => ''
+            ];
 
-        // Validate inputs
-        if (empty($data['inventory_id'])) {
-            $data['inventory_id_err'] = 'Please enter the Inventory ID.';
-        }
+            // Validate Inventory Name
+            if (empty($data['update_inventory_name'])) {
+                $data['name_err'] = 'Inventory name is required.';
+            } elseif (strlen($data['update_inventory_name']) < 3) {
+                $data['name_err'] = 'Inventory name must be at least 3 characters long.';
+            }
 
-        if (!empty($data['update_quantity']) && !is_numeric($data['update_quantity'])) {
-            $data['update_quantity_err'] = 'Quantity must be numeric.';
-        }
+            // Validate Quantity
+            if (empty($data['update_quantity'])) {
+                $data['quantity_err'] = 'Quantity is required.';
+            } elseif (!is_numeric($data['update_quantity']) || $data['update_quantity'] <= 0) {
+                $data['quantity_err'] = 'Quantity must be a positive number.';
+            }
 
-        if (!empty($data['update_price']) && !is_numeric($data['update_price'])) {
-            $data['update_price_err'] = 'Price must be numeric.';
-        }
+            // Validate Price
+            if (empty($data['update_price'])) {
+                $data['price_err'] = 'Price is required.';
+            } elseif (!is_numeric($data['update_price']) || $data['update_price'] <= 0) {
+                $data['price_err'] = 'Price must be a positive number.';
+            }
 
-        // Check for errors
-        if (empty($data['inventory_id_err']) && empty($data['update_inventory_name_err']) &&
-            empty($data['update_quantity_err']) && empty($data['update_price_err']) && 
-            empty($data['update_expiry_date_err'])) {
+            // Validate Expiry Date
+            if (empty($data['update_expiry_date'])) {
+                $data['expiry_date_err'] = 'Expiry date is required.';
+            } elseif (strtotime($data['update_expiry_date']) < time()) {
+                $data['expiry_date_err'] = 'Expiry date must be a future date.';
+            }
 
-            // Update Inventory
-            if ($this->InventoryModel->updateInventory($data)) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory');
-                exit;
+            // Check if all validations passed
+            if (empty($data['name_err']) && empty($data['quantity_err']) && empty($data['price_err']) && empty($data['expiry_date_err'])) {
+                if ($this->inventoryModel->updateInventory($data)) {
+                    header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory');
+                    exit;
+                } else {
+                    die('Something went wrong while updating the inventory.');
+                }
             } else {
-                die('Something went wrong.');
+                $data['inventory'] = $this->inventoryModel->getInventoryById($id);
+                $this->view('Inventorykeeper/v_updateinventory', $data);
             }
         } else {
-            // Load view with errors
+            $inventory = $this->inventoryModel->getInventoryById($id);
+
+            if (!$inventory) {
+                die('Inventory not found.');
+            }
+
+            $data = [
+                'inventory_id' => $id,
+                'update_inventory_name' => $inventory->name,
+                'update_quantity' => $inventory->quantity_available,
+                'update_price' => $inventory->Price_per_kg,
+                'update_expiry_date' => $inventory->Expiry_date,
+                'name_err' => '',
+                'quantity_err' => '',
+                'price_err' => '',
+                'expiry_date_err' => ''
+            ];
+
             $this->view('Inventorykeeper/v_updateinventory', $data);
         }
-    } else {
-        // Load empty form
-        $data = [
-            'inventory_id' => '',
-            'update_inventory_name' => '',
-            'update_quantity' => '',
-            'update_price' => '',
-            'update_expiry_date' => '',
-            'inventory_id_err' => '',
-            'update_inventory_name_err' => '',
-            'update_quantity_err' => '',
-            'update_price_err' => '',
-            'update_expiry_date_err' => ''
-        ];
-
-        $this->view('Inventorykeeper/v_updateinventory', $data);
     }
-}
 
-// Delete Inventory
-/*public function deleteInventory() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Sanitize POST data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-        // Get the Inventory ID
-        $data = [
-            'delete_inventory_id' => trim($_POST['delete_inventory_id']),
-            'delete_inventory_id_err' => ''
-        ];
-
-        // Validate the Inventory ID
-        if (empty($data['delete_inventory_id'])) {
-            $data['delete_inventory_id_err'] = 'Please enter the Inventory ID.';
-        } elseif (!is_numeric($data['delete_inventory_id'])) {
-            $data['delete_inventory_id_err'] = 'Inventory ID must be numeric.';
-        }
-
-        // Check for errors
-        if (empty($data['delete_inventory_id_err'])) {
-            // Attempt to delete inventory
-            if ($this->InventoryModel->deleteInventory($data['delete_inventory_id'])) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/deleteinventory');
-                exit;
-            } else {
-                die('Something went wrong.');
-            }
+    // Delete Inventory
+    public function deleteinventory($inventory_id) {
+        if ($this->inventoryModel->deleteInventory($inventory_id)) {
+            header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory?success=true');
         } else {
-            // Load view with errors
-            $this->view('Inventorykeeper/v_deleteinventory', $data);
-        }
-    } else {
-        // Load empty form
-        $data = [
-            'delete_inventory_id' => '',
-            'delete_inventory_id_err' => ''
-        ];
-
-        $this->view('Inventorykeeper/v_deleteinventory', $data);
-    }
-}*/
-// Delete Inventory
-public function deleteInventory() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Sanitize POST data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-        // Get the Inventory ID
-        $data = [
-            'delete_inventory_id' => trim($_POST['delete_inventory_id']),
-            'delete_inventory_id_err' => ''
-        ];
-
-        // Validate the Inventory ID
-        if (empty($data['delete_inventory_id'])) {
-            $data['delete_inventory_id_err'] = 'Please enter the Inventory ID.';
-        } elseif (!is_numeric($data['delete_inventory_id'])) {
-            $data['delete_inventory_id_err'] = 'Inventory ID must be numeric.';
-        }
-
-        // Check for errors
-        if (empty($data['delete_inventory_id_err'])) {
-            // Attempt to delete inventory
-            if ($this->InventoryModel->deleteInventory($data['delete_inventory_id'])) {
-                header('Location: ' . URLROOT . '/Inventorykeeper/viewinventory');
-                exit;
-            } else {
-                die('Something went wrong.');
-            }
-        } else {
-            // Load view with errors
-            $this->view('Inventorykeeper/v_deleteinventory', $data);
-        }
-    } else {
-        // Load empty form
-        $data = [
-            'delete_inventory_id' => '',
-            'delete_inventory_id_err' => ''
-        ];
-
-        $this->view('Inventorykeeper/v_deleteinventory',$data);
+            die('Something went wrong');
 }
 }
-
-
-// View Inventory
-public function viewInventory() {
-    // Fetch inventory data
-    $inventory = $this->InventoryModel->getInventory();
-
-    // Fetch storage statistics
-    $stats = $this->InventoryModel->getInventoryStorageStats();
-
-    // Prepare data for the view
-    $data = [
-        'inventory' => $inventory,
-        'low_storage' => $stats->low_storage,
-        'sufficient_storage' => $stats->sufficient_storage,
-    ];
-
-    // Load the view
-    $this->view('Inventorykeeper/v_viewinventory', $data);
-}
-
-
 }

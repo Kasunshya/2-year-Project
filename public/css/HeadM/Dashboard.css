@@ -5,7 +5,9 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: var(--box-shadow);
-    
+    margin-top: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 100px);
 }
 
 .overview {

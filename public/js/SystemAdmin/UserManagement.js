@@ -33,32 +33,26 @@ window.onclick = function(event) {
 }
 
 // Form validation function
-function validateForm(fullName, address, contactNo, userRole) {
+function validateForm(email, password, userRole) {
     let isValid = true;
     let errorMessage = "";
 
-    // Name validation (only letters and spaces)
-    if (!/^[a-zA-Z\s]+$/.test(fullName)) {
-        errorMessage += "Full name should only contain letters and spaces\n";
+    // Email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorMessage += "Please enter a valid email address\n";
         isValid = false;
     }
 
-    // Address validation (minimum length)
-    if (address.trim().length < 5) {
-        errorMessage += "Address should be at least 5 characters long\n";
+    // Password validation (if provided)
+    if (password && password.length < 6) {
+        errorMessage += "Password must be at least 6 characters long\n";
         isValid = false;
     }
 
-    // Contact number validation (10 digits)
-    if (!/^\d{10}$/.test(contactNo)) {
-        errorMessage += "Contact number should be exactly 10 digits\n";
-        isValid = false;
-    }
-
-    // User role validation (specific roles only)
-    const validRoles = ['admin', 'manager', 'employee', 'cashier'];
+    // User role validation
+    const validRoles = ['cashier', 'inventorykeeper', 'branchmanager', 'headmanager', 'admin'];
     if (!validRoles.includes(userRole.toLowerCase())) {
-        errorMessage += "Invalid user role. Please select a valid role\n";
+        errorMessage += "Invalid user role selected\n";
         isValid = false;
     }
 
@@ -148,20 +142,24 @@ document.addEventListener('DOMContentLoaded', function() {
     attachDeleteListeners();
 });
 
-function deleteUser(id) {
-    document.getElementById('delete_employee_id').value = id;
-    document.getElementById('deleteCustomerModal').style.display = 'block';
-}
-
 function closeDeleteModal() {
     document.getElementById('deleteCustomerModal').style.display = 'none';
 }
 
-function editUser(id, name, address, contact, role) {
-    document.getElementById('edit_employee_id').value = id;
-    document.getElementById('edit_full_name').value = name;
-    document.getElementById('edit_address').value = address;
-    document.getElementById('edit_contact_no').value = contact;
-    document.getElementById('edit_user_role').value = role;
+function editUser(id) {
+    const button = document.querySelector(`button[data-id="${id}"]`);
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_email').value = button.getAttribute('data-email');
+    document.getElementById('edit_user_role').value = button.getAttribute('data-role');
     document.getElementById('editCustomerModal').style.display = 'block';
+}
+
+function deleteUser(id) {
+    const deleteModal = document.getElementById('deleteCustomerModal');
+    deleteModal.style.display = 'block';
+    document.getElementById('delete_employee_id').value = id;
+    document.getElementById('deleteCustomerModal').style.display = 'block';
+    document.getElementById('confirmDelete').onclick = function() {
+        window.location.href = URLROOT + '/SysAdmin/deleteUser/' + id;
+    };
 }

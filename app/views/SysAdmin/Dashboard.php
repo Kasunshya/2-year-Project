@@ -31,42 +31,42 @@
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team1.jpeg" alt="Sarah">
                                 <span class="member-name">Sarah Chen</span>
-                                <span class="member-role">UI Designer</span>
+                                <!-- <span class="member-role">UI Designer</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team2.jpg" alt="Jerome">
                                 <span class="member-name">Jerome Phillips</span>
-                                <span class="member-role">Developer</span>
+                                <!-- <span class="member-role">Developer</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Anna">
                                 <span class="member-name">Anna Smith</span>
-                                <span class="member-role">Project Manager</span>
+                                <!-- <span class="member-role">Project Manager</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team3.jpg" alt="Maya">
                                 <span class="member-name">Maya Patel</span>
-                                <span class="member-role">UX Designer</span>
+                                <!-- <span class="member-role">UX Designer</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team4.jpg" alt="David">
                                 <span class="member-name">David Kim</span>
-                                <span class="member-role">Backend Dev</span>
+                                <!-- <span class="member-role">Backend Dev</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team5.jpg" alt="Lisa">
                                 <span class="member-name">Lisa Wang</span>
-                                <span class="member-role">Data Analyst</span>
+                                <!-- <span class="member-role">Data Analyst</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/team6.jpg" alt="Michael">
                                 <span class="member-name">Michael Torres</span>
-                                <span class="member-role">Frontend Dev</span>
+                                <!-- <span class="member-role">Frontend Dev</span> -->
                             </div>
                             <div class="team-member">
                                 <img src="<?php echo URLROOT; ?>/public/img/SysAdmin/user-profile.jpg" alt="Emma">
                                 <span class="member-name">Emma Wilson</span>
-                                <span class="member-role">QA Engineer</span>
+                                <!-- <span class="member-role">QA Engineer</span> -->
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,37 @@
 
                 </div>
                 <div class="calendar">
-                    <p>Calendar is placed here</p>
+                    <h2>Holiday Dates</h2>
+                    <div class="calendar-cards">
+                        <div class="date-card">
+                            <h3>January</h3>
+                            <ul>
+                                <li>1st - New Year's Day</li>
+                                <li>14th - Thai Pongal</li>
+                            </ul>
+                        </div>
+                        <div class="date-card">
+                            <h3>April</h3>
+                            <ul>
+                                <li>13th - Sinhala New Year</li>
+                                <li>14th - Good Friday</li>
+                            </ul>
+                        </div>
+                        <div class="date-card">
+                            <h3>May</h3>
+                            <ul>
+                                <li>1st - Labor Day</li>
+                                <li>5th - Vesak Full Moon</li>
+                            </ul>
+                        </div>
+                        <div class="date-card">
+                            <h3>December</h3>
+                            <ul>
+                                <li>25th - Christmas</li>
+                                <li>31st - New Year's Eve</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

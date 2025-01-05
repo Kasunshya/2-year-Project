@@ -1,24 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Vidaloka&display=swap');
 :root {
     --primary-color: #c98d83;
     --secondary-color: #783b31;
     --background-color: #f2f1ec;
+    --sidebar-color: #783b31;
     --white-color: #ffffff;
     --text-color: #333333;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* General Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body, html {
     font-family: 'Arial', sans-serif;
     background-color: var(--background-color);
-    color: var(--text-color);
+    margin: 0;
+    padding: 0;
     height: 100%;
 }
 
@@ -27,32 +22,59 @@ body, html {
     min-height: 100vh;
 }
 
+/* Sidebar Styles */
+.sidebar {
+    background-color: var(--sidebar-color);
+    color: var(--white-color);
+    width: 250px;
+    padding: 20px;
+    height: 100vh;
+    box-shadow: var(--box-shadow);
+}
+
+.sidebar-header {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    margin: 10px 0;
+}
+
+.sidebar-menu li a {
+    color: var(--white-color);
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px;
+}
 
 /* Main Content */
 main {
-    margin-left: 200px;
-    padding: 20px;
     flex: 1;
+    padding: 20px;
     background-color: var(--background-color);
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 20px;
     background-color: var(--primary-color);
     color: var(--white-color);
-    border-radius: 5px 5px 5px 5px;
-    margin-bottom: 30px;
+    padding: 20px;
+    margin-left:110px;
+    border-radius: 5px;
+    margin-bottom: 20px;
     box-shadow: var(--box-shadow);
-    position: fixed;
-    top: 0;
-    left: 0px;
-    right: 0;
-    z-index: 1000;
-    margin-left: 120px;
-    margin-right: 50px;
+    margin-top: 5px;
 }
 
 .header h1 {
@@ -66,48 +88,37 @@ main {
     text-decoration: none;
 }
 
-.header h1 i {
-    margin-right: 10px;
-}
-
 .header .user-info {
     text-align: right;
-    font-size: 1rem;
-    color: var(--white-color);
 }
 
 /* Content Section */
-section {
-    padding-top: 120px;
-}
-
 .content-container {
     display: flex;
-    /*justify-content: space-between;*/
+    flex-direction: column;
+    align-items: center;
     gap: 20px;
-    flex-wrap: wrap;
+    margin-left: 200px;
+    margin-right: 180px;
+
 }
 
 .chart-container {
-    width: 45%;
+    width: 500px;
     background-color: var(--white-color);
     padding: 20px;
     border-radius: 10px;
     box-shadow: var(--box-shadow);
-}
-
-.chart-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--secondary-color);
 }
 
 .inventory-table-container {
-    width: 50%;
+    width: 90%;
     background-color: var(--white-color);
     padding: 20px;
     border-radius: 10px;
     box-shadow: var(--box-shadow);
+    margin-left: 130px;
+    margin-right:20px;
 }
 
 .inventory-table {
@@ -127,5 +138,5 @@ section {
 }
 
 .inventory-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f9f9f9;
 }

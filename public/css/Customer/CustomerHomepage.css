@@ -265,7 +265,7 @@ section {
 
 .product .box-container{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem,1fr));
+  grid-template-columns: repeat(3,1fr);
   gap: 2rem;
 }
 
@@ -277,6 +277,7 @@ section {
   overflow: hidden;
   text-align: center;
 }
+
 
 .product .box-container .box .image{
   height: 35rem;
@@ -323,7 +324,7 @@ section {
 
 .gallery .gallery-container{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 

@@ -16,7 +16,7 @@
     <div class="container">
         <!-- Sidebar -->
         <?php require_once APPROOT . '/views/HeadM/inc/sidebar.php'; ?>
-        </aside>
+        
 
         <!-- Main Content -->
         <main>
