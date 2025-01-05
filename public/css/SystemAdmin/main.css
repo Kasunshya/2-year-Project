@@ -74,8 +74,9 @@
 }
 
 .body-elements-1 {
-    background-color: var(--bg);
+    background-color: var(--white);
     border-radius: 34px;
+    margin-left: 15px;
     width: 80%;
     padding: 20px;
     display: flex;
@@ -298,15 +299,54 @@ table td {
     font-size: 14px;
     color: #888;
 }
+  .calendar {
+      background: var(--white);
+      padding: 20px;
+      margin-left: 40px;
+      border-radius: 34px;
+      box-shadow: var(--box-shadow);
+  }
 
-.calendar {
-    background-color: var(--bg);
-    box-shadow: var(--box-shadow);
-    border-radius: 34px;
-    width: 20%;
-    padding: 20px;
-}
+  .calendar h2 {
+      color: var(--secondary);
+      margin-bottom: 20px;
+      text-align: center;
+  }
 
+  .calendar-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+  }
+
+  .date-card {
+      background: var(--bg);
+      padding: 15px;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+  }
+
+  .date-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--box-shadow);
+  }
+
+  .date-card h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 18px;
+  }
+
+  .date-card ul {
+      list-style: none;
+      padding: 0;
+  }
+
+  .date-card li {
+      color: var(--secondary);
+      padding: 5px 0;
+      font-size: 14px;
+  }
 /* Newly Adding */
 
 .form-container {
@@ -572,4 +612,37 @@ table td {
     font-size: 1.2rem;
     color: var(--secondary);
     margin-top: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: var(--white);
+    font-size: 14px;
+    color: var(--secondary);
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: var(--primary-color);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(201, 141, 131, 0.3);
+}
+
+select option {
+    padding: 10px;
+    background-color: var(--white);
+    color: var(--secondary);
+}
+
+select option:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
 }

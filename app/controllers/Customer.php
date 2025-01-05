@@ -5,7 +5,6 @@ class Customer extends Controller {
         
     }
 
-
     public function customerhomepage(){
         $data = [];
 

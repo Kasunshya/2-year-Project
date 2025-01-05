@@ -53,6 +53,7 @@
             left: 140px; /* Align with the sidebar */
             right: 0;
             z-index: 1000;
+            margin-right: 60px;
         }
 
         .header h1 {
@@ -135,4 +136,3 @@
         .add-inventory-form button:hover {
             background-color: var(--secondary-color);
         }
-    

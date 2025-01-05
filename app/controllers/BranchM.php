@@ -48,7 +48,9 @@ class BranchM extends Controller {
             // Validate inputs
             if (empty($data['cashier_name'])) $data['cashier_name_err'] = 'Cashier name is required';
             if (empty($data['email'])) $data['email_err'] = 'Email is required';
-            if (empty($data['password'])) $data['password_err'] = 'Password is required';
+            //if (empty($data['password'])) $data['password_err'] = 'Password is required';
+
+
 
             if (empty($data['cashier_name_err']) && empty($data['email_err']) && empty($data['password_err'])) {
                 // Add user to users table

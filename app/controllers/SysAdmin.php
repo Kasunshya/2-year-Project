@@ -124,40 +124,37 @@ class SysAdmin extends Controller {
     public function addUser() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
-                'full_name' => trim($_POST['full_name']),
-                'address' => trim($_POST['address']),
-                'contact_no' => trim($_POST['contact_no']),
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
                 'user_role' => trim($_POST['user_role'])
             ];
-
+    
             if ($this->sysAdminModel->addUser($data)) {
-                echo "<script>alert('User added successfully!');</script>";
-                $this->redirect('SysAdmin/UserManagement');
+                redirect('SysAdmin/userManagement');
             }
         }
     }
-
+    
     public function editUser() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
-                'employee_id' => $_POST['employee_id'],
-                'full_name' => trim($_POST['full_name']),
-                'address' => trim($_POST['address']),
-                'contact_no' => trim($_POST['contact_no']),
+                'id' => $_POST['id'],
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
                 'user_role' => trim($_POST['user_role'])
             ];
-
+    
             if ($this->sysAdminModel->updateUser($data)) {
-                $this->redirect('SysAdmin/UserManagement');
+                redirect('SysAdmin/userManagement');
             }
         }
     }
 
     public function deleteUser() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id = $_POST['employee_id'];
+            $id = $_POST['id'];
             if ($this->sysAdminModel->deleteUser($id)) {
-                echo "<script>alert('User deleted successfully!');</script>";
+                echo "<script>alert('Employee deleted successfully!');</script>";
                 $this->redirect('SysAdmin/UserManagement');
             }
         }

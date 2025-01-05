@@ -6,11 +6,8 @@
     </div>
     <nav>
         <ul>
-            <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/viewinventory"><i class="fas fa-tachometer-alt"></i></a>
-            </li>
+            <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/viewinventory"><i class="fas fa-tachometer-alt"></i></a></li>          
             <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/addinventory"><i class="fas fa-warehouse"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/updateinventory"><i class="fas fa-edit"></i></a></li>        
-            <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/deleteinventory"><i class="fas fa-trash"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
@@ -33,9 +30,7 @@
             // Map of icons to labels
             const labelMap = {
                 'fa-tachometer-alt': 'Dashboard',
-                'fa-warehouse': 'Add  Inventory',
-                'fa-birthday-edit': 'Update Inventory',
-                'fa-trash': 'Delete Inventory',
+                'fa-warehouse': 'Add Inventory',
                 'fa-sign-out-alt': 'Logout'
             };
 
@@ -90,5 +85,5 @@
                 alert('Logout functionality to be implemented');
             });
         }
-    });
+});
 </script>

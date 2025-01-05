@@ -23,6 +23,8 @@
             <a href="#pre-order">pre order</a>
             <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
             <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
+            <a href="<?php echo URLROOT ?>/Login/logout">Log Out</a></li>
+
         </nav>
         <div class="icons">
             <div id="cart-btn" class="fas fa-shopping-cart" onclick = "navigateTo('<?php echo URLROOT;?>/Customer/customercart')">
@@ -442,7 +444,7 @@
             </div>
             <div class="box">
                 <h3>E-mail</h3>
-                <a href="#" class="link">frostinebakery@gmail.com</a>
+                <a href="#" style="color: #c98d83"class="link">frostinebakery@gmail.com</a>
             </div>
             <div class="box">
                 <h3>call us</h3>

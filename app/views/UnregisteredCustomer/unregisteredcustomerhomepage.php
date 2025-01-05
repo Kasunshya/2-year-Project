@@ -41,8 +41,8 @@
                     <!-- Welcome Section -->
                     <div class="welcome-section">
                         <div class="home-buttons" style="gap: 7rem; margin-top: 2rem; display: flex; justify-content: center;">
-                            <a href="#" class="btn new-user">I'm a New User</a>
-                            <a href="#" class="btn existing-user">I'm Already a User</a>
+                            <a href="<?php echo URLROOT ?>/Register/signup" class="btn new-user">I'm a New User</a>
+                            <a href="<?php echo URLROOT ?>/Login/indexx" class="btn existing-user">I'm Already a User</a>
                         </div>
                     </div>
                 </div>
@@ -445,7 +445,7 @@
             </div>
             <div class="box">
                 <h3>E-mail</h3>
-                <a href="#" class="link">frostinebakery@gmail.com</a>
+                <a href="#" style="color: #c98d83"  class="link">frostinebakery@gmail.com</a>
             </div>
             <div class="box">
                 <h3>call us</h3>
