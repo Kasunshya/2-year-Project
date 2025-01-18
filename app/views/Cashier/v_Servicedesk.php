@@ -18,7 +18,7 @@
     
     <div class="main-content">
       <div class="search-container">
-          <input type="text" id="searchInput" placeholder="Search products..." oninput="searchProducts()">
+          <input type="text" id="searchInput" placeholder="Search products...">
       </div>
 
       <table class="product-table" id="productTable">
@@ -33,7 +33,25 @@
               </tr>
           </thead>
           <tbody>
-              
+          <?php if (!empty($data['products'])): ?>
+        <?php foreach ($data['products'] as $product): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                <td><?php echo htmlspecialchars($product->category); ?></td>
+                <td><?php echo htmlspecialchars($product->availability); ?></td>
+                <td><?php echo number_format($product->price, 2); ?></td>
+                <td><input type="number" value="1" min="1" data-product="<?php echo $product->product_name; ?>"></td>
+                <td>
+                <button onclick="addToOrder('<?php echo htmlspecialchars($product->product_name); ?>', <?php echo $product->price; ?>)">+</button>
+                <button onclick="removeFromOrder('<?php echo htmlspecialchars($product->product_name); ?>')">-</button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="6">No products available.</td>
+        </tr>
+    <?php endif; ?>
           </tbody>
       </table>
 
@@ -99,6 +117,7 @@
           </div>
       </div>
   </div>
-  <script src="<?php echo URLROOT; ?>/public/js/Cashier/SeviceDesk.js"></script>
+  <!--script src="<!-?php echo URLROOT; ?>/public/js/Cashier/SeviceDesk.js"></script-->
+  <script src="<?php echo URLROOT; ?>/public/js/Cashier/ServiceDesk.js"></script>
 
 </body>

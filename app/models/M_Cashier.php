@@ -73,7 +73,58 @@ public function deleteCashier($cashier_id) {
         return false;
     }
 }
+//fetch from db
+public function getProducts() {
+    try {
+        $this->db->query("
+            SELECT 
+                p.product_name, 
+                c.name AS category, 
+                bs.quantity AS availability, 
+                p.price 
+            FROM 
+                product p
+            JOIN 
+                category c ON p.category_id = c.category_id
+            JOIN 
+                branchstock bs ON p.product_id = bs.product_id
+        ");
+        return $this->db->resultSet();
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return [];
+    }
+}
 
+// searchbar
+public function searchProducts($searchTerm) {
+    try {
+        $this->db->query("
+            SELECT 
+                p.product_name, 
+                c.name AS category, 
+                bs.quantity AS availability, 
+                p.price 
+            FROM 
+                product p
+            JOIN 
+                category c ON p.category_id = c.category_id
+            JOIN 
+                branchstock bs ON p.product_id = bs.product_id
+            WHERE 
+                p.product_name LIKE :searchTerm 
+                OR c.name LIKE :searchTerm
+        ");
+        
+        $searchTerm = "%$searchTerm%";
+        $this->db->bind(':searchTerm', $searchTerm);
+        
+        return $this->db->resultSet();
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return [];
+    }
+}
 
 }
 ?>
