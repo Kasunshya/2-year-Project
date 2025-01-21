@@ -15,225 +15,109 @@
         </div>
       </div>
     </header>
-    <div class="search-container">
-      <input type="text" placeholder="Search..." class="search-input">
-      <button class="search-button"><i class="fas fa-search"></i></button>
-    </div>
-    <!-- Main Content -->
-<div class="main-content">
-    <!-- Product Grid -->
-    <h1 class="product-header">Bread</h1>
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b1.jpg" alt="Hazelnut Cake">
-                    <h3>oft Bun</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
+    
+    <div class="main-content">
+      <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search products...">
+      </div>
 
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b2.jpg" alt="Rose Pink Cake">
-                    <h3>Brown Bread</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b3.jpg" alt="Ice Cream Cake">
-                    <h3>White Bread</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b4.jpg" alt="Rainbow Cake">
-                    <h3>Choco Bread</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b5.jpg" alt="Red Velvet Cake">
-                    <h3>Garlic Bread</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/b6.jpg" alt="Chocolate Cake">
-                    <h3>Ciabatta</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div><br>
-            <div>
-            <h1 class="product-header">Cake</h1>
-                <!-- Product Grid -->
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d1.jpg" alt="Hazelnut Cake">
-                    <h3>Hazelnut Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d2.jpeg" alt="Rose Pink Cake">
-                    <h3>Rose Pink Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d3.jpeg" alt="Ice Cream Cake">
-                    <h3>Red Velvet Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d4.jpeg" alt="Rainbow Cake">
-                    <h3>Ice Cream Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d5.jpeg" alt="Red Velvet Cake">
-                    <h3>Ranibow Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/d6.jpeg" alt="Chocolate Cake">
-                    <h3>Chocolate Cake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <h1 class="product-header">Waffels</h1>
-                <!-- Product Grid -->
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w1.jpg" alt="Hazelnut Cake">
-                    <h3>Red Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w2.jpg" alt="Rose Pink Cake">
-                    <h3>Honey Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w3.jpg" alt="Ice Cream Cake">
-                    <h3>Savory Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w4.jpg" alt="Rainbow Cake">
-                    <h3>Fruit Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w5.jpg" alt="Red Velvet Cake">
-                    <h3>Strawberry Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/w6.jpg" alt="Chocolate Cake">
-                    <h3>Wipp CReam Woffel</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <h1 class="product-header">Pancake</h1>
-                <!-- Product Grid -->
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p1.jpg" alt="Hazelnut Cake">
-                    <h3>Red Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                    
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p2.jpg" alt="Rose Pink Cake">
-                    <h3>Mocha Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p3.jpg" alt="Ice Cream Cake">
-                    <h3>Blue Berry Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p4.jpg" alt="Rainbow Cake">
-                    <h3>Banana Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p6.jpg" alt="Red Velvet Cake">
-                    <h3>Sweet Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-                <div class="product-card">
-                    <img src="<?php echo URLROOT;?>/img/CashierImg/p7.jpg" alt="Chocolate Cake">
-                    <h3>Chocolate Pancake</h3>
-                    <p>LKR 9550.00</p>
-                    <button class="minus-btn"><i class="fas fa-minus"></i></button>
-                    <button>Add</button>
-                    <button class="plus-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            </div>
+      <table class="product-table" id="productTable">
+          <thead>
+              <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Availability</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+          <?php if (!empty($data['products'])): ?>
+        <?php foreach ($data['products'] as $product): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                <td><?php echo htmlspecialchars($product->category); ?></td>
+                <td><?php echo htmlspecialchars($product->availability); ?></td>
+                <td><?php echo number_format($product->price, 2); ?></td>
+                <td><input type="number" value="1" min="1" data-product="<?php echo $product->product_name; ?>"></td>
+                <td>
+                <button onclick="addToOrder('<?php echo htmlspecialchars($product->product_name); ?>', <?php echo $product->price; ?>)">+</button>
+                <button onclick="removeFromOrder('<?php echo htmlspecialchars($product->product_name); ?>')">-</button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="6">No products available.</td>
+        </tr>
+    <?php endif; ?>
+          </tbody>
+      </table>
+
+      <div class="order-section">
+          <h3>Order</h3>
+          <ul class="order-list" id="orderList"></ul>
+          <div class="discount-container">
+              <label for="discountSelect">Discount:</label>
+              <select id="discountSelect" onchange="applyDiscount()">
+                  <option value="0">None</option>
+                  <option value="10">10%</option>
+                  <option value="20">20%</option>
+              </select>
+              <input type="number" id="customDiscountInput" placeholder="Custom Discount" oninput="applyCustomDiscount()">
+          </div>
+
+          <div class="order-actions">
+              <button class="checkout-btn" onclick="checkout()">Checkout</button>
+              <button class="new-order-btn" onclick="newOrder()">New Order</button>
+              <button class="checkout-btn" onclick="generatePDF()">Generate PDF</button>
+
+          </div>
+      </div>
+      <a href="order_details.php" class="view-orders-btn">View Orders</a>
+      
+      <div class="modal" id="billSummaryModal">
+        <div class="modal-content">
+            <h3>Bill Summary</h3>
+            <ul id="billSummaryList"></ul>
+            <p id="billTotal" style="font-weight: bold;"></p>
+    
+            <button class="payment-btn" onclick="showPaymentOptions()">Next</button>
+            <button class="close-btn" onclick="closeBillModal()">Close</button>
         </div>
     </div>
+    
+
+      <!-- Modal for Payment -->
+      <div class="modal" id="paymentModal">
+          <div class="modal-content">
+              <h3>Payment</h3>
+              <div class="payment-method">
+                  <button class="payment-btn" onclick="selectPaymentMethod('card')">Pay by Card</button>
+                  <button class="payment-btn" onclick="selectPaymentMethod('cash')">Pay by Cash</button>
+              </div>
+              <div class="cash-input-container" id="cashInputContainer">
+                  <input type="number" class="cash-input" id="cashInput" placeholder="Enter Cash">
+                  <button class="payment-btn" onclick="processCashPayment()">Process Cash</button>
+              </div>
+              <div id="cardPaymentSection" style="display: none; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 20px auto;">
+                <label for="cardNumber" style="font-size: 14px; color: #333; margin-bottom: 5px; display: block;">Card Number:</label>
+                <input type="text" id="cardNumber" placeholder="Enter Card Number" style="padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 100%; margin-bottom: 15px; box-sizing: border-box;">
+                
+                <label for="expiryDate" style="font-size: 14px; color: #333; margin-bottom: 5px; display: block;">Expiry Date:</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY" style="padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 100%; margin-bottom: 15px; box-sizing: border-box;">
+                
+                <label for="cvv" style="font-size: 14px; color: #333; margin-bottom: 5px; display: block;">CVV:</label>
+                <input type="text" id="cvv" placeholder="CVV" style="padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 100%; margin-bottom: 15px; box-sizing: border-box;">
+                
+                <button class="payment-btn" onclick="processCardPayment()" style="background-color: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; width: 100%; font-size: 16px; transition: background-color 0.3s;">Process Card Payment</button>
+            </div>
+            
+          </div>
+      </div>
+  </div>
+  <!--script src="<!-?php echo URLROOT; ?>/public/js/Cashier/SeviceDesk.js"></script-->
+  <script src="<?php echo URLROOT; ?>/public/js/Cashier/ServiceDesk.js"></script>
+
 </body>
-</html>
