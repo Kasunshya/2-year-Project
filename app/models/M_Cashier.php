@@ -126,6 +126,10 @@ public function searchProducts($searchTerm) {
     }
 }
 
+
+
+
+
 }
 ?>
 
