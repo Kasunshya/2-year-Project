@@ -307,6 +307,24 @@ header {
 }
 
 
+#discountSelect, 
+#customDiscountInput {
+  width: 20%;
+  padding: 8px;
+  font-size: 1em;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#discountSelect:focus, 
+#customDiscountInput:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+
 .order-actions {
   display: flex;
   justify-content: space-between;
@@ -382,50 +400,115 @@ header {
   width: 400px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
 }
 
-.payment-method {
+.modal-content h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Close button */
+.close-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #c82333;
+}
+
+/* Payment options */
+.payment-options {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .payment-btn {
-  background-color: #3498db;
-  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
-  padding: 15px 30px;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
 .payment-btn:hover {
-  background-color: #2980b9;
+  background-color: #0056b3;
 }
 
-.cash-input-container {
+/* Payment section styles */
+#cashPaymentSection,
+#cardPaymentSection {
+  display: none;
+  text-align: left;
   margin-top: 20px;
+}
+
+#cashPaymentSection label,
+#cardPaymentSection label {
+  font-size: 14px;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+#cashPaymentSection input,
+#cardPaymentSection input {
+  width: 95%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Back button */
+.back-btn {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Print button */
+#printBillBtn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
   display: none;
 }
 
-.cash-input {
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+#printBillBtn:hover {
+  background-color: #218838;
 }
 
-.receipt {
-  margin-top: 20px;
-  text-align: left;
-  border-top: 1px solid #ddd;
-  padding-top:10px;
-}
 #billSummaryList {
 text-align: left;
 margin-top: 10px;
@@ -440,4 +523,69 @@ border-bottom: 1px solid #ddd;
 #billTotal {
 margin-top: 15px;
 font-size: 18px;
+}
+/* Add Button Styling */
+.add-btn {
+  background-color: #783b31;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+}
+
+/* Hover Effect */
+.add-btn:hover {
+  background-color: #c98d83; /* Slightly darker green */
+  transform: scale(1.05); /* Zoom effect */
+}
+
+/* Active (Pressed) Effect */
+.add-btn:active {
+  background-color:#783b31; /* Darkest green */
+  transform: scale(0.95); /* Shrink effect */
+}
+
+/* Focus Effect */
+.add-btn:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 8px #c98d83; /* Add a glowing border */
+}
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px; /* Space between the elements */
+  margin: 10px 0;
+}
+
+.decrement-btn, .increment-btn {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px 10px; /* Padding for a comfortable size */
+  font-size: 16px; /* Text size */
+  cursor: pointer; /* Hand cursor on hover */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.decrement-btn:hover, .increment-btn:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+.quantity-input {
+  width: 50px; /* Fixed width for uniformity */
+  text-align: center; /* Center align text */
+  font-size: 16px; /* Text size */
+  padding: 5px; /* Inner padding */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  outline: none; /* Remove outline on focus */
+  transition: border-color 0.3s; /* Smooth focus effect */
+}
+
+.quantity-input:focus {
+  border-color: #4CAF50; /* Green border on focus */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Subtle green glow */
 }
