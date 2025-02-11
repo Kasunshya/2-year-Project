@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,26 +9,22 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/SystemAdmin/systemadmindashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
 
-        <!-- Main Content -->
-        <main>
-            <header class="header">
-                <div class="header-left">
-                    <i class="fas fa-home"></i>
-                    <span>DASHBOARD</span>
-                </div>
-                <div class="header-role">
-                    <span>System Administrator</span>
-                </div>
-            </header>
+        <header class="header">
+            <div class="header-left">
+                <i class="fas fa-th"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="header-role">
+                <span>System Administrator</span>
+            </div>
+        </header>
 
+        <main>
             <section class="dashboard-content">
-                <!-- Overview Cards -->
                 <div class="overview">
                     <div class="card">
                         <h2>50</h2>
@@ -57,7 +52,6 @@
                     </div>
                 </div>
 
-                <!-- Charts and Calendar in Row -->
                 <div class="charts">
                     <div class="chart">
                         <h2>Activity Overview</h2>
@@ -74,5 +68,4 @@
     <script src="<?php echo URLROOT; ?>/public/js/SystemAdmin/Dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
-
 </html>
