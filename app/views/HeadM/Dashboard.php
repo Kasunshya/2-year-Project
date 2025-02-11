@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -29,7 +28,7 @@
             <section class="dashboard-content">
                 <div class="overview">
                     <div class="card">
-                        <h2>15</h2>
+                        <h2><?php echo $data['totalCashiers']; ?></h2>
                         <p>Total Cashiers</p>
                     </div>
                     <div class="card">
@@ -43,7 +42,7 @@
                 </div>
                 <div class="overview">
                     <div class="card">
-                        <h2>200</h2>
+                        <h2><?php echo $data['totalCustomers']; ?></h2>
                         <p>Total Customers</p>
                     </div>
                     <div class="card">
@@ -51,7 +50,7 @@
                         <p>Total Products</p>
                     </div>
                     <div class="card">
-                        <h2>8</h2>
+                        <h2><?php echo $data['totalBranchManagers']; ?></h2>
                         <p>Total Branch Managers</p>
                     </div>
                 </div>

@@ -8,6 +8,24 @@ class M_HeadM
         $this->db = new Database;
     }
 
+    public function getTotalCashiers()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM cashier');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalCustomers()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM customer');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalBranchManagers()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM branchmanager');
+        return $this->db->single()->total;
+    }
+
     public function getAllBranchManagers()
     {
         $this->db->query('SELECT bm.branchmanager_id, bm.branch_id, bm.branchmanager_name, bm.address, bm.contact_number, u.email, u.password, b.branch_name 
