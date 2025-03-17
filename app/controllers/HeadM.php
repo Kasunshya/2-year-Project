@@ -11,10 +11,19 @@ class HeadM extends Controller
         $this->headManagerModel = $this->model('M_HeadM');
     }
 
-    public function index()
+    /*public function index()
     {
+        $totalCashiers = $this->headManagerModel->getTotalCashiers();
+        $totalCustomers = $this->headManagerModel->getTotalCustomers();
+
+        $data = [
+            'totalCashiers' => $totalCashiers,
+            'totalCustomers' => $totalCustomers,
+        ];
+
+
         $this->view('HeadM/dashboard');
-    }
+    }*/
 
     public function supplierManagement()
     {
@@ -98,7 +107,17 @@ class HeadM extends Controller
 
     public function dashboard()
     {
-        $this->view('HeadM/Dashboard');
+        $totalCashiers = $this->headManagerModel->getTotalCashiers();
+        $totalCustomers = $this->headManagerModel->getTotalCustomers();
+        $totalBranchManagers = $this->headManagerModel->getTotalBranchManagers();
+
+
+        $data = [
+            'totalCashiers' => $totalCashiers,
+            'totalCustomers' => $totalCustomers,
+            'totalBranchManagers' => $totalBranchManagers
+        ];
+        $this->view('HeadM/Dashboard',$data);
     }
 
     public function inventoryManagement()
