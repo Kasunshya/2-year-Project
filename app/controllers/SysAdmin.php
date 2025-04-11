@@ -6,12 +6,11 @@ class SysAdmin extends Controller {
 
     public function __construct() {
         $this->sysAdminModel = $this->model('M_SysAdmin');
-        $this->branchModel = $this->model('M_Branch'); // Ensure this line is correct
         
-        /*Make sure the upload directory exists
+        // Make sure the upload directory exists
         if (!file_exists(UPLOADROOT)) {
             mkdir(UPLOADROOT, 0755, true);
-        }*/
+        }
     }
 
     public function dashboard() {
@@ -205,66 +204,7 @@ class SysAdmin extends Controller {
     }
 
     public function branchmanagement() {
-        $branches = $this->sysAdminModel->getAllBranches();
-        $data = [
-            'branches' => $branches
-        ];
-        $this->view('SysAdmin/BranchManagement', $data);
-    }
-
-    public function addBranch() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-            $data = [
-                'branch_name' => trim($_POST['branch_name']),
-                'branch_address' => trim($_POST['branch_address']),
-                'branch_contact' => trim($_POST['branch_contact'])
-            ];
-
-            // Use $this->branchModel instead of undefined $branchModel
-            if ($this->branchModel->addBranch($data)) {
-                //flash('branch_message', 'Branch added successfully');
-                redirect('sysadmin/branchmanagement');
-            } else {
-                die('Something went wrong');
-            }
-        } else {
-            redirect('sysadmin/branchmanagement');
-        }
-    }
-
-    public function updateBranch() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-            $data = [
-                'branch_id' => trim($_POST['branch_id']),
-                'branch_name' => trim($_POST['branch_name']),
-                'branch_address' => trim($_POST['branch_address']),
-                'branch_contact' => trim($_POST['branch_contact'])
-            ];
-
-            if ($this->sysAdminModel->updateBranch($data)) {
-                flash('branch_message', 'Branch updated successfully');
-                redirect('sysadmin/branchmanagement');
-            } else {
-                die('Something went wrong');
-            }
-        } else {
-            redirect('sysadmin/branchmanagement');
-        }
-    }
-
-    public function deleteBranch($branch_id = null) {
-        if ($branch_id) {
-            if ($this->sysAdminModel->deleteBranch($branch_id)) {
-                die( 'Branch deleted successfully');
-            } else {
-                die('Failed to delete branch');
-            }
-        }
-        redirect('sysadmin/branchmanagement');
+        $this->view('SysAdmin/BranchManagement');
     }
 
     public function categorymanagement() {

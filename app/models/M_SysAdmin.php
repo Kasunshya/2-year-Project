@@ -188,32 +188,6 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->bind(':id', $id);
             return $this->db->execute();
         }
-
-        public function getAllBranches()
-        {
-            $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch');
-            return $this->db->resultSet();
-        }
-
-        public function deleteBranch($branch_id)
-        {
-            $this->db->query('DELETE FROM branch WHERE branch_id = :branch_id');
-            $this->db->bind(':branch_id', $branch_id);
-            return $this->db->execute();
-        }
-
-        public function updateBranch($data) {
-            $this->db->query('UPDATE branch SET branch_name = :branch_name, branch_address = :branch_address, branch_contact = :branch_contact WHERE branch_id = :branch_id');
-
-            $this->db->bind(':branch_id', $data['branch_id']);
-            $this->db->bind(':branch_name', $data['branch_name']);
-            $this->db->bind(':branch_address', $data['branch_address']);
-            $this->db->bind(':branch_contact', $data['branch_contact']);
-
-            return $this->db->execute();
-        }
-       
     }
-    }
-
+}
 ?>

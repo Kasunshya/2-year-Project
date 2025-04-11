@@ -184,18 +184,16 @@
                 </tr>
             </thead>
             <tbody id="branchTable">
-                <?php foreach ($data['branches'] as $branch): ?>
-                    <tr onclick="populateEditModal(<?php echo htmlspecialchars(json_encode($branch), ENT_QUOTES, 'UTF-8'); ?>)">
-                        <td><?php echo $branch->branch_id; ?></td>
-                        <td><?php echo $branch->branch_name; ?></td>
-                        <td><?php echo $branch->branch_address; ?></td>
-                        <td><?php echo $branch->branch_contact; ?></td>
-                        <td class="actions">
-                            <button class="btn" onclick="event.stopPropagation(); openEditModal()">Edit</button>
-                            <button class="btn delete-btn" onclick="event.stopPropagation(); confirmDelete(<?php echo $branch->branch_id; ?>)">Delete</button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                <tr>
+                    <td>1</td>
+                    <td>Main Branch</td>
+                    <td>123 Street, Colombo</td>
+                    <td>0771234567</td>
+                    <td class="actions">
+                        <button class="btn" onclick="openEditModal(1)">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteBranch(1)">Delete</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -204,13 +202,15 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('addBranchModal')">&times;</span>
             <h2>Add Branch</h2>
-            <form action="<?php echo URLROOT; ?>/sysadmin/addBranch" method="POST">
+            <form id="addBranchForm">
+                <label for="branch_id">Branch ID:</label>
+                <input type="text" id="branch_id" required>
                 <label for="branch_name">Branch Name:</label>
-                <input type="text" id="branch_name" name="branch_name" required>
-                <label for="branch_address">Address:</label>
-                <input type="text" id="branch_address" name="branch_address" required>
-                <label for="branch_contact">Contact No:</label>
-                <input type="text" id="branch_contact" name="branch_contact" required>
+                <input type="text" id="branch_name" required>
+                <label for="address">Address:</label>
+                <input type="text" id="address" required>
+                <label for="contact_no">Contact No:</label>
+                <input type="text" id="contact_no" required>
                 <button type="submit" class="btn">Add Branch</button>
             </form>
         </div>
@@ -222,27 +222,25 @@
         document.getElementById('addBranchModal').style.display = 'flex';
     }
 
-    function openEditModal() {
-        document.getElementById('editBranchModal').style.display = 'flex';
-    }
-
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
     }
 
-    function confirmDelete(branchId) {
-        if (confirm("Are you sure you want to delete this branch?")) {
-            window.location.href = "<?php echo URLROOT; ?>/sysadmin/deleteBranch/" + branchId;
-        }
-    }
-
-    function populateEditModal(branch) {
-        document.getElementById('edit_branch_id').value = branch.branch_id;
-        document.getElementById('edit_branch_name').value = branch.branch_name;
-        document.getElementById('edit_address').value = branch.branch_address;
-        document.getElementById('edit_contact_no').value = branch.branch_contact;
-        openEditModal();
-    }
+    document.getElementById("addBranchForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const branchId = document.getElementById("branch_id").value;
+        const branchName = document.getElementById("branch_name").value;
+        const address = document.getElementById("address").value;
+        const contactNo = document.getElementById("contact_no").value;
+        
+        const table = document.getElementById("branchTable");
+        const row = table.insertRow();
+        row.innerHTML = `<td>${branchId}</td><td>${branchName}</td><td>${address}</td><td>${contactNo}</td>
+                         <td class='actions'><button class='btn' onclick='openEditModal(${branchId})'>Edit</button>
+                         <button class='btn delete-btn' onclick='deleteBranch(${branchId})'>Delete</button></td>`;
+        
+        closeModal('addBranchModal');
+    });
 </script>
 
     <div class="modal" id="editBranchModal">
@@ -263,5 +261,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    function openAddModal() {
+        document.getElementById('addBranchModal').style.display = 'flex';
+    }
+
+    function openEditModal(branchId) {
+        document.getElementById('editBranchModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function deleteBranch(branchId) {
+        if (confirm("Are you sure you want to delete this branch?")) {
+            alert(`Branch ${branchId} deleted.`);
+        }
+    }
+</script>
 </body>
 </html>

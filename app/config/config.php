@@ -9,8 +9,11 @@ define('DB_NAME', 'bakery');
 define('APPROOT',dirname(dirname(__FILE__)));
 
 //url root
-define ('URLROOT','http://localhost/Bakery');
+define ('URLROOT','http://localhost:8080//Bakery');
 
 //website name
 define('SITENAME','Bakery');
+
+// Upload Root
+define('UPLOADROOT', APPROOT . '/uploads');
 ?>
