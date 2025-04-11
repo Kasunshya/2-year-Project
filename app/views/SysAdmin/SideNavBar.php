@@ -6,8 +6,11 @@
     <nav>
         <ul>
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/UserManagement"><i class="fas fa-user"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-truck"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdmin/EmployeeManagement"><i class="fas fa-user"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdmin/CustomerManagement"><i class="fas fa-users"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdmin/CategoryManagement"><i class="fas fa-tags"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-utensils"></i></a></li>          
+            <li><a href="<?php echo URLROOT; ?>/SysAdmin/BranchManagement"><i class="fas fa-building"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
@@ -31,8 +34,10 @@
             const labelMap = {
                 'fa-th': 'Dashboard',
                 'fa-user': 'Employee Management',
-                'fa-truck': 'Product Management',
                 'fa-users': 'Customer Management',
+                'fa-tags': 'Category Management',
+                'fas fa-utensils': 'Product Management',
+                'fas fa-building': 'Branch Management',
                 'fa-sign-out-alt': 'Logout'
             };
 

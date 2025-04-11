@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Management</title>
+    <title>Category Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            display: flex;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f2f1ec ;
@@ -104,7 +103,7 @@
             margin: 10px 0 5px;
         }
 
-        .modal-content input, .modal-content select, .modal-content textarea {
+        .modal-content input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -119,7 +118,6 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-
 
         .search-bar {
             margin-bottom: 20px;
@@ -158,130 +156,136 @@
 
     <header class="header">
         <div class="header-left">
-            <i class="fas fa-utensils"></i>
-            <span>Product Management</span>
+            <i class="fas fa-tags"></i>
+            <span>Category Management</span>
         </div>
         <div class="header-role">
             <span>System Administrator</span>
         </div>
     </header>
- 
-           
+
     <div class="content">
-    <div class="search-bar">
-                <input type="text" id="searchProductInput" placeholder="Search Product by ID">
-                <button onclick="searchProduct()">Search</button>
-                </div>
-        <button class="btn" onclick="openAddFoodModal()">+ Add Food Item</button>
+        <div class="search-bar">
+            <input type="text" id="searchCategoryInput" placeholder="Search Category by Name">
+            <button onclick="searchCategory()">Search</button>
+        </div>
+        <button class="btn" onclick="openAddCategoryModal()">+ Add Category</button>
         <table>
             <thead>
                 <tr>
-                    <th>Product ID</th>
-                    <th>Photo</th>
+                    <th>Category ID</th>
                     <th>Name</th>
-                    <th>Category</th>
                     <th>Description</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="foodTable">
-                <tr id="food-1">
+            <tbody id="categoryTable">
+                <tr id="category-1">
                     <td>1</td>
-                    <td><img src="../public/img/Customer/product-1.jpg" alt="Strawberry Pancake" width="50"></td>
-                    <td>Strawberry Pancake</td>
-                    <td>Pancakes</td>
-                    <td>Delicious pancake with fresh strawberries.</td>
-                    <td>LKR 1,250.00</td>
-                    <td>10</td>
+                    <td>Waffles</td>
+                    <td>Delicious variety of waffles</td>
                     <td class="actions">
-                        <button class="btn" onclick="openEditFoodModal(1)">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteFood(1)">Delete</button>
+                        <button class="btn" onclick="openEditCategoryModal(1)">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteCategory(1)">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="modal" id="foodModal">
+    <!-- Modal -->
+    <div class="modal" id="categoryModal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('foodModal')">&times;</span>
-            <h2 id="foodModalTitle">Add Food Item</h2>
-            <form id="foodForm">
-                <input type="hidden" id="product_id">
-                <label for="food_photo">Photo:</label>
-                <input type="file" id="food_photo" accept="image/*">
-                <label for="food_name">Name:</label>
-                <input type="text" id="food_name" required>
-                <label for="food_category">Category:</label>
-                <select id="food_category" required>
-                    <option value="Bread">Bread</option>
-                    <option value="Waffles">Waffles</option>
-                    <option value="Pancakes">Pancakes</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Savoury Items">Savoury Items</option>
-                </select>
-                <label for="food_description">Description:</label>
-                <textarea id="food_description" required></textarea>
-                <label for="food_price">Price:</label>
-                <input type="number" id="food_price" required>
-                <label for="food_quantity">Quantity:</label>
-                <input type="number" id="food_quantity" required>
+            <span class="close" onclick="closeModal('categoryModal')">&times;</span>
+            <h2 id="categoryModalTitle">Add Category</h2>
+            <form id="categoryForm">
+                <label for="category_name">Category Name:</label>
+                <input type="text" id="category_name" required>
+                <label for="category_description">Description:</label>
+                <input type="text" id="category_description" required>
                 <button type="submit" class="btn">Save</button>
-                <button type="button" class="btn" onclick="closeModal('foodModal')">Close</button>
+                <button type="button" class="btn" onclick="closeModal('categoryModal')">Close</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    function openAddFoodModal() {
-        document.getElementById('foodModalTitle').textContent = "Add Food Item";
-        document.getElementById('foodForm').reset();
-        document.getElementById('foodModal').style.display = 'flex';
+    let editingCategoryId = null;
+
+    function openAddCategoryModal() {
+        document.getElementById('categoryModalTitle').textContent = "Add Category";
+        document.getElementById('categoryForm').reset();
+        editingCategoryId = null;
+        document.getElementById('categoryModal').style.display = 'flex';
     }
 
-    function openEditFoodModal(productId) {
-        document.getElementById('foodModalTitle').textContent = "Update Food Item";
+    function openEditCategoryModal(categoryId) {
+        editingCategoryId = categoryId;
 
-        let row = document.getElementById(`food-${productId}`);
+        document.getElementById('categoryModalTitle').textContent = "Update Category";
+
+        // Get the correct row
+        let row = document.getElementById(`category-${categoryId}`);
         let cells = row.getElementsByTagName("td");
 
-        document.getElementById("food_name").value = cells[2].textContent.trim();
-        document.getElementById("food_category").value = cells[3].textContent.trim();
-        document.getElementById("food_description").value = cells[4].textContent.trim();
-        document.getElementById("food_price").value = parseFloat(cells[5].textContent.replace('LKR', '').trim());
-        document.getElementById("food_quantity").value = cells[6].textContent.trim();
+        // Populate modal fields with existing values
+        document.getElementById("category_name").value = cells[1].textContent.trim();
+        document.getElementById("category_description").value = cells[2].textContent.trim();
 
-        document.getElementById('foodModal').style.display = 'flex';
+        document.getElementById('categoryModal').style.display = 'flex';
     }
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
     }
 
-    document.getElementById('foodForm').addEventListener('submit', function(e) {
+    document.getElementById('categoryForm').addEventListener('submit', function (e) {
         e.preventDefault();
-        alert("Food item saved/updated successfully!");
-        closeModal('foodModal');
-    });
-</script>
 
-<script>
-function deleteFood(fproductId) {
-    if (confirm("Are you sure you want to delete this food item?")) {
-        let row = document.getElementById(`food-${productId}`);
-        if (row) {
-            row.remove();
-            alert(`Food item ${productId} deleted successfully!`);
-        } else {
-            alert("Food item not found!");
+        const name = document.getElementById('category_name').value;
+        const description = document.getElementById('category_description').value;
+
+        if (editingCategoryId) {
+            let row = document.getElementById(`category-${editingCategoryId}`);
+            let cells = row.getElementsByTagName("td");
+
+            cells[1].textContent = name;
+            cells[2].textContent = description;
+
+            alert("Category updated successfully!");
+        }
+
+        editingCategoryId = null;
+        closeModal('categoryModal');
+    });
+
+    function deleteCategory(categoryId) {
+        if (confirm("Are you sure you want to delete this category?")) {
+            let row = document.getElementById(`category-${categoryId}`);
+            if (row) {
+                row.remove();
+                alert(`Category ${categoryId} deleted successfully!`);
+            } else {
+                alert("Category not found!");
+            }
         }
     }
-}
-</script>
 
+    function searchCategory() {
+        const input = document.getElementById('searchCategoryInput').value.toLowerCase();
+        const table = document.getElementById('categoryTable');
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            if (cells.length > 0) {
+                const categoryName = cells[1].textContent.toLowerCase();
+                rows[i].style.display = categoryName.includes(input) ? '' : 'none';
+            }
+        }
+    }
+</script>
 
 </body>
 </html>

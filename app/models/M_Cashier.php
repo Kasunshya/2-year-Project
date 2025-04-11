@@ -125,11 +125,6 @@ public function searchProducts($searchTerm) {
         return [];
     }
 }
-
-
-
-
-
 }
 ?>
 
