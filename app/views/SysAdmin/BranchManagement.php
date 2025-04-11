@@ -184,6 +184,7 @@
                 </tr>
             </thead>
             <tbody id="branchTable">
+
                 <?php foreach ($data['branches'] as $branch): ?>
                     <tr onclick="populateEditModal(<?php echo htmlspecialchars(json_encode($branch), ENT_QUOTES, 'UTF-8'); ?>)">
                         <td><?php echo $branch->branch_id; ?></td>
@@ -196,6 +197,7 @@
                         </td>
                     </tr>
                 <?php endforeach; ?>
+
             </tbody>
         </table>
     </div>
@@ -204,6 +206,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('addBranchModal')">&times;</span>
             <h2>Add Branch</h2>
+
             <form action="<?php echo URLROOT; ?>/sysadmin/addBranch" method="POST">
                 <label for="branch_name">Branch Name:</label>
                 <input type="text" id="branch_name" name="branch_name" required>
@@ -211,6 +214,7 @@
                 <input type="text" id="branch_address" name="branch_address" required>
                 <label for="branch_contact">Contact No:</label>
                 <input type="text" id="branch_contact" name="branch_contact" required>
+
                 <button type="submit" class="btn">Add Branch</button>
             </form>
         </div>
@@ -243,6 +247,7 @@
         document.getElementById('edit_contact_no').value = branch.branch_contact;
         openEditModal();
     }
+
 </script>
 
     <div class="modal" id="editBranchModal">
@@ -263,5 +268,7 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
+

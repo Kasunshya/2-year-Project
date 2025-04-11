@@ -6,12 +6,14 @@ class SysAdmin extends Controller {
 
     public function __construct() {
         $this->sysAdminModel = $this->model('M_SysAdmin');
+
         $this->branchModel = $this->model('M_Branch'); // Ensure this line is correct
         
         /*Make sure the upload directory exists
         if (!file_exists(UPLOADROOT)) {
             mkdir(UPLOADROOT, 0755, true);
         }*/
+
     }
 
     public function dashboard() {
@@ -198,6 +200,7 @@ class SysAdmin extends Controller {
 
     public function customermanagement() {
         $this->view('SysAdmin/CustomerManagement');
+
     }
 
     public function productmanagement() {
@@ -266,6 +269,8 @@ class SysAdmin extends Controller {
         }
         redirect('sysadmin/branchmanagement');
     }
+
+ 
 
     public function categorymanagement() {
         $this->view('SysAdmin/CategoryManagement');

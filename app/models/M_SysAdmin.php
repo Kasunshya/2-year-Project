@@ -188,8 +188,8 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->bind(':id', $id);
             return $this->db->execute();
         }
-
-        public function getAllBranches()
+    
+public function getAllBranches()
         {
             $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch');
             return $this->db->resultSet();
@@ -212,8 +212,6 @@ if (!class_exists('M_SysAdmin')) {
 
             return $this->db->execute();
         }
-       
-    }
-    }
-
+}
+}
 ?>
