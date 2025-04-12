@@ -125,6 +125,18 @@ public function searchProducts($searchTerm) {
         return [];
     }
 }
+public function getTotalOrderCount() {
+    $this->db->query("SELECT COUNT(DISTINCT order_detail_id) as total_orders FROM orderdetails");
+    return $this->db->single(); // returns an associative array like ['total_orders' => 320]
+}
+public function calculateTotalRevenue() {
+    $this->db->query("SELECT SUM(total_price) AS total_revenue FROM orderdetails");
+    $row = $this->db->single();
+    return $row->total_revenue ?? 0.00; // fallback just in case
+}
+
+
+
 }
 ?>
 

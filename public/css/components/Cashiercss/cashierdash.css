@@ -151,7 +151,7 @@ body, html {
   border-radius: 8px;
   text-align: center;
   flex: 1 1 300px;
-  max-width: 320px;
+  max-width: 380px;
   min-width: 280px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
@@ -270,4 +270,51 @@ background-color: rgba(0, 0, 0, 0.05);
 .username, .role {
   margin: 0; /* Remove any default margin from the text */
   font-size: 1.2rem;
+}
+/* Style for FullCalendar inside a card */
+#calendar {
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 100%;
+  height: 500px;
+  overflow-x: auto;
+}
+
+/* Ensure calendar text respects theme */
+body.dark-mode #calendar {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* Optional: style event dots and headers for better appearance */
+.fc .fc-toolbar-title {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+.fc-daygrid-event {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 2px 5px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+.fc-daygrid-day-number {
+  color: var(--secondary);
+  font-weight: bold;
+}
+
+body.dark-mode .fc-daygrid-event {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+body.dark-mode .fc .fc-toolbar-title,
+body.dark-mode .fc .fc-daygrid-day-number {
+  color: var(--dark-text);
 }
