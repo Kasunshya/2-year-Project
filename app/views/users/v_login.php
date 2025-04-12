@@ -28,7 +28,7 @@
                 <button id="submit" type="submit" name="login" class="login-btn">Login</button>
                 <span><?php echo $data['errors']['general'] ?? ''; ?></span>
             </form>
-            <a href="forgotPassword.php" class="forgot-password">Forgot Password?</a>
+            <a href="<?php echo URLROOT; ?>/users/forgotPassword" class="forgot-password">Forgot Password?</a>
             <a href="<?php echo URLROOT; ?>/Users/register" class="forgot-password">New Account</a>
         </div>
     </div>

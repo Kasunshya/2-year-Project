@@ -207,6 +207,8 @@ class SysAdmin extends Controller {
         $this->view('SysAdmin/BranchManagement');
     }
 
+ 
+
     public function categorymanagement() {
         $this->view('SysAdmin/CategoryManagement');
     }

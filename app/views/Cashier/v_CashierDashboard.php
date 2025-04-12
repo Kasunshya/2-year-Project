@@ -1,6 +1,9 @@
 <?php require APPROOT.'/views/inc/components/cverticalbar.php'?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/cashierdash.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
 </head>
 <body>
  
@@ -41,13 +44,14 @@
           <button onclick="updateSalesChart()">Toggle Sales Data</button>
       </div>
       <div class="card">
-          <h2>Orders</h2>
-          <canvas id="ordersChart"></canvas>
-      </div>
-      <div class="card">
+    <h2>Calendar</h2>
+    <div id="calendar" style="padding: 1rem;"></div>
+</div>
+
+      <!--div class="card">
           <h2>Revenue</h2>
           <canvas id="revenueChart"></canvas>
-      </div>
+      </div-->
   </div>
   <div class="metrics-container">
     <div class="metric">
@@ -56,12 +60,12 @@
     </div>
     <div class="metric">
       <h3>Total Orders</h3>
-      <p>320</p>
+      <p><?php echo isset($data['totalOrders']) ? $data['totalOrders'] : '0'; ?></p>
     </div>
     <div class="metric">
       <h3>Total Revenue</h3>
-      <p>$15,800</p>
-    </div>
+      <p>$<?php echo isset($data['totalRevenue']) ? number_format($data['totalRevenue'], 2) : '0.00'; ?></p>
+</div>
     <div class="metric">
       <h3>Pending Orders</h3>
       <p>25</p>
@@ -149,10 +153,24 @@
             data: { labels: ['Orders', 'Completed', 'Pending'], datasets: [{ data: [4400, 3500, 900], backgroundColor: ['#32b09f', '#c98d83', '#783b31'] }] }
         });
 
-        new Chart(document.getElementById('revenueChart'), {
-            type: 'bar',
-            data: { labels: ['Sales', 'Visits', 'Income', 'Revenue'], datasets: [{ label: 'Amount', data: [2200, 3400, 1800, 2800], backgroundColor: ['#c98d83', '#ffc85c', '#783b31', '#32b09f'] }] }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 380,
+            width:380,
+            events: [
+                { title: 'Pickup Order #1001', date: '2025-04-12' },
+                { title: 'Stock Check', date: '2025-04-13' }
+            ]
         });
+        calendar.render();
+    }
+});
+
+        
         function filterOrders() {
   const input = document.getElementById("orderSearch").value.toUpperCase();
   const table = document.querySelector(".recent-orders table tbody");
