@@ -127,7 +127,22 @@ class HeadM extends Controller
 
     public function cashierManagement()
     {
-        $this->view('HeadM/CashierManagement');
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        if (!empty($search)) {
+            $cashiers = $this->headManagerModel->searchCashiers($search);
+        } else {
+            $cashiers = $this->headManagerModel->getAllCashiers();
+        }
+
+        // Debugging: Log the data to check if nic, address, and branch are present
+        error_log(print_r($cashiers, true));
+
+        $data = [
+            'cashiers' => $cashiers
+        ];
+
+        $this->view('HeadM/CashierManagement', $data);
     }
 
     public function productManagement()
@@ -158,6 +173,28 @@ class HeadM extends Controller
     public function feedback()
     {
         $this->view('HeadM/Feedback');
+    }
+
+    public function downloadCV($employee_id)
+    {
+        $cashier = $this->headManagerModel->getCashierById($employee_id);
+
+        if ($cashier && !empty($cashier->cv_upload)) {
+            $filePath = UPLOADROOT . '/' . $cashier->cv_upload;
+
+            if (file_exists($filePath)) {
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+                readfile($filePath);
+                exit;
+            } else {
+                flash('cashier_message', 'CV file not found on the server', 'alert alert-danger');
+                redirect('HeadM/cashierManagement');
+            }
+        } else {
+            flash('cashier_message', 'CV not found in the database', 'alert alert-danger');
+            redirect('HeadM/cashierManagement');
+        }
     }
 }
 ?>

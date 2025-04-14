@@ -127,5 +127,38 @@ class M_HeadM
 
         return ($result1 && $result2);
     }
+
+    public function getAllCashiers()
+    {
+        $this->db->query('SELECT 
+                        employee_id, 
+                        full_name, 
+                        email, 
+                        contact_no, 
+                        nic, 
+                        address, 
+                        branch, 
+                        cv_upload 
+                      FROM employee
+                      WHERE user_role = "cashier"');
+        return $this->db->resultSet();
+    }
+
+    public function searchCashiers($search)
+    {
+        $this->db->query('SELECT employee_id, full_name, email, contact_no 
+                          FROM employee 
+                          WHERE user_role = "cashier" 
+                          AND (full_name LIKE :search OR email LIKE :search)');
+        $this->db->bind(':search', '%' . $search . '%');
+        return $this->db->resultSet();
+    }
+
+    public function getCashierById($employee_id)
+    {
+        $this->db->query('SELECT employee_id, full_name, cv_upload FROM employee WHERE employee_id = :employee_id AND user_role = "cashier"');
+        $this->db->bind(':employee_id', $employee_id);
+        return $this->db->single();
+    }
 }
 ?>
