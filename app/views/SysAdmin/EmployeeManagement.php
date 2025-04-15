@@ -116,25 +116,21 @@
             margin: 5% auto;
             padding: 20px;
             border-radius: 8px;
-            width: 50%;
+            width: 40%; /* Adjust width as needed */
+            max-width: 500px;
             position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
         .modal-content h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            color: #783b31;
         }
 
-        .modal-content label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        .modal-content input, .modal-content select {
-            width: 100%;
-            padding: 10px;
+        .modal-content p {
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            color: #333;
         }
 
         .modal-content .close {
@@ -143,6 +139,43 @@
             right: 10px;
             font-size: 1.5rem;
             cursor: pointer;
+            color: #783b31;
+        }
+
+        .modal-content .close:hover {
+            color: #c98d83;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons .btn.submit {
+            background-color: #c98d83;
+            color: white;
+        }
+
+        .buttons .btn.submit:hover {
+            background-color: #783b31;
+        }
+
+        .buttons .btn.reset {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .buttons .btn.reset:hover {
+            background-color: #d32f2f;
         }
 
         .search-bar {
@@ -172,6 +205,24 @@
 
         .search-bar button:hover {
             background-color: #783b31;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #783b31;
+            text-align: left; /* Align labels to the left */
+        }
+
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -279,8 +330,6 @@
                         <option value="Galle">Galle</option>
                     </select>
 
-                    <input type="hidden" id="add_branch_id" name="branch_id" value="1"> <!-- Default branch_id -->
-
                     <label for="add_user_role">User Role:</label>
                     <select id="add_user_role" name="user_role" required>
                         <option value="cashier">Cashier</option>
@@ -295,7 +344,10 @@
                     <label for="add_password">Password:</label>
                     <input type="password" id="add_password" name="password" required>
 
-                    <button type="submit" class="btn">Add Employee</button>
+                    <div class="buttons">
+                        <button type="submit" class="btn submit">Add Employee</button>
+                        <button type="button" class="btn reset" onclick="closeModal('addEmployeeModal')">Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -332,7 +384,6 @@
                         <option value="Colombo">Colombo</option>
                         <option value="Galle">Galle</option>
                     </select>
-                    <input type="hidden" id="edit_branch_id" name="branch_id">
                     <label for="edit_user_role">User Role:</label>
                     <select id="edit_user_role" name="user_role">
                         <option value="admin">Admin</option>
@@ -341,9 +392,24 @@
                     </select>
                     <label for="edit_cv_upload">Upload CV:</label>
                     <input type="file" id="edit_cv_upload" name="cv_upload" accept=".pdf,.doc,.docx">
-                    <input type="hidden" id="edit_branch_id" name="branch_id">
-                    <button type="submit" class="btn">Update Employee</button>
+                    <div class="buttons">
+                        <button type="submit" class="btn submit">Update Employee</button>
+                        <button type="button" class="btn reset" onclick="closeModal('editEmployeeModal')">Cancel</button>
+                    </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal" id="deleteEmployeeModal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('deleteEmployeeModal')">&times;</span>
+                <h2>Are you sure?</h2>
+                <p>This action will permanently delete the employee and their user account. Do you want to proceed?</p>
+                <div class="buttons">
+                    <button class="btn submit" id="confirmDeleteButton">Yes, Delete</button>
+                    <button class="btn reset" onclick="closeModal('deleteEmployeeModal')">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -385,9 +451,14 @@
             function openEditModal(employeeId) {
                 const table = document.getElementById('employeeTable');
                 const rows = table.getElementsByTagName('tr');
+                let found = false;
+
                 for (let i = 0; i < rows.length; i++) {
                     const cells = rows[i].getElementsByTagName('td');
                     if (cells.length > 0 && cells[0].textContent === employeeId.toString()) {
+                        found = true;
+
+                        // Populate the form fields
                         document.getElementById('edit_employee_id').value = employeeId;
                         document.getElementById('edit_full_name').value = cells[1].textContent.trim();
                         document.getElementById('edit_nic').value = cells[2].textContent.trim();
@@ -396,19 +467,33 @@
                         document.getElementById('edit_email').value = cells[5].textContent.trim();
                         document.getElementById('edit_branch').value = cells[6].textContent.trim();
                         document.getElementById('edit_user_role').value = cells[7].textContent.trim().toLowerCase();
+
+                        // Get additional data from row attributes
                         const dob = rows[i].getAttribute('data-dob');
                         const joinDate = rows[i].getAttribute('data-join-date');
-                        document.getElementById('edit_dob').value = dob;
-                        document.getElementById('edit_join_date').value = joinDate;
-                        document.getElementById('edit_branch_id').value = rows[i].getAttribute('data-branch-id'); // Ensure branch_id is set
+                        if (dob) document.getElementById('edit_dob').value = dob;
+                        if (joinDate) document.getElementById('edit_join_date').value = joinDate;
+
                         break;
                     }
                 }
+
+                if (!found) {
+                    alert('Employee not found.');
+                    return;
+                }
+
+                // Display the modal
                 document.getElementById('editEmployeeModal').style.display = 'block';
             }
 
             function deleteEmployee(employeeId) {
-                if (confirm("Are you sure you want to delete this employee? This will also delete their user account.")) {
+                // Open the delete confirmation modal
+                openModal('deleteEmployeeModal');
+
+                // Set up the confirm delete button
+                const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+                confirmDeleteButton.onclick = function () {
                     fetch(`<?php echo URLROOT; ?>/sysadmin/deleteEmployee/${employeeId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -430,9 +515,25 @@
                         .catch(error => {
                             console.error('Error:', error);
                             alert('An error occurred while deleting the employee.');
+                        })
+                        .finally(() => {
+                            closeModal('deleteEmployeeModal');
                         });
-                }
+                };
             }
+
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'block';
+            }
+
+            window.onclick = function(event) {
+                const modals = document.getElementsByClassName('modal');
+                for (let i = 0; i < modals.length; i++) {
+                    if (event.target === modals[i]) {
+                        modals[i].style.display = 'none';
+                    }
+                }
+            };
         </script>
 </body>
 </html>
