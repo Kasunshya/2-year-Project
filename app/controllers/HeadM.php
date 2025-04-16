@@ -127,12 +127,100 @@ class HeadM extends Controller
 
     public function cashierManagement()
     {
-        $this->view('HeadM/CashierManagement');
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        if (!empty($search)) {
+            $cashiers = $this->headManagerModel->searchCashiers($search);
+        } else {
+            $cashiers = $this->headManagerModel->getAllCashiers();
+        }
+
+        // Debugging: Log the data to check if nic, address, and branch are present
+        error_log(print_r($cashiers, true));
+
+        $data = [
+            'cashiers' => $cashiers
+        ];
+
+        $this->view('HeadM/CashierManagement', $data);
     }
 
-    public function productManagement()
-    {
-        $this->view('HeadM/ProductManagement');
+    public function productManagement() {
+        $categories = $this->headManagerModel->getAllCategories();
+        $products = $this->headManagerModel->getAllProducts();
+
+        $data = [
+            'categories' => $categories,
+            'products' => $products
+        ];
+
+        $this->view('HeadM/ProductManagement', $data);
+    }
+
+    public function addProduct() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'product_name' => trim($_POST['product_name']),
+                'price' => trim($_POST['price']),
+                'description' => trim($_POST['description']),
+                'category_id' => trim($_POST['category_id']),
+                'available_quantity' => trim($_POST['available_quantity'])
+            ];
+
+            if ($this->headManagerModel->addProduct($data)) {
+                flash('product_message', 'Product added successfully');
+                redirect('HeadM/productManagement');
+            } else {
+                flash('product_message', 'Something went wrong', 'alert alert-danger');
+                redirect('HeadM/productManagement');
+            }
+        } else {
+            redirect('HeadM/productManagement');
+        }
+    }
+
+    public function editProduct() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'product_id' => trim($_POST['product_id']),
+                'product_name' => trim($_POST['product_name']),
+                'price' => trim($_POST['price']),
+                'description' => trim($_POST['description']),
+                'category_id' => trim($_POST['category_id']),
+                'available_quantity' => trim($_POST['available_quantity'])
+            ];
+
+            if ($this->headManagerModel->editProduct($data)) {
+                flash('product_message', 'Product updated successfully');
+                redirect('HeadM/productManagement');
+            } else {
+                flash('product_message', 'Something went wrong', 'alert alert-danger');
+                redirect('HeadM/productManagement');
+            }
+        } else {
+            redirect('HeadM/productManagement');
+        }
+    }
+
+    public function getProductById($productId) {
+        $product = $this->headManagerModel->getProductById($productId);
+        echo json_encode($product);
+    }
+
+    public function deleteProduct($productId) {
+        if ($this->headManagerModel->deleteProductById($productId)) {
+            flash('product_message', 'Product deleted successfully');
+            redirect('HeadM/productManagement');
+        } else {
+            flash('product_message', 'Something went wrong', 'alert alert-danger');
+            redirect('HeadM/productManagement');
+        }
     }
 
     public function customization()
@@ -158,6 +246,28 @@ class HeadM extends Controller
     public function feedback()
     {
         $this->view('HeadM/Feedback');
+    }
+
+    public function downloadCV($employee_id)
+    {
+        $cashier = $this->headManagerModel->getCashierById($employee_id);
+
+        if ($cashier && !empty($cashier->cv_upload)) {
+            $filePath = UPLOADROOT . '/' . $cashier->cv_upload;
+
+            if (file_exists($filePath)) {
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+                readfile($filePath);
+                exit;
+            } else {
+                flash('cashier_message', 'CV file not found on the server', 'alert alert-danger');
+                redirect('HeadM/cashierManagement');
+            }
+        } else {
+            flash('cashier_message', 'CV not found in the database', 'alert alert-danger');
+            redirect('HeadM/cashierManagement');
+        }
     }
 }
 ?>

@@ -28,15 +28,25 @@
                     <div class="modal-content">
                         <span class="close">×</span>
                         <h2>Add New Product</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+                        <form action="<?php echo URLROOT; ?>/HeadM/addProduct" method="post">
                             <label for="product_name">Product Name:</label>
                             <input type="text" id="product_name" name="product_name" required>
 
                             <label for="price">Price (Rs.):</label>
                             <input type="number" id="price" name="price" required min="0" step="0.01">
 
-                            <label for="product_image">Product Image:</label>
-                            <input type="file" id="product_image" name="product_image" accept="image/*" required>
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" required></textarea>
+
+                            <label for="category_id">Category:</label>
+                            <select id="category_id" name="category_id" required>
+                                <?php foreach ($data['categories'] as $category): ?>
+                                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
+                            <label for="available_quantity">Available Quantity:</label>
+                            <input type="number" id="available_quantity" name="available_quantity" required min="0" step="1">
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -49,26 +59,38 @@
                 <!-- Edit Product Modal -->
                 <div id="editemployeeModal" class="modal">
                     <div class="modal-content">
-                        <span class="close">×</span>
+                        <span class="close" onclick="closeModal('editemployeeModal')">×</span>
                         <h2>Update Product</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+                        <form action="<?php echo URLROOT; ?>/HeadM/editProduct" method="post">
                             <input type="hidden" id="edit_product_id" name="product_id">
-            
+
                             <label for="edit_product_name">Product Name:</label>
                             <input type="text" id="edit_product_name" name="product_name" required>
 
                             <label for="edit_price">Price (Rs.):</label>
                             <input type="number" id="edit_price" name="price" required min="0" step="0.01">
 
-                            <label for="edit_product_image">Product Image:</label>
-                            <input type="file" id="edit_product_image" name="product_image" accept="image/*">
+                            <label for="edit_description">Description:</label>
+                            <textarea id="edit_description" name="description" required></textarea>
+
+                            <label for="edit_category_id">Category:</label>
+                            <select id="edit_category_id" name="category_id" required>
+                                <?php foreach ($data['categories'] as $category): ?>
+                                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
+                            <label for="edit_available_quantity">Available Quantity:</label>
+                            <input type="number" id="edit_available_quantity" name="available_quantity" required min="0" step="1">
 
                             <div class="buttons">
-                                <button type="submit" name="edit_product" class="btn submit">Save Changes</button>
+                                <button type="submit" class="btn submit">Save Changes</button>
+                                <button type="button" class="btn reset" onclick="closeModal('editemployeeModal')">Cancel</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
                 <!-- Delete Confirmation Modal -->
                 <div id="deleteemployeeModal" class="modal">
                     <div class="modal-content">
@@ -78,6 +100,19 @@
                         <div class="buttons">
                             <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
                             <button type="reset" class="btn submit">No</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div id="deleteProductModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('deleteProductModal')">&times;</span>
+                        <h2>Delete Product</h2>
+                        <p>Are you sure you want to delete this product?</p>
+                        <div class="buttons">
+                            <button class="btn submit" id="confirmDeleteButton">Yes, Delete</button>
+                            <button class="btn reset" onclick="closeModal('deleteProductModal')">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -93,76 +128,86 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Product ID</th>
                                     <th>Product Name</th>
-                                    <th>Price</th>
-                                    <th>Image</th>
-                                    <th>Update/Delete</th>
+                                    <th>Description</th>
+                                    <th>Price (Rs.)</th>
+                                    <th>Available Quantity</th>
+                                    <th>Star Rating</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>  
-                                <tr>
-                                    <td>P001</td>
-                                    <td>Chocolate Cake</td>
-                                    <td>Rs. 1500.00</td>
-                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/chocolatecake.png" alt="Chocolate Cake"></td>
-                                    <td>
-                                        <button class="btn edit"onclick="editEmployee()">Update</button>
-                                        <button class="btn delete"onclick="deleteEmployee()">Delete</button>
-                                    
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P002</td>
-                                    <td>Strawberry Cake</td>
-                                    <td>Rs. 1800.00</td>
-                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/strawberrycake.png" alt="Strawberry Cake"></td>
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P003</td>
-                                    <td>Vanilla Cake</td>
-                                    <td>Rs. 1200.00</td>
-                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/vanillacake.png" alt="Vanilla Cake"></td>
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
-                                    </td>   
-                                </tr>
-                                <tr>
-                                    <td>P004</td>
-                                    <td>Red Velvet Cake</td>
-                                    <td>Rs. 1600.00</td>
-                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/redvelvetcake.png" alt="Red Velvet Cake"></td>
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
-                                    </td>  
-                                </tr>
-                                <tr>
-                                    <td>P005</td>
-                                    <td>Chicken Submarine</td>
-                                    <td>Rs. 1400.00</td>
-                                    <td><img src="<?php echo URLROOT; ?>/public/img/HeadM/pchickensubmarine.png" alt="Lemon Cake"></td>
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete"onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
+                            <tbody>
+                                <?php foreach ($data['products'] as $product): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                                        <td><?php echo htmlspecialchars($product->description); ?></td>
+                                        <td>Rs. <?php echo number_format($product->price, 2); ?></td>
+                                        <td><?php echo htmlspecialchars($product->available_quantity); ?></td>
+                                        <td><?php echo htmlspecialchars($product->star_rating); ?> / 5</td>
+                                        <td><?php echo htmlspecialchars($product->category_name); ?></td>
+                                        <td>
+                                            <button class="btn edit" onclick="openEditModal(<?php echo $product->product_id; ?>)">Update</button>
+                                            <button class="btn delete" onclick="openDeleteModal(<?php echo $product->product_id; ?>)">Delete</button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </main>
     </div>
     <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
+    <script>
+        function openEditModal(productId) {
+            console.log('Opening edit modal for product ID:', productId); // Debugging log
 
+            // Fetch the product details using AJAX
+            fetch(`<?php echo URLROOT; ?>/HeadM/getProductById/${productId}`)
+                .then(response => response.json())
+                .then(product => {
+                    console.log('Product details fetched:', product); // Debugging log
+
+                    // Populate the form fields with the product details
+                    document.getElementById('edit_product_id').value = product.product_id;
+                    document.getElementById('edit_product_name').value = product.product_name;
+                    document.getElementById('edit_price').value = product.price;
+                    document.getElementById('edit_description').value = product.description;
+                    document.getElementById('edit_category_id').value = product.category_id;
+                    document.getElementById('edit_available_quantity').value = product.available_quantity;
+
+                    // Open the modal
+                    document.getElementById('editemployeeModal').style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching product details:', error));
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function confirmDelete(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                window.location.href = `<?php echo URLROOT; ?>/HeadM/deleteProduct/${productId}`;
+            }
+        }
+
+        let productIdToDelete = null;
+
+        function openDeleteModal(productId) {
+            productIdToDelete = productId; // Store the product ID to delete
+            document.getElementById('deleteProductModal').style.display = 'block';
+        }
+
+        document.getElementById('confirmDeleteButton').addEventListener('click', function () {
+            if (productIdToDelete) {
+                // Redirect to the delete endpoint
+                window.location.href = `<?php echo URLROOT; ?>/HeadM/deleteProduct/${productIdToDelete}`;
+            }
+        });
+    </script>
 </body>
 </html>
 

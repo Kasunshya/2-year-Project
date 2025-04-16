@@ -15,5 +15,5 @@ define ('URLROOT','http://localhost:/Bakery');
 define('SITENAME','Bakery');
 
 // Upload Root
-define('UPLOADROOT', APPROOT . '/uploads');
+define('UPLOADROOT', dirname(APPROOT) . '/public/uploads');
 ?>
