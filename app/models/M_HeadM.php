@@ -160,5 +160,93 @@ class M_HeadM
         $this->db->bind(':employee_id', $employee_id);
         return $this->db->single();
     }
+
+    public function getAllProducts() {
+        $this->db->query('
+            SELECT 
+                p.product_id, 
+                p.product_name, 
+                p.description, 
+                p.price, 
+                p.available_quantity, 
+                p.star_rating, 
+                c.name AS category_name, 
+                c.category_id 
+            FROM product p
+            INNER JOIN category c ON p.category_id = c.category_id
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function addProduct($data) {
+        $this->db->query('INSERT INTO product (product_name, price, description, category_id, available_quantity) 
+                          VALUES (:product_name, :price, :description, :category_id, :available_quantity)');
+
+        $this->db->bind(':product_name', $data['product_name']);
+        $this->db->bind(':price', $data['price']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':category_id', $data['category_id']);
+        $this->db->bind(':available_quantity', $data['available_quantity']);
+
+        return $this->db->execute();
+    }
+
+    public function editProduct($data) {
+        $this->db->query('UPDATE product 
+                          SET product_name = :product_name, 
+                              price = :price, 
+                              description = :description, 
+                              category_id = :category_id, 
+                              available_quantity = :available_quantity 
+                          WHERE product_id = :product_id');
+
+        $this->db->bind(':product_id', $data['product_id']);
+        $this->db->bind(':product_name', $data['product_name']);
+        $this->db->bind(':price', $data['price']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':category_id', $data['category_id']);
+        $this->db->bind(':available_quantity', $data['available_quantity']);
+
+        return $this->db->execute();
+    }
+
+    public function updateProduct($data) {
+        $this->db->query('UPDATE product 
+                          SET product_name = :product_name, 
+                              price = :price, 
+                              description = :description, 
+                              available_quantity = :available_quantity, 
+                              category_id = :category_id, 
+                              image = :image 
+                          WHERE product_id = :product_id');
+
+        $this->db->bind(':product_id', $data['product_id']);
+        $this->db->bind(':product_name', $data['product_name']);
+        $this->db->bind(':price', $data['price']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':available_quantity', $data['available_quantity']);
+        $this->db->bind(':category_id', $data['category_id']);
+        $this->db->bind(':image', $data['image']);
+
+        return $this->db->execute();
+    }
+
+    public function getProductById($productId) {
+        $this->db->query('SELECT * FROM product WHERE product_id = :product_id');
+        $this->db->bind(':product_id', $productId);
+        return $this->db->single();
+    }
+
+    public function deleteProductById($productId) {
+        $this->db->query('DELETE FROM product WHERE product_id = :product_id');
+        $this->db->bind(':product_id', $productId);
+
+        return $this->db->execute();
+    }
+
+    public function getAllCategories() {
+        $this->db->query('SELECT category_id, name FROM category');
+        return $this->db->resultSet();
+    }
 }
 ?>
