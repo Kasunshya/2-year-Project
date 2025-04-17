@@ -1,14 +1,7 @@
 <?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
 
-// Flash message helper
-// Example usage: flash('register_success', 'You are now registered');
-// Display in view: echo flash('register_success');
-function flash($name = '', $message = '', $class = 'alert alert-success')
-{
+function flash($name = '', $message = '', $class = 'alert alert-success') {
     if (!empty($name)) {
         if (!empty($message) && empty($_SESSION[$name])) {
             if (!empty($_SESSION[$name])) {
@@ -29,4 +22,3 @@ function flash($name = '', $message = '', $class = 'alert alert-success')
         }
     }
 }
-?>

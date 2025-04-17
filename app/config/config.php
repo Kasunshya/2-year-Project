@@ -8,9 +8,12 @@ define('DB_NAME', 'bakery');
 //approot
 define('APPROOT',dirname(dirname(__FILE__)));
 
-// Define the root URL of your application
-define('URLROOT', 'http://localhost/Bakery');
+//url root
+define ('URLROOT','http://localhost:/Bakery');
 
 //website name
 define('SITENAME','Bakery');
+
+// Upload Root
+define('UPLOADROOT', dirname(APPROOT) . '/public/uploads');
 ?>
