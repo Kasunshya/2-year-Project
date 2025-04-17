@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/cashierdash.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
 </head>
@@ -29,7 +30,7 @@
 
     <header>
       <div class="header-container">
-        <h7><i class="fas fa-home">&nbsp</i> Dashboard</h7>
+        <h7><i class="fas fa-home">&nbsp</i> <?php echo $_SESSION['user_id'];  ?>Dashboard</h7>
         <div class="user-profile-header">
           <i class="fas fa-user avatar"></i>
           <h7 class="role">Cashier</h7>
@@ -37,167 +38,190 @@
       </div>
     </header>
     
-    <div class="chart-container">
-      <div class="card">
-          <h2>Sales</h2>
-          <canvas id="salesChart"></canvas>
-          <button onclick="updateSalesChart()">Toggle Sales Data</button>
-      </div>
-      <div class="card">
-    <h2>Calendar</h2>
-    <div id="calendar" style="padding: 1rem;"></div>
-</div>
+    <main class="main-content">
+        <div class="dashboard-top">
+            <!-- Clock Widget -->
+            <div class="clock-widget">
+                <div id="digital-clock"></div>
+                <div id="current-date"></div>
+            </div>
 
-      <!--div class="card">
-          <h2>Revenue</h2>
-          <canvas id="revenueChart"></canvas>
-      </div-->
-  </div>
-  <div class="metrics-container">
-    <div class="metric">
-      <h3>Total Sales</h3>
-      <p>$4,560</p>
-    </div>
-    <div class="metric">
-      <h3>Total Orders</h3>
-      <p><?php echo isset($data['totalOrders']) ? $data['totalOrders'] : '0'; ?></p>
-    </div>
-    <div class="metric">
-      <h3>Total Revenue</h3>
-      <p>$<?php echo isset($data['totalRevenue']) ? number_format($data['totalRevenue'], 2) : '0.00'; ?></p>
-</div>
-    <div class="metric">
-      <h3>Pending Orders</h3>
-      <p>25</p>
-    </div>
-  </div>
-  
-  <div class="recent-orders">
-    <h2>Recent Orders</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Customer Name</th>
-          <th>Time</th>
-          <th>Amount</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1001</td>
-          <td>John Doe</td>
-          <td>10:30 AM</td>
-          <td>$45.00</td>
-          <td>Completed</td>
-        </tr>
-        <tr>
-          <td>1002</td>
-          <td>Jane Smith</td>
-          <td>11:00 AM</td>
-          <td>$32.50</td>
-          <td>Pending</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  
-  
-  <button class="toggle-theme" onclick="toggleTheme()"></button>
+            <!-- Calendar Widget - Single div structure -->
+            <div id="calendar"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        let salesChart;
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        function initializeSalesChart() {
-            salesChart = new Chart(salesCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Sales', 'Visits', 'Income', 'Revenue'],
-                    datasets: [{
-                        data: [2200, 3400, 1800, 2800],
-                        backgroundColor: ['#c98d83', '#ffc85c', '#32b09f', '#783b31'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
+            <!-- Analysis Widget -->
+            <div class="analysis-widget">
+                <h3>Sales Analysis</h3>
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Metrics Container -->
+        <div class="metrics-container">
+            <div class="metric">
+                <h3>Total Orders</h3>
+                <p><?php echo $data['totalOrders']; ?></p>
+            </div>
+            <div class="metric">
+                <h3>Today's Revenue</h3>
+                <p>Rs <?php echo number_format($data['totalRevenue'], 2); ?></p>
+            </div>
+            <div class="metric">
+                <h3>Pending Orders</h3>
+                <p>0</p>
+            </div>
+            <div class="metric">
+                <h3>Average Order Value</h3>
+                <p>Rs <?php echo $data['totalOrders'] > 0 ? number_format($data['totalRevenue'] / $data['totalOrders'], 2) : '0.00'; ?></p>
+            </div>
+        </div>
+
+        <!-- Best Sellers Box -->
+        <div class="best-sellers-container">
+            <h2>Best Selling Products</h2>
+            <div class="best-sellers-grid">
+                <?php foreach($data['bestSellers'] as $product): ?>
+                    <div class="best-seller-card">
+                        <div class="best-seller-info">
+                            <h3><?php echo $product->product_name; ?></h3>
+                            <p class="price">Rs <?php echo number_format($product->price, 2); ?></p>
+                            <p class="sold"><?php echo $product->quantity_sold; ?> units sold</p>
+                        </div>
+                        <div class="best-seller-progress">
+                            <div class="progress-bar" style="width: <?php echo min(($product->quantity_sold / 100) * 100, 100); ?>%"></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="recent-orders">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data['recentOrders'] as $order): ?>
+                        <tr>
+                            <td>OID<?php echo $order->order_id; ?></td>
+                            <td><?php echo date('M d, H:i', strtotime($order->order_date)); ?></td>
+                            <td><?php echo $order->items; ?></td>
+                            <td>Rs <?php echo number_format($order->total, 2); ?></td>
+                            <td>
+                                <span class="status <?php echo strtolower($order->payment_status); ?>">
+                                    <?php echo $order->payment_status; ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Clock Function
+                function updateClock() {
+                    const now = new Date();
+                    document.getElementById('digital-clock').textContent = 
+                        now.toLocaleTimeString('en-US', { 
+                            hour12: false,
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        });
+                    document.getElementById('current-date').textContent = 
+                        now.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
                 }
+
+                // Initialize Calendar
+                var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+                    initialView: 'dayGridMonth',
+                    height: 350, // Reduced height
+                    headerToolbar: {
+                        left: 'prev',
+                        center: 'title',
+                        right: 'next'
+                    },
+                    dayMaxEvents: 1,
+                    aspectRatio: 1.2
+                });
+                
+                calendar.render();
+                updateClock();
+                setInterval(updateClock, 1000);
+
+                // Process sales data
+                const salesData = <?php echo json_encode($data['salesAnalytics']); ?>;
+                const labels = salesData.map(item => item.day);
+                const values = salesData.map(item => parseFloat(item.daily_total));
+
+                // Initialize Sales Chart
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Daily Sales (Rs)',
+                            data: values,
+                            borderColor: '#c98d83',
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: 'rgba(201, 141, 131, 0.1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Rs ' + context.parsed.y.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'Rs ' + value;
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
             });
-        }
-
-        function updateSalesChart() {
-            salesChart.data.datasets[0].data = [1800, 2200, 3000, 2600];
-            salesChart.update();
-        }
-
-        const themeToggle = document.querySelector(".toggle-theme");
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            const rootStyles = document.documentElement.style;
-            if (document.body.classList.contains("dark-mode")) {
-                rootStyles.setProperty("--bg", "var(--dark-bg)");
-                rootStyles.setProperty("--white", "var(--dark-text)");
-            } else {
-                rootStyles.setProperty("--bg", "#f2f1ec");
-                rootStyles.setProperty("--white", "#ffffff");
-            }
-        }
-
-        initializeSalesChart();
-        new Chart(document.getElementById('ordersChart'), {
-            type: 'doughnut',
-            data: { labels: ['Orders', 'Completed', 'Pending'], datasets: [{ data: [4400, 3500, 900], backgroundColor: ['#32b09f', '#c98d83', '#783b31'] }] }
-        });
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-    if (calendarEl) {
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            height: 380,
-            width:380,
-            events: [
-                { title: 'Pickup Order #1001', date: '2025-04-12' },
-                { title: 'Stock Check', date: '2025-04-13' }
-            ]
-        });
-        calendar.render();
-    }
-});
-
-        
-        function filterOrders() {
-  const input = document.getElementById("orderSearch").value.toUpperCase();
-  const table = document.querySelector(".recent-orders table tbody");
-  const rows = table.getElementsByTagName("tr");
-  
-  for (let i = 0; i < rows.length; i++) {
-    const cells = rows[i].getElementsByTagName("td");
-    const customer = cells[1].textContent.toUpperCase();
-    const orderId = cells[0].textContent.toUpperCase();
-    rows[i].style.display = customer.includes(input) || orderId.includes(input) ? "" : "none";
-  }
-}
-// JavaScript to display today's date
-function displayDate() {
-    const today = new Date();
-    const dateString = today.toLocaleDateString('en-US', {
-        weekday: 'long', // "Monday"
-        year: 'numeric', // "2024"
-        month: 'long', // "November"
-        day: 'numeric' // "29"
-    });
-
-    document.getElementById("current-date").textContent = dateString;
-}
-
-// Call the function when the page loads
-window.onload = displayDate;
-
-
-    </script>
+        </script>
+    </main>
+</body>
+</html>
