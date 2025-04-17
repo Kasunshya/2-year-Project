@@ -1,4 +1,7 @@
 <?php
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();}
 class Login extends Controller {
     public function indexx() {
         $data = [
@@ -45,7 +48,7 @@ class Login extends Controller {
         // Load the login view
         $this->view('users/v_login', $data);
     }
-
+    
     private function redirectToDashboard($role) {
         switch ($role) {
             case 'customer':

@@ -15,6 +15,7 @@
                 <li><a href="<?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-boxes"></i></a></li>
                 <li><a href="<?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-edit"></i></a></li>
                 <li><a href="<?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-chart-bar"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Cashier/reports"><i class="fas fa-file-invoice"></i></a></li>
                 <li><a href="<?php echo URLROOT; ?>/Login/indexx" class="btn"><i class="fas fa-sign-out-alt"></i></a></i></a></li>
 
             </ul>
