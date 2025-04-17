@@ -165,125 +165,122 @@
     </header>
 
     <div class="content">
+        <!-- Add this near the top of your content div to display flash messages -->
+        <?php flash('category_message'); ?>
         <div class="search-bar">
-            <input type="text" id="searchCategoryInput" placeholder="Search Category by Name">
-            <button onclick="searchCategory()">Search</button>
+        <input type="text" id="searchCategoryInput" placeholder="Search Category by Name">
+        <button onclick="searchCategory()">Search</button>
         </div>
-        <button class="btn" onclick="openAddCategoryModal()">+ Add Category</button>
+        <button class="btn" onclick="openModal()">+ Add Category</button>
         <table>
             <thead>
                 <tr>
-                    <th>Category ID</th>
+                    <!-- Removed the Category ID column -->
                     <th>Name</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="categoryTable">
-                <tr id="category-1">
-                    <td>1</td>
-                    <td>Waffles</td>
-                    <td>Delicious variety of waffles</td>
-                    <td class="actions">
-                        <button class="btn" onclick="openEditCategoryModal(1)">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteCategory(1)">Delete</button>
-                    </td>
-                </tr>
+                <?php if (!empty($data['categories'])): ?>
+                    <?php foreach ($data['categories'] as $category): ?>
+                        <tr id="category-<?php echo $category->category_id; ?>">
+                            <td><?php echo $category->name; ?></td>
+                            <td><?php echo $category->description; ?></td>
+                            <td class="actions">
+                                <button class="btn" onclick="openEditModal(
+                                    '<?php echo $category->category_id; ?>',
+                                    '<?php echo htmlspecialchars($category->name, ENT_QUOTES); ?>',
+                                    '<?php echo htmlspecialchars($category->description, ENT_QUOTES); ?>'
+                                )">Edit</button>
+                                <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category->category_id; ?>" 
+                                      method="POST" 
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                                    <button type="submit" class="btn delete-btn">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3">No categories found.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
 
-    <!-- Modal -->
-    <div class="modal" id="categoryModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('categoryModal')">&times;</span>
-            <h2 id="categoryModalTitle">Add Category</h2>
-            <form id="categoryForm">
-                <label for="category_name">Category Name:</label>
-                <input type="text" id="category_name" required>
-                <label for="category_description">Description:</label>
-                <input type="text" id="category_description" required>
-                <button type="submit" class="btn">Save</button>
-                <button type="button" class="btn" onclick="closeModal('categoryModal')">Close</button>
-            </form>
-        </div>
+<div class="modal" id="addCategoryModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add Category</h2>
+        <form action="<?php echo URLROOT; ?>/categories/add" method="post">
+            <label for="category_name">Name:</label>
+            <input type="text" id="category_name" name="category_name" required>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required>
+            <button type="submit" class="btn">Add Category</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editCategoryModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Edit Category</h2>
+        <form id="editCategoryForm" action="" method="post">
+            <label for="edit_category_name">Name:</label>
+            <input type="text" id="edit_category_name" name="category_name" required>
+            <label for="edit_description">Description:</label>
+            <input type="text" id="edit_description" name="description" required>
+            <button type="submit" class="btn">Update Category</button>
+        </form>
     </div>
 </div>
 
 <script>
-    let editingCategoryId = null;
-
-    function openAddCategoryModal() {
-        document.getElementById('categoryModalTitle').textContent = "Add Category";
-        document.getElementById('categoryForm').reset();
-        editingCategoryId = null;
-        document.getElementById('categoryModal').style.display = 'flex';
+    function openModal() {
+        document.getElementById('addCategoryModal').style.display = 'flex';
     }
 
-    function openEditCategoryModal(categoryId) {
-        editingCategoryId = categoryId;
-
-        document.getElementById('categoryModalTitle').textContent = "Update Category";
-
-        // Get the correct row
-        let row = document.getElementById(`category-${categoryId}`);
-        let cells = row.getElementsByTagName("td");
-
-        // Populate modal fields with existing values
-        document.getElementById("category_name").value = cells[1].textContent.trim();
-        document.getElementById("category_description").value = cells[2].textContent.trim();
-
-        document.getElementById('categoryModal').style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    document.getElementById('categoryForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById('category_name').value;
-        const description = document.getElementById('category_description').value;
-
-        if (editingCategoryId) {
-            let row = document.getElementById(`category-${editingCategoryId}`);
-            let cells = row.getElementsByTagName("td");
-
-            cells[1].textContent = name;
-            cells[2].textContent = description;
-
-            alert("Category updated successfully!");
-        }
-
-        editingCategoryId = null;
-        closeModal('categoryModal');
-    });
-
-    function deleteCategory(categoryId) {
-        if (confirm("Are you sure you want to delete this category?")) {
-            let row = document.getElementById(`category-${categoryId}`);
-            if (row) {
-                row.remove();
-                alert(`Category ${categoryId} deleted successfully!`);
-            } else {
-                alert("Category not found!");
-            }
-        }
+    function closeModal() {
+        document.getElementById('addCategoryModal').style.display = 'none';
     }
 
     function searchCategory() {
-        const input = document.getElementById('searchCategoryInput').value.toLowerCase();
-        const table = document.getElementById('categoryTable');
-        const rows = table.getElementsByTagName('tr');
+        const input = document.getElementById('searchCategoryInput').value.toLowerCase(); // Get the search input value
+        const table = document.getElementById('categoryTable'); // Get the table body
+        const rows = table.getElementsByTagName('tr'); // Get all rows in the table
 
         for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName('td');
+            const cells = rows[i].getElementsByTagName('td'); // Get all cells in the row
             if (cells.length > 0) {
-                const categoryName = cells[1].textContent.toLowerCase();
-                rows[i].style.display = categoryName.includes(input) ? '' : 'none';
+                const categoryName = cells[0].textContent.toLowerCase(); // Get the category name from the first cell
+                // Show or hide the row based on whether the category name includes the search input
+                if (categoryName.includes(input)) {
+                    rows[i].style.display = ''; // Show the row
+                } else {
+                    rows[i].style.display = 'none'; // Hide the row
+                }
             }
         }
+    }
+
+    // Open the Edit Modal and populate it with the selected category's data
+    function openEditModal(categoryId, categoryName, categoryDescription) {
+        document.getElementById('editCategoryModal').style.display = 'flex';
+        document.getElementById('edit_category_name').value = categoryName;
+        document.getElementById('edit_description').value = categoryDescription;
+
+        // Update the form action dynamically to include the category ID
+        document.getElementById('editCategoryForm').action = `<?php echo URLROOT; ?>/categories/edit/${categoryId}`;
+    }
+
+    // Close the Edit Modal
+    function closeEditModal() {
+        document.getElementById('editCategoryModal').style.display = 'none';
     }
 </script>
 

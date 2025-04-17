@@ -8,8 +8,8 @@ define('DB_NAME', 'bakery');
 //approot
 define('APPROOT',dirname(dirname(__FILE__)));
 
-//url root
-define ('URLROOT','http://localhost/Bakery');
+// Define the root URL of your application
+define('URLROOT', 'http://localhost/Bakery');
 
 //website name
 define('SITENAME','Bakery');
