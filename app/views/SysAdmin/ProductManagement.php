@@ -8,10 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            display: flex;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f2f1ec ;
+            background-color: #f2f1ec;
         }
 
         .header {
@@ -46,6 +45,18 @@
             margin-bottom: 20px;
         }
 
+        .btn:hover {
+            background-color: #b27b71;
+        }
+
+        .delete-btn {
+            background-color: #c98d83;
+        }
+
+        .delete-btn:hover {
+            background-color: #b27b71;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -65,12 +76,6 @@
 
         table td {
             background-color: #ffff;
-
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
         }
 
         .modal {
@@ -104,7 +109,9 @@
             margin: 10px 0 5px;
         }
 
-        .modal-content input, .modal-content select, .modal-content textarea {
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -119,7 +126,6 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-
 
         .search-bar {
             margin-bottom: 20px;
@@ -150,6 +156,46 @@
             background-color: #783b31;
         }
 
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 1200px) {
+            .content {
+                margin-left: 100px;
+                width: calc(100% - 150px);
+            }
+
+            .header {
+                margin-left: 100px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .content {
+                margin-left: 0;
+                width: 100%;
+                padding: 10px;
+            }
+
+            .header {
+                margin-left: 0;
+                margin-right: 0;
+                border-radius: 0;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -176,62 +222,142 @@
         <table>
             <thead>
                 <tr>
-                    <th>Product ID</th>
-                    <th>Photo</th>
                     <th>Name</th>
                     <th>Category</th>
                     <th>Description</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="foodTable">
-                <tr id="food-1">
-                    <td>1</td>
-                    <td><img src="../public/img/Customer/product-1.jpg" alt="Strawberry Pancake" width="50"></td>
-                    <td>Strawberry Pancake</td>
-                    <td>Pancakes</td>
-                    <td>Delicious pancake with fresh strawberries.</td>
-                    <td>LKR 1,250.00</td>
-                    <td>10</td>
-                    <td class="actions">
-                        <button class="btn" onclick="openEditFoodModal(1)">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteFood(1)">Delete</button>
-                    </td>
-                </tr>
+            <tbody id="productTable">
+                <?php if (!empty($data['products'])): ?>
+                    <?php foreach ($data['products'] as $product): ?>
+                        <tr id="product-<?php echo $product->product_id; ?>">
+                            <td><?php echo $product->product_name; ?></td>
+                            <td><?php echo $product->category_name; ?></td>
+                            <td><?php echo $product->description; ?></td>
+                            <td><?php echo $product->price; ?></td>
+                            <td><?php echo $product->available_quantity; ?></td>
+                            <td><?php echo $product->status ? 'Active' : 'Inactive'; ?></td>
+                            <td>
+                                <button class="btn" onclick="openEditModal(<?php echo $product->product_id; ?>)">Edit</button>
+                                <form action="<?php echo URLROOT; ?>/products/delete/<?php echo $product->product_id; ?>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
+
+        <!-- Add Product Modal -->
+        <div id="addProductModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('addProductModal')">&times;</span>
+                <h2>Add Product</h2>
+                <form action="<?php echo URLROOT; ?>/products/add" method="POST">
+                    <label for="product_name">Product Name:</label>
+                    <input type="text" name="product_name" required>
+
+                    <label for="description">Description:</label>
+                    <textarea name="description" required></textarea>
+
+                    <label for="price">Price:</label>
+                    <input type="number" name="price" step="0.01" required>
+
+                    <label for="available_quantity">Quantity:</label>
+                    <input type="number" name="available_quantity" required>
+
+                    <label for="category_id">Category:</label>
+                    <select name="category_id" required>
+                        <option value="">Select Category</option>
+                        <?php foreach ($data['categories'] as $category): ?>
+                            <option value="<?php echo $category->category_id; ?>">
+                                <?php echo $category->name; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <label for="status">Status:</label>
+                    <input type="checkbox" name="status" value="1" checked>
+
+                    <button type="submit" class="btn">Add Product</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="modal" id="foodModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('foodModal')">&times;</span>
             <h2 id="foodModalTitle">Add Food Item</h2>
-            <form id="foodForm">
-                <input type="hidden" id="product_id">
-                <label for="food_photo">Photo:</label>
-                <input type="file" id="food_photo" accept="image/*">
+            <form id="foodForm" action="<?php echo URLROOT; ?>/products/add" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="product_id" name="product_id">
                 <label for="food_name">Name:</label>
-                <input type="text" id="food_name" required>
-                <label for="food_category">Category:</label>
-                <select id="food_category" required>
-                    <option value="Bread">Bread</option>
-                    <option value="Waffles">Waffles</option>
-                    <option value="Pancakes">Pancakes</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Savoury Items">Savoury Items</option>
-                </select>
+                <input type="text" id="food_name" name="product_name" required> 
+              
                 <label for="food_description">Description:</label>
-                <textarea id="food_description" required></textarea>
+                <textarea id="food_description" name="description" required></textarea>
                 <label for="food_price">Price:</label>
-                <input type="number" id="food_price" required>
+                <input type="number" id="food_price" name="price" required>
                 <label for="food_quantity">Quantity:</label>
-                <input type="number" id="food_quantity" required>
+                <input type="number" id="food_quantity" name="available_quantity" required>
+                <label for="food_category">Category:</label>
+                <select id="food_category" name="category_id" required>
+                    <option value="">Select Category</option>
+                    <?php foreach ($data['categories'] as $category): ?>
+                        <option value="<?php echo $category->category_id; ?>"><?php echo $category->name; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <label for="food_status">Status:</label>
+                <input type="checkbox" id="food_status" name="status">
+                <label for="product_image">Image:</label>
+                <input type="file" id="product_image" name="product_image" accept="image/*">
                 <button type="submit" class="btn">Save</button>
                 <button type="button" class="btn" onclick="closeModal('foodModal')">Close</button>
             </form>
         </div>
+    </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div id="editProductModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editProductModal')">&times;</span>
+        <h2>Edit Product</h2>
+        <form action="<?php echo URLROOT; ?>/products/update" method="POST">
+            <input type="hidden" name="product_id" id="edit_product_id">
+            
+            <label for="edit_product_name">Product Name:</label>
+            <input type="text" name="product_name" id="edit_product_name" required>
+
+            <label for="edit_description">Description:</label>
+            <textarea name="description" id="edit_description" required></textarea>
+
+            <label for="edit_price">Price:</label>
+            <input type="number" name="price" id="edit_price" step="0.01" required>
+
+            <label for="edit_available_quantity">Quantity:</label>
+            <input type="number" name="available_quantity" id="edit_available_quantity" required>
+
+            <label for="edit_category_id">Category:</label>
+            <select name="category_id" id="edit_category_id" required>
+                <option value="">Select Category</option>
+                <?php foreach ($data['categories'] as $category): ?>
+                    <option value="<?php echo $category->category_id; ?>">
+                        <?php echo $category->name; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <label for="edit_status">Status:</label>
+            <input type="checkbox" name="status" id="edit_status" value="1">
+
+            <button type="submit" class="btn">Update Product</button>
+        </form>
     </div>
 </div>
 
@@ -261,10 +387,11 @@
         document.getElementById(modalId).style.display = 'none';
     }
 
+    // Update the form submission handler in ProductManagement.php
     document.getElementById('foodForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert("Food item saved/updated successfully!");
-        closeModal('foodModal');
+        // Remove the preventDefault() to allow form submission
+        // e.preventDefault();
+        return true;
     });
 </script>
 
@@ -279,6 +406,61 @@ function deleteFood(fproductId) {
             alert("Food item not found!");
         }
     }
+}
+
+// Add this to your existing JavaScript in ProductManagement.php
+function searchProduct() {
+    const searchInput = document.getElementById('searchProductInput').value;
+    const tableRows = document.querySelectorAll('#productTable tr');
+    
+    tableRows.forEach(row => {
+        const productId = row.querySelector('td:first-child').textContent;
+        const productName = row.querySelector('td:nth-child(3)').textContent;
+        
+        if (productId.includes(searchInput) || 
+            productName.toLowerCase().includes(searchInput.toLowerCase())) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Add event listener for real-time search
+document.getElementById('searchProductInput').addEventListener('keyup', searchProduct);
+
+function openEditModal(productId) {
+    const modal = document.getElementById('editProductModal');
+    const row = document.getElementById('product-' + productId);
+    
+    // Get the cells from the row
+    const cells = row.getElementsByTagName('td');
+    
+    // Set the values in the edit form
+    document.getElementById('edit_product_id').value = productId;
+    document.getElementById('edit_product_name').value = cells[0].innerText;
+    document.getElementById('edit_description').value = cells[2].innerText;
+    document.getElementById('edit_price').value = cells[3].innerText;
+    document.getElementById('edit_available_quantity').value = cells[4].innerText;
+    
+    // Set the category
+    const categorySelect = document.getElementById('edit_category_id');
+    const categoryOptions = categorySelect.options;
+    for (let i = 0; i < categoryOptions.length; i++) {
+        if (categoryOptions[i].text === cells[1].innerText) {
+            categorySelect.selectedIndex = i;
+            break;
+        }
+    }
+    
+    // Set the status checkbox
+    document.getElementById('edit_status').checked = cells[5].innerText === 'Active';
+    
+    modal.style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
 }
 </script>
 

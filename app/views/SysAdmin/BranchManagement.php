@@ -169,14 +169,13 @@
 
     <div class="content">
         <div class="search-bar">
-            <input type="text" id="searchBranchInput" placeholder="Search Branch by ID">
+            <input type="text" id="searchBranchInput" placeholder="Search Branch by Name">
             <button onclick="searchBranch()">Search</button>
         </div>
         <button class="btn" onclick="openAddModal()">+ Add Branch</button>
         <table>
             <thead>
                 <tr>
-                    <th>Branch ID</th>
                     <th>Branch Name</th>
                     <th>Address</th>
                     <th>Contact No</th>
@@ -184,16 +183,19 @@
                 </tr>
             </thead>
             <tbody id="branchTable">
-                <tr>
-                    <td>1</td>
-                    <td>Main Branch</td>
-                    <td>123 Street, Colombo</td>
-                    <td>0771234567</td>
-                    <td class="actions">
-                        <button class="btn" onclick="openEditModal(1)">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteBranch(1)">Delete</button>
-                    </td>
-                </tr>
+                <?php foreach ($data['branches'] as $branch): ?>
+                    <tr id="branch-<?php echo $branch->branch_id; ?>">
+                        <td><?php echo $branch->branch_name; ?></td>
+                        <td><?php echo $branch->branch_address; ?></td>
+                        <td><?php echo $branch->branch_contact; ?></td>
+                        <td>
+                            <button class="btn" onclick="openEditModal(<?php echo $branch->branch_id; ?>)">Edit</button>
+                            <form action="<?php echo URLROOT; ?>/branches/delete/<?php echo $branch->branch_id; ?>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this branch?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -202,60 +204,37 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('addBranchModal')">&times;</span>
             <h2>Add Branch</h2>
-            <form id="addBranchForm">
-                <label for="branch_id">Branch ID:</label>
-                <input type="text" id="branch_id" required>
+            <form action="<?php echo URLROOT; ?>/branches/add" method="POST" id="addBranchForm">
                 <label for="branch_name">Branch Name:</label>
-                <input type="text" id="branch_name" required>
-                <label for="address">Address:</label>
-                <input type="text" id="address" required>
-                <label for="contact_no">Contact No:</label>
-                <input type="text" id="contact_no" required>
+                <input type="text" name="branch_name" id="branch_name" required>
+                
+                <label for="branch_address">Address:</label>
+                <input type="text" name="branch_address" id="branch_address" required>
+                
+                <label for="branch_contact">Contact No:</label>
+                <input type="text" name="branch_contact" id="branch_contact" required>
+                
                 <button type="submit" class="btn">Add Branch</button>
             </form>
         </div>
     </div>
-</div>
-
-<script>
-    function openAddModal() {
-        document.getElementById('addBranchModal').style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    document.getElementById("addBranchForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        const branchId = document.getElementById("branch_id").value;
-        const branchName = document.getElementById("branch_name").value;
-        const address = document.getElementById("address").value;
-        const contactNo = document.getElementById("contact_no").value;
-        
-        const table = document.getElementById("branchTable");
-        const row = table.insertRow();
-        row.innerHTML = `<td>${branchId}</td><td>${branchName}</td><td>${address}</td><td>${contactNo}</td>
-                         <td class='actions'><button class='btn' onclick='openEditModal(${branchId})'>Edit</button>
-                         <button class='btn delete-btn' onclick='deleteBranch(${branchId})'>Delete</button></td>`;
-        
-        closeModal('addBranchModal');
-    });
-</script>
 
     <div class="modal" id="editBranchModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editBranchModal')">&times;</span>
             <h2>Edit Branch</h2>
-            <form id="editBranchForm">
-                <label for="edit_branch_id">Branch ID:</label>
-                <input type="text" id="edit_branch_id" required>
+            <form action="<?php echo URLROOT; ?>/branches/update" method="POST" id="editBranchForm">
+                <input type="hidden" name="branch_id" id="edit_branch_id">
+                
                 <label for="edit_branch_name">Branch Name:</label>
-                <input type="text" id="edit_branch_name" required>
-                <label for="edit_address">Address:</label>
-                <input type="text" id="edit_address" required>
-                <label for="edit_contact_no">Contact No:</label>
-                <input type="text" id="edit_contact_no" required>
+                <input type="text" name="branch_name" id="edit_branch_name" required>
+                
+                <label for="edit_branch_address">Address:</label>
+                <input type="text" name="branch_address" id="edit_branch_address" required>
+                
+                <label for="edit_branch_contact">Contact No:</label>
+                <input type="text" name="branch_contact" id="edit_branch_contact" required>
+                
                 <button type="submit" class="btn">Update Branch</button>
             </form>
         </div>
@@ -268,18 +247,37 @@
     }
 
     function openEditModal(branchId) {
-        document.getElementById('editBranchModal').style.display = 'flex';
+        const modal = document.getElementById('editBranchModal');
+        const row = document.getElementById('branch-' + branchId);
+        
+        document.getElementById('edit_branch_id').value = branchId;
+        document.getElementById('edit_branch_name').value = row.cells[0].innerText;
+        document.getElementById('edit_branch_address').value = row.cells[1].innerText;
+        document.getElementById('edit_branch_contact').value = row.cells[2].innerText;
+        
+        modal.style.display = 'flex';
     }
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
     }
 
-    function deleteBranch(branchId) {
-        if (confirm("Are you sure you want to delete this branch?")) {
-            alert(`Branch ${branchId} deleted.`);
-        }
+    function searchBranch() {
+        const searchInput = document.getElementById('searchBranchInput').value.toLowerCase();
+        const tableRows = document.querySelectorAll('#branchTable tr');
+        
+        tableRows.forEach(row => {
+            const branchName = row.cells[0].textContent.toLowerCase();
+            if (branchName.includes(searchInput)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
+
+    // Add event listener for real-time search
+    document.getElementById('searchBranchInput').addEventListener('keyup', searchBranch);
 </script>
 </body>
 </html>
