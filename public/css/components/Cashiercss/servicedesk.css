@@ -204,7 +204,6 @@
 header {
   background-color: var(--primary-color);
   padding: 2rem;
-  text-align: center;
   color: var(--white);
   font-size: 2.5rem;
   text-transform: uppercase;
@@ -212,6 +211,20 @@ header {
   margin-left: 120px;
   margin-right: 20px;
   border-radius: 5px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+}
+
+.title-section {
+  text-align: left;
+}
+
+.title-section h1 {
+  margin: 0;
+  font-size: 2.5rem;
 }
 
 .main-content {
@@ -588,4 +601,148 @@ font-size: 18px;
 .quantity-input:focus {
   border-color: #4CAF50; /* Green border on focus */
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Subtle green glow */
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-selector button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.decrement-btn {
+    background-color: #e74c3c;  /* Red color */
+}
+
+.increment-btn {
+    background-color: #2ecc71;  /* Green color */
+}
+
+.quantity-selector button:hover {
+    transform: scale(1.1);
+}
+
+.decrement-btn:hover {
+    background-color: #c0392b;  /* Darker red on hover */
+}
+
+.increment-btn:hover {
+    background-color: #27ae60;  /* Darker green on hover */
+}
+
+.quantity-selector button:active {
+    transform: scale(0.95);
+}
+
+.quantity-selector .quantity-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.clock-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#digital-clock {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    width: 100%;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#current-date {
+    text-align: center;
+    font-size: 1.2em;
+    width: 100%;
+    margin: 0;
+    padding: 5px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#digital-clock {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#current-date {
+    text-align: center;
+    font-size: 1.2em;
+    width: 100%;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 300px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: #783b31;
+  font-size: 16px;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.cart-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 10px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cart-button:hover {
+  background-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.cart-button i {
+  font-size: 18px;
 }
