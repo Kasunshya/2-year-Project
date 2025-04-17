@@ -24,84 +24,10 @@
                 </div>
             </header>
             <div class="content">
-                <button class="btn add-employee">+ Add New Cashier</button>
-                <!-- Add employee Modal -->
-                <div id="employeeModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">×</span>
-                        <h2>Add New Cashier</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" required pattern="[A-Za-z\s]{1,}" 
-                                title="Please enter a valid name (letters only)">
-
-                            <label for="contact">Contact:</label>
-                            <input type="text" id="contact" name="contact" required pattern="[0-9]{10}"
-                                title="Please enter a 10-digit contact number">
-
-                            <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" required>
-
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-
-                            <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" required>
-
-                            <div class="buttons">
-                                <button type="reset" class="btn reset">Reset</button>
-                                <button type="submit" name="add_employee" class="btn submit">Register</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Edit employee Modal -->
-                <div id="editemployeeModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">×</span>
-                        <h2>Update Cashier</h2>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                            <input type="hidden" id="edit_cashier_id" name="cashier_id">
-                            
-                            <label for="edit_name">Name:</label>
-                            <input type="text" id="edit_name" name="name" required>
-
-                            <label for="edit_contact">Contact:</label>
-                            <input type="text" id="edit_contact" name="contact" required>
-
-                            <label for="edit_address">Address:</label>
-                            <input type="text" id="edit_address" name="address" required>
-
-                            <label for="edit_email">Email:</label>
-                            <input type="email" id="edit_email" name="email" required>
-
-                            <label for="edit_password">Password:</label>
-                            <input type="password" id="edit_password" name="password" required>
-
-                            <div class="buttons">
-                                <button type="submit" name="edit_employee" class="btn submit">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Delete Confirmation Modal -->
-                <div id="deleteemployeeModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Delete cashier</h2>
-                        <p>Are you sure you want to delete this cashier?</p>
-                        <div class="buttons">
-                            <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
-                            <button type="reset" class="btn submit">No</button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="employee-list">
                     <div class="search-bar">
                         <form method="GET" action="">
-                            <input type="text" placeholder="Search by User Name">
+                            <input type="text" name="search" placeholder="Search by Name or Email" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
                             <button class="search-btn">🔍</button>
                         </form>
                     </div>
@@ -111,103 +37,66 @@
                                 <tr>
                                     <th>Cashier ID</th>
                                     <th>Name</th>
-                                    <th>Contact</th>
-                                    <th>Address</th>
                                     <th>Email</th>
-                                    <th>Join Date</th>
-                                    <!--th>Password</th-->
-                                    <th>Update/Delete</th>
+                                    <th>Contact No</th>
+                                    <th>NIC</th>
+                                    <th>Address</th>
+                                    <th>Branch</th>
+                                    <th>CV</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>E001</td>
-                                    <td>Lalithra</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                        <button class="btn edit"onclick="editEmployee()">Update</button>
-                                        <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>E002</td>
-                                    <td>Umeshi</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>E003</td>
-                                    <td>Ksunshya</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>E004</td>
-                                    <td>Inod</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>E005</td>
-                                    <td>Bavindu</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>E006</td>
-                                    <td>Shakila</td>
-                                    <td>1234567890</td>
-                                    <td>123 Main St, New York</td>
-                                    <td>john@example.com</td>
-                                    <td>2023-08-01</td>
-                                    <!--td>password123</td-->
-                                    <td>
-                                    <button class="btn edit"onclick="editEmployee()">Update</button>
-                                    <button class="btn delete" onclick="deleteEmployee()">Delete</button>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['cashiers'])): ?>
+                                    <?php foreach ($data['cashiers'] as $cashier): ?>
+                                        <tr>
+                                            <td><?php echo $cashier->employee_id; ?></td>
+                                            <td><?php echo $cashier->full_name; ?></td>
+                                            <td><?php echo $cashier->email; ?></td>
+                                            <td><?php echo $cashier->contact_no; ?></td>
+                                            <td><?php echo $cashier->nic; ?></td>
+                                            <td><?php echo $cashier->address; ?></td>
+                                            <td><?php echo $cashier->branch; ?></td>
+                                            <td>
+                                                <?php if (!empty($cashier->cv_upload)): ?>
+                                                    <a href="<?php echo URLROOT . '/headm/downloadCV/' . $cashier->employee_id; ?>">Download CV</a>
+                                                <?php else: ?>
+                                                    No CV Uploaded
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8">No cashiers found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
-
 </body>
 
 </html>
+
+<?php
+// Ensure this function is part of a class, e.g., HeadManagerController
+class HeadManagerController
+{
+    public function downloadCV($employee_id)
+    {
+        $cashier = $this->headManagerModel->getCashierById($employee_id);
+
+        if ($cashier && !empty($cashier->cv_file)) {
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $cashier->cv_upload . '"');
+            echo $cashier->cv_file;
+            exit;
+        } else {
+            flash('cashier_message', 'CV not found', 'alert alert-danger');
+            redirect('HeadM/cashierManagement');
+        }
+    }
+}

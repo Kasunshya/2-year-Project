@@ -52,5 +52,6 @@ class M_Branch {
         $this->db->bind(':search', '%' . $searchTerm . '%');
         return $this->db->resultSet();
     }
+   
 }
 ?>
