@@ -119,9 +119,29 @@
 
                 <div class="employee-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by User Name">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/productManagement" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="product_name" placeholder="Search by Product Name" value="<?php echo isset($_GET['product_name']) ? htmlspecialchars($_GET['product_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="category_id">
+                                    <option value="">All Categories</option>
+                                    <?php foreach ($data['categories'] as $category): ?>
+                                        <option value="<?php echo $category->category_id; ?>" <?php echo (isset($_GET['category_id']) && $_GET['category_id'] == $category->category_id) ? 'selected' : ''; ?>>
+                                            <?php echo $category->name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <input type="number" name="min_price" placeholder="Min Price (Rs.)" min="0" step="0.01" value="<?php echo isset($_GET['min_price']) ? htmlspecialchars($_GET['min_price']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <input type="number" name="max_price" placeholder="Max Price (Rs.)" min="0" step="0.01" value="<?php echo isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">

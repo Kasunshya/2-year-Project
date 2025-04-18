@@ -296,106 +296,115 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal('addEmployeeModal')">&times;</span>
                 <h2>Add New Employee</h2>
-                <form id="addEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/addEmployee" method="post" enctype="multipart/form-data">
-                    <label for="add_full_name">Full Name:</label>
-                    <input type="text" id="add_full_name" name="full_name" required>
+                <form action="<?php echo URLROOT; ?>/sysadmin/addEmployee" method="POST" enctype="multipart/form-data">
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" name="full_name" id="full_name" required>
 
-                    <label for="add_nic">NIC:</label>
-                    <input type="text" id="add_nic" name="nic" required>
+                    <label for="address">Address:</label>
+                    <input type="text" name="address" id="address" required>
 
-                    <label for="add_address">Address:</label>
-                    <input type="text" id="add_address" name="address" required>
+                    <label for="contact_no">Contact Number:</label>
+                    <input type="text" name="contact_no" id="contact_no" required>
 
-                    <label for="add_contact_no">Contact No:</label>
-                    <input type="text" id="add_contact_no" name="contact_no" required>
+                    <label for="nic">NIC:</label>
+                    <input type="text" name="nic" id="nic" required>
 
-                    <label for="add_email">Email:</label>
-                    <input type="email" id="add_email" name="email" required>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" name="dob" id="dob" required>
 
-                    <label for="add_dob">Date of Birth:</label>
-                    <input type="date" id="add_dob" name="dob" required>
-
-                    <label for="add_gender">Gender:</label>
-                    <select id="add_gender" name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                    <label for="gender">Gender:</label>
+                    <select name="gender" id="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select>
 
-                    <label for="add_join_date">Join Date:</label>
-                    <input type="date" id="add_join_date" name="join_date" required>
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" required>
 
-                    <label for="add_branch">Branch:</label>
-                    <select id="add_branch" name="branch">
-                        <option value="Colombo">Colombo</option>
-                        <option value="Galle">Galle</option>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password" required>
+
+                    <label for="join_date">Join Date:</label>
+                    <input type="date" name="join_date" id="join_date" required>
+
+                    <label for="cv_upload">Upload CV:</label>
+                    <input type="file" name="cv_upload" id="cv_upload">
+
+                    <label for="branch_id">Branch:</label>
+                    <select name="branch_id" id="branch_id" required>
+                        <option value="">Select Branch</option>
+                        <option value="1">Branch 1</option>
+                        <option value="2">Branch 2</option>
+                        <!-- Add more branches as needed -->
                     </select>
 
-                    <label for="add_user_role">User Role:</label>
-                    <select id="add_user_role" name="user_role" required>
+                    <label for="user_role">User Role:</label>
+                    <select name="user_role" id="user_role" required>
                         <option value="cashier">Cashier</option>
                         <option value="branchmanager">Branch Manager</option>
                         <option value="headmanager">Head Manager</option>
-                        <option value="admin">Admin</option>
                     </select>
 
-                    <label for="cv_upload">Upload CV:</label>
-                    <input type="file" id="cv_upload" name="cv_upload" accept=".pdf,.doc,.docx" required>
-
-                    <label for="add_password">Password:</label>
-                    <input type="password" id="add_password" name="password" required>
-
-                    <div class="buttons">
-                        <button type="submit" class="btn submit">Add Employee</button>
-                        <button type="button" class="btn reset" onclick="closeModal('addEmployeeModal')">Cancel</button>
-                    </div>
+                    <button type="submit" class="btn submit">Add Employee</button>
                 </form>
             </div>
         </div>
 
         <!-- Edit Employee Modal -->
-        <div class="modal" id="editEmployeeModal">
+        <div id="editEmployeeModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
-                <h2>Edit Employee</h2>
-                <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/editEmployee" method="post" enctype="multipart/form-data">
-                    <input type="hidden" id="edit_employee_id" name="employee_id">
-                    <input type="hidden" id="edit_user_id" name="user_id">
+                <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="employee_id" id="edit_employee_id">
+
                     <label for="edit_full_name">Full Name:</label>
-                    <input type="text" id="edit_full_name" name="full_name" required>
-                    <label for="edit_nic">NIC:</label>
-                    <input type="text" id="edit_nic" name="nic" required>
+                    <input type="text" name="full_name" id="edit_full_name" required>
+
                     <label for="edit_address">Address:</label>
-                    <input type="text" id="edit_address" name="address" required>
-                    <label for="edit_contact_no">Contact No:</label>
-                    <input type="text" id="edit_contact_no" name="contact_no" required>
-                    <label for="edit_email">Email:</label>
-                    <input type="email" id="edit_email" name="email" required>
+                    <input type="text" name="address" id="edit_address" required>
+
+                    <label for="edit_contact_no">Contact Number:</label>
+                    <input type="text" name="contact_no" id="edit_contact_no" required>
+
+                    <label for="edit_nic">NIC:</label>
+                    <input type="text" name="nic" id="edit_nic" required>
+
                     <label for="edit_dob">Date of Birth:</label>
-                    <input type="date" id="edit_dob" name="dob" required>
+                    <input type="date" name="dob" id="edit_dob" required>
+
                     <label for="edit_gender">Gender:</label>
-                    <select id="edit_gender" name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                    <select name="gender" id="edit_gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select>
+
+                    <label for="edit_email">Email:</label>
+                    <input type="email" name="email" id="edit_email" required>
+
+                    <label for="edit_password">Password (Leave blank to keep unchanged):</label>
+                    <input type="password" name="password" id="edit_password">
+
                     <label for="edit_join_date">Join Date:</label>
-                    <input type="date" id="edit_join_date" name="join_date" required>
-                    <label for="edit_branch">Branch:</label>
-                    <select id="edit_branch" name="branch">
-                        <option value="Colombo">Colombo</option>
-                        <option value="Galle">Galle</option>
+                    <input type="date" name="join_date" id="edit_join_date" required>
+
+                    <label for="edit_cv_upload">Upload CV (Leave blank to keep unchanged):</label>
+                    <input type="file" name="cv_upload" id="edit_cv_upload">
+
+                    <label for="edit_branch_id">Branch:</label>
+                    <select name="branch_id" id="edit_branch_id" required>
+                        <!-- Populate branch options dynamically -->
+                        <?php foreach ($branches as $branch): ?>
+                            <option value="<?php echo $branch->branch_id; ?>"><?php echo $branch->branch_name; ?></option>
+                        <?php endforeach; ?>
                     </select>
+
                     <label for="edit_user_role">User Role:</label>
-                    <select id="edit_user_role" name="user_role">
-                        <option value="admin">Admin</option>
-                        <option value="headmanager">Head Manager</option>
+                    <select name="user_role" id="edit_user_role" required>
                         <option value="cashier">Cashier</option>
+                        <option value="branchmanager">Branch Manager</option>
+                        <option value="headmanager">Head Manager</option>
                     </select>
-                    <label for="edit_cv_upload">Upload CV:</label>
-                    <input type="file" id="edit_cv_upload" name="cv_upload" accept=".pdf,.doc,.docx">
-                    <div class="buttons">
-                        <button type="submit" class="btn submit">Update Employee</button>
-                        <button type="button" class="btn reset" onclick="closeModal('editEmployeeModal')">Cancel</button>
-                    </div>
+
+                    <button type="submit" class="btn submit">Update Employee</button>
                 </form>
             </div>
         </div>
@@ -449,42 +458,40 @@
             }
 
             function openEditModal(employeeId) {
-                const table = document.getElementById('employeeTable');
-                const rows = table.getElementsByTagName('tr');
-                let found = false;
+                fetch(`<?php echo URLROOT; ?>/sysadmin/getEmployeeDetails/${employeeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            // Populate the form fields with the employee data
+                            document.getElementById('edit_employee_id').value = data.employee_id;
+                            document.getElementById('edit_full_name').value = data.full_name;
+                            document.getElementById('edit_address').value = data.address;
+                            document.getElementById('edit_contact_no').value = data.contact_no;
+                            document.getElementById('edit_nic').value = data.nic;
+                            document.getElementById('edit_dob').value = data.dob;
+                            document.getElementById('edit_email').value = data.email;
+                            document.getElementById('edit_join_date').value = data.join_date;
+                            document.getElementById('edit_user_role').value = data.user_role;
 
-                for (let i = 0; i < rows.length; i++) {
-                    const cells = rows[i].getElementsByTagName('td');
-                    if (cells.length > 0 && cells[0].textContent === employeeId.toString()) {
-                        found = true;
+                            // Set gender
+                            document.getElementById('edit_gender').value = data.gender;
 
-                        // Populate the form fields
-                        document.getElementById('edit_employee_id').value = employeeId;
-                        document.getElementById('edit_full_name').value = cells[1].textContent.trim();
-                        document.getElementById('edit_nic').value = cells[2].textContent.trim();
-                        document.getElementById('edit_address').value = cells[3].textContent.trim();
-                        document.getElementById('edit_contact_no').value = cells[4].textContent.trim();
-                        document.getElementById('edit_email').value = cells[5].textContent.trim();
-                        document.getElementById('edit_branch').value = cells[6].textContent.trim();
-                        document.getElementById('edit_user_role').value = cells[7].textContent.trim().toLowerCase();
+                            // Set branch
+                            const branchSelect = document.getElementById('edit_branch_id');
+                            for (let i = 0; i < branchSelect.options.length; i++) {
+                                if (branchSelect.options[i].value == data.branch) {
+                                    branchSelect.options[i].selected = true;
+                                    break;
+                                }
+                            }
 
-                        // Get additional data from row attributes
-                        const dob = rows[i].getAttribute('data-dob');
-                        const joinDate = rows[i].getAttribute('data-join-date');
-                        if (dob) document.getElementById('edit_dob').value = dob;
-                        if (joinDate) document.getElementById('edit_join_date').value = joinDate;
-
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    alert('Employee not found.');
-                    return;
-                }
-
-                // Display the modal
-                document.getElementById('editEmployeeModal').style.display = 'block';
+                            // Show the modal
+                            document.getElementById('editEmployeeModal').style.display = 'block';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
 
             function deleteEmployee(employeeId) {

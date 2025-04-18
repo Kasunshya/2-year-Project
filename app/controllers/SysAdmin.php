@@ -30,16 +30,17 @@ class SysAdmin extends Controller {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Handle CV upload
-            $cvFileName = null;
-            if (!empty($_FILES['cv_upload']['name'])) {
-                $cvFileName = time() . '_' . $_FILES['cv_upload']['name']; // Add a timestamp to avoid duplicate file names
-                $cvFilePath = UPLOADROOT . '/' . $cvFileName;
+            // Validate branch_id
+            if (empty($_POST['branch_id'])) {
+                flash('employee_message', 'Please select a branch.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+            }
 
-                if (!move_uploaded_file($_FILES['cv_upload']['tmp_name'], $cvFilePath)) {
-                    flash('employee_message', 'Failed to upload CV', 'alert alert-danger');
-                    redirect('sysadmin/employeeManagement');
-                }
+            // Handle CV upload
+            $cvFileName = '';
+            if (!empty($_FILES['cv_upload']['name'])) {
+                $cvFileName = $_FILES['cv_upload']['name'];
+                move_uploaded_file($_FILES['cv_upload']['tmp_name'], UPLOADROOT . '/' . $cvFileName);
             }
 
             $data = [
@@ -50,10 +51,10 @@ class SysAdmin extends Controller {
                 'dob' => trim($_POST['dob']),
                 'gender' => trim($_POST['gender']),
                 'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
                 'join_date' => trim($_POST['join_date']),
-                'cv_upload' => $cvFileName, // Save the file name in the database
-                'branch' => trim($_POST['branch']),
-                'user_id' => null, // Set this based on your logic
+                'cv_upload' => $cvFileName, // Use the uploaded CV file name
+                'branch_id' => trim($_POST['branch_id']), // Ensure branch_id is included
                 'user_role' => trim($_POST['user_role'])
             ];
 
@@ -130,6 +131,44 @@ class SysAdmin extends Controller {
         }
     }
 
+    public function updateEmployee() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $cvFileName = '';
+            if (!empty($_FILES['cv_upload']['name'])) {
+                $cvFileName = $_FILES['cv_upload']['name'];
+                move_uploaded_file($_FILES['cv_upload']['tmp_name'], UPLOADROOT . '/' . $cvFileName);
+            }
+
+            $data = [
+                'employee_id' => trim($_POST['employee_id']),
+                'full_name' => trim($_POST['full_name']),
+                'address' => trim($_POST['address']),
+                'contact_no' => trim($_POST['contact_no']),
+                'nic' => trim($_POST['nic']),
+                'dob' => trim($_POST['dob']),
+                'gender' => trim($_POST['gender']),
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']), // Optional
+                'join_date' => trim($_POST['join_date']),
+                'cv_upload' => $cvFileName, // Optional
+                'branch_id' => trim($_POST['branch_id']),
+                'user_role' => trim($_POST['user_role']),
+            ];
+
+            if ($this->sysAdminModel->updateEmployee($data)) {
+                flash('employee_message', 'Employee updated successfully');
+                redirect('sysadmin/employeeManagement');
+            } else {
+                flash('employee_message', 'Something went wrong', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+            }
+        } else {
+            redirect('sysadmin/employeeManagement');
+        }
+    }
+
     public function downloadCV($employee_id) {
         $employee = $this->sysAdminModel->getEmployeeById($employee_id);
 
@@ -195,6 +234,16 @@ class SysAdmin extends Controller {
 
     public function categorymanagement() {
         $this->view('SysAdmin/CategoryManagement');
+    }
+
+    public function getEmployeeDetails($id) {
+        $employee = $this->sysAdminModel->getEmployeeById($id);
+
+        if ($employee) {
+            echo json_encode($employee);
+        } else {
+            echo json_encode(['error' => 'Employee not found']);
+        }
     }
 }
 ?>

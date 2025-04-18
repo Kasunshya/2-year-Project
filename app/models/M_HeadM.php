@@ -28,18 +28,40 @@ class M_HeadM
 
     public function getAllBranchManagers()
     {
-        $this->db->query('SELECT bm.branchmanager_id, bm.branch_id, bm.branchmanager_name, bm.address, bm.contact_number, u.email, u.password, b.branch_name 
-                          FROM branchmanager bm 
-                          JOIN users u ON bm.user_id = u.id
-                          JOIN branch b ON bm.branch_id = b.branch_id');
+        $this->db->query('
+            SELECT 
+                bm.branchmanager_id, 
+                bm.branch_id, 
+                bm.branchmanager_name, 
+                bm.address, 
+                bm.contact_number, 
+                e.full_name AS employee_name, 
+                e.email AS employee_email, 
+                e.contact_no AS employee_contact, 
+                b.branch_name 
+            FROM branchmanager bm
+            JOIN employee e ON bm.user_id = e.employee_id
+            JOIN branch b ON bm.branch_id = b.branch_id
+        ');
         return $this->db->resultSet();
     }
+
     public function getBranchManagerById($id)
     {
-        $this->db->query('SELECT bm.branchmanager_id, bm.user_id, bm.branch_id, bm.branchmanager_name, bm.address, bm.contact_number, u.email, u.password 
-                          FROM branchmanager bm 
-                          JOIN users u ON bm.user_id = u.id 
-                          WHERE bm.branchmanager_id = :id');
+        $this->db->query('
+            SELECT 
+                bm.branchmanager_id, 
+                bm.user_id, 
+                bm.branch_id, 
+                bm.branchmanager_name, 
+                bm.address, 
+                bm.contact_number, 
+                u.email, 
+                u.password 
+            FROM branchmanager bm 
+            JOIN users u ON bm.user_id = u.user_id 
+            WHERE bm.branchmanager_id = :id
+        ');
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
@@ -50,11 +72,10 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function addBranchManager($data)
-    {
+    public function addBranchManager($data) {
         // Insert into users table
         $this->db->query('INSERT INTO users (email, password, user_role, created_at) 
-                        VALUES (:email, :password, :user_role, NOW())');
+                          VALUES (:email, :password, :user_role, NOW())');
 
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
@@ -65,7 +86,7 @@ class M_HeadM
 
             // Insert into branchmanager table
             $this->db->query('INSERT INTO branchmanager (user_id, branch_id, branchmanager_name, address, contact_number) 
-                            VALUES (:user_id, :branch_id, :branchmanager_name, :address, :contact_number)');
+                              VALUES (:user_id, :branch_id, :branchmanager_name, :address, :contact_number)');
 
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':branch_id', $data['branch_id']);
@@ -78,9 +99,7 @@ class M_HeadM
         return false;
     }
 
-
-    public function updateBranchManager($data)
-    {
+    public function updateBranchManager($data) {
         // Update branchmanager table
         $this->db->query('UPDATE branchmanager SET 
                           branch_id = :branch_id, 
@@ -98,7 +117,7 @@ class M_HeadM
         $result1 = $this->db->execute();
 
         // Update users table
-        $this->db->query('UPDATE users SET email = :email, password = :password WHERE id = :user_id');
+        $this->db->query('UPDATE users SET email = :email, password = :password WHERE user_id = :user_id');
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
@@ -108,8 +127,7 @@ class M_HeadM
         return ($result1 && $result2);
     }
 
-    public function deleteBranchManager($data)
-    {
+    public function deleteBranchManager($data) {
         // Get user_id before deletion
         $this->db->query('SELECT user_id FROM branchmanager WHERE branchmanager_id = :id');
         $this->db->bind(':id', $data['branchmanager_id']);
@@ -121,7 +139,7 @@ class M_HeadM
         $result1 = $this->db->execute();
 
         // Delete from users table
-        $this->db->query('DELETE FROM users WHERE id = :user_id');
+        $this->db->query('DELETE FROM users WHERE user_id = :user_id');
         $this->db->bind(':user_id', $branchManager->user_id);
         $result2 = $this->db->execute();
 
@@ -246,6 +264,50 @@ class M_HeadM
 
     public function getAllCategories() {
         $this->db->query('SELECT category_id, name FROM category');
+        return $this->db->resultSet();
+    }
+
+    public function searchProducts($productName, $categoryId, $minPrice, $maxPrice) {
+        $query = 'SELECT 
+                    p.product_id, 
+                    p.product_name, 
+                    p.description, 
+                    p.price, 
+                    p.available_quantity, 
+                    p.star_rating, 
+                    c.name AS category_name 
+                  FROM product p
+                  INNER JOIN category c ON p.category_id = c.category_id
+                  WHERE 1=1';
+
+        if (!empty($productName)) {
+            $query .= ' AND p.product_name LIKE :product_name';
+        }
+        if (!empty($categoryId)) {
+            $query .= ' AND p.category_id = :category_id';
+        }
+        if (!empty($minPrice)) {
+            $query .= ' AND p.price >= :min_price';
+        }
+        if (!empty($maxPrice)) {
+            $query .= ' AND p.price <= :max_price';
+        }
+
+        $this->db->query($query);
+
+        if (!empty($productName)) {
+            $this->db->bind(':product_name', '%' . $productName . '%');
+        }
+        if (!empty($categoryId)) {
+            $this->db->bind(':category_id', $categoryId);
+        }
+        if (!empty($minPrice)) {
+            $this->db->bind(':min_price', $minPrice);
+        }
+        if (!empty($maxPrice)) {
+            $this->db->bind(':max_price', $maxPrice);
+        }
+
         return $this->db->resultSet();
     }
 }

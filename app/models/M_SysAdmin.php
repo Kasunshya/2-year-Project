@@ -129,23 +129,57 @@ if (!class_exists('M_SysAdmin')) {
         }
 
         public function addEmployee($data) {
-            $this->db->query('INSERT INTO employee (full_name, address, contact_no, nic, dob, gender, email, join_date, cv_upload, branch, user_id, user_role) 
-                              VALUES (:full_name, :address, :contact_no, :nic, :dob, :gender, :email, :join_date, :cv_upload, :branch, :user_id, :user_role)');
-
-            $this->db->bind(':full_name', $data['full_name']);
-            $this->db->bind(':address', $data['address']);
-            $this->db->bind(':contact_no', $data['contact_no']);
-            $this->db->bind(':nic', $data['nic']);
-            $this->db->bind(':dob', $data['dob']);
-            $this->db->bind(':gender', $data['gender']);
+            // Insert into users table
+            $this->db->query('INSERT INTO users (email, password, user_role) VALUES (:email, :password, :user_role)');
             $this->db->bind(':email', $data['email']);
-            $this->db->bind(':join_date', $data['join_date']);
-            $this->db->bind(':cv_upload', $data['cv_upload']); // Save only the file name
-            $this->db->bind(':branch', $data['branch']);
-            $this->db->bind(':user_id', $data['user_id']);
+            $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
             $this->db->bind(':user_role', $data['user_role']);
 
-            return $this->db->execute();
+            if ($this->db->execute()) {
+                $user_id = $this->db->lastInsertId();
+
+                // Insert into employee table
+                $this->db->query('INSERT INTO employee (full_name, address, contact_no, nic, dob, gender, email, join_date, cv_upload, branch, user_id, user_role) 
+                                  VALUES (:full_name, :address, :contact_no, :nic, :dob, :gender, :email, :join_date, :cv_upload, :branch, :user_id, :user_role)');
+                $this->db->bind(':full_name', $data['full_name']);
+                $this->db->bind(':address', $data['address']);
+                $this->db->bind(':contact_no', $data['contact_no']);
+                $this->db->bind(':nic', $data['nic']);
+                $this->db->bind(':dob', $data['dob']);
+                $this->db->bind(':gender', $data['gender']);
+                $this->db->bind(':email', $data['email']);
+                $this->db->bind(':join_date', $data['join_date']);
+                $this->db->bind(':cv_upload', $data['cv_upload']);
+                $this->db->bind(':branch', $data['branch_id']); // Ensure branch_id is passed here
+                $this->db->bind(':user_id', $user_id);
+                $this->db->bind(':user_role', $data['user_role']);
+
+                if ($this->db->execute()) {
+                    $employee_id = $this->db->lastInsertId();
+
+                    // Insert into the related table based on user_role
+                    if ($data['user_role'] === 'cashier') {
+                        $this->db->query('INSERT INTO cashier (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                        $this->db->bind(':employee_id', $employee_id);
+                        $this->db->bind(':user_id', $user_id);
+                        $this->db->bind(':branch_id', $data['branch_id']);
+                    } elseif ($data['user_role'] === 'branchmanager') {
+                        $this->db->query('INSERT INTO branchmanager (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                        $this->db->bind(':employee_id', $employee_id);
+                        $this->db->bind(':user_id', $user_id);
+                        $this->db->bind(':branch_id', $data['branch_id']);
+                    } elseif ($data['user_role'] === 'headmanager') {
+                        $this->db->query('INSERT INTO headmanager (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                        $this->db->bind(':employee_id', $employee_id);
+                        $this->db->bind(':user_id', $user_id);
+                        $this->db->bind(':branch_id', $data['branch_id']);
+                    }
+
+                    return $this->db->execute();
+                }
+            }
+
+            return false;
         }
 
         public function getUserByEmail($email)
@@ -155,14 +189,21 @@ if (!class_exists('M_SysAdmin')) {
             return $this->db->single();
         }
 
-        public function getEmployeeById($employee_id)
-        {
+        public function getEmployeeById($employee_id) {
             $this->db->query('SELECT * FROM employee WHERE employee_id = :employee_id');
             $this->db->bind(':employee_id', $employee_id);
             return $this->db->single();
         }
 
         public function updateEmployee($data) {
+            // Update users table
+            $this->db->query('UPDATE users SET email = :email, user_role = :user_role WHERE user_id = :user_id');
+            $this->db->bind(':user_id', $data['user_id']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':user_role', $data['user_role']);
+            $result1 = $this->db->execute();
+
+            // Update employee table
             $this->db->query('UPDATE employee SET 
                               full_name = :full_name, 
                               address = :address, 
@@ -171,12 +212,11 @@ if (!class_exists('M_SysAdmin')) {
                               dob = :dob, 
                               gender = :gender, 
                               email = :email, 
-                              join_date = :join_date, 
-                              cv_upload = :cv_upload, 
                               branch = :branch, 
-                              user_role = :user_role 
-                              WHERE employee_id = :employee_id');
-
+                              user_role = :user_role, 
+                              join_date = :join_date' .
+                              (!empty($data['cv_upload']) ? ', cv_upload = :cv_upload' : '') .
+                              ' WHERE employee_id = :employee_id');
             $this->db->bind(':employee_id', $data['employee_id']);
             $this->db->bind(':full_name', $data['full_name']);
             $this->db->bind(':address', $data['address']);
@@ -185,53 +225,71 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->bind(':dob', $data['dob']);
             $this->db->bind(':gender', $data['gender']);
             $this->db->bind(':email', $data['email']);
-            $this->db->bind(':join_date', $data['join_date']);
-            $this->db->bind(':cv_upload', $data['cv_upload']);
-            $this->db->bind(':branch', $data['branch']);
+            $this->db->bind(':branch', $data['branch_id']);
             $this->db->bind(':user_role', $data['user_role']);
-
-            $result1 = $this->db->execute();
+            $this->db->bind(':join_date', $data['join_date']);
+            if (!empty($data['cv_upload'])) {
+                $this->db->bind(':cv_upload', $data['cv_upload']);
+            }
+            $result2 = $this->db->execute();
 
             // Update related table based on user_role
             if ($data['user_role'] === 'cashier') {
-                $this->db->query('UPDATE cashier SET 
-                                  branch_id = :branch_id 
-                                  WHERE employee_id = :employee_id');
+                $this->db->query('UPDATE cashier SET branch_id = :branch_id WHERE employee_id = :employee_id');
                 $this->db->bind(':branch_id', $data['branch_id']);
                 $this->db->bind(':employee_id', $data['employee_id']);
-                $result2 = $this->db->execute();
-                return $result1 && $result2;
             } elseif ($data['user_role'] === 'branchmanager') {
-                $this->db->query('UPDATE branchmanager SET 
-                                  branch_id = :branch_id 
-                                  WHERE employee_id = :employee_id');
+                $this->db->query('UPDATE branchmanager SET branch_id = :branch_id WHERE employee_id = :employee_id');
                 $this->db->bind(':branch_id', $data['branch_id']);
                 $this->db->bind(':employee_id', $data['employee_id']);
-                $result2 = $this->db->execute();
-                return $result1 && $result2;
+            } elseif ($data['user_role'] === 'headmanager') {
+                $this->db->query('UPDATE headmanager SET branch_id = :branch_id WHERE employee_id = :employee_id');
+                $this->db->bind(':branch_id', $data['branch_id']);
+                $this->db->bind(':employee_id', $data['employee_id']);
             }
 
-            return $result1;
+            return $result1 && $result2 && $this->db->execute();
         }
 
-        public function deleteEmployee($id)
-        {
-            // Check if the employee is a cashier
-            $this->db->query('SELECT user_role FROM employee WHERE employee_id = :id');
+        public function deleteEmployee($id) {
+            // Get the employee details
+            $this->db->query('SELECT user_id, user_role FROM employee WHERE employee_id = :id');
             $this->db->bind(':id', $id);
             $employee = $this->db->single();
 
-            if ($employee && $employee->user_role === 'cashier') {
-                // Delete from the cashier table
-                $this->db->query('DELETE FROM cashier WHERE employee_id = :id');
+            if ($employee) {
+                $user_id = $employee->user_id;
+                $user_role = $employee->user_role;
+
+                // Delete from related table based on user_role
+                if ($user_role === 'cashier') {
+                    $this->db->query('DELETE FROM cashier WHERE employee_id = :id');
+                    $this->db->bind(':id', $id);
+                    $this->db->execute();
+                } elseif ($user_role === 'branchmanager') {
+                    $this->db->query('DELETE FROM branchmanager WHERE employee_id = :id');
+                    $this->db->bind(':id', $id);
+                    $this->db->execute();
+                } elseif ($user_role === 'headmanager') {
+                    $this->db->query('DELETE FROM headmanager WHERE employee_id = :id');
+                    $this->db->bind(':id', $id);
+                    $this->db->execute();
+                }
+
+                // Delete from employee table
+                $this->db->query('DELETE FROM employee WHERE employee_id = :id');
                 $this->db->bind(':id', $id);
-                $this->db->execute();
+                $result1 = $this->db->execute();
+
+                // Delete from users table
+                $this->db->query('DELETE FROM users WHERE user_id = :user_id');
+                $this->db->bind(':user_id', $user_id);
+                $result2 = $this->db->execute();
+
+                return $result1 && $result2;
             }
 
-            // Delete from the employee table
-            $this->db->query('DELETE FROM employee WHERE employee_id = :id');
-            $this->db->bind(':id', $id);
-            return $this->db->execute();
+            return false;
         }
 
         public function addCashier($data) {

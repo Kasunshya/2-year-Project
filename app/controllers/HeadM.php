@@ -30,14 +30,15 @@ class HeadM extends Controller
         $this->view('HeadM/SupplierManagement');
     }
 
-    public function branchManager()
-    {
+    public function branchManager() {
         $branchManagers = $this->headManagerModel->getAllBranchManagers();
         $branches = $this->headManagerModel->getAllBranches();
+
         $data = [
             'branchManagers' => $branchManagers,
             'branches' => $branches
         ];
+
         $this->view('HeadM/BranchManagers', $data);
     }
 
@@ -146,12 +147,17 @@ class HeadM extends Controller
     }
 
     public function productManagement() {
+        $productName = isset($_GET['product_name']) ? trim($_GET['product_name']) : '';
+        $categoryId = isset($_GET['category_id']) ? trim($_GET['category_id']) : '';
+        $minPrice = isset($_GET['min_price']) ? trim($_GET['min_price']) : '';
+        $maxPrice = isset($_GET['max_price']) ? trim($_GET['max_price']) : '';
+
+        $products = $this->headManagerModel->searchProducts($productName, $categoryId, $minPrice, $maxPrice);
         $categories = $this->headManagerModel->getAllCategories();
-        $products = $this->headManagerModel->getAllProducts();
 
         $data = [
-            'categories' => $categories,
-            'products' => $products
+            'products' => $products,
+            'categories' => $categories
         ];
 
         $this->view('HeadM/ProductManagement', $data);

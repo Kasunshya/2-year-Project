@@ -145,33 +145,33 @@
                                 <tr>
                                     <th>Branch Manager ID</th>
                                     <th>Branch Name</th>
-                                    <th>Name</th>
+                                    <th>Manager Name</th>
                                     <th>Address</th>
-                                    <!--th>Email</th-->
                                     <th>Contact Number</th>
-                                    <th>Update/Delete</th>
+                                    <th>Employee Name</th>
+                                    <th>Employee Email</th>
+                                    <th>Employee Contact</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($data['branchManagers'] as $branchManager): ?>
-                                    <tr data-id="<?php echo $branchManager->branchmanager_id; ?>">
-                                        <td><?php echo $branchManager->branchmanager_id; ?></td>
-                                        <td data-user-id="<?php echo $branchManager->user_id; ?>"
-                                            data-branch-id="<?php echo $branchManager->branch_id; ?>">
-                                            <?php echo $branchManager->branch_name; ?>
-                                        </td>
-                                        <td><?php echo $branchManager->branchmanager_name; ?></td>
-                                        <td><?php echo $branchManager->address; ?></td>
-                                        <!--td><!-?php echo $branchManager->email; ?></td-->
-                                        <td><?php echo $branchManager->contact_number; ?></td>
-                                        <td>
-                                            <button class="btn edit"
-                                                onclick="editEmployee(<?php echo $branchManager->branchmanager_id; ?>)">Update</button>
-                                            <button class="btn delete"
-                                                onclick="deleteEmployee(<?php echo $branchManager->branchmanager_id; ?>)">Delete</button>
-                                        </td>
+                                <?php if (!empty($data['branchManagers'])): ?>
+                                    <?php foreach ($data['branchManagers'] as $branchManager): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($branchManager->branchmanager_id); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->branch_name); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->branchmanager_name); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->address); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->contact_number); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->employee_name); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->employee_email); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->employee_contact); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center;">No branch managers found.</td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
