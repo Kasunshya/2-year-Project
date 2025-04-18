@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
+        <?php require_once APPROOT . '/views/HeadM/inc/sidebar.php'; ?>
 
         <!-- Main Content -->
         <main>
@@ -24,24 +24,9 @@
                 </div>
             </header>
             <div class="content">
-
-            <!-- Delete Confirmation Modal -->
-            <div id="deleteemployeeModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Delete Feedback</h2>
-                    <p>Are you sure you want to delete this feedback?</p>
-                    <div class="buttons">
-                        <button type="submit" id="confirmDelete" class="btn reset">Yes</button>
-                        <button type="reset" class="btn submit">No</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="emplooyee-list">
                 <div class="search-bar">
                     <form method="GET" action="">
-                        <input type="text" placeholder="Search by Customer Name">
+                        <input type="text" name="search" placeholder="Search by Product Name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                         <button class="search-btn"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
@@ -49,51 +34,40 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Feedback ID</th>
-                                <th>Customer ID</th>
-                                <th>Customer Name</th>
-                                <th>Message</th>
-                                <th>Rating</th>
-                                <th>Date</th>
-                                <th>Actions</th>
+                                <th>Product Name</th>
+                                <th>Star Rating</th>
+                                <th>Feedback Comment</th>
+                                <th>Created Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>F001</td>
-                                <td>101</td>
-                                <td>John Doe</td>
-                                <td>The cake was amazing!</td>
-                                <td><span class="rating">★★★★★</span></td>
-                                <td>2024-11-20</td>
-                                <td><button class="btn delete" onclick="deleteEmployee()">Delete</button></td>
-                            </tr>
-                            <tr>
-                                <td>F002</td>
-                                <td>102</td>
-                                <td>Jane Smith</td>
-                                <td>Delivery was on time and perfect.</td>
-                                <td><span class="rating">★★★★★</span></td>
-                                <td>2024-11-21</td>
-                                <td><button class="btn delete"onclick="deleteEmployee()">Delete</button></td>
-                            </tr>
-                            <tr>
-                                <td>F003</td>
-                                <td>103</td>
-                                <td>Michael Brown</td>
-                                <td>Great customization options!</td>
-                                <td><span class="rating">★★★★★</span></td>
-                                <td>2024-11-22</td>
-                                <td><button class="btn delete"onclick="deleteEmployee()">Delete</button></td>
-                            </tr>
+                            <?php if (!empty($data['feedbacks'])): ?>
+                                <?php foreach ($data['feedbacks'] as $feedback): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($feedback->product_name); ?></td>
+                                        <td>
+                                            <?php for ($i = 0; $i < floor($feedback->star_rating); $i++): ?>
+                                                <span class="rating">★</span>
+                                            <?php endfor; ?>
+                                            <?php for ($i = floor($feedback->star_rating); $i < 5; $i++): ?>
+                                                <span class="rating">☆</span>
+                                            <?php endfor; ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($feedback->feedback_comment); ?></td>
+                                        <td><?php echo htmlspecialchars($feedback->created_at); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">No feedback found.</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
-                </div>
                 </div>
             </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
 </body>
 
 </html>

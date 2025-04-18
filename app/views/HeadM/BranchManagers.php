@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <?php require_once APPROOT.'/views/HeadM/inc/sidebar.php'; ?>
+        <?php require_once APPROOT . '/views/HeadM/inc/sidebar.php'; ?>
 
         <!-- Main Content -->
         <main>
@@ -24,7 +24,7 @@
                 </div>
             </header>
             <div class="content">
-                <button class="btn add-employee">+ Add New Branch Manager</button>
+                
 
                 <!-- Add employee Modal -->
                 <div id="employeeModal" class="modal">
@@ -89,8 +89,8 @@
                 <div class="employee-list">
                     <div class="search-bar">
                         <form method="GET" action="">
-                            <input type="text" placeholder="Search by User Name">
-                            <button class="search-btn">🔍</button>
+                            <input type="text" name="search" placeholder="Search by Name or Branch" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            <button type="submit" class="search-btn">🔍</button>
                         </form>
                     </div>
                     <!-- Edit employee Modal -->
@@ -147,10 +147,9 @@
                                     <th>Branch Name</th>
                                     <th>Manager Name</th>
                                     <th>Address</th>
-                                    <th>Contact Number</th>
-                                    <th>Employee Name</th>
-                                    <th>Employee Email</th>
-                                    <th>Employee Contact</th>
+                                    <th>Contact No</th>
+                                    <th>Email</th>
+                                    <th>CV</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -161,15 +160,22 @@
                                             <td><?php echo htmlspecialchars($branchManager->branch_name); ?></td>
                                             <td><?php echo htmlspecialchars($branchManager->branchmanager_name); ?></td>
                                             <td><?php echo htmlspecialchars($branchManager->address); ?></td>
-                                            <td><?php echo htmlspecialchars($branchManager->contact_number); ?></td>
-                                            <td><?php echo htmlspecialchars($branchManager->employee_name); ?></td>
+                                            <td><?php echo htmlspecialchars($branchManager->contact_no); ?></td>
                                             <td><?php echo htmlspecialchars($branchManager->employee_email); ?></td>
-                                            <td><?php echo htmlspecialchars($branchManager->employee_contact); ?></td>
+                                            <td>
+                                                <?php if (!empty($branchManager->cv_upload)): ?>
+                                                    <a href="<?php echo URLROOT; ?>/HeadM/downloadCV/<?php echo $branchManager->employee_id; ?>" class="btn download-cv">
+                                                        <i class="fas fa-download"></i> Download CV
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span>No CV available</span>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="8" style="text-align: center;">No branch managers found.</td>
+                                        <td colspan="7" style="text-align: center;">No branch managers found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

@@ -58,7 +58,7 @@
                                             <td><?php echo $cashier->branch; ?></td>
                                             <td>
                                                 <?php if (!empty($cashier->cv_upload)): ?>
-                                                    <a href="<?php echo URLROOT . '/headm/downloadCV/' . $cashier->employee_id; ?>">Download CV</a>
+                                                    <a href="<?php echo URLROOT . '/headm/downloadCV/' . $cashier->employee_id; ?>" class="btn download-cv"><i class="fas fa-download"></i>Download CV</a>
                                                 <?php else: ?>
                                                     No CV Uploaded
                                                 <?php endif; ?>

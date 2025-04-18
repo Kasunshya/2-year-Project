@@ -113,6 +113,26 @@ main {
     background: var(--secondary);
 }
 
+.btn.approve {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.btn.reject {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.btn.approve:hover, .btn.reject:hover {
+    opacity: 0.8;
+}
+
 /* Modal Styling */
 .modal {
     display: none;
@@ -470,4 +490,21 @@ input:valid {
 
 .search-btn:hover {
     background-color: #c98d83;
+}
+
+.download-cv {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.download-cv:hover {
+    background-color: #45a049;
 }

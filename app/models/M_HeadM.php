@@ -26,23 +26,33 @@ class M_HeadM
         return $this->db->single()->total;
     }
 
-    public function getAllBranchManagers()
+    public function getAllBranchManagers($search = '')
     {
-        $this->db->query('
+        $query = '
             SELECT 
                 bm.branchmanager_id, 
-                bm.branch_id, 
-                bm.branchmanager_name, 
-                bm.address, 
-                bm.contact_number, 
-                e.full_name AS employee_name, 
-                e.email AS employee_email, 
-                e.contact_no AS employee_contact, 
+                bm.branch_id,
+                bm.employee_id,
+                e.full_name AS branchmanager_name,
+                e.address,
+                e.contact_no, 
+                e.cv_upload, 
+                e.email AS employee_email,
                 b.branch_name 
             FROM branchmanager bm
-            JOIN employee e ON bm.user_id = e.employee_id
+            JOIN employee e ON bm.employee_id = e.employee_id
             JOIN branch b ON bm.branch_id = b.branch_id
-        ');
+        ';
+        
+        // Add search condition if a search query is provided
+        if (!empty($search)) {
+            $query .= ' WHERE e.full_name LIKE :search OR b.branch_name LIKE :search';
+            $this->db->query($query);
+            $this->db->bind(':search', '%' . $search . '%');
+        } else {
+            $this->db->query($query);
+        }
+        
         return $this->db->resultSet();
     }
 
@@ -52,14 +62,15 @@ class M_HeadM
             SELECT 
                 bm.branchmanager_id, 
                 bm.user_id, 
-                bm.branch_id, 
-                bm.branchmanager_name, 
-                bm.address, 
-                bm.contact_number, 
-                u.email, 
-                u.password 
+                bm.branch_id,
+                bm.employee_id,
+                e.full_name AS branchmanager_name,
+                e.address, 
+                e.contact_no AS contact_number, 
+                u.email
             FROM branchmanager bm 
-            JOIN users u ON bm.user_id = u.user_id 
+            JOIN users u ON bm.user_id = u.user_id
+            JOIN employee e ON bm.employee_id = e.employee_id
             WHERE bm.branchmanager_id = :id
         ');
         $this->db->bind(':id', $id);
@@ -83,48 +94,80 @@ class M_HeadM
 
         if ($this->db->execute()) {
             $user_id = $this->db->lastInsertId();
+            
+            // First insert into employee table
+            $this->db->query('INSERT INTO employee (full_name, address, contact_no, email, user_id, user_role) 
+                             VALUES (:full_name, :address, :contact_no, :email, :user_id, :user_role)');
 
-            // Insert into branchmanager table
-            $this->db->query('INSERT INTO branchmanager (user_id, branch_id, branchmanager_name, address, contact_number) 
-                              VALUES (:user_id, :branch_id, :branchmanager_name, :address, :contact_number)');
-
-            $this->db->bind(':user_id', $user_id);
-            $this->db->bind(':branch_id', $data['branch_id']);
-            $this->db->bind(':branchmanager_name', $data['branchmanager_name']);
+            $this->db->bind(':full_name', $data['branchmanager_name']);
             $this->db->bind(':address', $data['address']);
-            $this->db->bind(':contact_number', $data['contact_number']);
+            $this->db->bind(':contact_no', $data['contact_number']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':user_role', 'branchmanager');
 
-            return $this->db->execute();
+            if ($this->db->execute()) {
+                $employee_id = $this->db->lastInsertId();
+                
+                // Then insert into branchmanager table
+                $this->db->query('INSERT INTO branchmanager (employee_id, branch_id, user_id) 
+                                 VALUES (:employee_id, :branch_id, :user_id)');
+
+                $this->db->bind(':employee_id', $employee_id);
+                $this->db->bind(':branch_id', $data['branch_id']);
+                $this->db->bind(':user_id', $user_id);
+
+                return $this->db->execute();
+            }
         }
         return false;
     }
 
     public function updateBranchManager($data) {
-        // Update branchmanager table
-        $this->db->query('UPDATE branchmanager SET 
-                          branch_id = :branch_id, 
-                          branchmanager_name = :branchmanager_name, 
-                          address = :address, 
-                          contact_number = :contact_number 
-                          WHERE branchmanager_id = :id');
-
+        // Get employee_id from branchmanager
+        $this->db->query('SELECT employee_id FROM branchmanager WHERE branchmanager_id = :id');
         $this->db->bind(':id', $data['branchmanager_id']);
-        $this->db->bind(':branch_id', $data['branch_id']);
-        $this->db->bind(':branchmanager_name', $data['branchmanager_name']);
+        $branchManager = $this->db->single();
+        
+        if (!$branchManager) {
+            return false;
+        }
+        
+        // Update employee table
+        $this->db->query('UPDATE employee SET 
+                          full_name = :full_name, 
+                          address = :address, 
+                          contact_no = :contact_number
+                          WHERE employee_id = :employee_id');
+
+        $this->db->bind(':employee_id', $branchManager->employee_id);
+        $this->db->bind(':full_name', $data['branchmanager_name']);
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':contact_number', $data['contact_number']);
 
         $result1 = $this->db->execute();
 
-        // Update users table
-        $this->db->query('UPDATE users SET email = :email, password = :password WHERE user_id = :user_id');
-        $this->db->bind(':user_id', $data['user_id']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        // Update branchmanager table
+        $this->db->query('UPDATE branchmanager SET 
+                         branch_id = :branch_id
+                         WHERE branchmanager_id = :id');
+
+        $this->db->bind(':id', $data['branchmanager_id']);
+        $this->db->bind(':branch_id', $data['branch_id']);
 
         $result2 = $this->db->execute();
 
-        return ($result1 && $result2);
+        // Update users table if password is provided
+        if (!empty($data['password'])) {
+            $this->db->query('UPDATE users SET password = :password WHERE user_id = :user_id');
+            $this->db->bind(':user_id', $data['user_id']);
+            $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+            $result3 = $this->db->execute();
+        } else {
+            $result3 = true;
+        }
+
+        return ($result1 && $result2 && $result3);
     }
 
     public function deleteBranchManager($data) {
@@ -175,6 +218,19 @@ class M_HeadM
     public function getCashierById($employee_id)
     {
         $this->db->query('SELECT employee_id, full_name, cv_upload FROM employee WHERE employee_id = :employee_id AND user_role = "cashier"');
+        $this->db->bind(':employee_id', $employee_id);
+        return $this->db->single();
+    }
+
+    public function getEmployeeById($employee_id) {
+        $this->db->query('
+            SELECT 
+                employee_id, 
+                full_name, 
+                cv_upload 
+            FROM employee 
+            WHERE employee_id = :employee_id
+        ');
         $this->db->bind(':employee_id', $employee_id);
         return $this->db->single();
     }
@@ -306,6 +362,42 @@ class M_HeadM
         }
         if (!empty($maxPrice)) {
             $this->db->bind(':max_price', $maxPrice);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getDailyBranchOrders() {
+        $this->db->query('
+            SELECT
+                dbo.dailybranchorder_id, 
+                b.branch_name, 
+                dbo.description, 
+                dbo.orderdate 
+            FROM dailybranchorder dbo
+            JOIN branch b ON dbo.branch_id = b.branch_id
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getAllFeedbacks($search = '') {
+        $query = '
+            SELECT 
+                p.product_name, 
+                f.star_rating, 
+                f.feedback_comment, 
+                f.created_at 
+            FROM feedback f
+            JOIN product p ON f.product_id = p.product_id
+        ';
+
+        // Add search condition if a search query is provided
+        if (!empty($search)) {
+            $query .= ' WHERE p.product_name LIKE :search';
+            $this->db->query($query);
+            $this->db->bind(':search', '%' . $search . '%');
+        } else {
+            $this->db->query($query);
         }
 
         return $this->db->resultSet();

@@ -31,12 +31,14 @@ class HeadM extends Controller
     }
 
     public function branchManager() {
-        $branchManagers = $this->headManagerModel->getAllBranchManagers();
-        $branches = $this->headManagerModel->getAllBranches();
+        // Get the search query from the GET request
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        // Fetch branch managers based on the search query
+        $branchManagers = $this->headManagerModel->getAllBranchManagers($search);
 
         $data = [
-            'branchManagers' => $branchManagers,
-            'branches' => $branches
+            'branchManagers' => $branchManagers
         ];
 
         $this->view('HeadM/BranchManagers', $data);
@@ -244,36 +246,52 @@ class HeadM extends Controller
         $this->view('HeadM/PreOrder');
     }
 
-    public function dailyBranchOrder()
-    {
-        $this->view('HeadM/DailyBranchOrder');
-    }
+    public function dailyBranchOrder() {
+    // Fetch daily branch orders from the model
+    $orders = $this->headManagerModel->getDailyBranchOrders();
 
-    public function feedback()
-    {
-        $this->view('HeadM/Feedback');
-    }
+    // Pass the data to the view
+    $data = [
+        'orders' => $orders
+    ];
 
-    public function downloadCV($employee_id)
-    {
-        $cashier = $this->headManagerModel->getCashierById($employee_id);
+    $this->view('HeadM/DailyBranchOrder', $data);
+}
 
-        if ($cashier && !empty($cashier->cv_upload)) {
-            $filePath = UPLOADROOT . '/' . $cashier->cv_upload;
+    public function feedback() {
+    // Get the search query from the GET request
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
+    // Fetch feedbacks based on the search query
+    $feedbacks = $this->headManagerModel->getAllFeedbacks($search);
+
+    $data = [
+        'feedbacks' => $feedbacks
+    ];
+
+    $this->view('HeadM/Feedback', $data);
+}
+
+    public function downloadCV($employee_id) {
+        // Fetch employee details using the model
+        $employee = $this->headManagerModel->getEmployeeById($employee_id);
+    
+        if ($employee && !empty($employee->cv_upload)) {
+            $filePath = UPLOADROOT . '/' . $employee->cv_upload;
+    
             if (file_exists($filePath)) {
+                // Serve the file for download
                 header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+                header('Content-Disposition: attachment; filename="' . basename($employee->cv_upload) . '"');
+                header('Content-Length: ' . filesize($filePath));
                 readfile($filePath);
                 exit;
-            } else {
-                flash('cashier_message', 'CV file not found on the server', 'alert alert-danger');
-                redirect('HeadM/cashierManagement');
             }
-        } else {
-            flash('cashier_message', 'CV not found in the database', 'alert alert-danger');
-            redirect('HeadM/cashierManagement');
         }
+    
+        // Redirect back if the CV file doesn't exist or there's an error
+        flash('cv_error', 'CV file not found', 'alert alert-danger');
+        redirect('HeadM/branchManager');
     }
 }
 ?>
