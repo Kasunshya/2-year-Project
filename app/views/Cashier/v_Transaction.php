@@ -19,7 +19,9 @@
                 left: 0;
                 top: 0;
                 width: 100%;
-                padding: 20px;
+                padding: 0;
+                margin: 0;
+                background-color: white;
             }
             .print-table {
                 page-break-inside: avoid;
@@ -32,73 +34,264 @@
         /* Hide print-section by default */
         .print-section {
             display: none;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            color: #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        /* Invoice styling */
+        .invoice-container {
+            padding: 40px;
+            position: relative;
+            border: 1px solid #eaeaea;
         }
         
-        /* Rest of your existing styles */
-        .print-header {
-            text-align: center;
-            margin-bottom: 20px;
+        /* Header with Logo */
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #783b31;
+            padding-bottom: 20px;
         }
+        
+        .invoice-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .invoice-logo img {
+            height: 60px; /* Adjust logo size as needed */
+        }
+        
+        .invoice-logo-text {
+            margin-left: 15px;
+        }
+        
+        .invoice-logo-text h1 {
+            font-size: 24px;
+            color: #783b31;
+            margin: 0;
+        }
+        
+        .invoice-logo-text p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .invoice-title {
+            flex-grow: 0;
+            text-align: right;
+        }
+        
+        .invoice-title h2 {
+            font-size: 28px;
+            color: #783b31;
+            margin: 0 0 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .invoice-title p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Company and Report Info */
+        .company-info {
+            text-align: left;
+            margin-bottom: 30px;
+            padding: 0;
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .company-info-left {
+            flex: 1;
+        }
+        
+        .company-info-left h3 {
+            font-size: 18px;
+            color: #783b31;
+            margin: 0 0 10px;
+        }
+        
+        .company-info-left p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .report-info {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .report-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .report-info strong {
+            color: #783b31;
+        }
+        
+        /* Transactions Table */
         .print-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
+            margin: 30px 0;
+            border: 1px solid #dee2e6;
         }
-        .print-table th, .print-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        
+        .print-table th {
+            background-color: #f8f9fa;
+            color: #495057;
+            padding: 12px;
             text-align: left;
+            border: 1px solid #dee2e6;
+            font-weight: 600;
         }
-        .print-summary {
-            margin-top: 20px;
-            border-top: 2px solid #333;
-            padding: 15px;
-            background: #f9f9f9;
-            width: 60%;  /* Reduced from 100% */
-            margin-left: 20px;  /* Add left margin */
-        }
-        .print-summary-row {
-            display: flex;
-            justify-content: flex-start;  /* Changed from space-between */
-            padding: 5px 20px;
-            font-size: 16px;
-        }
-        .print-summary-row span:first-child {
-            width: 200px;  /* Fixed width for labels */
-            font-weight: 500;
-        }
-        .print-summary-row span:last-child {
-            margin-left: 20px;  /* Add space between label and value */
-        }
-        .print-summary-row.total {
-            font-weight: bold;
-            font-size: 18px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-            margin-top: 5px;
-        }
-        .print-summary h3 {
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 20px;
-        }
-        .company-info {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            border-bottom: 2px solid #333;
-        }
-        .company-info h1 {
-            margin-bottom: 10px;
+        
+        .print-table td {
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
             color: #333;
         }
-        .footer {
-            margin-top: 30px;
+        
+        .print-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .print-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Summary Box */
+        .print-summary {
+            margin: 30px 0;
+            background: #f9f9f9;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 20px;
+            width: 350px;
+            float: right;
+        }
+        
+        .print-summary h3 {
+            text-align: left;
+            color: #783b31;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .print-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        
+        .print-summary-row.total {
+            font-weight: 700;
+            font-size: 16px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+            margin-top: 10px;
+            color: #783b31;
+        }
+        
+        /* Footer */
+        .invoice-footer {
+            clear: both;
             text-align: center;
-            border-top: 1px solid #ddd;
+            margin-top: 60px;
             padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            color: #888;
+        }
+        
+        .invoice-footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 100px;
+            color: rgba(200, 200, 200, 0.1);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* QR Code spot */
+        .qr-code {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            width: 80px;
+            height: 80px;
+            border: 1px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .qr-code span {
+            font-size: 10px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* Status colors */
+        .status-paid {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        
+        /* Print button */
+        .invoice-btn {
+            background-color: #783b31;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .invoice-btn:hover {
+            background-color: #62302a;
+        }
+        
+        /* Additional styles to mimic a professional PDF */
+        .print-section {
+            position: relative;
         }
     </style>
 </head>
@@ -132,7 +325,14 @@
         <?php if(isset($_SESSION['employee_id'])): ?>
             <p class="debug-info">Logged in as employee ID: <?php echo $_SESSION['employee_id']; ?></p>
         <?php else: ?>
-            <p class="debug-info">No employee ID set in session</p>
+            <!-- Display a more user-friendly message and provide a fallback ID -->
+            <?php
+                // Set default employee_id for cashier if not set
+                if (!isset($_SESSION['employee_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'cashier') {
+                    $_SESSION['employee_id'] = 1; // Fallback ID
+                }
+            ?>
+            <p class="debug-info">Using system default cashier ID</p>
         <?php endif; ?>
         
         <table class="transaction-table">
@@ -175,65 +375,111 @@
 
     <!-- Print Section -->
     <div class="print-section">
-        <div class="company-info">
-            <h1>FROSTINE BAKERY</h1>
-            <p>Daily Transaction Report</p>
-            <p><?php echo date('d M Y'); ?></p>
-        </div>
+        <div class="invoice-container">
+            <!-- Watermark -->
+            <div class="watermark">FROSTINE</div>
+            
+            <!-- Invoice Header with Logo -->
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <!--img src="<?php echo URLROOT; ?>/public/img/frostineLogo.png" alt="Frostine Logo"-->
+                    <img src="<?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
+                    <div class="invoice-logo-text">
+                        <h1>FROSTINE BAKERY</h1>
+                        <p>Fresh & Delicious Every Day</p>
+                    </div>
+                </div>
+                <div class="invoice-title">
+                    <h2>Daily Transactions</h2>
+                    <p>Report #DTR-<?php echo date('Ymd'); ?></p>
+                </div>
+            </div>
+            
+            <!-- Company and Report Information -->
+            <div class="company-info">
+                <div class="company-info-left">
+                    <h3>Bakery Information</h3>
+                    <p>123 Baker Street, Colombo</p>
+                    <p>Phone: +94 112 345 678</p>
+                    <p>Email: info@frostine.com</p>
+                    <p>Website: www.frostinebakery.com</p>
+                </div>
+                <div class="report-info">
+                    <p><strong>Date:</strong> <?php echo date('d F Y'); ?></p>
+                    <?php if(isset($_SESSION['employee_id'])): ?>
+                        <p><strong>Cashier ID:</strong> <?php echo $_SESSION['employee_id']; ?></p>
+                    <?php endif; ?>
+                    <?php if(isset($_SESSION['branch_id'])): ?>
+                        <p><strong>Branch ID:</strong> <?php echo $_SESSION['branch_id']; ?></p>
+                    <?php endif; ?>
+                    <p><strong>Report Generated:</strong> <?php echo date('d F Y, h:i A'); ?></p>
+                </div>
+            </div>
 
-        <div class="print-header">
-            <h2>Daily Transactions Summary</h2>
-            <p>Date: <?php echo date('d M Y'); ?></p>
-            <?php if(isset($_SESSION['employee_id'])): ?>
-                <p>Cashier ID: <?php echo $_SESSION['employee_id']; ?></p>
-            <?php endif; ?>
-        </div>
-
-        <table class="print-table">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Time</th>
-                    <th>Amount</th>
-                    <th>Payment Method</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($data['transactions'])) : ?>
-                    <?php foreach ($data['transactions'] as $transaction) : ?>
+            <!-- Transactions Table -->
+            <table class="print-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Time</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($data['transactions'])) : ?>
+                        <?php foreach ($data['transactions'] as $transaction) : ?>
+                            <tr>
+                                <td>#<?php echo $transaction->order_id; ?></td>
+                                <td><?php echo date('h:i A', strtotime($transaction->order_date)); ?></td>
+                                <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
+                                <td><?php echo $transaction->payment_method; ?></td>
+                                <td class="status-<?php echo strtolower($transaction->payment_status); ?>">
+                                    <?php echo $transaction->payment_status; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td>#<?php echo $transaction->order_id; ?></td>
-                            <td><?php echo date('H:i', strtotime($transaction->order_date)); ?></td>
-                            <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
-                            <td><?php echo $transaction->payment_method; ?></td>
-                            <td><?php echo $transaction->payment_status; ?></td>
+                            <td colspan="5" style="text-align: center;">No transactions found for today</td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    <?php endif; ?>
+                </tbody>
+            </table>
 
-        <div class="print-summary">
-            <h3>Summary</h3>
-            <div class="print-summary-row">
-                <span>Total Transactions:</span>
-                <span><?php echo $data['summary']->transaction_count ?? 0; ?></span>
+            <!-- Summary Box -->
+            <div class="print-summary">
+                <h3>Transaction Summary</h3>
+                <div class="print-summary-row">
+                    <span>Total Transactions</span>
+                    <span><?php echo $data['summary']->transaction_count ?? 0; ?></span>
+                </div>
+                <div class="print-summary-row">
+                    <span>Cash Sales</span>
+                    <span>LKR <?php echo number_format($data['summary']->cash_sales ?? 0, 2); ?></span>
+                </div>
+                <div class="print-summary-row">
+                    <span>Card Sales</span>
+                    <span>LKR <?php echo number_format($data['summary']->card_sales ?? 0, 2); ?></span>
+                </div>
+                <div class="print-summary-row total">
+                    <span>Total Sales</span>
+                    <span>LKR <?php echo number_format($data['summary']->total_sales ?? 0, 2); ?></span>
+                </div>
             </div>
-            <div class="print-summary-row total">
-                <span>Total Sales:</span>
-                <span>LKR <?php echo number_format($data['summary']->total_sales ?? 0, 2); ?></span>
-            </div>
-            <div class="print-summary-row">
-                <span>Generated on:</span>
-                <span><?php echo date('d M Y H:i:s'); ?></span>
-            </div>
-        </div>
 
-        <div class="footer" style="text-align: center; margin-top: 50px;">
-            <p>Thank you for your business!</p>
-            <p>FROSTINE BAKERY</p>
-            <small>This is a computer generated document</small>
+            <!-- QR Code placeholder -->
+            <div class="qr-code">
+                <span>Scan to verify report</span>
+            </div>
+
+            <!-- Footer -->
+            <div class="invoice-footer">
+                <p>Thank you for your business!</p>
+                <p>&copy; <?php echo date('Y'); ?> FROSTINE BAKERY - All Rights Reserved</p>
+                <p><small>This is a computer generated document and requires no signature</small></p>
+            </div>
         </div>
     </div>
 
@@ -242,14 +488,17 @@
         function printDailyReport() {
             // Show print section just before printing
             document.querySelector('.print-section').style.display = 'block';
-            window.print();
-            // Hide print section after printing dialog is closed
+            
+            // Add a slight delay to ensure CSS is applied before printing
             setTimeout(() => {
-                document.querySelector('.print-section').style.display = 'none';
-            }, 100);
+                window.print();
+                
+                // Hide print section after printing dialog is closed
+                setTimeout(() => {
+                    document.querySelector('.print-section').style.display = 'none';
+                }, 100);
+            }, 300);
         }
-        
-        // Remove the DOMContentLoaded listener since we don't want to show print section by default
     </script>
 </body>
 </html>

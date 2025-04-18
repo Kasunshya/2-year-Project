@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Receipt</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/bill.css">
+    <style>
+    .warning-message {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+        text-align: center;
+    }
+    </style>
 </head>
 <body>
     <div class="receipt">
@@ -73,6 +83,12 @@
                 <?php endif; ?>
             </div>
         </div>
+
+        <?php if(isset($data['stock_updated']) && !$data['stock_updated']): ?>
+        <div class="warning-message">
+            <strong>Note:</strong> There was an issue updating the inventory. Please notify the manager.
+        </div>
+        <?php endif; ?>
 
         <div class="receipt-footer">
             <p>Thank you for shopping with us!</p>
