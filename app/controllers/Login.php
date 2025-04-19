@@ -33,11 +33,49 @@ class Login extends Controller {
 
                 // Check if user exists and password matches
                 if ($user && password_verify($data['password'], $user->password)) {
-                    // Start session and redirect based on role
+                    // Start session and set user data
                     session_start();
-                    $_SESSION['user_id'] = $user->id;
+                    $_SESSION['user_id'] = $user->user_id;
                     $_SESSION['user_role'] = $user->user_role;
-
+                    
+                    // For cashier role, fetch and set the employee_id and branch_id
+                    if ($user->user_role === 'cashier') {
+                        // First try to get from cashier table directly
+                        $this->db = new Database();
+                        $this->db->query("SELECT c.cashier_id, c.employee_id, c.branch_id 
+                                         FROM cashier c 
+                                         WHERE c.user_id = :user_id");
+                        $this->db->bind(':user_id', $user->user_id);
+                        $cashier = $this->db->single();
+                        
+                        if ($cashier && $cashier->branch_id) {
+                            $_SESSION['cashier_id'] = $cashier->cashier_id;
+                            $_SESSION['employee_id'] = $cashier->employee_id;
+                            $_SESSION['branch_id'] = $cashier->branch_id;
+                            error_log("Login - Found cashier record with cashier_id: " . $cashier->cashier_id . 
+                                      ", employee_id: " . $cashier->employee_id . ", branch_id: " . $cashier->branch_id);
+                        } else {
+                            // If not found in cashier table or branch_id is null, try employee table
+                            $this->db->query("SELECT e.employee_id, b.branch_id 
+                                             FROM employee e 
+                                             LEFT JOIN branch b ON e.branch = b.branch_name
+                                             WHERE e.user_id = :user_id AND e.user_role = 'cashier'");
+                            $this->db->bind(':user_id', $user->user_id);
+                            $employee = $this->db->single();
+                            
+                            if ($employee) {
+                                $_SESSION['employee_id'] = $employee->employee_id;
+                                $_SESSION['branch_id'] = $employee->branch_id;
+                                error_log("Login - Found employee with ID: " . $employee->employee_id . ", branch_id: " . $employee->branch_id);
+                            } else {
+                                // Set default values as fallback
+                                $_SESSION['employee_id'] = 6;
+                                $_SESSION['branch_id'] = 1;
+                                error_log("Login - Using default values - employee_id: 6, branch_id: 1");
+                            }
+                        }
+                    }
+                    
                     $this->redirectToDashboard($user->user_role);
                 } else {
                     $data['errors']['general'] = 'Invalid credentials';

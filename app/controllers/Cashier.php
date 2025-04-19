@@ -11,6 +11,12 @@ class Cashier extends Controller {
         // Debug logs
         error_log('Session data: ' . print_r($_SESSION, true));
         
+        // Set default employee_id if not set
+        if (!isset($_SESSION['employee_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'cashier') {
+            $_SESSION['employee_id'] = 1; // Default value for testing
+            error_log('Set default employee_id: ' . $_SESSION['employee_id']);
+        }
+        
         $transactions = $this->CashierModel->getDailyTransactions();
         $summary = $this->CashierModel->getDailySummary();
         
@@ -39,15 +45,34 @@ class Cashier extends Controller {
   }
 
 public function cashierdashboard(){
+    // Get cashier information if available
+    if (isset($_SESSION['user_id'])) {
+        $cashierInfo = $this->CashierModel->getCashierByUserId($_SESSION['user_id']);
+        if ($cashierInfo) {
+            // Set session variables for later use
+            $_SESSION['employee_id'] = $cashierInfo->employee_id ?? null;
+            $_SESSION['branch_id'] = $cashierInfo->branch_id ?? null;
+            
+            // Log the session setup
+            error_log("Set session variables - employee_id: " . $_SESSION['employee_id'] . 
+                      ", branch_id: " . $_SESSION['branch_id']);
+        }
+    }
+    
+    // Get metrics specific to this cashier and branch
     $totalOrders = $this->CashierModel->getTotalOrderCount();
     $totalRevenue = $this->CashierModel->calculateTotalRevenue();
+    $todaysRevenue = $this->CashierModel->calculateTodaysRevenue();
+    $avgOrderValue = $this->CashierModel->calculateAverageOrderValue();
     $bestSellers = $this->CashierModel->getBestSellingProducts();
     $salesAnalytics = $this->CashierModel->getSalesAnalytics();
     $recentOrders = $this->CashierModel->getRecentOrders();
     
     $data = [
         'totalOrders' => $totalOrders->total_orders,
-        'totalRevenue' => $totalRevenue ?? 0.00,
+        'totalRevenue' => $totalRevenue,
+        'todaysRevenue' => $todaysRevenue,
+        'averageOrderValue' => $avgOrderValue,
         'bestSellers' => $bestSellers,
         'salesAnalytics' => $salesAnalytics,
         'recentOrders' => $recentOrders
@@ -198,8 +223,20 @@ public function search() {
 
     public function processPayment() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Clear any potential output buffer to prevent HTML in response
+            if (ob_get_level()) ob_clean();
+            
+            // Debug actual session data
+            error_log("Session data during payment: " . print_r($_SESSION, true));
+            
             if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
                 echo json_encode(['success' => false, 'message' => 'Cart is empty']);
+                return;
+            }
+
+            // Check if employee_id is set - redirect to login if not
+            if (!isset($_SESSION['employee_id']) || !isset($_SESSION['branch_id'])) {
+                echo json_encode(['success' => false, 'message' => 'Session expired. Please login again.']);
                 return;
             }
 
@@ -212,64 +249,121 @@ public function search() {
             $discountAmount = isset($_SESSION['discount']) ? floatval($_SESSION['discount']) : 0;
             $total = $subtotal - $discountAmount;
             
-            // Handle different payment methods
-            if ($paymentMethod === 'cash') {
-                $amountTendered = isset($_POST['amount_tendered']) ? floatval($_POST['amount_tendered']) : 0;
-                $change = max(0, $amountTendered - $total);
-            } else if ($paymentMethod === 'card') {
-                $amountTendered = $total; // For card payments, amount tendered equals total
-                $change = 0;
+            $amountTendered = ($paymentMethod === 'cash') ? 
+                floatval($_POST['amount_tendered']) : $total;
+            $change = ($paymentMethod === 'cash') ? 
+                max(0, $amountTendered - $total) : 0;
+
+            // Get branch_id from cashier record if possible
+            $branch_id = $_SESSION['branch_id'] ?? 1;
+            
+            // If cashier_id is available, ensure we use the correct branch_id
+            if (isset($_SESSION['cashier_id'])) {
+                try {
+                    $this->db = new Database();
+                    $this->db->query("SELECT branch_id FROM cashier WHERE cashier_id = :cashier_id");
+                    $this->db->bind(':cashier_id', $_SESSION['cashier_id']);
+                    $result = $this->db->single();
+                    
+                    if ($result && $result->branch_id) {
+                        $branch_id = $result->branch_id;
+                        error_log("Using branch_id " . $branch_id . " from cashier table for cashier_id " . $_SESSION['cashier_id']);
+                    }
+                } catch (Exception $e) {
+                    error_log("Error fetching branch_id from cashier table: " . $e->getMessage());
+                }
             }
 
-            // Create order data
+            // Use actual session values with verified branch_id
             $orderData = [
-                'customer_id' => $_SESSION['user_id'] ?? 1,
+                'customer_id' => 1, // This is still hardcoded as we're using a generic customer
                 'total' => $total,
                 'discount_amount' => $discountAmount,
                 'payment_method' => $paymentMethod === 'cash' ? 'Cash' : 'Credit Card',
                 'order_type' => 'Physical',
-                'employee_id' => $_SESSION['employee_id'] ?? null,
-                'branch_id' => $_SESSION['branch_id'] ?? null,
+                'employee_id' => $_SESSION['employee_id'] ?? 6,
+                'branch_id' => $branch_id,
                 'amount_tendered' => $amountTendered,
                 'change_amount' => $change
             ];
 
-            $orderId = $this->CashierModel->createOrder($orderData);
+            // Log actual values being used
+            error_log("Creating order with actual employee_id: " . $_SESSION['employee_id'] . 
+                     ", branch_id: " . $_SESSION['branch_id']);
 
-            if (!$orderId) {
-                echo json_encode(['success' => false, 'message' => 'Failed to create order']);
-                return;
-            }
+            try {
+                $orderId = $this->CashierModel->createOrder($orderData);
 
-            // Save order details
-            foreach ($cart as $item) {
-                $this->CashierModel->addOrderDetail([
+                if (!$orderId) {
+                    echo json_encode(['success' => false, 'message' => 'Failed to create order. Please try again.']);
+                    return;
+                }
+
+                // Process order details and update stock
+                $detailsSuccess = true;
+                $stockUpdateSuccess = true;
+                foreach ($cart as $item) {
+                    $result = $this->CashierModel->addOrderDetail([
+                        'order_id' => $orderId,
+                        'product_id' => $item['productId'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price']
+                    ]);
+                    
+                    if (!$result) {
+                        $detailsSuccess = false;
+                        error_log("Failed to add order detail for product ID: " . $item['productId']);
+                    }
+                    
+                    // Update branch stock after adding order detail
+                    $stockResult = $this->CashierModel->updateBranchStock(
+                        $branch_id, 
+                        $item['productId'], 
+                        $item['quantity']
+                    );
+                    
+                    if (!$stockResult) {
+                        $stockUpdateSuccess = false;
+                        error_log("Failed to update stock for product ID: " . $item['productId']);
+                    }
+                }
+
+                // Store complete order data in session
+                $_SESSION['last_order'] = [
                     'order_id' => $orderId,
-                    'product_id' => $item['productId'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price']
+                    'items' => $cart,
+                    'subtotal' => $subtotal,
+                    'discount' => $discountAmount,
+                    'total' => $total,
+                    'payment_method' => $paymentMethod === 'cash' ? 'Cash' : 'Credit Card',
+                    'amount_tendered' => $amountTendered,
+                    'change' => $change,
+                    'date' => date('Y-m-d H:i:s'),
+                    'stock_updated' => $stockUpdateSuccess
+                ];
+
+                // Clear cart after successful order
+                unset($_SESSION['cart']);
+                unset($_SESSION['discount']);
+
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true, 
+                    'detailsComplete' => $detailsSuccess,
+                    'stockUpdated' => $stockUpdateSuccess,
+                    'message' => 'Order created successfully' . 
+                                (!$stockUpdateSuccess ? ' (Warning: Some inventory updates failed)' : '')
                 ]);
+            } catch (Exception $e) {
+                error_log("Order processing error: " . $e->getMessage());
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Error processing order: ' . $e->getMessage()]);
             }
-
-            // Store complete order data in session
-            $_SESSION['last_order'] = [
-                'order_id' => $orderId,
-                'items' => $cart,
-                'subtotal' => $subtotal,
-                'discount' => $discountAmount,
-                'total' => $total,
-                'payment_method' => $paymentMethod === 'cash' ? 'Cash' : 'Credit Card',
-                'amount_tendered' => $amountTendered,
-                'change' => $change,
-                'date' => date('Y-m-d H:i:s')
-            ];
-
-            // Clear cart after successful order
-            unset($_SESSION['cart']);
-            unset($_SESSION['discount']);
-
-            echo json_encode(['success' => true]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
         }
+        exit; // Prevent further output
     }
 
     public function generateBill() {
@@ -318,6 +412,13 @@ public function search() {
         ];
         
         $this->view('Cashier/v_Bill', $orderData);
+    }
+
+    public function getCartCount() {
+        header('Content-Type: application/json');
+        $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+        echo json_encode(['count' => $count]);
+        exit;
     }
 
 }
