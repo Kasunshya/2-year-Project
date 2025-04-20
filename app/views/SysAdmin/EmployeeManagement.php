@@ -353,6 +353,8 @@
         <!-- Edit Employee Modal -->
         <div id="editEmployeeModal" class="modal">
             <div class="modal-content">
+                <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
+                <h2>Edit Employee</h2> <!-- Updated title -->
                 <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="employee_id" id="edit_employee_id">
 
@@ -373,8 +375,9 @@
 
                     <label for="edit_gender">Gender:</label>
                     <select name="gender" id="edit_gender" required>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
 
                     <label for="edit_email">Email:</label>
@@ -391,10 +394,7 @@
 
                     <label for="edit_branch_id">Branch:</label>
                     <select name="branch_id" id="edit_branch_id" required>
-                        <!-- Populate branch options dynamically -->
-                        <?php foreach ($branches as $branch): ?>
-                            <option value="<?php echo $branch->branch_id; ?>"><?php echo $branch->branch_name; ?></option>
-                        <?php endforeach; ?>
+                        <!-- Branch options will be populated dynamically -->
                     </select>
 
                     <label for="edit_user_role">User Role:</label>
@@ -473,19 +473,29 @@
                             document.getElementById('edit_dob').value = data.dob;
                             document.getElementById('edit_email').value = data.email;
                             document.getElementById('edit_join_date').value = data.join_date;
-                            document.getElementById('edit_user_role').value = data.user_role;
 
-                            // Set gender
+                            // Pre-select gender
                             document.getElementById('edit_gender').value = data.gender;
 
-                            // Set branch
-                            const branchSelect = document.getElementById('edit_branch_id');
-                            for (let i = 0; i < branchSelect.options.length; i++) {
-                                if (branchSelect.options[i].value == data.branch) {
-                                    branchSelect.options[i].selected = true;
-                                    break;
-                                }
-                            }
+                            // Populate branch dropdown
+                            fetch(`<?php echo URLROOT; ?>/sysadmin/getBranches`)
+                                .then(response => response.json())
+                                .then(branches => {
+                                    const branchSelect = document.getElementById('edit_branch_id');
+                                    branchSelect.innerHTML = ''; // Clear existing options
+                                    branches.forEach(branch => {
+                                        const option = document.createElement('option');
+                                        option.value = branch.branch_id;
+                                        option.textContent = branch.branch_name;
+                                        if (branch.branch_id == data.branch) {
+                                            option.selected = true;
+                                        }
+                                        branchSelect.appendChild(option);
+                                    });
+                                });
+
+                            // Pre-select user role
+                            document.getElementById('edit_user_role').value = data.user_role;
 
                             // Show the modal
                             document.getElementById('editEmployeeModal').style.display = 'block';

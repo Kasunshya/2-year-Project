@@ -488,7 +488,109 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
+    public function getSalesByBranch($branch_id, $filter = []) {
+        $query = '
+            SELECT 
+                SUM(o.total) AS total_sales, 
+                DATE_FORMAT(o.order_date, "%Y-%m") AS sales_month,
+                YEAR(o.order_date) AS sales_year,
+                o.order_date AS sales_date
+            FROM orders o
+            WHERE o.branch_id = :branch_id
+        ';
+
+        // Add filtering conditions
+        if (!empty($filter['year'])) {
+            $query .= ' AND YEAR(o.order_date) = :year';
+        }
+        if (!empty($filter['month'])) {
+            $query .= ' AND MONTH(o.order_date) = :month';
+        }
+        if (!empty($filter['date'])) {
+            $query .= ' AND o.order_date = :date';
+        }
+
+        $query .= ' GROUP BY sales_date ORDER BY o.order_date ASC';
+
+        $this->db->query($query);
+        $this->db->bind(':branch_id', $branch_id);
+
+        if (!empty($filter['year'])) {
+            $this->db->bind(':year', $filter['year']);
+        }
+        if (!empty($filter['month'])) {
+            $this->db->bind(':month', $filter['month']);
+        }
+        if (!empty($filter['date'])) {
+            $this->db->bind(':date', $filter['date']);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getTotalSalesByBranch($branch_id, $filter = []) {
+        $query = '
+            SELECT 
+                SUM(o.total) AS total_sales
+            FROM orders o
+            WHERE o.branch_id = :branch_id
+        ';
+
+        // Add filtering conditions
+        if (!empty($filter['year'])) {
+            $query .= ' AND YEAR(o.order_date) = :year';
+        }
+        if (!empty($filter['month'])) {
+            $query .= ' AND MONTH(o.order_date) = :month';
+        }
+        if (!empty($filter['date'])) {
+            $query .= ' AND o.order_date = :date';
+        }
+
+        $this->db->query($query);
+        $this->db->bind(':branch_id', $branch_id);
+
+        if (!empty($filter['year'])) {
+            $this->db->bind(':year', $filter['year']);
+        }
+        if (!empty($filter['month'])) {
+            $this->db->bind(':month', $filter['month']);
+        }
+        if (!empty($filter['date'])) {
+            $this->db->bind(':date', $filter['date']);
+        }
+
+        return $this->db->single();
+    }
     
+    
+
+    public function getInventoryData($search = '')
+    {
+        $sql = '
+            SELECT 
+                b.branch_name, 
+                p.product_name, 
+                bs.quantity, 
+                bs.expiry_date
+            FROM branchstock bs
+            JOIN branch b ON bs.branch_id = b.branch_id
+            JOIN product p ON bs.product_id = p.product_id
+        ';
+
+        // Add search condition if a search term is provided
+        if (!empty($search)) {
+            $sql .= ' WHERE b.branch_name LIKE :search OR p.product_name LIKE :search';
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($search)) {
+            $this->db->bind(':search', '%' . $search . '%');
+        }
+
+        return $this->db->resultSet();
+    }
 }
 
 

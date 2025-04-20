@@ -197,11 +197,38 @@ if (!class_exists('M_SysAdmin')) {
 
         public function updateEmployee($data) {
             // Update users table
-            $this->db->query('UPDATE users SET email = :email, user_role = :user_role WHERE user_id = :user_id');
+            $this->db->query('UPDATE users SET email = :email, user_role = :user_role' .
+                             (!empty($data['password']) ? ', password = :password' : '') .
+                             ' WHERE user_id = :user_id');
             $this->db->bind(':user_id', $data['user_id']);
             $this->db->bind(':email', $data['email']);
             $this->db->bind(':user_role', $data['user_role']);
+            if (!empty($data['password'])) {
+                $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+            }
             $result1 = $this->db->execute();
+
+            // Get the current user role from the employee table
+            $this->db->query('SELECT user_role FROM employee WHERE employee_id = :employee_id');
+            $this->db->bind(':employee_id', $data['employee_id']);
+            $currentRole = $this->db->single()->user_role;
+
+            // Remove the employee from the previous role's table if the role has changed
+            if ($currentRole !== $data['user_role']) {
+                if ($currentRole === 'cashier') {
+                    $this->db->query('DELETE FROM cashier WHERE employee_id = :employee_id');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->execute();
+                } elseif ($currentRole === 'branchmanager') {
+                    $this->db->query('DELETE FROM branchmanager WHERE employee_id = :employee_id');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->execute();
+                } elseif ($currentRole === 'headmanager') {
+                    $this->db->query('DELETE FROM headmanager WHERE employee_id = :employee_id');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->execute();
+                }
+            }
 
             // Update employee table
             $this->db->query('UPDATE employee SET 
@@ -233,22 +260,30 @@ if (!class_exists('M_SysAdmin')) {
             }
             $result2 = $this->db->execute();
 
-            // Update related table based on user_role
-            if ($data['user_role'] === 'cashier') {
-                $this->db->query('UPDATE cashier SET branch_id = :branch_id WHERE employee_id = :employee_id');
-                $this->db->bind(':branch_id', $data['branch_id']);
-                $this->db->bind(':employee_id', $data['employee_id']);
-            } elseif ($data['user_role'] === 'branchmanager') {
-                $this->db->query('UPDATE branchmanager SET branch_id = :branch_id WHERE employee_id = :employee_id');
-                $this->db->bind(':branch_id', $data['branch_id']);
-                $this->db->bind(':employee_id', $data['employee_id']);
-            } elseif ($data['user_role'] === 'headmanager') {
-                $this->db->query('UPDATE headmanager SET branch_id = :branch_id WHERE employee_id = :employee_id');
-                $this->db->bind(':branch_id', $data['branch_id']);
-                $this->db->bind(':employee_id', $data['employee_id']);
+            // Add the employee to the new role's table if the role has changed
+            if ($currentRole !== $data['user_role']) {
+                if ($data['user_role'] === 'cashier') {
+                    $this->db->query('INSERT INTO cashier (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->bind(':user_id', $data['user_id']);
+                    $this->db->bind(':branch_id', $data['branch_id']);
+                    $this->db->execute();
+                } elseif ($data['user_role'] === 'branchmanager') {
+                    $this->db->query('INSERT INTO branchmanager (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->bind(':user_id', $data['user_id']);
+                    $this->db->bind(':branch_id', $data['branch_id']);
+                    $this->db->execute();
+                } elseif ($data['user_role'] === 'headmanager') {
+                    $this->db->query('INSERT INTO headmanager (employee_id, user_id, branch_id) VALUES (:employee_id, :user_id, :branch_id)');
+                    $this->db->bind(':employee_id', $data['employee_id']);
+                    $this->db->bind(':user_id', $data['user_id']);
+                    $this->db->bind(':branch_id', $data['branch_id']);
+                    $this->db->execute();
+                }
             }
 
-            return $result1 && $result2 && $this->db->execute();
+            return $result1 && $result2;
         }
 
         public function deleteEmployee($id) {
@@ -354,6 +389,11 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->query('DELETE FROM headmanager WHERE employee_id = :employee_id');
             $this->db->bind(':employee_id', $employee_id);
             return $this->db->execute();
+        }
+
+        public function getAllBranches() {
+            $this->db->query('SELECT branch_id, branch_name FROM branch');
+            return $this->db->resultSet();
         }
     }
 }

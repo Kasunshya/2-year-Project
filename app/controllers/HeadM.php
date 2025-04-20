@@ -125,7 +125,18 @@ class HeadM extends Controller
 
     public function inventoryManagement()
     {
-        $this->view('HeadM/InventoryManagement');
+        // Get the search term from the GET request
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        // Fetch inventory data based on the search term
+        $inventoryData = $this->headManagerModel->getInventoryData($search);
+
+        $data = [
+            'inventoryData' => $inventoryData,
+            'search' => $search
+        ];
+
+        $this->view('HeadM/InventoryManagement', $data);
     }
 
     public function cashierManagement()
@@ -329,11 +340,21 @@ class HeadM extends Controller
     // Fetch cashiers related to the branch
     $cashiers = $this->headManagerModel->getCashiersByBranchId($branch_id);
 
-    // Remove sales reports fetching
+    // Fetch sales data
+    $filter = [
+        'year' => $_GET['year'] ?? null,
+        'month' => $_GET['month'] ?? null,
+        'date' => $_GET['date'] ?? null
+    ];
+    $salesData = $this->headManagerModel->getSalesByBranch($branch_id, $filter);
+    $totalSales = $this->headManagerModel->getTotalSalesByBranch($branch_id, $filter);
+
     $data = [
         'branch' => $branch,
         'branchManager' => $branchManager,
-        'cashiers' => $cashiers
+        'cashiers' => $cashiers,
+        'salesData' => $salesData,
+        'totalSales' => $totalSales->total_sales ?? 0
     ];
 
     $this->view('HeadM/Branch', $data); // Load the Branch view

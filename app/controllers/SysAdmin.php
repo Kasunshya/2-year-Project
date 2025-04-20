@@ -245,5 +245,10 @@ class SysAdmin extends Controller {
             echo json_encode(['error' => 'Employee not found']);
         }
     }
+
+    public function getBranches() {
+        $branches = $this->sysAdminModel->getAllBranches();
+        echo json_encode($branches);
+    }
 }
 ?>
