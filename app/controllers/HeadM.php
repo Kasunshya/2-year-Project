@@ -236,10 +236,19 @@ class HeadM extends Controller
         $this->view('HeadM/Customization');
     }
 
-    public function viewOrder()
-    {
-        $this->view('HeadM/ViewOrder');
-    }
+    public function viewOrder() {
+    // Get the search query from the GET request
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+    // Fetch orders based on the search query
+    $orders = $this->headManagerModel->getAllOrders($search);
+
+    $data = [
+        'orders' => $orders
+    ];
+
+    $this->view('HeadM/ViewOrder', $data);
+}
 
     public function preOrder()
     {
@@ -293,5 +302,43 @@ class HeadM extends Controller
         flash('cv_error', 'CV file not found', 'alert alert-danger');
         redirect('HeadM/branchManager');
     }
+
+    public function branches() {
+        // Fetch all branches
+        $branches = $this->headManagerModel->getAllBranches();
+    
+        $data = [
+            'branches' => $branches
+        ];
+    
+        $this->view('HeadM/Branches', $data);
+    }
+
+    public function branch($branch_id) {
+    // Fetch branch details
+    $branch = $this->headManagerModel->getBranchById($branch_id);
+
+    // Check if branch exists
+    if (!$branch) {
+        die('Branch not found'); // Handle error if branch does not exist
+    }
+
+    // Fetch branch manager
+    $branchManager = $this->headManagerModel->getBranchManagerByBranchId($branch_id);
+
+    // Fetch cashiers related to the branch
+    $cashiers = $this->headManagerModel->getCashiersByBranchId($branch_id);
+
+    // Remove sales reports fetching
+    $data = [
+        'branch' => $branch,
+        'branchManager' => $branchManager,
+        'cashiers' => $cashiers
+    ];
+
+    $this->view('HeadM/Branch', $data); // Load the Branch view
 }
+
+}
+
 ?>

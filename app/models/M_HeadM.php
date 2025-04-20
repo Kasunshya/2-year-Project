@@ -77,9 +77,23 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function getAllBranches()
-    {
-        $this->db->query('SELECT branch_id, branch_name FROM branch');
+    public function getBranchManagerByBranchId($branch_id) {
+        $this->db->query('
+            SELECT 
+                bm.branchmanager_id, 
+                e.full_name AS branchmanager_name, 
+                e.contact_no, 
+                e.email 
+            FROM branchmanager bm
+            JOIN employee e ON bm.employee_id = e.employee_id
+            WHERE bm.branch_id = :branch_id
+        ');
+        $this->db->bind(':branch_id', $branch_id);
+        return $this->db->single();
+    }
+
+    public function getAllBranches() {
+        $this->db->query('SELECT branch_id, branch_name, branch_address FROM branch'); // Include branch_address
         return $this->db->resultSet();
     }
 
@@ -402,5 +416,81 @@ class M_HeadM
 
         return $this->db->resultSet();
     }
+
+    public function getAllOrders($search = '') {
+        $query = '
+            SELECT 
+                c.customer_name, 
+                o.order_date, 
+                o.order_type, 
+                o.payment_method, 
+                o.payment_status, 
+                o.discount, 
+                e.full_name AS employee_name, 
+                b.branch_name, 
+                o.total 
+            FROM orders o
+            JOIN customer c ON o.customer_id = c.customer_id
+            LEFT JOIN employee e ON o.employee_id = e.employee_id
+            LEFT JOIN branch b ON o.branch_id = b.branch_id
+        ';
+
+        // Add search condition if a search query is provided
+        if (!empty($search)) {
+            $query .= ' WHERE c.customer_name LIKE :search OR b.branch_name LIKE :search';
+            $this->db->query($query);
+            $this->db->bind(':search', '%' . $search . '%');
+        } else {
+            $this->db->query($query);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getBranchById($branch_id) {
+        $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch WHERE branch_id = :branch_id');
+        $this->db->bind(':branch_id', $branch_id);
+        return $this->db->single();
+    }
+
+    public function getCashiersByBranchId($branch_id) {
+        $this->db->query('
+            SELECT 
+                e.employee_id, 
+                e.full_name, 
+                e.contact_no, 
+                e.email 
+            FROM cashier c
+            JOIN employee e ON c.employee_id = e.employee_id
+            WHERE c.branch_id = :branch_id
+        ');
+        $this->db->bind(':branch_id', $branch_id);
+        return $this->db->resultSet();
+    }
+
+    public function getBranchByIdentifier($branchIdentifier) {
+        $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch WHERE branch_name = :branch_name OR branch_id = :branch_id');
+        $this->db->bind(':branch_name', $branchIdentifier);
+        $this->db->bind(':branch_id', $branchIdentifier);
+        return $this->db->single();
+    }
+
+    public function getSalesReportsByBranchId($branch_id) {
+        $this->db->query('
+            SELECT 
+                sr.report_id, 
+                sr.total_sales, 
+                sr.report_date 
+            FROM sales_reports sr
+            WHERE sr.branch_id = :branch_id
+        ');
+        $this->db->bind(':branch_id', $branch_id);
+        return $this->db->resultSet();
+    }
+
+    
 }
+
+
+
 ?>

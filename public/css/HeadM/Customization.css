@@ -494,7 +494,7 @@ input:valid {
 
 .download-cv {
     padding: 5px 10px;
-    background-color: #4CAF50;
+    background-color: #c98d83;
     color: white;
     border: none;
     border-radius: 4px;
@@ -506,5 +506,44 @@ input:valid {
 }
 
 .download-cv:hover {
-    background-color: #45a049;
+    background-color: #c98d83;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    text-align: left;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table thead tr {
+    background-color: #c98d83;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #c98d83;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
 }

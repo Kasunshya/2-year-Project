@@ -7,6 +7,7 @@
         <ul>
             <li><a href="<?php echo URLROOT; ?>/HeadM/dashboard"><i class="fas fa-tachometer-alt"></i></a>
             </li>
+            <li><a href="<?php echo URLROOT; ?>/HeadM/branches"><i class="fas fa-building"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/HeadM/cashierManagement"><i
                         class="fas fa-cash-register icon-cashier"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/HeadM/productManagement"><i class="fas fa-birthday-cake"></i></a>

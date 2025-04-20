@@ -6,7 +6,12 @@ class Core {
     protected $params = [];
 
     public function __construct() {
-        $url = $this->getUrl(); // Get the URL parts
+        $url = $this->getUrl();
+
+        // Ensure no debugging statements like this remain
+        // echo '<pre>';
+        // var_dump($url);
+        // echo '</pre>';
 
         // Check if the controller exists
         if (!empty($url) && file_exists('../app/controllers/' . ucwords($url[0]) . '.php')) {
