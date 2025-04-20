@@ -39,55 +39,32 @@
                             <thead>
                                 <tr>
                                     <th>Customization ID</th>
-                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
                                     <th>Flavor</th>
                                     <th>Size</th>
                                     <th>Toppings</th>
                                     <th>Custom Message</th>
                                     <th>Delivery Date</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>C001</td>
-                                    <td>101</td>
-                                    <td>Vanilla</td>
-                                    <td>Medium</td>
-                                    <td>Chocolate Chips, Nuts</td>
-                                    <td>Happy Birthday, John!</td>
-                                    <td>2024-12-17</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>C002</td>
-                                    <td>102</td>
-                                    <td>Chocolate</td>
-                                    <td>Large</td>
-                                    <td>Fresh Fruits, Sprinkles</td>
-                                    <td>Happy Anniversary!</td>
-                                    <td>2024-12-12</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>C003</td>
-                                    <td>103</td>
-                                    <td>Red Velvet</td>
-                                    <td>Small</td>
-                                    <td>Nuts</td>
-                                    <td>Congratulations!</td>
-                                    <td>2024-12-15</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['customizations'])): ?>
+                                    <?php foreach ($data['customizations'] as $customization): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($customization->customisation_id); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->customer_name); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->flavour); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->size); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->toppings); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->custom_message); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->delivery_date); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7">No customizations found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

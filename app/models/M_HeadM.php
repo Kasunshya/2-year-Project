@@ -565,7 +565,7 @@ class M_HeadM
     
     
 
-    public function getInventoryData($search = '')
+    public function getInventoryData($productName = '', $branchId = '')
     {
         $sql = '
             SELECT 
@@ -578,16 +578,101 @@ class M_HeadM
             JOIN product p ON bs.product_id = p.product_id
         ';
 
-        // Add search condition if a search term is provided
-        if (!empty($search)) {
-            $sql .= ' WHERE b.branch_name LIKE :search OR p.product_name LIKE :search';
+        $conditions = [];
+        if (!empty($productName)) {
+            $conditions[] = 'p.product_name LIKE :product_name';
+        }
+        if (!empty($branchId)) {
+            $conditions[] = 'bs.branch_id = :branch_id';
+        }
+
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
 
         $this->db->query($sql);
 
-        if (!empty($search)) {
-            $this->db->bind(':search', '%' . $search . '%');
+        if (!empty($productName)) {
+            $this->db->bind(':product_name', '%' . $productName . '%');
         }
+        if (!empty($branchId)) {
+            $this->db->bind(':branch_id', $branchId);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getCashiers($nameEmail = '', $branchId = '')
+    {
+        $sql = '
+            SELECT 
+                e.employee_id, 
+                e.full_name, 
+                e.email, 
+                e.contact_no, 
+                e.nic, 
+                e.address, 
+                b.branch_name AS branch, -- Alias branch_name as branch
+                e.cv_upload
+            FROM cashier c
+            JOIN employee e ON c.employee_id = e.employee_id
+            JOIN branch b ON c.branch_id = b.branch_id
+        ';
+
+        $conditions = [];
+        if (!empty($nameEmail)) {
+            $conditions[] = '(e.full_name LIKE :name_email OR e.email LIKE :name_email)';
+        }
+        if (!empty($branchId)) {
+            $conditions[] = 'c.branch_id = :branch_id';
+        }
+
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($nameEmail)) {
+            $this->db->bind(':name_email', '%' . $nameEmail . '%');
+        }
+        if (!empty($branchId)) {
+            $this->db->bind(':branch_id', $branchId);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getAllCustomizations()
+    {
+        $this->db->query('
+            SELECT 
+                c.customisation_id,
+                cu.customer_name,
+                c.flavour,
+                c.size,
+                c.toppings,
+                c.custom_message,
+                c.delivery_date
+            FROM customisation c
+            JOIN customer cu ON c.customer_id = cu.customer_id
+        ');
+
+        return $this->db->resultSet();
+    }
+
+    public function getAllPreOrders()
+    {
+        $this->db->query('
+            SELECT 
+                preorder_id,
+                first_name,
+                last_name,
+                email_address AS email,
+                phone_number,
+                description
+            FROM preorder
+        ');
 
         return $this->db->resultSet();
     }

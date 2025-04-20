@@ -125,15 +125,21 @@ class HeadM extends Controller
 
     public function inventoryManagement()
     {
-        // Get the search term from the GET request
-        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        // Get search parameters from the GET request
+        $productName = isset($_GET['product_name']) ? trim($_GET['product_name']) : '';
+        $branchId = isset($_GET['branch_id']) ? trim($_GET['branch_id']) : '';
 
-        // Fetch inventory data based on the search term
-        $inventoryData = $this->headManagerModel->getInventoryData($search);
+        // Fetch inventory data based on the search parameters
+        $inventoryData = $this->headManagerModel->getInventoryData($productName, $branchId);
+
+        // Fetch all branches for the branch dropdown
+        $branches = $this->headManagerModel->getAllBranches();
 
         $data = [
             'inventoryData' => $inventoryData,
-            'search' => $search
+            'branches' => $branches,
+            'product_name' => $productName,
+            'branch_id' => $branchId
         ];
 
         $this->view('HeadM/InventoryManagement', $data);
@@ -141,19 +147,21 @@ class HeadM extends Controller
 
     public function cashierManagement()
     {
-        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        // Get search parameters from the GET request
+        $nameEmail = isset($_GET['name_email']) ? trim($_GET['name_email']) : '';
+        $branchId = isset($_GET['branch_id']) ? trim($_GET['branch_id']) : '';
 
-        if (!empty($search)) {
-            $cashiers = $this->headManagerModel->searchCashiers($search);
-        } else {
-            $cashiers = $this->headManagerModel->getAllCashiers();
-        }
+        // Fetch cashiers based on the search parameters
+        $cashiers = $this->headManagerModel->getCashiers($nameEmail, $branchId);
 
-        // Debugging: Log the data to check if nic, address, and branch are present
-        error_log(print_r($cashiers, true));
+        // Fetch all branches for the branch dropdown
+        $branches = $this->headManagerModel->getAllBranches();
 
         $data = [
-            'cashiers' => $cashiers
+            'cashiers' => $cashiers,
+            'branches' => $branches,
+            'name_email' => $nameEmail,
+            'branch_id' => $branchId
         ];
 
         $this->view('HeadM/CashierManagement', $data);
@@ -244,7 +252,14 @@ class HeadM extends Controller
 
     public function customization()
     {
-        $this->view('HeadM/Customization');
+        // Fetch all customizations
+        $customizations = $this->headManagerModel->getAllCustomizations();
+
+        $data = [
+            'customizations' => $customizations
+        ];
+
+        $this->view('HeadM/Customization', $data);
     }
 
     public function viewOrder() {
@@ -263,7 +278,14 @@ class HeadM extends Controller
 
     public function preOrder()
     {
-        $this->view('HeadM/PreOrder');
+        // Fetch all preorders
+        $preOrders = $this->headManagerModel->getAllPreOrders();
+
+        $data = [
+            'preOrders' => $preOrders
+        ];
+
+        $this->view('HeadM/PreOrder', $data);
     }
 
     public function dailyBranchOrder() {

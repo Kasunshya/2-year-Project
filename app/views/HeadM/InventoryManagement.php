@@ -27,9 +27,23 @@
                 <div class="employee-list">
                     <!-- Search Bar -->
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" name="search" placeholder="Search by Branch or Product Name" value="<?php echo htmlspecialchars($data['search'] ?? ''); ?>">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="product_name" placeholder="Search by Product Name" value="<?php echo isset($_GET['product_name']) ? htmlspecialchars($_GET['product_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo $branch->branch_name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">
