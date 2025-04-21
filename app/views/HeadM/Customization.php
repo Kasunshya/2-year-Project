@@ -42,31 +42,48 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Customization ID</th>
                                     <th>Customer Name</th>
                                     <th>Flavor</th>
                                     <th>Size</th>
                                     <th>Toppings</th>
-                                    <th>Custom Message</th>
+                                    <th>Premium Toppings</th>
+                                    <th>Message</th>
+                                    <th>Delivery Option</th>
+                                    <th>Delivery Address</th>
                                     <th>Delivery Date</th>
+                                    <th>Order Status</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (!empty($data['customizations'])): ?>
                                     <?php foreach ($data['customizations'] as $customization): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($customization->customisation_id); ?></td>
                                             <td><?php echo htmlspecialchars($customization->customer_name); ?></td>
-                                            <td><?php echo htmlspecialchars($customization->flavour); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->flavor); ?></td>
                                             <td><?php echo htmlspecialchars($customization->size); ?></td>
                                             <td><?php echo htmlspecialchars($customization->toppings); ?></td>
-                                            <td><?php echo htmlspecialchars($customization->custom_message); ?></td>
-                                            <td><?php echo htmlspecialchars($customization->delivery_date); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->premium_toppings); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->message); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->delivery_option); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->delivery_address); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($customization->delivery_date)); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->order_status); ?></td>
+                                            <td><?php echo date('Y-m-d H:i:s', strtotime($customization->created_at)); ?></td>
+                                            <td class="actions">
+                                                <button class="btn approve" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'approved')">
+                                                    Approve
+                                                </button>
+                                                <button class="btn reject" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'rejected')">
+                                                    Reject
+                                                </button>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="7">No customizations found.</td>
+                                        <td colspan="12">No customizations found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -76,7 +93,7 @@
                 </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
+    
 </body>
 
 </html>

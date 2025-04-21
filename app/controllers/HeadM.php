@@ -296,17 +296,13 @@ class HeadM extends Controller
 
     public function preOrder()
     {
-        // Get the search term from the GET request
+        // Get search term from GET request
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-        // Fetch preorders based on the search term
-        $preOrders = $this->headManagerModel->getPreOrders($search);
-
-        $data = [
-            'preOrders' => $preOrders,
-            'search' => $search
-        ];
-
+        
+        // Get filtered results
+        $data['preOrders'] = $this->headManagerModel->getPreOrders($search);
+        
+        // Load view with data
         $this->view('HeadM/PreOrder', $data);
     }
 
@@ -332,17 +328,16 @@ class HeadM extends Controller
 
     public function feedback()
     {
-        // Get the search term from the GET request
+        // Enable error reporting for debugging
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+
         $productName = isset($_GET['product_name']) ? trim($_GET['product_name']) : '';
-
-        // Fetch feedback data based on the search term
-        $feedbacks = $this->headManagerModel->getFeedbacks($productName);
-
-        $data = [
-            'feedbacks' => $feedbacks,
-            'product_name' => $productName
-        ];
-
+        $data['feedbacks'] = $this->headManagerModel->getFeedbacks($productName);
+        
+        // Debug data
+        error_log("Feedback Data: " . print_r($data, true));
+        
         $this->view('HeadM/Feedback', $data);
     }
 

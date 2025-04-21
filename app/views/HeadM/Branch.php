@@ -119,24 +119,37 @@
 
                     <!-- Sales Data -->
                     <?php if (!empty($data['salesData'])): ?>
-                        <div class="table-container">
+                        <div class="table-container sales-table">
                             <h2>Sales Data</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Total Sales ($)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($data['salesData'] as $sales): ?>
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($sales->sales_date); ?></td>
-                                        <td><?php echo number_format($sales->total_sales, 2); ?></td>
+                                        <th>Date</th>
+                                        <th>Total Sales ($)</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $counter = 0;
+                                    foreach ($data['salesData'] as $sales): 
+                                        $rowClass = $counter >= 5 ? 'hidden-row' : '';
+                                    ?>
+                                        <tr class="<?php echo $rowClass; ?>">
+                                            <td><?php echo htmlspecialchars($sales->sales_date); ?></td>
+                                            <td><?php echo number_format($sales->total_sales, 2); ?></td>
+                                        </tr>
+                                    <?php 
+                                        $counter++;
+                                    endforeach; 
+                                    ?>
+                                </tbody>
+                            </table>
+                            <?php if (count($data['salesData']) > 5): ?>
+                                <button id="viewMoreBtn" class="btn view-more-btn">
+                                    View More <i class="fas fa-chevron-down"></i>
+                                </button>
+                            <?php endif; ?>
+                        </div>
                     <?php else: ?>
                         <p>No sales data available for this branch.</p>
                     <?php endif; ?>
@@ -149,6 +162,98 @@
                     </div>
                 </div>
             </section>
+            <!-- Print Section for Sales Report -->
+            <div class="print-section">
+                <div class="invoice-container">
+                    <!-- Watermark -->
+                    <div class="watermark">FROSTINE</div>
+                    
+                    <!-- Invoice Header with Logo -->
+                    <div class="invoice-header">
+                        <div class="invoice-logo">
+                            <img src="<?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
+                            <div class="invoice-logo-text">
+                                <h1>FROSTINE BAKERY</h1>
+                                <p>Branch Sales Report</p>
+                            </div>
+                        </div>
+                        <div class="invoice-title">
+                            <h2><?php echo htmlspecialchars($data['branch']->branch_name); ?></h2>
+                            <p>Report #BSR-<?php echo date('Ymd'); ?></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Branch Information -->
+                    <div class="company-info">
+                        <div class="company-info-left">
+                            <h3>Branch Information</h3>
+                            <p>Address: <?php echo htmlspecialchars($data['branch']->branch_address); ?></p>
+                            <p>Contact: <?php echo htmlspecialchars($data['branch']->branch_contact); ?></p>
+                        </div>
+                        <div class="report-info">
+                            <p><strong>Report Period:</strong> 
+                                <?php 
+                                if (!empty($_GET['date'])) {
+                                    echo date('d F Y', strtotime($_GET['date']));
+                                } elseif (!empty($_GET['month'])) {
+                                    echo date('F Y', mktime(0, 0, 0, $_GET['month'], 1));
+                                } elseif (!empty($_GET['year'])) {
+                                    echo $_GET['year'];
+                                } else {
+                                    echo 'All Time';
+                                }
+                                ?>
+                            </p>
+                            <p><strong>Generated On:</strong> <?php echo date('d F Y, h:i A'); ?></p>
+                        </div>
+                    </div>
+
+                    <!-- Sales Data Table -->
+                    <table class="print-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Sales (LKR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($data['salesData'])): ?>
+                                <?php foreach ($data['salesData'] as $sales): ?>
+                                    <tr>
+                                        <td><?php echo date('d F Y', strtotime($sales->sales_date)); ?></td>
+                                        <td><?php echo number_format($sales->total_sales, 2); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="2">No sales data available</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+
+                    <!-- Summary Box -->
+                    <div class="print-summary">
+                        <h3>Sales Summary</h3>
+                        <div class="print-summary-row total">
+                            <span>Total Sales</span>
+                            <span>LKR <?php echo number_format($data['totalSales'], 2); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="invoice-footer">
+                        <p>Generated from Frostine Management System</p>
+                        <p>&copy; <?php echo date('Y'); ?> FROSTINE BAKERY - All Rights Reserved</p>
+                        <p><small>This is a computer generated document</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="report-actions">
+                <button class="btn download-btn" onclick="printSalesReport()">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+            </div>
         </main>
     </div>
 
@@ -202,6 +307,39 @@
                 }
             }
         });
+
+        // Add this new code for table functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewMoreBtn = document.getElementById('viewMoreBtn');
+            const salesTable = document.querySelector('.sales-table');
+            const hiddenRows = document.querySelectorAll('.hidden-row');
+
+            if (viewMoreBtn) {
+                viewMoreBtn.addEventListener('click', function() {
+                    salesTable.classList.toggle('expanded');
+                    hiddenRows.forEach(row => row.classList.toggle('show'));
+                    
+                    if (salesTable.classList.contains('expanded')) {
+                        viewMoreBtn.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+                    } else {
+                        viewMoreBtn.innerHTML = 'View More <i class="fas fa-chevron-down"></i>';
+                    }
+                    viewMoreBtn.classList.toggle('expanded');
+                });
+            }
+        });
+
+        function printSalesReport() {
+            document.querySelector('.print-section').style.display = 'block';
+            
+            setTimeout(() => {
+                window.print();
+                
+                setTimeout(() => {
+                    document.querySelector('.print-section').style.display = 'none';
+                }, 100);
+            }, 300);
+        }
     </script>
 </body>
 

@@ -8,6 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .rating {
+            color: #FFD700;
+            font-size: 18px;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,32 +44,42 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Customer Name</th>
                                 <th>Product Name</th>
-                                <th>Star Rating</th>
-                                <th>Feedback Comment</th>
-                                <th>Created Date</th>
+                                <th>Rating</th>
+                                <th>Feedback</th>
+                                <th>Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($data['feedbacks'])): ?>
+                            <?php if (isset($data['feedbacks']) && is_array($data['feedbacks'])): ?>
                                 <?php foreach ($data['feedbacks'] as $feedback): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($feedback->product_name); ?></td>
+                                        <td><?php echo !is_null($feedback->customer_name) ? htmlspecialchars($feedback->customer_name) : 'N/A'; ?></td>
+                                        <td><?php echo !is_null($feedback->product_name) ? htmlspecialchars($feedback->product_name) : 'N/A'; ?></td>
                                         <td>
-                                            <?php for ($i = 0; $i < floor($feedback->star_rating); $i++): ?>
+                                            <?php 
+                                            $rating = isset($feedback->rating) ? (int)$feedback->rating : 0;
+                                            for ($i = 0; $i < $rating; $i++): ?>
                                                 <span class="rating">★</span>
-                                            <?php endfor; ?>
-                                            <?php for ($i = floor($feedback->star_rating); $i < 5; $i++): ?>
+                                            <?php endfor; 
+                                            for ($i = $rating; $i < 5; $i++): ?>
                                                 <span class="rating">☆</span>
                                             <?php endfor; ?>
                                         </td>
-                                        <td><?php echo htmlspecialchars($feedback->feedback_comment); ?></td>
-                                        <td><?php echo htmlspecialchars($feedback->created_at); ?></td>
+                                        <td><?php echo !is_null($feedback->feedback_text) ? htmlspecialchars($feedback->feedback_text) : 'No feedback'; ?></td>
+                                        <td><?php echo !is_null($feedback->created_at) ? date('Y-m-d', strtotime($feedback->created_at)) : 'N/A'; ?></td>
+                                        <td>
+                                            <button class="btn post-btn" onclick="postFeedback(<?php echo $feedback->feedback_id; ?>)">
+                                                <i class="fas fa-share"></i> Post
+                                            </button>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" style="text-align: center;">No feedback found.</td>
+                                    <td colspan="6" style="text-align: center;">No feedback found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

@@ -693,18 +693,22 @@ class M_HeadM
     {
         $sql = '
             SELECT 
-                p.product_name,
-                f.star_rating,
-                f.feedback_comment,
-                f.created_at
+                f.*,
+                c.customer_name,
+                p.product_name
             FROM feedback f
-            JOIN product p ON f.product_id = p.product_id
+            LEFT JOIN customer c ON f.customer_id = c.customer_id
+            LEFT JOIN orders o ON f.order_id = o.order_id
+            LEFT JOIN orderdetails od ON o.order_id = od.order_id
+            LEFT JOIN product p ON od.product_id = p.product_id
         ';
 
-        // Add search condition if a product name is provided
         if (!empty($productName)) {
             $sql .= ' WHERE p.product_name LIKE :product_name';
         }
+
+        // Debug query
+        error_log("SQL Query: " . $sql);
 
         $this->db->query($sql);
 
@@ -712,25 +716,31 @@ class M_HeadM
             $this->db->bind(':product_name', '%' . $productName . '%');
         }
 
-        return $this->db->resultSet();
+        $result = $this->db->resultSet();
+        
+        // Debug result
+        error_log("Query Result: " . print_r($result, true));
+        
+        return $result;
     }
 
     public function getPreOrders($search = '')
     {
         $sql = '
             SELECT 
-                preorder_id,
+                enquiry_id,
                 first_name,
                 last_name,
                 email_address AS email,
                 phone_number,
-                description
-            FROM preorder
+                message as description
+            FROM enquiry
         ';
 
-        // Add search condition if a search term is provided
         if (!empty($search)) {
-            $sql .= ' WHERE first_name LIKE :search OR last_name LIKE :search OR email_address LIKE :search';
+            $sql .= ' WHERE first_name LIKE :search 
+                      OR last_name LIKE :search 
+                      OR email_address LIKE :search';
         }
 
         $this->db->query($sql);
@@ -820,20 +830,25 @@ class M_HeadM
     {
         $sql = '
             SELECT 
-                c.customisation_id,
-                cu.customer_name,
-                c.flavour,
-                c.size,
-                c.toppings,
-                c.custom_message,
-                c.delivery_date
-            FROM customisation c
-            JOIN customer cu ON c.customer_id = cu.customer_id
+                cc.customization_id,
+                c.customer_name,
+                cc.flavor,
+                cc.size,
+                cc.toppings,
+                cc.premium_toppings,
+                cc.message,
+                cc.delivery_option,
+                cc.delivery_address,
+                cc.delivery_date,
+                cc.order_status,
+                cc.created_at
+            FROM cake_customization cc
+            JOIN customer c ON cc.customer_id = c.customer_id
         ';
 
         // Add search condition if a customer name is provided
         if (!empty($customerName)) {
-            $sql .= ' WHERE cu.customer_name LIKE :customer_name';
+            $sql .= ' WHERE c.customer_name LIKE :customer_name';
         }
 
         $this->db->query($sql);
