@@ -297,6 +297,36 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->bind(':employee_id', $employee_id);
             return $this->db->execute();
         }
+
+        public function getDashboardStats() {
+            $stats = [];
+            
+            // Get total users
+            $this->db->query('SELECT COUNT(*) as total FROM users');
+            $stats['totalUsers'] = $this->db->single()->total;
+            
+            // Get total products
+            $this->db->query('SELECT COUNT(*) as total FROM product');
+            $stats['totalProducts'] = $this->db->single()->total;
+            
+            // Get total orders
+            $this->db->query('SELECT COUNT(*) as total FROM orders');
+            $stats['totalOrders'] = $this->db->single()->total;
+            
+            // Get total customers
+            $this->db->query('SELECT COUNT(*) as total FROM customer');
+            $stats['totalCustomers'] = $this->db->single()->total;
+            
+            // Get total branches
+            $this->db->query('SELECT COUNT(*) as total FROM branch');
+            $stats['totalBranches'] = $this->db->single()->total;
+            
+            // Get pending orders
+            $this->db->query('SELECT COUNT(*) as total FROM orders WHERE status = "Pending"');
+            $stats['pendingOrders'] = $this->db->single()->total;
+            
+            return $stats;
+        }
     }
 }
 ?>

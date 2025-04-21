@@ -173,41 +173,50 @@
         <table>
             <thead>
                 <tr>
-                    <th>Category ID</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="categoryTable">
-                <tr id="category-1">
-                    <td>1</td>
-                    <td>Waffles</td>
-                    <td>Delicious variety of waffles</td>
-                    <td class="actions">
-                        <button class="btn" onclick="openEditCategoryModal(1)">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteCategory(1)">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
+    <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
+        <?php foreach ($data['categories'] as $category) : ?>
+            <tr id="category-<?php echo $category->category_id; ?>">
+                <td><?php echo htmlspecialchars($category->name); ?></td>
+                <td><?php echo htmlspecialchars($category->description); ?></td>
+                <td class="actions">
+                    <button class="btn" onclick="openEditCategoryModal(<?php echo $category->category_id; ?>)">Edit</button>
+                    <form method="POST" action="<?php echo URLROOT; ?>/SysAdminP/deleteCategory/<?php echo $category->category_id; ?>" style="display: inline;">
+                        <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <tr>
+            <td colspan="3" style="text-align: center;">No categories found</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
         </table>
     </div>
 
     <!-- Modal -->
     <div class="modal" id="categoryModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('categoryModal')">&times;</span>
-            <h2 id="categoryModalTitle">Add Category</h2>
-            <form id="categoryForm">
-                <label for="category_name">Category Name:</label>
-                <input type="text" id="category_name" required>
-                <label for="category_description">Description:</label>
-                <input type="text" id="category_description" required>
-                <button type="submit" class="btn">Save</button>
-                <button type="button" class="btn" onclick="closeModal('categoryModal')">Close</button>
-            </form>
-        </div>
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('categoryModal')">&times;</span>
+        <h2 id="categoryModalTitle">Add Category</h2>
+        <form id="categoryForm" method="POST" action="<?php echo URLROOT; ?>/SysAdminP/addCategory">
+            <!-- We'll add hidden input for category_id dynamically when editing -->
+            <label for="name">Category Name:</label>
+            <input type="text" id="category_name" name="name" required>
+            <label for="description">Description:</label>
+            <input type="text" id="category_description" name="description" required>
+            <button type="submit" class="btn">Save</button>
+            <button type="button" class="btn" onclick="closeModal('categoryModal')">Close</button>
+        </form>
     </div>
+</div>
 </div>
 
 <script>
@@ -216,60 +225,45 @@
     function openAddCategoryModal() {
         document.getElementById('categoryModalTitle').textContent = "Add Category";
         document.getElementById('categoryForm').reset();
-        editingCategoryId = null;
+        document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/addCategory";
+        // Remove any hidden category_id field if it exists
+        const hiddenInput = document.getElementById('category_id_input');
+        if (hiddenInput) {
+            hiddenInput.remove();
+        }
         document.getElementById('categoryModal').style.display = 'flex';
     }
 
     function openEditCategoryModal(categoryId) {
-        editingCategoryId = categoryId;
-
-        document.getElementById('categoryModalTitle').textContent = "Update Category";
-
         // Get the correct row
         let row = document.getElementById(`category-${categoryId}`);
         let cells = row.getElementsByTagName("td");
 
-        // Populate modal fields with existing values
-        document.getElementById("category_name").value = cells[1].textContent.trim();
-        document.getElementById("category_description").value = cells[2].textContent.trim();
+        // Update form for editing
+        document.getElementById('categoryModalTitle').textContent = "Update Category";
+        document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/updateCategory";
+        
+        // Add hidden input for category_id if it doesn't exist
+        if (!document.getElementById('category_id_input')) {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.id = 'category_id_input';
+            hiddenInput.name = 'category_id';
+            hiddenInput.value = categoryId;
+            document.getElementById('categoryForm').appendChild(hiddenInput);
+        } else {
+            document.getElementById('category_id_input').value = categoryId;
+        }
+
+        // Populate modal fields with existing values - adjusted indices because Category ID column is removed
+        document.getElementById("category_name").value = cells[0].textContent.trim();
+        document.getElementById("category_description").value = cells[1].textContent.trim();
 
         document.getElementById('categoryModal').style.display = 'flex';
     }
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
-    }
-
-    document.getElementById('categoryForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById('category_name').value;
-        const description = document.getElementById('category_description').value;
-
-        if (editingCategoryId) {
-            let row = document.getElementById(`category-${editingCategoryId}`);
-            let cells = row.getElementsByTagName("td");
-
-            cells[1].textContent = name;
-            cells[2].textContent = description;
-
-            alert("Category updated successfully!");
-        }
-
-        editingCategoryId = null;
-        closeModal('categoryModal');
-    });
-
-    function deleteCategory(categoryId) {
-        if (confirm("Are you sure you want to delete this category?")) {
-            let row = document.getElementById(`category-${categoryId}`);
-            if (row) {
-                row.remove();
-                alert(`Category ${categoryId} deleted successfully!`);
-            } else {
-                alert("Category not found!");
-            }
-        }
     }
 
     function searchCategory() {
@@ -280,7 +274,7 @@
         for (let i = 0; i < rows.length; i++) {
             const cells = rows[i].getElementsByTagName('td');
             if (cells.length > 0) {
-                const categoryName = cells[1].textContent.toLowerCase();
+                const categoryName = cells[0].textContent.toLowerCase();
                 rows[i].style.display = categoryName.includes(input) ? '' : 'none';
             }
         }

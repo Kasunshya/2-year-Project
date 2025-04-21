@@ -103,6 +103,22 @@
         table td {
             background-color: #ffffff;
         }
+
+        .status-badge.active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-badge.inactive {
+            color: red;
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -121,81 +137,61 @@
 
     <div class="content">
         <div class="search-bar">
-            <input type="text" id="searchCustomerInput" placeholder="Search Customer by Email">
+            <input type="text" id="searchCustomerInput" placeholder="Search Customer by name...">
             <button onclick="searchCustomer()">Search</button>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th>Customer ID</th>
-                    <th>User ID</th>
-                    <th>Customer Email</th>
                     <th>Name</th>
+                    <th>Email</th>
                     <th>Contact</th>
                     <th>Address</th>
                     <th>Gender</th>
-                    <th>Profile</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody id="customerTable">
-                <tr>
-                    <td>1</td>
-                    <td>18</td>
-                    <td>john.doe@example.com</td>
-                    <td>Lalithra</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>52</td>
-                    <td>pasindu@example.com</td>
-                    <td>Pasindu</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>53</td>
-                    <td>kavindya@example.com</td>
-                    <td>Kavindya</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Active</td>
-                </tr>
+                <?php if(isset($data['customers']) && !empty($data['customers'])) : ?>
+                    <?php foreach($data['customers'] as $customer) : ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($customer->customer_name); ?></td>
+                            <td><?php echo htmlspecialchars($customer->email ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($customer->customer_contact ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($customer->customer_address ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($customer->customer_gender ?? '-'); ?></td>
+                            <td>
+                                <span class="status-badge <?php echo strtolower($customer->customer_status); ?>">
+                                    <?php echo htmlspecialchars($customer->customer_status); ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="no-data">No customers found</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    function searchCustomer() {
-        const input = document.getElementById('searchCustomerInput').value.toLowerCase();
-        const table = document.getElementById('customerTable');
-        const rows = table.getElementsByTagName('tr');
+function searchCustomer() {
+    const input = document.getElementById('searchCustomerInput').value.toLowerCase();
+    const table = document.getElementById('customerTable');
+    const rows = table.getElementsByTagName('tr');
 
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName('td');
-            if (cells.length > 0) {
-                const customerEmail = cells[2].textContent.toLowerCase();
-                if (customerEmail.includes(input)) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
+    for (let i = 0; i < rows.length; i++) {
+        const nameCell = rows[i].getElementsByTagName('td')[0]; // Name is in first column
+        if (nameCell) {
+            const name = nameCell.textContent.toLowerCase();
+            rows[i].style.display = name.includes(input) ? '' : 'none';
         }
     }
+}
 </script>
 
 </body>

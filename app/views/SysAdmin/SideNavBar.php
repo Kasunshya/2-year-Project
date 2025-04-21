@@ -7,10 +7,10 @@
         <ul>
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/Dashboard"><i class="fas fa-th"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/EmployeeManagement"><i class="fas fa-user"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/CustomerManagement"><i class="fas fa-users"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/CategoryManagement"><i class="fas fa-tags"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/ProductManagement"><i class="fas fa-utensils"></i></a></li>          
-            <li><a href="<?php echo URLROOT; ?>/SysAdmin/BranchManagement"><i class="fas fa-building"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/CustomerManagement"><i class="fas fa-users"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/CategoryManagement"><i class="fas fa-tags"></i></a></li>  
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/ProductManagement"><i class="fas fa-utensils"></i></a></li>          
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/BranchManagement"><i class="fas fa-building"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
