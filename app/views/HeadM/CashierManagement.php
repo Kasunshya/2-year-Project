@@ -26,9 +26,23 @@
             <div class="content">
                 <div class="employee-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" name="search" placeholder="Search by Name or Email" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/cashierManagement" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="name_email" placeholder="Search by Name or Email" value="<?php echo isset($_GET['name_email']) ? htmlspecialchars($_GET['name_email']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo $branch->branch_name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">
@@ -58,7 +72,7 @@
                                             <td><?php echo $cashier->branch; ?></td>
                                             <td>
                                                 <?php if (!empty($cashier->cv_upload)): ?>
-                                                    <a href="<?php echo URLROOT . '/headm/downloadCV/' . $cashier->employee_id; ?>">Download CV</a>
+                                                    <a href="<?php echo URLROOT . '/headm/downloadCV/' . $cashier->employee_id; ?>" class="btn download-cv"><i class="fas fa-download"></i>Download CV</a>
                                                 <?php else: ?>
                                                     No CV Uploaded
                                                 <?php endif; ?>

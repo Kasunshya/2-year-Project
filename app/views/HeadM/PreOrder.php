@@ -26,9 +26,13 @@
                 <!-- Preorders Table -->
                 <div class="preorder-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Preorder ID">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/preOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="search" placeholder="Search by Name or Email" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">
@@ -39,48 +43,27 @@
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
-                                    <th>Contact Number</th>
+                                    <th>Phone Number</th>
                                     <th>Description</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>P001</td>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>john.doe@example.com</td>
-                                    <td>9876543210</td>
-                                    <td>Wedding Cake for 150 guests</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P002</td>
-                                    <td>Jane</td>
-                                    <td>Smith</td>
-                                    <td>jane.smith@example.com</td>
-                                    <td>9123456780</td>
-                                    <td>Customized Birthday Cake</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P003</td>
-                                    <td>Michael</td>
-                                    <td>Brown</td>
-                                    <td>michael.brown@example.com</td>
-                                    <td>9988776655</td>
-                                    <td>Anniversary Cake with a heart design</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['preOrders'])): ?>
+                                    <?php foreach ($data['preOrders'] as $preOrder): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($preOrder->preorder_id); ?></td>
+                                            <td><?php echo htmlspecialchars($preOrder->first_name); ?></td>
+                                            <td><?php echo htmlspecialchars($preOrder->last_name); ?></td>
+                                            <td><?php echo htmlspecialchars($preOrder->email); ?></td>
+                                            <td><?php echo htmlspecialchars($preOrder->phone_number); ?></td>
+                                            <td><?php echo htmlspecialchars($preOrder->description); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="6">No preorders found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

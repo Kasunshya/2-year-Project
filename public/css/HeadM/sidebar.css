@@ -68,7 +68,7 @@
 .sidebar nav ul li a {
     display: flex;
     align-items: center;
-    padding: 14px 22px;
+    padding: 10px 22px;
     text-decoration: none;
     color: var(--secondary);
     position: relative;
