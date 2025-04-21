@@ -304,11 +304,67 @@ function processCardPayment() {
     finalizeTransaction();
 }
 
-// Finalize the transaction
+/* Finalize the transaction
 function finalizeTransaction() {
     document.getElementById('printBillBtn').style.display = 'block'; // Enable "Print Bill" button
     document.getElementById('cashPaymentSection').style.display = 'none';
     document.getElementById('cardPaymentSection').style.display = 'none';
+}*/
+function finalizeTransaction() {
+    // Safe way to access and modify element style
+    const printBillBtn = document.getElementById('printBillBtn');
+    if (printBillBtn) {
+        printBillBtn.style.display = 'block';
+    }
+
+    // Get base URL from a meta tag or global variable
+    const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+
+    const totalBeforeDiscount = order.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discountedTotal = totalBeforeDiscount * (1 - discount / 100);
+    const paymentMethod = order.paymentInfo?.paymentMethod || 'Cash';
+
+    const payload = {
+        orderItems: order.map(item => ({
+            productName: item.productName,
+            quantity: item.quantity
+        })),
+        total: discountedTotal,
+        discount: discount,
+        paymentMethod: paymentMethod
+    };
+
+    // Use the full URL path
+    fetch(`${baseUrl}/Cashier/saveOrder`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'  // Add this header
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.text())  // Change to text() first
+    .then(text => {
+        try {
+            return JSON.parse(text);  // Try to parse as JSON
+        } catch (e) {
+            console.error('Server response:', text);
+            throw new Error('Invalid JSON response from server');
+        }
+    })
+    .then(response => {
+        if (response.status === 'success') {
+            alert('✅ Order saved successfully.');
+            completeTransaction();
+        } else {
+            throw new Error(response.message || 'Failed to save order');
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        alert('❌ Error saving order: ' + err.message);
+    });
 }
 
 function completeTransaction() {
