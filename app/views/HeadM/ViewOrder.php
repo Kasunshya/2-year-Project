@@ -28,9 +28,47 @@
                 <!-- Orders Table -->
                 <div class="order-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" name="search" placeholder="Search by Customer Name or Branch" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/viewOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="customer_name" placeholder="Search by Customer Name" value="<?php echo isset($_GET['customer_name']) ? htmlspecialchars($_GET['customer_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="payment_method">
+                                    <option value="">All Payment Methods</option>
+                                    <option value="Cash" <?php echo (isset($_GET['payment_method']) && $_GET['payment_method'] == 'Cash') ? 'selected' : ''; ?>>Cash</option>
+                                    <option value="Card" <?php echo (isset($_GET['payment_method']) && $_GET['payment_method'] == 'Card') ? 'selected' : ''; ?>>Card</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <select name="order_type">
+                                    <option value="">All Order Types</option>
+                                    <option value="Dine-In" <?php echo (isset($_GET['order_type']) && $_GET['order_type'] == 'Dine-In') ? 'selected' : ''; ?>>Dine-In</option>
+                                    <option value="Takeaway" <?php echo (isset($_GET['order_type']) && $_GET['order_type'] == 'Takeaway') ? 'selected' : ''; ?>>Takeaway</option>
+                                    <option value="Delivery" <?php echo (isset($_GET['order_type']) && $_GET['order_type'] == 'Delivery') ? 'selected' : ''; ?>>Delivery</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($branch->branch_name); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <input type="date" name="date" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <input type="number" name="month" placeholder="Month (1-12)" min="1" max="12" value="<?php echo isset($_GET['month']) ? htmlspecialchars($_GET['month']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <input type="number" name="year" placeholder="Year" min="2000" max="<?php echo date('Y'); ?>" value="<?php echo isset($_GET['year']) ? htmlspecialchars($_GET['year']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">

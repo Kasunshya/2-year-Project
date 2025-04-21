@@ -26,9 +26,13 @@
                 <!-- Preorders Table -->
                 <div class="preorder-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Preorder ID">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/preOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="search" placeholder="Search by Name or Email" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">

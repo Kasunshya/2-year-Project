@@ -1,6 +1,7 @@
 <!-- filepath: c:\xampp\htdocs\Bakery\app\views\HeadM\Branch.php -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,10 +27,12 @@
             </header>
             <section class="content">
                 <!-- Branch Manager -->
-                <div class="overview">
+
+                <div class="table-container">
+                
                     <h2>Branch Manager</h2>
                     <?php if (!empty($data['branchManager'])): ?>
-                        <table class="styled-table">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Manager ID</th>
@@ -53,10 +56,10 @@
                 </div>
 
                 <!-- Cashiers -->
-                <div class="overview">
+                <div class="table-container">
                     <h2>Cashiers</h2>
                     <?php if (!empty($data['cashiers'])): ?>
-                        <table class="styled-table">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Employee ID</th>
@@ -82,7 +85,7 @@
                 </div>
 
                 <!-- Sales Reports -->
-                <div class="overview">
+                <div class="table-container">
                     <h2>Sales Reports</h2>
 
                     <!-- Filter Form -->
@@ -116,7 +119,9 @@
 
                     <!-- Sales Data -->
                     <?php if (!empty($data['salesData'])): ?>
-                        <table class="styled-table">
+                        <div class="table-container">
+                            <h2>Sales Data</h2>
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -147,10 +152,8 @@
         </main>
     </div>
 
-    
-
     <script>
-        // Prepare data for the bar chart
+        // Bar chart logic remains unchanged
         const salesData = <?php echo json_encode(array_map(function($sales) {
             return [
                 'date' => $sales->sales_date,
@@ -161,7 +164,6 @@
         const labels = salesData.map(sale => sale.date);
         const data = salesData.map(sale => sale.total_sales);
 
-        // Create the bar chart
         const ctx = document.getElementById('salesChart').getContext('2d');
         const salesChart = new Chart(ctx, {
             type: 'bar',
@@ -196,48 +198,6 @@
                             text: 'Total Sales ($)'
                         },
                         beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Prepare data for the pie chart
-        const pieData = {
-            labels: labels,
-            datasets: [{
-                label: 'Sales Distribution',
-                data: data,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        };
-
-        // Create the pie chart
-        const pieCtx = document.getElementById('salesPieChart').getContext('2d');
-        const salesPieChart = new Chart(pieCtx, {
-            type: 'pie',
-            data: pieData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
                     }
                 }
             }

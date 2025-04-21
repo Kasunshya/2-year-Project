@@ -25,9 +25,13 @@
             </header>
             <div class="content">
                 <div class="search-bar">
-                    <form method="GET" action="">
-                        <input type="text" name="search" placeholder="Search by Product Name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <form method="GET" action="<?php echo URLROOT; ?>/HeadM/feedback" class="search-form">
+                        <div class="search-field">
+                            <input type="text" name="product_name" placeholder="Search by Product Name" value="<?php echo isset($_GET['product_name']) ? htmlspecialchars($_GET['product_name']) : ''; ?>">
+                        </div>
+                        <div class="search-field">
+                            <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                        </div>
                     </form>
                 </div>
                 <div class="table-container">

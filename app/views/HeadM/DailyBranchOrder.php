@@ -28,9 +28,23 @@
                 <!-- Daily Branch Orders Table -->
                 <div class="branch-orders-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Date">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="branch_name" placeholder="Search by Branch Name" value="<?php echo isset($_GET['branch_name']) ? htmlspecialchars($_GET['branch_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($branch->branch_name); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">

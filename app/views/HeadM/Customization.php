@@ -28,9 +28,13 @@
                 <!-- Customization Table -->
                 <div class="customization-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Customisation ID">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/customization" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="customer_name" placeholder="Search by Customer Name" value="<?php echo isset($_GET['customer_name']) ? htmlspecialchars($_GET['customer_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <section class="dashboard-content">

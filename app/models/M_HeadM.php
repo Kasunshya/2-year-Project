@@ -381,16 +381,28 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getDailyBranchOrders() {
-        $this->db->query('
-            SELECT
+    public function getDailyBranchOrders($branchId = '') {
+        $sql = '
+            SELECT 
                 dbo.dailybranchorder_id, 
                 b.branch_name, 
                 dbo.description, 
                 dbo.orderdate 
             FROM dailybranchorder dbo
             JOIN branch b ON dbo.branch_id = b.branch_id
-        ');
+        ';
+
+        // Add filtering condition if a branch ID is provided
+        if (!empty($branchId)) {
+            $sql .= ' WHERE dbo.branch_id = :branch_id';
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($branchId)) {
+            $this->db->bind(':branch_id', $branchId);
+        }
+
         return $this->db->resultSet();
     }
 
@@ -673,6 +685,162 @@ class M_HeadM
                 description
             FROM preorder
         ');
+
+        return $this->db->resultSet();
+    }
+
+    public function getFeedbacks($productName = '')
+    {
+        $sql = '
+            SELECT 
+                p.product_name,
+                f.star_rating,
+                f.feedback_comment,
+                f.created_at
+            FROM feedback f
+            JOIN product p ON f.product_id = p.product_id
+        ';
+
+        // Add search condition if a product name is provided
+        if (!empty($productName)) {
+            $sql .= ' WHERE p.product_name LIKE :product_name';
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($productName)) {
+            $this->db->bind(':product_name', '%' . $productName . '%');
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getPreOrders($search = '')
+    {
+        $sql = '
+            SELECT 
+                preorder_id,
+                first_name,
+                last_name,
+                email_address AS email,
+                phone_number,
+                description
+            FROM preorder
+        ';
+
+        // Add search condition if a search term is provided
+        if (!empty($search)) {
+            $sql .= ' WHERE first_name LIKE :search OR last_name LIKE :search OR email_address LIKE :search';
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($search)) {
+            $this->db->bind(':search', '%' . $search . '%');
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getOrders($filters = [])
+    {
+        $sql = '
+            SELECT 
+                o.order_id,
+                c.customer_name,
+                o.order_date,
+                o.order_type,
+                o.payment_method,
+                o.payment_status,
+                o.discount,
+                e.full_name AS employee_name,
+                b.branch_name,
+                o.total
+            FROM orders o
+            JOIN customer c ON o.customer_id = c.customer_id
+            JOIN employee e ON o.employee_id = e.employee_id
+            JOIN branch b ON o.branch_id = b.branch_id
+        ';
+
+        $conditions = [];
+        if (!empty($filters['customer_name'])) {
+            $conditions[] = '(c.customer_name LIKE :customer_name)';
+        }
+        if (!empty($filters['payment_method'])) {
+            $conditions[] = 'o.payment_method = :payment_method';
+        }
+        if (!empty($filters['order_type'])) {
+            $conditions[] = 'o.order_type = :order_type';
+        }
+        if (!empty($filters['branch_id'])) {
+            $conditions[] = 'o.branch_id = :branch_id';
+        }
+        if (!empty($filters['date'])) {
+            $conditions[] = 'o.order_date = :date';
+        }
+        if (!empty($filters['month'])) {
+            $conditions[] = 'MONTH(o.order_date) = :month';
+        }
+        if (!empty($filters['year'])) {
+            $conditions[] = 'YEAR(o.order_date) = :year';
+        }
+
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($filters['customer_name'])) {
+            $this->db->bind(':customer_name', '%' . $filters['customer_name'] . '%');
+        }
+        if (!empty($filters['payment_method'])) {
+            $this->db->bind(':payment_method', $filters['payment_method']);
+        }
+        if (!empty($filters['order_type'])) {
+            $this->db->bind(':order_type', $filters['order_type']);
+        }
+        if (!empty($filters['branch_id'])) {
+            $this->db->bind(':branch_id', $filters['branch_id']);
+        }
+        if (!empty($filters['date'])) {
+            $this->db->bind(':date', $filters['date']);
+        }
+        if (!empty($filters['month'])) {
+            $this->db->bind(':month', $filters['month']);
+        }
+        if (!empty($filters['year'])) {
+            $this->db->bind(':year', $filters['year']);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getCustomizations($customerName = '')
+    {
+        $sql = '
+            SELECT 
+                c.customisation_id,
+                cu.customer_name,
+                c.flavour,
+                c.size,
+                c.toppings,
+                c.custom_message,
+                c.delivery_date
+            FROM customisation c
+            JOIN customer cu ON c.customer_id = cu.customer_id
+        ';
+
+        // Add search condition if a customer name is provided
+        if (!empty($customerName)) {
+            $sql .= ' WHERE cu.customer_name LIKE :customer_name';
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($customerName)) {
+            $this->db->bind(':customer_name', '%' . $customerName . '%');
+        }
 
         return $this->db->resultSet();
     }

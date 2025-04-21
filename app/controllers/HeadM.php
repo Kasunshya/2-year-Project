@@ -252,67 +252,99 @@ class HeadM extends Controller
 
     public function customization()
     {
-        // Fetch all customizations
-        $customizations = $this->headManagerModel->getAllCustomizations();
+        // Get the search term from the GET request
+        $customerName = isset($_GET['customer_name']) ? trim($_GET['customer_name']) : '';
+
+        // Fetch customizations based on the search term
+        $customizations = $this->headManagerModel->getCustomizations($customerName);
 
         $data = [
-            'customizations' => $customizations
+            'customizations' => $customizations,
+            'customer_name' => $customerName
         ];
 
         $this->view('HeadM/Customization', $data);
     }
 
-    public function viewOrder() {
-    // Get the search query from the GET request
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    public function viewOrder()
+    {
+        // Get search and filter parameters from the GET request
+        $filters = [
+            'customer_name' => isset($_GET['customer_name']) ? trim($_GET['customer_name']) : '',
+            'payment_method' => isset($_GET['payment_method']) ? trim($_GET['payment_method']) : '',
+            'order_type' => isset($_GET['order_type']) ? trim($_GET['order_type']) : '',
+            'branch_id' => isset($_GET['branch_id']) ? trim($_GET['branch_id']) : '',
+            'date' => isset($_GET['date']) ? trim($_GET['date']) : '',
+            'month' => isset($_GET['month']) ? trim($_GET['month']) : '',
+            'year' => isset($_GET['year']) ? trim($_GET['year']) : ''
+        ];
 
-    // Fetch orders based on the search query
-    $orders = $this->headManagerModel->getAllOrders($search);
+        // Fetch orders based on the filters
+        $orders = $this->headManagerModel->getOrders($filters);
 
-    $data = [
-        'orders' => $orders
-    ];
+        // Fetch all branches for the branch dropdown
+        $branches = $this->headManagerModel->getAllBranches();
 
-    $this->view('HeadM/ViewOrder', $data);
-}
+        $data = [
+            'orders' => $orders,
+            'branches' => $branches,
+            'filters' => $filters
+        ];
+
+        $this->view('HeadM/ViewOrder', $data);
+    }
 
     public function preOrder()
     {
-        // Fetch all preorders
-        $preOrders = $this->headManagerModel->getAllPreOrders();
+        // Get the search term from the GET request
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        // Fetch preorders based on the search term
+        $preOrders = $this->headManagerModel->getPreOrders($search);
 
         $data = [
-            'preOrders' => $preOrders
+            'preOrders' => $preOrders,
+            'search' => $search
         ];
 
         $this->view('HeadM/PreOrder', $data);
     }
 
-    public function dailyBranchOrder() {
-    // Fetch daily branch orders from the model
-    $orders = $this->headManagerModel->getDailyBranchOrders();
+    public function dailyBranchOrder()
+    {
+        // Get the selected branch ID from the GET request
+        $branchId = isset($_GET['branch_id']) ? trim($_GET['branch_id']) : '';
 
-    // Pass the data to the view
-    $data = [
-        'orders' => $orders
-    ];
+        // Fetch branch orders based on the selected branch
+        $orders = $this->headManagerModel->getDailyBranchOrders($branchId);
 
-    $this->view('HeadM/DailyBranchOrder', $data);
-}
+        // Fetch all branches for the dropdown
+        $branches = $this->headManagerModel->getAllBranches();
 
-    public function feedback() {
-    // Get the search query from the GET request
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $data = [
+            'orders' => $orders,
+            'branches' => $branches,
+            'branch_id' => $branchId
+        ];
 
-    // Fetch feedbacks based on the search query
-    $feedbacks = $this->headManagerModel->getAllFeedbacks($search);
+        $this->view('HeadM/DailyBranchOrder', $data);
+    }
 
-    $data = [
-        'feedbacks' => $feedbacks
-    ];
+    public function feedback()
+    {
+        // Get the search term from the GET request
+        $productName = isset($_GET['product_name']) ? trim($_GET['product_name']) : '';
 
-    $this->view('HeadM/Feedback', $data);
-}
+        // Fetch feedback data based on the search term
+        $feedbacks = $this->headManagerModel->getFeedbacks($productName);
+
+        $data = [
+            'feedbacks' => $feedbacks,
+            'product_name' => $productName
+        ];
+
+        $this->view('HeadM/Feedback', $data);
+    }
 
     public function downloadCV($employee_id) {
         // Fetch employee details using the model
