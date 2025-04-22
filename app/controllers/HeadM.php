@@ -110,17 +110,44 @@ class HeadM extends Controller
 
     public function dashboard()
     {
+        // Base metrics
         $totalCashiers = $this->headManagerModel->getTotalCashiers();
         $totalCustomers = $this->headManagerModel->getTotalCustomers();
         $totalBranchManagers = $this->headManagerModel->getTotalBranchManagers();
-
-
+        $totalProducts = $this->headManagerModel->getTotalProducts();
+        $totalOrders = $this->headManagerModel->getTotalOrders();
+        $totalRevenue = $this->headManagerModel->getTotalRevenue();
+        
+        // Sales analytics for chart
+        $salesAnalytics = $this->headManagerModel->getSalesAnalytics();
+        
+        // Best selling products
+        $bestSellers = $this->headManagerModel->getBestSellingProducts();
+        
+        // Recent orders
+        $recentOrders = $this->headManagerModel->getRecentOrders();
+        
+        // Calendar data - orders by date
+        $orderDates = $this->headManagerModel->getOrderDates();
+        
+        // Branch performance
+        $branchPerformance = $this->headManagerModel->getBranchPerformance();
+    
         $data = [
             'totalCashiers' => $totalCashiers,
             'totalCustomers' => $totalCustomers,
-            'totalBranchManagers' => $totalBranchManagers
+            'totalBranchManagers' => $totalBranchManagers,
+            'totalProducts' => $totalProducts,
+            'totalOrders' => $totalOrders,
+            'totalRevenue' => $totalRevenue,
+            'salesAnalytics' => $salesAnalytics,
+            'bestSellers' => $bestSellers,
+            'recentOrders' => $recentOrders,
+            'orderDates' => $orderDates,
+            'branchPerformance' => $branchPerformance
         ];
-        $this->view('HeadM/Dashboard',$data);
+        
+        $this->view('HeadM/Dashboard', $data);
     }
 
     public function inventoryManagement()

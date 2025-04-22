@@ -859,8 +859,105 @@ class M_HeadM
 
         return $this->db->resultSet();
     }
+
+    public function getTotalProducts()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM product');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalOrders()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM orders');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalRevenue()
+    {
+        $this->db->query('SELECT SUM(total) as total_revenue FROM orders');
+        $result = $this->db->single();
+        return $result ? $result->total_revenue : 0;
+    }
+
+    public function getSalesAnalytics()
+    {
+        $this->db->query('
+            SELECT 
+                DATE(order_date) as day,
+                SUM(total) as daily_total
+            FROM orders
+            GROUP BY DATE(order_date)
+            ORDER BY day DESC
+            LIMIT 14
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getBestSellingProducts()
+    {
+        $this->db->query('
+            SELECT 
+                p.product_id,
+                p.product_name,
+                p.price,
+                SUM(od.quantity) as quantity_sold,
+                SUM(od.quantity * od.price) as total_revenue
+            FROM orderdetails od
+            JOIN product p ON od.product_id = p.product_id
+            GROUP BY p.product_id
+            ORDER BY quantity_sold DESC
+            LIMIT 4
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getRecentOrders()
+    {
+        $this->db->query('
+            SELECT 
+                o.order_id,
+                o.order_date,
+                o.total,
+                o.payment_status,
+                b.branch_name,
+                COUNT(od.order_detail_id) as items
+            FROM orders o
+            LEFT JOIN orderdetails od ON o.order_id = od.order_id
+            LEFT JOIN branch b ON o.branch_id = b.branch_id
+            GROUP BY o.order_id
+            ORDER BY o.order_date DESC
+            LIMIT 5
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getOrderDates()
+    {
+        $this->db->query('
+            SELECT 
+                DATE(order_date) as order_day,
+                COUNT(*) as order_count,
+                SUM(total) as day_total
+            FROM orders
+            WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+            GROUP BY order_day
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getBranchPerformance()
+    {
+        $this->db->query('
+            SELECT 
+                b.branch_name,
+                COUNT(o.order_id) as order_count,
+                SUM(o.total) as total_sales
+            FROM branch b
+            LEFT JOIN orders o ON b.branch_id = o.branch_id
+            GROUP BY b.branch_id
+            ORDER BY total_sales DESC
+        ');
+        return $this->db->resultSet();
+    }
 }
-
-
-
 ?>
