@@ -132,6 +132,9 @@ class HeadM extends Controller
         
         // Branch performance
         $branchPerformance = $this->headManagerModel->getBranchPerformance();
+        
+        // Add this new section to fetch latest feedback
+        $latestFeedbacks = $this->headManagerModel->getLatestFeedbacks();
     
         $data = [
             'totalCashiers' => $totalCashiers,
@@ -144,7 +147,8 @@ class HeadM extends Controller
             'bestSellers' => $bestSellers,
             'recentOrders' => $recentOrders,
             'orderDates' => $orderDates,
-            'branchPerformance' => $branchPerformance
+            'branchPerformance' => $branchPerformance,
+            'latestFeedbacks' => $latestFeedbacks // Add this line
         ];
         
         $this->view('HeadM/Dashboard', $data);

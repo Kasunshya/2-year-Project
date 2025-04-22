@@ -81,22 +81,64 @@
                             <div id="current-date"></div>
                         </div>
 
-                        <!-- Branch Performance Chart (moved here) -->
+                        <!-- Branch Performance Chart -->
                         <div class="branch-performance">
                             <h2>Branch Performance</h2>
                             <canvas id="branchPerformanceChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Calendar Widget -->
+                    <!-- Calendar Widget (Middle) -->
                     <div class="calendar-widget">
                         <div id="calendar"></div>
                     </div>
 
-                    <!-- Sales Analysis -->
-                    <div class="sales-widget">
-                        <h3 style="color: #783b31; margin-bottom: 15px;">Sales Analysis</h3>
-                        <canvas id="salesChart"></canvas>
+                    <!-- Right Column: Sales Analysis + Latest Feedback -->
+                    <div class="right-column">
+                        <!-- Sales Analysis -->
+                        <div class="sales-widget">
+                            <h3 style="color: #783b31; margin-bottom: 15px;">Sales Analysis</h3>
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                        
+                        <!-- Latest Product Feedbacks -->
+                        <div class="feedback-widget">
+                            <h3>Latest Product Feedback</h3>
+                            <div class="feedback-container">
+                                <?php if(isset($data['latestFeedbacks']) && !empty($data['latestFeedbacks'])): ?>
+                                    <?php foreach($data['latestFeedbacks'] as $feedback): ?>
+                                        <div class="feedback-item">
+                                            <div class="feedback-product-image">
+                                                <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $feedback->product_image ?? 'default.jpg'; ?>" alt="<?php echo $feedback->product_name; ?>">
+                                            </div>
+                                            <div class="feedback-content">
+                                                <div class="feedback-product-name"><?php echo $feedback->product_name; ?></div>
+                                                <div class="feedback-text"><?php echo $feedback->feedback_text; ?></div>
+                                                <div class="feedback-meta">
+                                                    <div class="feedback-rating">
+                                                        <?php 
+                                                        for($i = 0; $i < $feedback->rating; $i++) {
+                                                            echo '<i class="fas fa-star"></i>';
+                                                        }
+                                                        for($i = $feedback->rating; $i < 5; $i++) {
+                                                            echo '<i class="far fa-star"></i>';
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                    <div class="feedback-date"><?php echo date('M d, Y', strtotime($feedback->feedback_date)); ?></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="feedback-item">
+                                        <div class="feedback-content">
+                                            <div class="feedback-text">No product feedback available.</div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
