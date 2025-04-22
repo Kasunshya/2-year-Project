@@ -377,36 +377,50 @@ class HeadM extends Controller
     public function branch($branch_id) {
     // Fetch branch details
     $branch = $this->headManagerModel->getBranchById($branch_id);
-
+    
     // Check if branch exists
     if (!$branch) {
-        die('Branch not found'); // Handle error if branch does not exist
+        die('Branch not found');
     }
 
-    // Fetch branch manager
+    // Fetch branch manager and cashiers
     $branchManager = $this->headManagerModel->getBranchManagerByBranchId($branch_id);
-
-    // Fetch cashiers related to the branch
     $cashiers = $this->headManagerModel->getCashiersByBranchId($branch_id);
 
-    // Fetch sales data
-    $filter = [
-        'year' => $_GET['year'] ?? null,
-        'month' => $_GET['month'] ?? null,
-        'date' => $_GET['date'] ?? null
-    ];
-    $salesData = $this->headManagerModel->getSalesByBranch($branch_id, $filter);
-    $totalSales = $this->headManagerModel->getTotalSalesByBranch($branch_id, $filter);
+    // Prepare filters for sales data based on request
+    $filters = [];
+    
+    // Handle date filter (daily report)
+    if (isset($_GET['date']) && !empty($_GET['date'])) {
+        $filters['date'] = $_GET['date'];
+    } 
+    // Handle month and year filter (monthly report)
+    else if (isset($_GET['month']) && !empty($_GET['month'])) {
+        $filters['month'] = $_GET['month'];
+        $filters['year'] = isset($_GET['year']) ? $_GET['year'] : date('Y');
+    } 
+    // Handle year filter (yearly report)
+    else if (isset($_GET['year']) && !empty($_GET['year'])) {
+        $filters['year'] = $_GET['year'];
+    }
+
+    // Fetch sales data with filters
+    $salesData = $this->headManagerModel->getSalesByBranch($branch_id, $filters);
+    
+    // Calculate total sales
+    $totalSalesObj = $this->headManagerModel->getTotalSalesByBranch($branch_id, $filters);
+    $totalSales = $totalSalesObj ? $totalSalesObj->total_sales : 0;
 
     $data = [
         'branch' => $branch,
         'branchManager' => $branchManager,
         'cashiers' => $cashiers,
         'salesData' => $salesData,
-        'totalSales' => $totalSales->total_sales ?? 0
+        'totalSales' => $totalSales,
+        'filters' => $filters
     ];
 
-    $this->view('HeadM/Branch', $data); // Load the Branch view
+    $this->view('HeadM/Branch', $data);
 }
 
 }
