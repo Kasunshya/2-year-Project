@@ -539,14 +539,14 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
+    // Also update getTotalSalesByBranch with the same filter logic
     public function getTotalSalesByBranch($branch_id, $filters = [])
     {
-        // Start building the query for total sum
+        // Similar SQL with the same filters but just getting the sum
         $sql = "SELECT SUM(o.total) as total_sales 
                 FROM orders o 
                 WHERE o.branch_id = :branch_id";
 
-        // Apply the same filtering logic as above
         if (isset($filters['date']) && !empty($filters['date'])) {
             $sql .= " AND DATE(o.order_date) = :date";
         } elseif (isset($filters['month']) && isset($filters['year'])) {
@@ -558,7 +558,6 @@ class M_HeadM
         $this->db->query($sql);
         $this->db->bind(':branch_id', $branch_id);
         
-        // Bind parameters if set
         if (isset($filters['date']) && !empty($filters['date'])) {
             $this->db->bind(':date', $filters['date']);
         } elseif (isset($filters['month']) && isset($filters['year'])) {

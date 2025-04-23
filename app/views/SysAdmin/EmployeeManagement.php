@@ -275,12 +275,14 @@
                         <td><?php echo $employee->branch; ?></td>
                         <td><?php echo $employee->user_role; ?></td>
                         <td>
-                            <?php if (!empty($employee->cv_upload)): ?>
-                                <a href="<?php echo URLROOT . '/uploads/' . $employee->cv_upload; ?>" download>Download CV</a>
-                            <?php else: ?>
-                                No CV Uploaded
-                            <?php endif; ?>
-                        </td>
+    <?php if (!empty($employee->cv_upload)): ?>
+        <a href="<?php echo URLROOT . '/uploads/' . $employee->cv_upload; ?>" download class="btn download-cv" style="background-color: #c98d83; color: white; padding: 6px 12px; border-radius: 5px; text-decoration: none; display: inline-flex; align-items: center; font-size: 0.9rem;">
+            <i class="fas fa-download" style="margin-right: 5px;"></i>Download CV
+        </a>
+    <?php else: ?>
+        No CV Uploaded
+    <?php endif; ?>
+</td>
                         <td class="actions">
                             <button class="btn" onclick="openEditModal(<?php echo $employee->employee_id; ?>)">Edit</button>
                             <button class="btn delete-btn" onclick="deleteEmployee(<?php echo $employee->employee_id; ?>)">Delete</button>
@@ -296,7 +298,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal('addEmployeeModal')">&times;</span>
                 <h2>Add New Employee</h2>
-                <form action="<?php echo URLROOT; ?>/sysadmin/addEmployee" method="POST" enctype="multipart/form-data">
+                <form action="<?php echo URLROOT; ?>/sysadmin/addEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateAddEmployeeForm()">
                     <label for="full_name">Full Name:</label>
                     <input type="text" name="full_name" id="full_name" required>
 
@@ -355,7 +357,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
                 <h2>Edit Employee</h2> <!-- Updated title -->
-                <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data">
+                <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateEditEmployeeForm()">
                     <input type="hidden" name="employee_id" id="edit_employee_id">
 
                     <label for="edit_full_name">Full Name:</label>
@@ -425,6 +427,272 @@
 
         
         <script>
+    // Add this before your existing script functions
+
+    // Function to validate email format
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    // Function to validate NIC format (Sri Lankan)
+    function isValidNIC(nic) {
+        // Accept both old (9 digits + V/X) and new (12 digits) NIC formats
+        const oldNICRegex = /^[0-9]{9}[VvXx]$/;
+        const newNICRegex = /^[0-9]{12}$/;
+        return oldNICRegex.test(nic) || newNICRegex.test(nic);
+    }
+    
+    // Function to validate phone number
+    function isValidPhone(phone) {
+        // Allow +94 format or 0 starting 10 digit numbers
+        const phoneRegex = /^(?:\+94|0)[0-9]{9}$/;
+        return phoneRegex.test(phone);
+    }
+    
+    // Function to validate the Add Employee form
+    function validateAddEmployeeForm() {
+        const fullName = document.getElementById('full_name').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const contactNo = document.getElementById('contact_no').value.trim();
+        const nic = document.getElementById('nic').value.trim();
+        const dob = document.getElementById('dob').value;
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const joinDate = document.getElementById('join_date').value;
+        const branchId = document.getElementById('branch_id').value;
+        const userRole = document.getElementById('user_role').value;
+        
+        // Basic field validations
+        if (fullName === '' || address === '' || contactNo === '' || nic === '' || 
+            dob === '' || email === '' || password === '' || joinDate === '' || 
+            branchId === '' || userRole === '') {
+            alert('All fields are required');
+            return false;
+        }
+        
+        // Email format validation
+        if (!isValidEmail(email)) {
+            alert('Please enter a valid email address');
+            return false;
+        }
+        
+        // NIC format validation
+        if (!isValidNIC(nic)) {
+            alert('Please enter a valid NIC number');
+            return false;
+        }
+        
+        // Phone number validation
+        if (!isValidPhone(contactNo)) {
+            alert('Please enter a valid contact number (format: 0XXXXXXXXX or +94XXXXXXXXX)');
+            return false;
+        }
+        
+        // Password strength validation
+        if (password.length < 8) {
+            alert('Password must be at least 8 characters long');
+            return false;
+        }
+        
+        // Date validations
+        const currentDate = new Date();
+        const dobDate = new Date(dob);
+        const joinDateObj = new Date(joinDate);
+        
+        // Check if person is at least 18 years old
+        const minAge = 18;
+        const ageDate = new Date(currentDate - dobDate);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        
+        if (age < minAge) {
+            alert(`Employee must be at least ${minAge} years old`);
+            return false;
+        }
+        
+        // Join date cannot be in the future
+        if (joinDateObj > currentDate) {
+            alert('Join date cannot be in the future');
+            return false;
+        }
+        
+        // Join date should be after birth date + 18 years
+        const minJoinDate = new Date(dobDate);
+        minJoinDate.setFullYear(minJoinDate.getFullYear() + minAge);
+        
+        if (joinDateObj < minJoinDate) {
+            alert('Join date must be after person is 18 years old');
+            return false;
+        }
+
+        // Check branch manager uniqueness via AJAX before submitting
+        if (userRole === 'branchmanager') {
+            // We'll use a synchronous AJAX call for simplicity
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkBranchManagerExists/${branchId}`, false);
+            xhr.send();
+            
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.exists) {
+                    alert('This branch already has a Branch Manager assigned. Only one Branch Manager is allowed per branch.');
+                    return false;
+                }
+            }
+        }
+        
+        // Check email uniqueness via AJAX
+        const emailXhr = new XMLHttpRequest();
+        emailXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExists/${encodeURIComponent(email)}`, false);
+        emailXhr.send();
+        
+        if (emailXhr.status === 200) {
+            const response = JSON.parse(emailXhr.responseText);
+            if (response.exists) {
+                alert('This email address is already in use by another employee.');
+                return false;
+            }
+        }
+        
+        // Check NIC uniqueness via AJAX
+        const nicXhr = new XMLHttpRequest();
+        nicXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkNicExists/${encodeURIComponent(nic)}`, false);
+        nicXhr.send();
+        
+        if (nicXhr.status === 200) {
+            const response = JSON.parse(nicXhr.responseText);
+            if (response.exists) {
+                alert('This NIC number is already in use by another employee.');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Function to validate the Edit Employee form
+    function validateEditEmployeeForm() {
+        const employeeId = document.getElementById('edit_employee_id').value;
+        const fullName = document.getElementById('edit_full_name').value.trim();
+        const address = document.getElementById('edit_address').value.trim();
+        const contactNo = document.getElementById('edit_contact_no').value.trim();
+        const nic = document.getElementById('edit_nic').value.trim();
+        const dob = document.getElementById('edit_dob').value;
+        const email = document.getElementById('edit_email').value.trim();
+        const password = document.getElementById('edit_password').value;
+        const joinDate = document.getElementById('edit_join_date').value;
+        const branchId = document.getElementById('edit_branch_id').value;
+        const userRole = document.getElementById('edit_user_role').value;
+        
+        // Basic field validations (exclude password as it can be empty on edit)
+        if (fullName === '' || address === '' || contactNo === '' || nic === '' || 
+            dob === '' || email === '' || joinDate === '' || 
+            branchId === '' || userRole === '') {
+            alert('All fields except password are required');
+            return false;
+        }
+        
+        // Email format validation
+        if (!isValidEmail(email)) {
+            alert('Please enter a valid email address');
+            return false;
+        }
+        
+        // NIC format validation
+        if (!isValidNIC(nic)) {
+            alert('Please enter a valid NIC number');
+            return false;
+        }
+        
+        // Phone number validation
+        if (!isValidPhone(contactNo)) {
+            alert('Please enter a valid contact number (format: 0XXXXXXXXX or +94XXXXXXXXX)');
+            return false;
+        }
+        
+        // Password strength validation (only if password is being changed)
+        if (password !== '' && password.length < 8) {
+            alert('Password must be at least 8 characters long');
+            return false;
+        }
+        
+        // Date validations
+        const currentDate = new Date();
+        const dobDate = new Date(dob);
+        const joinDateObj = new Date(joinDate);
+        
+        // Check if person is at least 18 years old
+        const minAge = 18;
+        const ageDate = new Date(currentDate - dobDate);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        
+        if (age < minAge) {
+            alert(`Employee must be at least ${minAge} years old`);
+            return false;
+        }
+        
+        // Join date cannot be in the future
+        if (joinDateObj > currentDate) {
+            alert('Join date cannot be in the future');
+            return false;
+        }
+        
+        // Join date should be after birth date + 18 years
+        const minJoinDate = new Date(dobDate);
+        minJoinDate.setFullYear(minJoinDate.getFullYear() + minAge);
+        
+        if (joinDateObj < minJoinDate) {
+            alert('Join date must be after person is 18 years old');
+            return false;
+        }
+
+        // Check branch manager uniqueness via AJAX before submitting
+        if (userRole === 'branchmanager') {
+            // We'll use a synchronous AJAX call for simplicity
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkBranchManagerExistsExcept/${branchId}/${employeeId}`, false);
+            xhr.send();
+            
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.exists) {
+                    alert('This branch already has a Branch Manager assigned. Only one Branch Manager is allowed per branch.');
+                    return false;
+                }
+            }
+        }
+        
+        // Check email uniqueness via AJAX (excluding current employee)
+        const emailXhr = new XMLHttpRequest();
+        emailXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${employeeId}`, false);
+        emailXhr.send();
+        
+        if (emailXhr.status === 200) {
+            const response = JSON.parse(emailXhr.responseText);
+            if (response.exists) {
+                alert('This email address is already in use by another employee.');
+                return false;
+            }
+        }
+        
+        // Check NIC uniqueness via AJAX (excluding current employee)
+        const nicXhr = new XMLHttpRequest();
+        nicXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkNicExistsExcept/${encodeURIComponent(nic)}/${employeeId}`, false);
+        nicXhr.send();
+        
+        if (nicXhr.status === 200) {
+            const response = JSON.parse(nicXhr.responseText);
+            if (response.exists) {
+                alert('This NIC number is already in use by another employee.');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Your existing functions below...
+
             function searchEmployee() {
                 const input = document.getElementById('searchEmployeeInput').value.trim();
                 const table = document.getElementById('employeeTable');

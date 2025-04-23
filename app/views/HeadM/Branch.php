@@ -433,7 +433,18 @@
                             </table>
                         </div>
                     <?php else: ?>
-                        <p>No sales data available for this branch.</p>
+                        <div class="no-data-message" style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                            <i class="fas fa-exclamation-circle"></i> 
+                            <span style="margin-left: 10px;">
+                                <?php 
+                                if (!empty($data['reportType'])) {
+                                    echo "No sales data found for the selected " . $data['reportType'] . " report filters.";
+                                } else {
+                                    echo "No sales data available for this branch.";
+                                }
+                                ?>
+                            </span>
+                        </div>
                     <?php endif; ?>
 
                     <!-- Graphs Section -->
@@ -492,18 +503,8 @@
                     <p><strong>Contact:</strong> <?php echo htmlspecialchars($data['branch']->branch_contact); ?></p>
                 </div>
                 <div class="report-info">
-                    <p><strong>Report Period:</strong> 
-                        <?php 
-                        if (isset($_GET['date'])) {
-                            echo date('d F Y', strtotime($_GET['date']));
-                        } elseif (isset($_GET['month']) && isset($_GET['year'])) {
-                            echo date('F Y', mktime(0, 0, 0, $_GET['month'], 1, $_GET['year']));
-                        } elseif (isset($_GET['year'])) {
-                            echo $_GET['year'];
-                        } else {
-                            echo 'All Time';
-                        }
-                        ?>
+                    <p><strong>Report Type:</strong> 
+                        <?php echo isset($data['reportTitle']) ? $data['reportTitle'] : 'All Time Report'; ?>
                     </p>
                     <p><strong>Report Generated:</strong> <?php echo date('d F Y, h:i A'); ?></p>
                 </div>
@@ -751,17 +752,30 @@
             const form = document.getElementById('reportForm');
             const reportType = document.getElementById('reportType').value;
             
-            // Create a new FormData object to manipulate what gets submitted
+            if (!reportType) {
+                alert('Please select a report type');
+                return;
+            }
+            
+            // Create a new FormData object
             const formData = new FormData(form);
             
-            // Remove all parameters first
+            // Get the branch ID
+            const branchId = formData.get('id');
+            
+            // Clear existing filter parameters
             formData.delete('date');
             formData.delete('month');
             formData.delete('year');
             
-            // Only add the relevant parameters based on report type
+            // Set parameters based on report type
             if (reportType === 'daily') {
-                formData.set('date', document.getElementById('date').value);
+                const dateValue = document.getElementById('date').value;
+                if (!dateValue) {
+                    alert('Please select a date');
+                    return;
+                }
+                formData.set('date', dateValue);
             } else if (reportType === 'monthly') {
                 formData.set('month', document.getElementById('month').value);
                 formData.set('year', document.getElementById('year').value);
@@ -769,31 +783,21 @@
                 formData.set('year', document.getElementById('year').value);
             }
             
-            // Build the query string manually
+            // Build the query string
             const params = new URLSearchParams();
             formData.forEach((value, key) => {
                 params.append(key, value);
             });
             
-            // Redirect with the correct parameters
+            // Redirect with parameters
             window.location.href = `${window.location.pathname}?${params.toString()}`;
         }
 
         // Initialize filter fields on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set the report type based on URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            let reportType = '';
+            // Set the report type based on parameters
+            const reportType = '<?php echo $data['reportType']; ?>';
             
-            if (urlParams.has('date')) {
-                reportType = 'daily';
-            } else if (urlParams.has('month')) {
-                reportType = 'monthly';
-            } else if (urlParams.has('year')) {
-                reportType = 'yearly';
-            }
-            
-            // Set the selected value
             if (reportType) {
                 document.getElementById('reportType').value = reportType;
             }

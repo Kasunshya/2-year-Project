@@ -100,7 +100,7 @@ main {
     margin-top: 1rem;
     display: inline-block;
     padding: 1rem 3rem;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     color: var(--white);
     border-radius: 0.5rem;
     box-shadow: var(--box-shadow);
@@ -396,7 +396,7 @@ header {
 .table-container .rating {
     color: gold;
     font-size: 1.5rem;
-    display: flex;
+    display: inline-block;
 }
 
 .table-container .btn {
