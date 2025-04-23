@@ -56,7 +56,6 @@
                                     <th>Description</th>
                                     <th>Price (Rs.)</th>
                                     <th>Available Quantity</th>
-                                    <th>Star Rating</th>
                                     <th>Category</th>
                                 </tr>
                             </thead>
@@ -67,16 +66,6 @@
                                         <td><?php echo htmlspecialchars($product->description); ?></td>
                                         <td>Rs. <?php echo number_format($product->price, 2); ?></td>
                                         <td><?php echo htmlspecialchars($product->available_quantity); ?></td>
-                                        <td>
-                                            <span class="stars">
-                                                <?php
-                                                $filledStars = intval($product->star_rating); // Number of filled stars
-                                                $emptyStars = 5 - $filledStars; // Number of empty stars
-                                                echo str_repeat('★', $filledStars); // Display filled stars
-                                                echo str_repeat('☆', $emptyStars); // Display empty stars
-                                                ?>
-                                            </span>
-                                        </td>
                                         <td><?php echo htmlspecialchars($product->category_name); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
