@@ -140,7 +140,7 @@ class SysAdmin extends Controller {
                 $cvFileName = $_FILES['cv_upload']['name'];
                 move_uploaded_file($_FILES['cv_upload']['tmp_name'], UPLOADROOT . '/' . $cvFileName);
             }
-
+            $userId= $this->sysAdminModel->getEmployeeById($_POST['employee_id'])->user_id;
             $data = [
                 'employee_id' => trim($_POST['employee_id']),
                 'full_name' => trim($_POST['full_name']),
@@ -150,13 +150,14 @@ class SysAdmin extends Controller {
                 'dob' => trim($_POST['dob']),
                 'gender' => trim($_POST['gender']),
                 'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']), // Optional
+                'password' => trim($_POST['password']),
                 'join_date' => trim($_POST['join_date']),
-                'cv_upload' => $cvFileName, // Optional
+                'cv_upload' => $cvFileName,
                 'branch_id' => trim($_POST['branch_id']),
                 'user_role' => trim($_POST['user_role']),
+                'user_id' => $userId
             ];
-
+            
             if ($this->sysAdminModel->updateEmployee($data)) {
                 flash('employee_message', 'Employee updated successfully');
                 redirect('sysadmin/employeeManagement');
