@@ -59,7 +59,7 @@
             <span><?php echo $data['branch_name_err'] ?? ''; ?></span>
 
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
+            <input type="password" name="password" id="password" value="<?php echo htmlspecialchars($data['password']); ?>" required>
             <span><?php echo $data['password_err'] ?? ''; ?></span>
 
             

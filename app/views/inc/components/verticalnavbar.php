@@ -11,11 +11,12 @@
         <nav>
         <ul>
         <li><a href="<?php echo URLROOT;?>/BranchM/branchmdashboard"><i class="fas fa-home"></i></a></li>
-        <li><a href="<?php echo URLROOT;?>/BranchM/viewCashiers"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/addCashier"><i class="fas fa-edit"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/DailyOrder"><i class="fas fa-tasks"></i></a></li>
-                <li><a href="<?php echo URLROOT;?>/BranchM/salesReport"><i class="fas fa-chart-bar"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/Login/indexx" class="btn"><i class="fas fa-sign-out-alt"></i></a></i></a></li>
+        <!--li><a href="<?php echo URLROOT;?>/BranchM/viewCashiers"><i class="fas fa-boxes"></i></a></li-->
+                <li><a href="<?php echo URLROOT;?>/Branch/stock"><i class="fas fa-box-open"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/Branch/products"><i class="fas fa-cookie"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/Branch/dailyOrder"><i class="fas fa-tasks"></i></a></li>
+                <li><a href="<?php echo URLROOT;?>/Branch/salesReport"><i class="fas fa-chart-bar"></i></a></li>
+                <li><a href="<?php echo URLROOT; ?>/Login/indexx" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
             </ul>
         </div>
        
@@ -38,9 +39,10 @@
             const labelMap = {
                 'fa-home': 'Dashboard',
                 'fa-boxes': 'Cashier Profiles',
-                'fa-edit': 'Add cashier',
+                'fa-box-open': 'Stock Management',
+                'fa-cookie': 'Products',
                 'fa-tasks': 'Daily Order',
-                'fa-chart-bar': 'Sales Reports',
+                'fa-chart-bar': 'Sales Report',
                 'fa-sign-out-alt': 'Logout'
             };
 

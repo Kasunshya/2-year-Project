@@ -75,6 +75,37 @@ class Login extends Controller {
                             }
                         }
                     }
+                    // For branch manager role, fetch and set the employee_id, branch_id, and branch manager_id
+                    elseif ($user->user_role === 'branchmanager') {
+                        $this->db = new Database();
+                        $this->db->query("SELECT bm.branchmanager_id, bm.employee_id, bm.branch_id 
+                                         FROM branchmanager bm 
+                                         WHERE bm.user_id = :user_id");
+                        $this->db->bind(':user_id', $user->user_id);
+                        $manager = $this->db->single();
+                        
+                        if ($manager) {
+                            $_SESSION['branchmanager_id'] = $manager->branchmanager_id;
+                            $_SESSION['employee_id'] = $manager->employee_id;
+                            $_SESSION['branch_id'] = $manager->branch_id;
+                            error_log("Login - Found branch manager record with id: " . $manager->branchmanager_id . 
+                                     ", employee_id: " . $manager->employee_id . ", branch_id: " . $manager->branch_id);
+                        } else {
+                            // If not found in branchmanager table, try employee table
+                            $this->db->query("SELECT e.employee_id, b.branch_id 
+                                             FROM employee e 
+                                             LEFT JOIN branch b ON e.branch = b.branch_name
+                                             WHERE e.user_id = :user_id AND e.user_role = 'branchmanager'");
+                            $this->db->bind(':user_id', $user->user_id);
+                            $employee = $this->db->single();
+                            
+                            if ($employee) {
+                                $_SESSION['employee_id'] = $employee->employee_id;
+                                $_SESSION['branch_id'] = $employee->branch_id;
+                                error_log("Login - Found branch manager employee with ID: " . $employee->employee_id . ", branch_id: " . $employee->branch_id);
+                            }
+                        }
+                    }
                     
                     $this->redirectToDashboard($user->user_role);
                 } else {
