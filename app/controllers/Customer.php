@@ -133,8 +133,9 @@ class Customer extends Controller {
             if (isset($_SESSION['cart'][$productId])) {
                 $_SESSION['cart'][$productId]['quantity']++;
             } else {
-                // Add new product to cart
+                // Add new product to cart with product_id included
                 $_SESSION['cart'][$productId] = [
+                    'product_id' => $productId, // Add this line
                     'name' => $name,
                     'price' => $price,
                     'quantity' => 1,
@@ -142,9 +143,8 @@ class Customer extends Controller {
                 ];
             }
 
-            // Calculate total items in cart
             $cartCount = array_sum(array_column($_SESSION['cart'], 'quantity'));
-
+            
             echo json_encode([
                 'success' => true,
                 'cartCount' => $cartCount,
@@ -314,9 +314,13 @@ class Customer extends Controller {
                 return;
             }
 
-            // Get customer data and active branches
+            // Get branches for pickup locations
             $branches = $this->customerModel->getAllBranches();
             
+            if ($branches === false) {
+                throw new Exception("Unable to fetch branch data");
+            }
+
             $data = [
                 'title' => 'Checkout',
                 'cartItems' => $_SESSION['checkout_data']['cart_items'],
@@ -331,6 +335,7 @@ class Customer extends Controller {
             $this->view('customer/customercheckout', $data);
         } catch (Exception $e) {
             error_log("Error in checkout: " . $e->getMessage());
+            flash('payment_error', 'An error occurred. Please try again.');
             redirect('customer/customercart');
         }
     }
@@ -376,7 +381,22 @@ class Customer extends Controller {
             error_log('Processing payment - POST data: ' . print_r($_POST, true));
             error_log('Cart data: ' . print_r($_SESSION['cart'], true));
 
-            // Calculate delivery charge and total
+            // Validate required fields
+            $requiredFields = ['delivery_type', 'contact_number', 'total'];
+            foreach ($requiredFields as $field) {
+                if (!isset($_POST[$field]) || empty($_POST[$field])) {
+                    throw new Exception("Missing required field: {$field}");
+                }
+            }
+
+            $cartItems = json_decode($_POST['cart_items'], true);
+            
+            // Add product_id to cart items if missing
+            foreach ($cartItems as $key => $item) {
+                $cartItems[$key]['product_id'] = $key; // Set product_id from array key
+            }
+
+            // Calculate delivery charge based on delivery type
             $deliveryCharge = ($_POST['delivery_type'] === 'delivery') ? 500.00 : 0.00;
             $subtotal = floatval($_POST['total']);
             $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : 0;
@@ -385,61 +405,30 @@ class Customer extends Controller {
             // Begin transaction
             $this->customerModel->beginTransaction();
 
-            // 1. Create order record
+            // Prepare order data with updated cart items
             $orderData = [
                 'customer_id' => $_SESSION['customer_id'],
+                'cart_items' => $cartItems,
                 'total' => $orderTotal,
-                'order_date' => date('Y-m-d H:i:s'),
-                'order_type' => 'Online',
-                'payment_method' => 'Credit Card',
-                'payment_status' => 'Paid',
                 'discount' => $discount,
-                'employee_id' => null,
-                'branch_id' => isset($_POST['branch']) ? $_POST['branch'] : null,
-                'amount_tendered' => $orderTotal,
-                'change_amount' => 0,
-                'delivery_charge' => $deliveryCharge
+                'delivery_type' => $_POST['delivery_type'],
+                'contact_number' => $_POST['contact_number'],
+                'delivery_address' => $_POST['delivery_type'] === 'delivery' ? $_POST['delivery_address'] : null,
+                'district' => $_POST['delivery_type'] === 'delivery' ? $_POST['district'] : null,
+                'branch_id' => $_POST['delivery_type'] === 'pickup' ? $_POST['branch'] : null,
+                'payment_method' => 'Credit Card',
+                'payment_status' => 'Paid'
             ];
 
-            $orderId = $this->customerModel->createOrder($orderData);
-            
+            // Create the complete order
+            $orderId = $this->customerModel->createCompleteOrder($orderData);
+
             if (!$orderId) {
                 throw new Exception('Failed to create order');
             }
 
-            // 2. Create order details for each cart item
-            foreach ($_SESSION['cart'] as $productId => $item) {
-                $orderDetailData = [
-                    'order_id' => $orderId,
-                    'product_id' => $productId,
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price']
-                ];
-                
-                if (!$this->customerModel->createOrderDetail($orderDetailData)) {
-                    throw new Exception('Failed to create order detail for product ' . $productId);
-                }
-            }
-
-            // 3. Create delivery details
-            $deliveryData = [
-                'order_id' => $orderId,
-                'branch_id' => $_POST['delivery_type'] === 'pickup' ? $_POST['branch'] : null,
-                'delivery_type' => $_POST['delivery_type'],
-                'delivery_address' => $_POST['delivery_type'] === 'delivery' ? $_POST['delivery_address'] : null,
-                'delivery_date' => date('Y-m-d H:i:s'),
-                'district' => $_POST['delivery_type'] === 'delivery' ? $_POST['district'] : null,
-                'contact_number' => $_POST['contact_number']
-            ];
-
-            if (!$this->customerModel->createDeliveryDetail($deliveryData)) {
-                throw new Exception('Failed to create delivery detail');
-            }
-
-            // If everything is successful, commit the transaction
+            // If successful, commit transaction and clear cart
             $this->customerModel->commit();
-
-            // Clear cart and related session data
             unset($_SESSION['cart']);
             unset($_SESSION['checkout_data']);
 
@@ -450,13 +439,8 @@ class Customer extends Controller {
             redirect('customer/customerfeedback');
 
         } catch (Exception $e) {
-            // Rollback transaction on error
             $this->customerModel->rollBack();
-            
             error_log("Error processing payment: " . $e->getMessage());
-            error_log("Data that caused error - POST: " . print_r($_POST, true));
-            error_log("Data that caused error - Cart: " . print_r($_SESSION['cart'], true));
-            
             flash('payment_error', 'An error occurred while processing your payment. Please try again.');
             redirect('customer/customercheckout');
         }
@@ -506,14 +490,22 @@ class Customer extends Controller {
         }
 
         try {
+            // Debug log incoming data
+            error_log("Feedback submission data: " . print_r($_POST, true));
+
             // Validate required fields
             if (empty($_POST['feedback_text']) || empty($_POST['order_id']) || empty($_POST['customer_id'])) {
                 throw new Exception('Missing required fields');
             }
 
+            // Validate order_id and customer_id are numeric
+            if (!is_numeric($_POST['order_id']) || !is_numeric($_POST['customer_id'])) {
+                throw new Exception('Invalid order or customer ID');
+            }
+
             $feedbackData = [
-                'order_id' => $_POST['order_id'],
-                'customer_id' => $_POST['customer_id'],
+                'order_id' => (int)$_POST['order_id'],
+                'customer_id' => (int)$_POST['customer_id'],
                 'feedback_text' => trim($_POST['feedback_text'])
             ];
 
@@ -564,6 +556,8 @@ class Customer extends Controller {
             // Process form data
             $toppings = isset($_POST['toppings']) ? implode(', ', $_POST['toppings']) : null;
             $premium_toppings = isset($_POST['premium_toppings']) ? implode(', ', $_POST['premium_toppings']) : null;
+            
+            error_log("Processing customization with data: " . print_r($_POST, true));
 
             $data = [
                 'customer_id' => $_SESSION['customer_id'],
@@ -580,15 +574,20 @@ class Customer extends Controller {
                 'order_status' => 'Pending'
             ];
 
-            // Add validation here if needed
-            
+            // Validate required fields
+            if (empty($data['flavor']) || empty($data['size']) || empty($data['delivery_option'])) {
+                flash('customization_error', 'Please fill in all required fields');
+                redirect('customer/customercustomisation');
+                return;
+            }
+
             if ($this->customerModel->createCakeCustomization($data)) {
                 flash('customization_success', 'Your cake customization order has been submitted successfully!');
-                redirect('customer/customercustomisation');
             } else {
                 flash('customization_error', 'Sorry, there was a problem submitting your order. Please try again.');
-                redirect('customer/customercustomisation');
             }
+
+            redirect('customer/customercustomisation');
 
         } catch (Exception $e) {
             error_log("Error in submitCustomization: " . $e->getMessage());

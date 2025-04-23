@@ -428,20 +428,17 @@ $checkout = new CustomerCheckout();
             </div>
         </div>
 
-        <form id="checkoutForm" method="POST" action="<?php echo URLROOT; ?>/customer/confirmPayment">
-            <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id']; ?>">
-            <input type="hidden" name="cart_items" value='<?php echo json_encode($_SESSION['cart']); ?>'>
-            <input type="hidden" name="payment_method" value="Credit Card">
-            <input type="hidden" name="payment_status" value="Paid">
-            <input type="hidden" name="delivery_type" id="delivery_type" value="">
-            <input type="hidden" name="contact_number" id="contact_number" value="">
-            <input type="hidden" name="branch_id" id="branch_id" value="">
-            <input type="hidden" name="delivery_address" id="delivery_address" value="">
-            <input type="hidden" name="district" id="district" value="">
-        </form>
-
         <form method="POST" action="<?php echo URLROOT; ?>/customer/processPayment" class="checkout-form">
+            <!-- Hidden fields for order data -->
             <input type="hidden" name="total" value="<?php echo $data['total']; ?>">
+            <input type="hidden" name="subtotal" value="<?php echo $data['subtotal']; ?>">
+            <input type="hidden" name="discount" value="<?php echo $data['discount']; ?>">
+            <input type="hidden" name="cart_items" value='<?php echo htmlspecialchars(json_encode($data['cartItems'])); ?>'>
+            <?php if (isset($data['promotion_title'])): ?>
+                <input type="hidden" name="promotion_title" value="<?php echo htmlspecialchars($data['promotion_title']); ?>">
+                <input type="hidden" name="promotion_discount" value="<?php echo htmlspecialchars($data['promotion_discount']); ?>">
+            <?php endif; ?>
+
             <!-- Delivery Section -->
             <div class="section-container">
                 <h2 style="color: #783b31; margin-bottom: 20px;">Delivery Details</h2>
@@ -497,8 +494,8 @@ $checkout = new CustomerCheckout();
                         <select id="branch" name="branch">
                             <option value="">Select Branch</option>
                             <?php 
-                            if ($checkout->branches): 
-                                foreach($checkout->branches as $branch): ?>
+                            if (isset($data['branches']) && is_array($data['branches'])): 
+                                foreach($data['branches'] as $branch): ?>
                                     <option value="<?php echo htmlspecialchars($branch->branch_id); ?>">
                                         <?php echo htmlspecialchars($branch->branch_name) . ' - ' . 
                                                  htmlspecialchars($branch->branch_address); ?>

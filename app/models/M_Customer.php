@@ -59,9 +59,9 @@ class M_Customer {
             $sql = "SELECT p.*, c.name as category_name 
                     FROM product p 
                     LEFT JOIN category c ON p.category_id = c.category_id 
-                    WHERE p.status = 'active' 
-                    AND p.is_active = 1 
-                    AND p.available_quantity > 0";
+                    WHERE p.is_active = 1 
+                    AND p.available_quantity > 0 
+                    AND (p.expiry_date IS NULL OR p.expiry_date > NOW())";
             $params = [];
 
             if (!empty($category)) {
@@ -88,7 +88,7 @@ class M_Customer {
             }
 
             $results = $this->db->resultSet();
-            error_log("Filtered products query: $sql");
+            error_log("Filtered products query: " . $sql);
             error_log("Found " . count($results) . " products");
             
             return $results;
@@ -251,12 +251,10 @@ class M_Customer {
 
     public function getLatestProducts($limit = 6) {
         try {
-            // Updated query to use both status columns and match your table structure
             $this->db->query("SELECT p.*, c.name as category_name 
                          FROM product p 
                          LEFT JOIN category c ON p.category_id = c.category_id 
                          WHERE p.is_active = 1 
-                         AND p.status = 'active' 
                          AND p.available_quantity > 0 
                          AND (p.expiry_date IS NULL OR p.expiry_date > NOW()) 
                          ORDER BY p.created_at DESC 
@@ -265,15 +263,8 @@ class M_Customer {
             $this->db->bind(':limit', $limit);
             $results = $this->db->resultSet();
             
-            // Debug logging
-            error_log("Number of products found: " . count($results));
-            if (empty($results)) {
-                error_log("No products found matching criteria");
-                // Debug query results
-                $this->db->query("SELECT COUNT(*) as count FROM product WHERE is_active = 1 AND status = 'active'");
-                $count = $this->db->single();
-                error_log("Total active products in database: " . $count->count);
-            }
+            error_log("Latest products query executed with limit: " . $limit);
+            error_log("Found " . count($results) . " products");
             
             return $results;
         } catch (Exception $e) {
@@ -480,36 +471,37 @@ class M_Customer {
     }
 
     public function createCakeCustomization($data) {
-        $query = "INSERT INTO cake_customization (
-            customer_id, 
-            flavor, 
-            size, 
-            toppings, 
-            premium_toppings, 
-            message, 
-            delivery_option, 
-            delivery_address, 
-            delivery_date, 
-            total_price, 
-            branch_id,
-            order_status
-        ) VALUES (
-            :customer_id, 
-            :flavor, 
-            :size, 
-            :toppings, 
-            :premium_toppings, 
-            :message, 
-            :delivery_option, 
-            :delivery_address, 
-            :delivery_date, 
-            :total_price, 
-            :branch_id,
-            :order_status
-        )";
-
         try {
-            $this->db->query($query);
+            $this->db->query("INSERT INTO cake_customization (
+                customer_id, 
+                flavor, 
+                size, 
+                toppings, 
+                premium_toppings, 
+                message, 
+                delivery_option, 
+                delivery_address, 
+                delivery_date, 
+                total_price,
+                branch_id,
+                order_status,
+                created_at
+            ) VALUES (
+                :customer_id, 
+                :flavor, 
+                :size, 
+                :toppings, 
+                :premium_toppings, 
+                :message, 
+                :delivery_option, 
+                :delivery_address, 
+                :delivery_date, 
+                :total_price, 
+                :branch_id,
+                :order_status,
+                NOW()
+            )");
+
             $this->db->bind(':customer_id', $data['customer_id']);
             $this->db->bind(':flavor', $data['flavor']);
             $this->db->bind(':size', $data['size']);
@@ -520,19 +512,29 @@ class M_Customer {
             $this->db->bind(':delivery_address', $data['delivery_address']);
             $this->db->bind(':delivery_date', $data['delivery_date']);
             $this->db->bind(':total_price', $data['total_price']);
-            $this->db->bind(':branch_id', $data['branch_id']);
+            $this->db->bind(':branch_id', $data['delivery_option'] === 'pickup' ? $data['branch_id'] : null);
             $this->db->bind(':order_status', $data['order_status']);
 
-            return $this->db->execute();
+            $result = $this->db->execute();
+            error_log("Cake customization creation result: " . ($result ? "Success" : "Failed"));
+            return $result;
         } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
+            error_log("Database Error in createCakeCustomization: " . $e->getMessage());
             return false;
         }
     }
 
     public function getAllBranches() {
-        $this->db->query("SELECT * FROM branch WHERE status = 'Active'");
-        return $this->db->resultSet();
+        try {
+            // Update query to match actual table structure
+            $this->db->query("SELECT branch_id, branch_name, branch_address 
+                         FROM branch 
+                         ORDER BY branch_id ASC");
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error getting branches: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getUserIdByEmail($email) {
@@ -652,31 +654,16 @@ class M_Customer {
 
     public function getAllProducts() {
         try {
-            // Updated query to match your table structure
             $this->db->query("SELECT p.*, c.name as category_name 
                          FROM product p 
                          LEFT JOIN category c ON p.category_id = c.category_id 
-                         WHERE p.status = 'active' 
-                         AND p.is_active = 1
+                         WHERE p.is_active = 1 
                          AND p.available_quantity > 0 
                          AND (p.expiry_date IS NULL OR p.expiry_date > NOW()) 
                          ORDER BY p.created_at DESC");
             
             $results = $this->db->resultSet();
-            
-            // Debug logging
-            error_log("Number of products found: " . count($results));
-            
-            if (empty($results)) {
-                // Debug queries
-                $this->db->query("SELECT COUNT(*) as count FROM product");
-                $totalCount = $this->db->single();
-                error_log("Total products in database: " . $totalCount->count);
-                
-                $this->db->query("SELECT COUNT(*) as count FROM product WHERE status = 'active' AND is_active = 1");
-                $activeCount = $this->db->single();
-                error_log("Active products: " . $activeCount->count);
-            }
+            error_log("Total products found: " . count($results));
             
             return $results;
         } catch (Exception $e) {
@@ -687,31 +674,8 @@ class M_Customer {
 
     public function createCompleteOrder($orderData) {
         try {
-            $this->db->beginTransaction();
-
-            // Debug log
-            error_log("Starting order creation with data: " . print_r($orderData, true));
-
-            // Validate cart items
-            if (empty($orderData['cart_items'])) {
-                throw new Exception("Cart is empty");
-            }
-
-            // Calculate totals
-            $deliveryCharge = ($orderData['delivery_type'] === 'delivery') ? 500.00 : 0.00;
-            $subtotal = 0;
+            error_log("Creating order with data: " . print_r($orderData, true));
             
-            // Calculate subtotal from cart items
-            foreach ($orderData['cart_items'] as $item) {
-                if (is_object($item)) {
-                    $item = (array) $item;
-                }
-                $subtotal += ($item['price'] * $item['quantity']);
-            }
-
-            // Calculate final total
-            $finalTotal = $subtotal + $deliveryCharge;
-
             // 1. Create the order record
             $this->db->query("INSERT INTO orders (
                 customer_id,
@@ -725,7 +689,7 @@ class M_Customer {
             ) VALUES (
                 :customer_id,
                 :total,
-                :order_date,
+                NOW(),
                 'Online',
                 :payment_method,
                 :payment_status,
@@ -734,12 +698,11 @@ class M_Customer {
             )");
 
             $this->db->bind(':customer_id', $orderData['customer_id']);
-            $this->db->bind(':total', $finalTotal);
-            $this->db->bind(':order_date', date('Y-m-d H:i:s'));
+            $this->db->bind(':total', $orderData['total']);
             $this->db->bind(':payment_method', $orderData['payment_method']);
             $this->db->bind(':payment_status', $orderData['payment_status']);
-            $this->db->bind(':discount', isset($orderData['discount']) ? $orderData['discount'] : 0);
-            $this->db->bind(':delivery_charge', $deliveryCharge);
+            $this->db->bind(':discount', $orderData['discount']);
+            $this->db->bind(':delivery_charge', $orderData['delivery_type'] === 'delivery' ? 500.00 : 0.00);
 
             if (!$this->db->execute()) {
                 throw new Exception("Failed to create order record");
@@ -748,8 +711,14 @@ class M_Customer {
             $orderId = $this->db->lastInsertId();
             error_log("Created order with ID: " . $orderId);
 
-            // 2. Create order details
+            // 2. Create order details for each item
             foreach ($orderData['cart_items'] as $item) {
+                error_log("Processing cart item: " . print_r($item, true));
+                
+                if (!isset($item['product_id'])) {
+                    throw new Exception("Missing product_id in cart item");
+                }
+
                 $this->db->query("INSERT INTO orderdetails (
                     order_id,
                     product_id,
@@ -763,53 +732,48 @@ class M_Customer {
                 )");
 
                 $this->db->bind(':order_id', $orderId);
-                $this->db->bind(':product_id', $item['id']);
+                $this->db->bind(':product_id', $item['product_id']);
                 $this->db->bind(':quantity', $item['quantity']);
                 $this->db->bind(':price', $item['price']);
 
                 if (!$this->db->execute()) {
-                    throw new Exception("Failed to create order details");
+                    throw new Exception("Failed to create order detail");
                 }
             }
 
             // 3. Create delivery details
             $this->db->query("INSERT INTO delivery_details (
                 order_id,
+                branch_id,
                 delivery_type,
                 delivery_address,
+                delivery_date,
                 district,
-                contact_number,
-                branch_id,
-                delivery_date
+                contact_number
             ) VALUES (
                 :order_id,
+                :branch_id,
                 :delivery_type,
                 :delivery_address,
+                NOW(),
                 :district,
-                :contact_number,
-                :branch_id,
-                :delivery_date
+                :contact_number
             )");
 
             $this->db->bind(':order_id', $orderId);
+            $this->db->bind(':branch_id', $orderData['branch_id']);
             $this->db->bind(':delivery_type', $orderData['delivery_type']);
-            $this->db->bind(':delivery_address', $orderData['delivery_type'] === 'delivery' ? $orderData['delivery_address'] : null);
-            $this->db->bind(':district', $orderData['delivery_type'] === 'delivery' ? $orderData['district'] : null);
+            $this->db->bind(':delivery_address', $orderData['delivery_address']);
+            $this->db->bind(':district', $orderData['district']);
             $this->db->bind(':contact_number', $orderData['contact_number']);
-            $this->db->bind(':branch_id', $orderData['delivery_type'] === 'pickup' ? $orderData['branch_id'] : null);
-            $this->db->bind(':delivery_date', date('Y-m-d H:i:s'));
 
             if (!$this->db->execute()) {
-                throw new Exception("Failed to create delivery details");
+                throw new Exception("Failed to create delivery detail");
             }
 
-            $this->db->commit();
             return $orderId;
-
         } catch (Exception $e) {
-            $this->db->rollBack();
-            error_log("Error creating order: " . $e->getMessage());
-            error_log("Order data that caused error: " . print_r($orderData, true));
+            error_log("Error in createCompleteOrder: " . $e->getMessage());
             return false;
         }
     }
@@ -904,7 +868,15 @@ class M_Customer {
             $this->db->bind(':customer_id', $feedbackData['customer_id']);
             $this->db->bind(':feedback_text', $feedbackData['feedback_text']);
 
-            return $this->db->execute();
+            // Debug logging
+            error_log("Saving feedback with data: " . print_r($feedbackData, true));
+
+            $result = $this->db->execute();
+            if (!$result) {
+                error_log("Failed to execute feedback insert");
+                return false;
+            }
+            return true;
         } catch (Exception $e) {
             error_log("Error saving feedback: " . $e->getMessage());
             return false;
