@@ -2,10 +2,13 @@
 class SysAdminP extends Controller {
     private $categoryModel;
     private $productModel;
+    private $M_SysAdminP;  // Add this line
 
     public function __construct() {
+        // Initialize all models
         $this->categoryModel = $this->model('M_SysAdminP');
         $this->productModel = $this->model('M_SysAdminP');
+        $this->M_SysAdminP = $this->model('M_SysAdminP');  // Add this line if missing
     }
 
     public function categoryManagement() {
@@ -266,12 +269,184 @@ class SysAdminP extends Controller {
         }
     }
 
+    public function updateBranchStatus($branchId) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $data = json_decode(file_get_contents("php://input"));
+                
+                if (!$data || !isset($data->status)) {
+                    throw new Exception('Invalid data received');
+                }
+                
+                // Convert boolean to string status
+                $status = $data->status ? 'active' : 'inactive';
+                
+                if ($this->productModel->updateBranchStatus($branchId, $status)) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Branch status updated successfully'
+                    ]);
+                } else {
+                    throw new Exception('Failed to update branch status');
+                }
+            } catch (Exception $e) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+        }
+    }
+
     public function customerManagement() {
         $customers = $this->productModel->getAllCustomers();
         $data = [
             'customers' => $customers
         ];
         $this->view('SysAdmin/CustomerManagement', $data);
+    }
+
+    public function promotionManagement() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Handle form submissions
+            if (isset($_POST['promotion_id'])) {
+                // This is an update request
+                $this->updatePromotion();
+            } else {
+                // This is an add request
+                $this->addPromotion();
+            }
+        }
+
+        // Get all promotions and display the view
+        $promotions = $this->M_SysAdminP->getAllPromotions();
+        $data = [
+            'promotions' => $promotions
+        ];
+        $this->view('SysAdmin/PromotionManagement', $data);
+    }
+
+    public function addPromotion() {
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Handle image upload
+            $image_name = '';
+            if(isset($_FILES['promotion_image']) && $_FILES['promotion_image']['error'] == 0) {
+                $image_name = $this->handleImageUpload($_FILES['promotion_image'], 'promotions');
+                if(!$image_name) {
+                    flash('promotion_message', 'Image upload failed', 'error');
+                    redirect('SysAdminP/promotionManagement');
+                    return;
+                }
+            }
+
+            $data = [
+                'title' => trim($_POST['title']),
+                'description' => trim($_POST['description']),
+                'discount_percentage' => trim($_POST['discount_percentage']),
+                'start_date' => trim($_POST['start_date']),
+                'end_date' => trim($_POST['end_date']),
+                'image_path' => $image_name,
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            if($this->M_SysAdminP->addPromotion($data)) {
+                flash('promotion_message', 'Promotion Added Successfully');
+            } else {
+                flash('promotion_message', 'Something went wrong', 'error');
+            }
+        }
+        redirect('SysAdminP/promotionManagement');
+    }
+
+    public function updatePromotion() {
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $current_promotion = $this->M_SysAdminP->getPromotionById($_POST['promotion_id']);
+            
+            // Handle image upload
+            $image_name = $current_promotion->image_path;
+            if(isset($_FILES['promotion_image']) && $_FILES['promotion_image']['error'] == 0) {
+                $image_name = $this->handleImageUpload($_FILES['promotion_image'], 'promotions');
+                if(!$image_name) {
+                    flash('promotion_message', 'Image upload failed', 'error');
+                    redirect('SysAdminP/promotionManagement');
+                    return;
+                }
+                // Delete old image if exists
+                if($current_promotion->image_path) {
+                    $old_image_path = dirname(dirname(dirname(__FILE__))) . '/public/img/promotions/' . $current_promotion->image_path;
+                    if(file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+            }
+
+            $data = [
+                'promotion_id' => $_POST['promotion_id'],
+                'title' => trim($_POST['title']),
+                'description' => trim($_POST['description']),
+                'discount_percentage' => trim($_POST['discount_percentage']),
+                'start_date' => trim($_POST['start_date']),
+                'end_date' => trim($_POST['end_date']),
+                'image_path' => $image_name,
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            if($this->M_SysAdminP->updatePromotion($data)) {
+                flash('promotion_message', 'Promotion Updated Successfully');
+            } else {
+                flash('promotion_message', 'Something went wrong', 'error');
+            }
+        }
+        redirect('SysAdminP/promotionManagement');
+    }
+
+    public function deletePromotion($id) {
+        $promotion = $this->M_SysAdminP->getPromotionById($id);
+        if($promotion) {
+            // Delete image if exists
+            if($promotion->image_path) {
+                $image_path = dirname(dirname(dirname(__FILE__))) . '/public/img/promotions/' . $promotion->image_path;
+                if(file_exists($image_path)) {
+                    unlink($image_path);
+                }
+            }
+            
+            if($this->M_SysAdminP->deletePromotion($id)) {
+                flash('promotion_message', 'Promotion Removed Successfully');
+            } else {
+                flash('promotion_message', 'Something went wrong', 'error');
+            }
+        }
+        redirect('SysAdminP/promotionManagement');
+    }
+
+    // Add this method to your SysAdminP class
+    private function handleImageUpload($file, $folder = 'products') {
+        $upload_dir = dirname(dirname(dirname(__FILE__))) . '/public/img/' . $folder . '/';
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        // Validate file type
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+        if (!in_array($file['type'], $allowed_types)) {
+            flash('promotion_message', 'Invalid file type. Only JPG, PNG and GIF are allowed.', 'error');
+            return false;
+        }
+
+        // Generate unique filename
+        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid() . '.' . $file_extension;
+        $target_path = $upload_dir . $filename;
+
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $target_path)) {
+            return $filename;
+        }
+
+        return false;
     }
 }
 ?>

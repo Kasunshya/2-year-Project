@@ -52,6 +52,22 @@ body {
     text-align: right;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#digital-clock {
+    background: #f2f1ec;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Dashboard Content */
 .dashboard-content {
     display: flex;
@@ -60,46 +76,189 @@ body {
     padding: 20px;
 }
 
+/* Time and Calendar Container */
+.time-calendar-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    margin: 25px;
+    margin-left: 175px;
+    max-height: 350px; /* Increased from 250px */
+}
+
+/* Common styles for both cards */
+.time-card, .calendar-card {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    height: 350px; /* Increased from 250px */
+    min-width: calc(50% - 25px);
+}
+
+/* Clock specific styles */
+.time-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.clock-display {
+    font-size: 4rem !important; /* Increased from 3.2rem */
+    font-family: 'Courier New', monospace;
+    color: var(--secondary-color) !important;
+    font-weight: bold;
+    margin: 20px 0;
+    letter-spacing: 3px;
+}
+
+/* Calendar specific styles */
+.calendar-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-card {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    height: 350px;
+    min-width: calc(50% - 25px);
+    overflow: hidden; /* Add this to prevent overflow */
+}
+
+.calendar-card h2 {
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.flatpickr-calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    box-shadow: none !important;
+    padding: 10px 0;
+    background: transparent;
+    font-size: 1rem; /* Increased from 0.9rem */
+    transform: scale(1); /* Removed scale down */
+    transform-origin: top center;
+}
+
+/* Adjust calendar day cells */
+.flatpickr-day {
+    margin: 2px;
+    padding: 0;
+    height: 28px; /* Reduce height */
+    line-height: 28px; /* Match height */
+}
+
+/* Adjust calendar header */
+.flatpickr-header {
+    padding-top: 0;
+    padding-bottom: 5px;
+}
+
+/* Adjust month dropdown */
+.flatpickr-months {
+    padding-top: 5px;
+    margin-bottom: 5px;
+}
+
 /* Overview Cards */
 .overview {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Increased size */
+    gap: 30px; /* Increased gap */
+    margin: 35px 25px; /* Increased top/bottom margin */
+    margin-left: 175px;
 }
 
 .card {
-    background: var(--white);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    border-radius: 15px;
+    padding: 35px; /* Increased padding */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 25px; /* Increased gap */
+    transition: all 0.3s ease;
+    border: 1px solid rgba(120, 59, 49, 0.1);
+    min-height: 180px; /* Added minimum height */
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(120, 59, 49, 0.15);
 }
 
-.card h2 {
-    font-size: 3rem;
+.stats-card {
+    background: white;
+    border-radius: 15px;
+    padding: 35px; /* Increased padding */
+    display: flex;
+    align-items: center;
+    gap: 25px; /* Increased gap */
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    min-height: 180px; /* Added minimum height */
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    background: linear-gradient(135deg, #783b31 0%, #c98d83 100%);
+    width: 80px; /* Increased size */
+    height: 80px; /* Increased size */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon i {
+    font-size: 32px; /* Increased size */
+    color: white;
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.card-title {
+    color: #666;
+    font-size: 1rem;
     margin: 0;
-    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.card p {
-    font-size: 1.2rem;
-    color: var(--secondary-color);
+.card-content h2 {
+    color: #333;
+    font-size: 2.8rem; /* Increased size */
+    margin: 12px 0; /* Increased margin */
+}
+
+.card-subtitle {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 /* Charts and Calendar Layout */
 .charts {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 20px;
-    align-items: flex-start;
 }
 
 .chart {
@@ -111,16 +270,6 @@ body {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     text-align: center;
-}
-
-.calendar-container {
-    flex: 1;
-    min-width: 300px;
-    max-width: 48%;
-    background: var(--white);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
 }
 
 /* Calendar Styling */
@@ -163,4 +312,36 @@ body {
     background: #e3f2fd;
     font-weight: bold;
     border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .overview {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    .time-calendar-container {
+        flex-direction: column;
+        margin-left: 25px;
+        max-height: none;
+    }
+
+    .time-card, .calendar-card {
+        width: 100%;
+        min-width: 100%;
+        height: 300px;
+    }
+
+    .overview {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .overview {
+        grid-template-columns: 1fr;
+        margin: 15px;
+    }
 }

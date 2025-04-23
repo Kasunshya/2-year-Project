@@ -91,7 +91,7 @@
 
         .modal-content {
             background-color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             width: 40%;
             position: relative;
@@ -151,6 +151,102 @@
         .search-bar button:hover {
             background-color: #783b31;
         } 
+
+        /* Alert/Message Styling */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .alert-error {
+            background-color: #fdecea;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        /* Status Toggle Switch */
+        .status-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .status-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .alert.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
     </style>
 </head>
 <body>
@@ -183,6 +279,7 @@
                     <th>Branch Name</th>
                     <th>Address</th>
                     <th>Contact No</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -193,12 +290,19 @@
                             <td><?php echo htmlspecialchars($branch->branch_name); ?></td>
                             <td><?php echo htmlspecialchars($branch->branch_address); ?></td>
                             <td><?php echo htmlspecialchars($branch->branch_contact); ?></td>
+                            <td>
+                                <label class="status-switch">
+                                    <input type="checkbox" 
+                                           onchange="updateBranchStatus(<?php echo $branch->branch_id; ?>, this.checked)"
+                                           <?php echo ($branch->status === 'active') ? 'checked' : ''; ?>>
+                                    <span class="slider"></span>
+                                </label>
+                            </td>
                             <td class="actions">
                                 <button class="btn" onclick="openEditModal(<?php echo $branch->branch_id; ?>, 
                                     '<?php echo htmlspecialchars(addslashes($branch->branch_name)); ?>', 
                                     '<?php echo htmlspecialchars(addslashes($branch->branch_address)); ?>', 
                                     '<?php echo htmlspecialchars($branch->branch_contact); ?>')">Edit</button>
-                                <button class="btn delete-btn" onclick="confirmDelete(<?php echo $branch->branch_id; ?>)">Delete</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -314,6 +418,60 @@
             }
 
             return isValid;
+        }
+
+        function updateBranchStatus(branchId, isActive) {
+            fetch(`<?php echo URLROOT; ?>/SysAdminP/updateBranchStatus/${branchId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: isActive })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message);
+                } else {
+                    showAlert('error', data.message || 'Failed to update branch status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('error', 'An error occurred while updating branch status');
+            });
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <div class="alert-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="close-btn" onclick="closeAlert(this.parentElement)">&times;</button>
+            `;
+            
+            const content = document.querySelector('.content');
+            content.insertBefore(alertDiv, content.firstChild);
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                closeAlert(alertDiv);
+            }, 5000);
+        }
+
+        function closeAlert(alert) {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
         }
 
         // Add event listeners to handle modal clicks outside

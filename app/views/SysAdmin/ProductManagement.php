@@ -140,43 +140,136 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
             align-items: center;
             justify-content: center;
         }
 
         .modal-content {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 40%;
+            padding: 30px;
+            border-radius: 12px;
+            width: 700px; /* Increased width */
+            max-height: 85vh; /* Slightly taller */
             position: relative;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-content form {
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .modal-content h2 {
-            margin-bottom: 20px;
-            text-align: center;
+            color: #783b31;
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid #c98d83;
+            padding-bottom: 10px;
         }
 
         .modal-content label {
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
             display: block;
-            margin: 10px 0 5px;
         }
 
-        .modal-content input, .modal-content select, .modal-content textarea {
+        .modal-content input,
+        .modal-content select,
+        .modal-content textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 0;
+            box-sizing: border-box;
+        }
+
+        .modal-content input:focus,
+        .modal-content select:focus,
+        .modal-content textarea:focus {
+            border-color: #c98d83;
+            box-shadow: 0 0 0 2px rgba(201, 141, 131, 0.2);
+            outline: none;
+        }
+
+        .file-input-container {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .file-input-container label {
+            margin-bottom: 10px;
+        }
+
+        .modal-content .btn {
+            background-color: #c98d83;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            align-self: flex-end;
+        }
+
+        .modal-content .btn:hover {
+            background-color: #783b31;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #c98d83;
+            border-radius: 6px;
+            border: 2px solid #f5f5f5;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #783b31;
         }
 
         .modal-content .close {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #783b31;
             cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-content .close:hover {
+            color: #c98d83;
+            background-color: rgba(120, 59, 49, 0.1);
         }
 
         .search-bar {
@@ -223,12 +316,12 @@
         }
 
         .product-image-preview {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: none;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
         }
 
         .file-input-container {
@@ -238,6 +331,87 @@
 
         .file-input-container input[type="file"] {
             padding-top: 5px;
+        }
+
+        #currentImageText {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .alert-error {
+            background-color: #fdecea;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        .alert-info {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            color: #1565c0;
+        }
+
+        .alert i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .alert .close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            padding: 0 5px;
+            font-size: 20px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .alert .close-btn:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .alert.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
         }
     </style>
 </head>
@@ -256,7 +430,21 @@
     </header>
 
     <div class="content">
-        <?php flash('product_message'); ?>
+        <?php if(isset($_SESSION['flash_messages'])) : ?>
+            <?php foreach($_SESSION['flash_messages'] as $type => $message) : ?>
+                <div class="alert alert-<?php echo $type; ?>" id="alert-message">
+                    <?php if($type === 'success') : ?>
+                        <i class="fas fa-check-circle"></i>
+                    <?php elseif($type === 'error') : ?>
+                        <i class="fas fa-exclamation-circle"></i>
+                    <?php else : ?>
+                        <i class="fas fa-info-circle"></i>
+                    <?php endif; ?>
+                    <span><?php echo $message; ?></span>
+                    <button class="close-btn" onclick="closeAlert(this.parentElement)">&times;</button>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
         
         <div class="search-bar">
             <form action="<?php echo URLROOT; ?>/SysAdminP/searchProduct" method="GET">
@@ -511,6 +699,31 @@
         }
         return true;
     }
+
+    function closeAlert(alertElement) {
+        alertElement.classList.add('fade-out');
+        setTimeout(() => alertElement.remove(), 500);
+    }
+
+    // Add this to your existing script section
+    function closeAlert(alert) {
+        alert.classList.add('fade-out');
+        setTimeout(() => {
+            alert.remove();
+        }, 500);
+    }
+
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                if(alert) {
+                    closeAlert(alert);
+                }
+            }, 5000);
+        });
+    });
 </script>
 </body>
 </html>
