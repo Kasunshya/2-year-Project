@@ -14,7 +14,19 @@ class SysAdmin extends Controller {
     }
 
     public function dashboard() {
-        $this->view('SysAdmin/Dashboard');
+        // Get all dashboard statistics
+        $stats = $this->sysAdminModel->getDashboardStats();
+        
+        $data = [
+            'totalCustomers' => $stats['totalCustomers'] ?? 0,
+            'totalEmployees' => $stats['totalEmployees'] ?? 0,
+            'totalCategories' => $stats['totalCategories'] ?? 0,
+            'totalProducts' => $stats['totalProducts'] ?? 0,
+            'activeBranches' => $stats['activeBranches'] ?? 0,
+            'title' => 'Dashboard'
+        ];
+
+        $this->view('SysAdmin/Dashboard', $data);
     }
 
     public function employeeManagement() {

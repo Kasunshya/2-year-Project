@@ -131,11 +131,10 @@ class M_SysAdminP {
     }
 
     public function updateExpiredProducts() {
-        $this->db->query('UPDATE product 
-                          SET status = 0 
-                          WHERE expiry_date IS NOT NULL 
-                          AND expiry_date <= NOW() 
-                          AND status = 1');
+        $this->db->query("UPDATE product 
+                          SET status = 'inactive' 
+                          WHERE status = 'active' 
+                          AND expiry_date < CURRENT_DATE()");
         return $this->db->execute();
     }
 
@@ -183,6 +182,14 @@ class M_SysAdminP {
         return $this->db->single();
     }
 
+    public function updateBranchStatus($branchId, $status) {
+        $this->db->query('UPDATE branch SET status = :status WHERE branch_id = :branch_id');
+        $this->db->bind(':status', $status);
+        $this->db->bind(':branch_id', $branchId);
+        
+        return $this->db->execute();
+    }
+
     public function getAllCustomers() {
         $this->db->query('SELECT c.*, u.email 
                           FROM customer c 
@@ -190,5 +197,62 @@ class M_SysAdminP {
                           ORDER BY c.customer_id DESC');
         return $this->db->resultSet();
     }
+
+    // Promotion Management Methods
+    public function getAllPromotions() {
+        $this->db->query('SELECT * FROM promotions ORDER BY start_date DESC');
+        return $this->db->resultSet();
+    }
+
+    public function addPromotion($data) {
+        $this->db->query('INSERT INTO promotions (title, description, discount_percentage, start_date, end_date, image_path, is_active) 
+                         VALUES (:title, :description, :discount_percentage, :start_date, :end_date, :image_path, :is_active)');
+        
+        $this->db->bind(':title', $data['title']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':discount_percentage', $data['discount_percentage']);
+        $this->db->bind(':start_date', $data['start_date']);
+        $this->db->bind(':end_date', $data['end_date']);
+        $this->db->bind(':image_path', $data['image_path']);
+        $this->db->bind(':is_active', $data['is_active']);
+
+        return $this->db->execute();
+    }
+
+    public function updatePromotion($data) {
+        $this->db->query('UPDATE promotions 
+                         SET title = :title, 
+                             description = :description, 
+                             discount_percentage = :discount_percentage, 
+                             start_date = :start_date, 
+                             end_date = :end_date, 
+                             image_path = :image_path, 
+                             is_active = :is_active 
+                         WHERE id = :promotion_id');
+        
+        $this->db->bind(':promotion_id', $data['promotion_id']);
+        $this->db->bind(':title', $data['title']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':discount_percentage', $data['discount_percentage']);
+        $this->db->bind(':start_date', $data['start_date']);
+        $this->db->bind(':end_date', $data['end_date']);
+        $this->db->bind(':image_path', $data['image_path']);
+        $this->db->bind(':is_active', $data['is_active']);
+
+        return $this->db->execute();
+    }
+
+    public function deletePromotion($id) {
+        $this->db->query('DELETE FROM promotions WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+
+    public function getPromotionById($id) {
+        $this->db->query('SELECT * FROM promotions WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
 }
 ?>

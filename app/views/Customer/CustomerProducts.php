@@ -14,6 +14,7 @@
             --white: #ffffff;
             --black: #000000;
             --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -29,56 +30,122 @@
 
         /* Navigation Bar */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            background-color: var(--background-color);
+            background-color: var(--white);
             box-shadow: var(--box-shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .navbar a.logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--black);
+        .navbar .logo {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            font-weight: 600;
             text-decoration: none;
+            letter-spacing: 2px;
         }
 
         .navbar ul {
-            list-style: none;
             display: flex;
+            list-style: none;
             gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            position: relative;
         }
 
         .navbar ul li a {
-            text-decoration: none;
             color: var(--black);
-            font-size: 1.5rem;
-            transition: color 0.3s;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            padding: 0.5rem 0;
         }
 
         .navbar ul li a:hover {
             color: var(--primary-color);
         }
 
-        .navbar .icons {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
         }
 
-        .navbar .icons .fas {
-            font-size: 1.8rem;
-            color: var(--black);
-            cursor: pointer;
-            transition: color 0.3s;
+        .navbar ul li a:hover::after {
+            width: 100%;
         }
 
-        .navbar .icons .fas:hover {
-            color: var(--primary-color);
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 1rem 2%;
+            }
+
+            .navbar .logo {
+                font-size: 1.5rem;
+            }
+
+            .navbar ul {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .navbar .logo {
+                margin-bottom: 1rem;
+            }
+
+            .navbar ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .navbar ul li a {
+                font-size: 0.9rem;
+            }
+        }
+
+        .cart-icon {
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .cart-link {
+            color: #333;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            min-width: 20px;
+            text-align: center;
         }
 
         /* Filter Bar */
@@ -124,8 +191,9 @@
         .products-container {
             max-width: 1200px;
             margin: 20px auto;
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
@@ -135,6 +203,7 @@
             box-shadow: var(--box-shadow);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-width: 200px;
         }
 
         .product-card:hover {
@@ -144,7 +213,7 @@
 
         .product-card img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
         }
 
@@ -192,157 +261,142 @@
     </style>
 </head>
 <body>
+   
+
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" class="logo">FROSTINE</a>
         <ul>
             <li><a href="<?php echo URLROOT ?>/Customer/customerhomepage">Home</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage#about">About</a></li>
             <li><a href="<?php echo URLROOT ?>Customer/customerproducts" class="active">Products</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#order">Pre Order</a></li>
             <li><a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
             <li><a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
 
         </ul>
         <div class="icons">
-            <i class="fas fa-shopping-cart" onclick="navigateTo('<?php echo URLROOT; ?>/Customer/customercart')"></i>
+            <div class="cart-icon">
+                <a href="<?php echo URLROOT; ?>/Customer/customercart" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">
+                        <?php 
+                        $cartCount = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+                        echo $cartCount;
+                        ?>
+                    </span>
+                </a>
+            </div>
         </div>
     </div>
 
     <!-- Filter Bar -->
     <div class="filter-bar">
-        <select name="category" id="category">
-            <option value="">All Categories</option>
-            <option value="cakes">Cakes</option>
-            <option value="breads">Breads</option>
-            <option value="pancakes">Pancakes</option>
-            <option value="waffles">Waffles</option>
-        </select>
+        <form method="GET" action="<?php echo URLROOT; ?>/Customer/customerproducts">
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
+                    <?php foreach ($data['categories'] as $category) : ?>
+                        <option value="<?php echo $category->category_id; ?>" 
+                                <?php echo (isset($data['selectedCategory']) && $data['selectedCategory'] == $category->category_id) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($category->name); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
 
-        <input type="number" name="min-price" id="min-price" placeholder="Min Price" min="0">
-        <input type="number" name="max-price" id="max-price" placeholder="Max Price" min="0">
+            <input type="number" name="min_price" id="min-price" placeholder="Min Price" min="0"
+                   value="<?php echo isset($_GET['min_price']) ? htmlspecialchars($_GET['min_price']) : ''; ?>">
+            <input type="number" name="max_price" id="max-price" placeholder="Max Price" min="0"
+                   value="<?php echo isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : ''; ?>">
 
-        <button onclick="filterProducts()">Filter</button>
+            <button type="submit">Filter</button>
+        </form>
     </div>
 
     <!-- Products Section -->
     <div class="products-container">
-        <!-- Example Product -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-1.jpg" alt="Product 1">
-            <div class="product-info">
-                <h3>Strawberry Pancake</h3>
-                <p class="price">LKR 1,250.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+        <?php if (isset($data['products']) && !empty($data['products'])) : ?>
+            <?php foreach ($data['products'] as $product) : ?>
+                <div class="product-card">
+                    <!-- Product image -->
+                    <?php if (!empty($product->image_path)) : ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo htmlspecialchars($product->image_path); ?>" 
+                             alt="<?php echo htmlspecialchars($product->product_name); ?>"
+                             onerror="this.src='<?php echo URLROOT; ?>/public/img/default-product.jpg';">
+                    <?php else : ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/default-product.jpg" 
+                             alt="No image available">
+                    <?php endif; ?>
+                    
+                    <div class="product-info">
+                        <h3><?php echo htmlspecialchars($product->product_name); ?></h3>
+                        <p class="price">LKR <?php echo number_format($product->price, 2); ?></p>
+                        
+                        <form action="<?php echo URLROOT; ?>/Customer/addToCart" method="POST">
+                            <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
+                            <input type="hidden" name="name" value="<?php echo htmlspecialchars($product->product_name); ?>">
+                            <input type="hidden" name="price" value="<?php echo $product->price; ?>">
+                            <input type="hidden" name="image" value="<?php echo $product->image_path ? $product->image_path : 'default-product.jpg'; ?>">
+                            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                        </form>
+                    </div>
                 </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-        <!-- Product 2 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-2.jpg" alt="Product 2">
-            <div class="product-info">
-                <h3>Blueberry Pancake</h3>
-                <p class="price">LKR 1,450.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-3.jpg" alt="Product 3">
-            <div class="product-info">
-                <h3>Butter & Honey Bread</h3>
-                <p class="price">LKR 1,950.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="no-products">No products available</div>
+        <?php endif; ?>
     </div>
-
-    
-    
-    <div class="products-container">
-        <!-- Product 4 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-4.jpg" alt="Rose Pink Cake">
-            <div class="product-info">
-                <h3>Rose Pink Cake</h3>
-                <p class="price">LKR 9,550.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 5-->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-5.jpg" alt="Honey Waffles">
-            <div class="product-info">
-                <h3>Honey Waffles</h3>
-                <p class="price">LKR 1,200.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 6 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-6.jpg" alt="Honey Pancake">
-            <div class="product-info">
-                <h3>Honey Pancake</h3>
-                <p class="price">LKR 1,050.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-    </div>
-    
 
     <script>
-        function filterProducts() {
-            alert('Filter functionality will be implemented here.');
+        // Function to update cart count
+        function updateCartCount(count) {
+            const cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+                // Show/hide the count based on value
+                cartCountElement.style.display = count > 0 ? 'block' : 'none';
+            }
         }
-        function navigateTo(url) {
-            window.location.href = url;
-        }
+
+        // Add event listener to all add to cart forms
+        document.querySelectorAll('form[action*="addToCart"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update cart count immediately
+                        updateCartCount(data.cartCount);
+                        // Show success message
+                        const button = this.querySelector('.add-to-cart-btn');
+                        const originalText = button.textContent;
+                        button.textContent = 'Added!';
+                        button.style.backgroundColor = 'var(--secondary-color)';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                            button.style.backgroundColor = 'var(--primary-color)';
+                        }, 1000);
+                    } else {
+                        alert('Failed to add product to cart');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error adding product to cart');
+                });
+            });
+        });
+
+        // Initialize cart count on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialCount = <?php echo $cartCount; ?>;
+            updateCartCount(initialCount);
+        });
     </script>
 </body>
 </html>

@@ -299,33 +299,46 @@ if (!class_exists('M_SysAdmin')) {
         }
 
         public function getDashboardStats() {
-            $stats = [];
-            
-            // Get total users
-            $this->db->query('SELECT COUNT(*) as total FROM users');
-            $stats['totalUsers'] = $this->db->single()->total;
-            
-            // Get total products
-            $this->db->query('SELECT COUNT(*) as total FROM product');
-            $stats['totalProducts'] = $this->db->single()->total;
-            
-            // Get total orders
-            $this->db->query('SELECT COUNT(*) as total FROM orders');
-            $stats['totalOrders'] = $this->db->single()->total;
-            
-            // Get total customers
-            $this->db->query('SELECT COUNT(*) as total FROM customer');
-            $stats['totalCustomers'] = $this->db->single()->total;
-            
-            // Get total branches
-            $this->db->query('SELECT COUNT(*) as total FROM branch');
-            $stats['totalBranches'] = $this->db->single()->total;
-            
-            // Get pending orders
-            $this->db->query('SELECT COUNT(*) as total FROM orders WHERE status = "Pending"');
-            $stats['pendingOrders'] = $this->db->single()->total;
-            
-            return $stats;
+            try {
+                $stats = [];
+                
+                // Get total customers (no status filter needed)
+                $this->db->query('SELECT COUNT(*) as total FROM customer');
+                $result = $this->db->single();
+                $stats['totalCustomers'] = $result ? $result->total : 0;
+                
+                // Get total employees (assuming no status column, count all)
+                $this->db->query('SELECT COUNT(*) as total FROM employee');
+                $result = $this->db->single();
+                $stats['totalEmployees'] = $result ? $result->total : 0;
+                
+                // Get total categories (no status filter needed)
+                $this->db->query('SELECT COUNT(*) as total FROM category');
+                $result = $this->db->single();
+                $stats['totalCategories'] = $result ? $result->total : 0;
+                
+                // Get total products (no status filter needed)
+                $this->db->query('SELECT COUNT(*) as total FROM product');
+                $result = $this->db->single();
+                $stats['totalProducts'] = $result ? $result->total : 0;
+                
+                // Get total branches (assuming status column exists in branch table)
+                $this->db->query('SELECT COUNT(*) as total FROM branch WHERE status = "active"');
+                $result = $this->db->single();
+                $stats['activeBranches'] = $result ? $result->total : 0;
+                
+                return $stats;
+                
+            } catch (Exception $e) {
+                error_log("Error in getDashboardStats: " . $e->getMessage());
+                return [
+                    'totalCustomers' => 0,
+                    'totalEmployees' => 0,
+                    'totalCategories' => 0,
+                    'totalProducts' => 0,
+                    'activeBranches' => 0
+                ];
+            }
         }
     }
 }

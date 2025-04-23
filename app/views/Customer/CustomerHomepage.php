@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../public/css/Customer/CustomerHomepage.css">
+
+    <!-- Add this CSS in the head section -->
+    <style>
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 4px;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .notification.success {
+        background-color: #c98d83;
+    }
+
+    .notification.error {
+        background-color: #ff6b6b;
+    }
+
+    .notification.show {
+        opacity: 1;
+    }
+    </style>
 </head>
 <body>
     
@@ -15,19 +42,18 @@
     <header class="header">
         <a href="#" class="logo">FROSTINE</a>
         <nav class="navbar">
-            <a href="<?php echo URLROOT;?>/customer/customerhomepage">Home</a></li>
-            <a href="#about">about</a>
-            <a href="<?php echo URLROOT ?>/customer/customerproducts">product</a>
-            <a href="#gallery">gallery</a>
-            <a href="#review">review</a>
-            <a href="#pre-order">pre order</a>
-            <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-            <a href="<?php echo URLROOT ?>/Login/logout">Log Out</a></li>
-
+            <a href="<?php echo URLROOT;?>/customer/customerhomepage">Home</a>
+            <a href="#about">About</a>
+            <a href="<?php echo URLROOT ?>/customer/customerproducts">Products</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#order">Review</a>
+            <a href="#order">Enquiry</a>  <!-- Changed from #enquiry to #order -->
+            <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a>
+            <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a>
+            <a href="<?php echo URLROOT ?>/Login/logout">Log Out</a>
         </nav>
         <div class="icons">
-            <div id="cart-btn" class="fas fa-shopping-cart" onclick = "navigateTo('<?php echo URLROOT;?>/Customer/customercart')">
+            <div id="cart-btn" class="fas fa-shopping-cart" onclick="navigateTo('<?php echo URLROOT;?>/Customer/customercart')"></div>
         </div>
     </header>
 
@@ -77,10 +103,9 @@
 
             <div class="content">
                 <h3>good things come to those <span>who bake </span> for others</h3>
-                <p>Welcome to FROSTINE, where we blend tradition with innovation to bring you the finest bakery delights.
-                Our commitment to quality and customer satisfaction ensures a delightful experience with every order. Join us in celebrating the art of baking!
+                <p>
+                    At Frostine Bakery, we believe that every sweet moment deserves the perfect treat. Our easy-to-use online system is built just for you – to make ordering your favorite cakes, pastries, and baked delights faster, easier, and more enjoyable. Whether you're planning a celebration or simply craving something fresh from the oven, Frostine brings the bakery to your doorstep with just a few clicks. Quality, freshness, and customer happiness are at the heart of everything we bake.              
                 </p>
-                <a href="#" class="btn">read more</a>
             </div>
 
         </div>
@@ -90,129 +115,39 @@
 
     <!-- about us end-->
 
-    <!-- product -->
-
+    <!-- product section -->
     <section class="product" id="product">
-
-        <h1 class="heading">our <span> products</span></h1>
-
+        <h1 class="heading">our <span>products</span></h1>
+        
         <div class="box-container">
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-1.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Strawberry Pancake</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
+            <?php if (!empty($data['products'])): ?>
+                <?php foreach ($data['products'] as $product): ?>
+                    <div class="box">
+                        <div class="image">
+                            <?php if (!empty($product->image_path)) : ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo htmlspecialchars($product->image_path); ?>" 
+                                     alt="<?php echo htmlspecialchars($product->product_name); ?>"
+                                     onerror="this.src='<?php echo URLROOT; ?>/public/img/default-product.jpg'">
+                            <?php else : ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/default-product.jpg" 
+                                     alt="Default product image">
+                            <?php endif; ?>
+                        </div>
+                        <div class="content">
+                            <h3><?php echo htmlspecialchars($product->product_name); ?></h3>
+                            <div class="price">LKR <?php echo number_format($product->price, 2); ?></div>
+                            <a href="<?php echo URLROOT; ?>/customer/customerproducts" class="btn">View Details</a>
+                        </div>
                     </div>
-                    <span class="price">LKR 1250.00</span>
-                    <a href="#" class="btn">add to cart</a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="no-products">
+                    <p>No products available at the moment.</p>
                 </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-2.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Blueberry Pancake</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="price">LKR 1450.00</span>
-                    <a href="#" class="btn">add to cart</a>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-3.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Butter & Honey Bread</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <span class="price">LKR 1950.00</span>
-                    <a href="#" class="btn">add to cart</a>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-4.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Rose Pink Cake</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="price">LKR 9550.00</span>
-                    <a href="#" class="btn">add to cart</a>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-5.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Honey Waffles</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <span class="price">LKR 1200.00</span>
-                    <a href="#" class="btn">add to cart</a>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/product-6.jpg" alt="">
-                </div>
-                <div class="content">
-                    <h3>Honey Pancake</h3>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="price">LKR 1050.00</span>
-                    <a href="#" class="btn">add to cart</a>
-                </div>
-            </div>
-
+            <?php endif; ?>
         </div>
-
     </section>
-
-
     <!-- product end-->
-
 
     <!-- gallery -->
 
@@ -260,33 +195,37 @@
 
     <!-- weekly promotions -->
 
-    <section class="promotion">
-
+    <section class="promotion" id="promotion">
         <h1 class="heading">weekly <span>promotions</span></h1>
 
         <div class="box-container">
-
-            <div class="box">
-                <div class="content">
-                    <h3>chocolat cake</h3>
-                    <p>Experience pure bliss with our rich, velvety chocolate cake, crafted for every chocolate lover's delight. Perfect for any occasion, indulge in a slice of luxury today.
-                    </p>
+            <?php if(!empty($data['promotions'])): ?>
+                <?php foreach($data['promotions'] as $promotion): ?>
+                    <div class="box">
+                        <div class="image">
+                            <?php if(!empty($promotion->image_path)): ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/promotions/<?php echo htmlspecialchars($promotion->image_path); ?>" 
+                                     alt="<?php echo htmlspecialchars($promotion->title); ?>">
+                            <?php else: ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/default-promotion.jpg" alt="Default promotion image">
+                            <?php endif; ?>
+                        </div>
+                        <div class="content">
+                            <h3><?php echo htmlspecialchars($promotion->title); ?></h3>
+                            <p><?php echo htmlspecialchars($promotion->description); ?></p>
+                            <div class="promotion-date">Valid until: <?php echo date('d M Y', strtotime($promotion->end_date)); ?></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="box">
+                    <div class="content">
+                        <h3>No Active Promotions</h3>
+                        <p>Check back later for exciting offers!</p>
+                    </div>
                 </div>
-
-                <img src="../public/img/Customer/promotion1.png" alt="">
-            </div>
-
-            <div class="box">
-                <img src="../public/img/Customer/promotion2.png" alt="">
-                <div class="content">
-                    <h3>nut cake</h3>
-                    <p>Savor the rich flavors of our nut cake, packed with crunchy nuts and a hint of sweetness. Perfectly balanced and utterly irresistible, it's a treat you won't want to miss!</p>
-                </div>
-                
-            </div>
-
+            <?php endif; ?>
         </div>
-
     </section>
 
     <!-- weekly promotions ends -->
@@ -390,44 +329,34 @@
 
     <!-- review -->
 
-    <!-- order -->
+    <!-- enquiry -->
 
     <section class="order" id="order">
-
-        <h1 class="heading"><span>Pre Order</span> now </h1>
+        <h1 class="heading"><span>Enquiry</span> Form</h1>
 
         <div class="row">
-
             <div class="image">
                 <img src="../public/img/Customer/order.gif" alt="">
             </div>
 
-            <form action="">
-
+            <form id="enquiryForm" action="<?php echo URLROOT; ?>/customer/submitEnquiry" method="POST" onsubmit="return submitForm(event)">
                 <div class="inputBox">
-                    <input type="text" placeholder="first name">
-                    <input type="text" placeholder="last name">
+                    <input type="text" name="first_name" placeholder="First Name" required>
+                    <input type="text" name="last_name" placeholder="Last Name" required>
                 </div>
 
                 <div class="inputBox">
-                    <input type="email" placeholder="email address">
-                    <input type="number" placeholder="phone number">
+                    <input type="email" name="email_address" placeholder="Email Address" style="text-transform: none;" required>
+                    <input type="tel" name="phone_number" placeholder="Phone Number">
                 </div>
 
-                <div class="inputBox">
-                    <input type="text" placeholder="food name">
-                    <input type="number" placeholder="how much">
-                </div>
-
-                <textarea placeholder="your address" name="" id="" cols="30" rows="10"></textarea>
-                <input type="submit" value="pre order now" class="btn">
+                <textarea placeholder="Your Enquiry Message" name="message" cols="30" rows="10" required></textarea>
+                <input type="submit" value="Submit Enquiry" class="btn">
             </form>
-
         </div>
-
     </section>
 
-    <!-- order end -->
+    <!-- enquiry end -->
     
     <!-- Footer -->
     <section class="footer">
@@ -459,18 +388,51 @@
         <div class="credit">created by <span></span> all rights reserved!</div>
     </section>
 
-    <!-- JavaScript -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script>
-        const swiper = new Swiper('.home-slider', {
-            loop: true,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+    <!-- Add this div after your footer section -->
+    <div id="notification" class="notification"></div>
 
-        function navigateTo(url) { window.location.href = url; }
+    <!-- Replace your existing script with this updated version -->
+    <script>
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        
+        // Show notification
+        setTimeout(() => notification.classList.add('show'), 100);
+        
+        // Hide notification after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    function submitForm(e) {
+        e.preventDefault();
+        
+        var form = document.getElementById('enquiryForm');
+        var formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showNotification('Thank you for your enquiry!', 'success');
+                form.reset();
+            } else {
+                showNotification('Please try again later.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Something went wrong. Please try again.', 'error');
+        });
+        
+        return false;
+    }
     </script>
 </body>
 </html>

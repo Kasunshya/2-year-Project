@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-          :root {
+        :root {
             --primary-color: #c98d83;
             --secondary: #783b31;
             --bg: #f2f1ec;
             --white: #ffffff;
-            --box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
+            --black: #333333;
+            --gray: #666666;
+            --light-gray: #f5f5f5;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -19,177 +24,264 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            text-transform: capitalize;
         }
 
         body {
-            background: var(--background-color) url('/images/banner-bg.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: var(--light-gray);
             color: var(--black);
+            line-height: 1.6;
         }
+
+        /* Header Styles */
         header {
-            background-color: var(--primary-color);
-            padding: 2rem;
+            background-color: var(--primary-color);           
+            padding: 1.5rem;
             text-align: center;
             color: var(--white);
-            font-size: 2.5rem;
+            font-size: 2rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
         }
+
         /* Navigation Bar */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            background-color: var(--bg);
+            background-color: var(--white);
             box-shadow: var(--box-shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-        .navbar a.logo {
-            font-size: 1.7rem;
-            font-weight: bold;
-            color: #000 ;
-            text-decoration: none;
-        }
-        .navbar ul {
-            list-style: none;
+            padding: 1rem 5%;
             display: flex;
-            gap: 2rem;
+            justify-content: space-between;
+            align-items: center;
         }
-        .navbar ul li a {
+
+        .navbar .logo {
+            color: var(--secondary);
+            font-size: 1.8rem;
+            font-weight: 600;
             text-decoration: none;
-            color: #000 ;
-            font-size: 1.3rem;
-            transition: color 0.3s;
+            letter-spacing: 2px;
         }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            position: relative;
+        }
+
+        .navbar ul li a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+        }
+
         .navbar ul li a:hover {
             color: var(--primary-color);
         }
-        section {
-            padding: 3rem 7%;
+
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
         }
-        .customization-form {
+
+        .navbar ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Add responsive navbar styles */
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 1rem 2%;
+            }
+
+            .navbar .logo {
+                font-size: 1.5rem;
+            }
+
+            .navbar ul {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .navbar .logo {
+                margin-bottom: 1rem;
+            }
+
+            .navbar ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .navbar ul li a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Profile Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        /* Profile Info Section */
+        .profile-info {
             background: var(--white);
-            padding: 2rem;
             border-radius: 10px;
             box-shadow: var(--box-shadow);
-        }
-        
-        /* Profile Page */
-        .container {
-            max-width: 900px;
-            margin: 70px auto 50px; /* Added top margin for navbar */
-            background: var(--white);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .profile-header h1 {
-            font-size: 28px;
-            color: #783b31;
-        }
-
-        .profile-info {
-            margin-bottom: 30px;
-        }
-
-        .profile-info label {
-            font-weight: bold;
-            margin-top: 15px;
+        .form-group label {
             display: block;
-            margin-left: 500px;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+            font-weight: 500;
         }
 
-        .profile-info input {
-            width: 40%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-left: 500px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .tabs button {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            color: var(--black);
-            border-bottom: 3px solid transparent;
-        }
-
-        .tabs button.active {
-            border-bottom: 3px solid var(--primary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .order-history, .current-orders {
+        .form-group input, 
+        .form-group textarea {
             width: 100%;
-            border-collapse: collapse;
-        }
-
-        .order-history th, .order-history td,
-        .current-orders th, .current-orders td {
-            padding: 10px;
-            text-align: left;
+            padding: 0.8rem;
             border: 1px solid #ddd;
-            font-size: 14px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
         }
 
-        .order-history th, .current-orders th {
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(201, 141, 131, 0.1);
+        }
+
+        /* Recent Orders Section */
+        .recent-orders {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recent-orders h2 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .order-history {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .order-history th {
             background: var(--primary-color);
             color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
         }
 
-        .order-history tr:nth-child(even),
-        .current-orders tr:nth-child(even) {
-            background: #f9f9f9;
+        .order-history td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
         }
 
-        .reset-password {
-            margin-top: 20px;
-            text-align: center;
+        .order-history tr:last-child td {
+            border-bottom: none;
         }
 
-        .reset-password button {
+        .order-history tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        /* Button Styles */
+        .btn {
             background: var(--primary-color);
             color: var(--white);
-            padding: 10px 20px;
+            padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
         }
 
-        .reset-password button:hover {
-            background: #783b31;
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Flash Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar ul {
+                gap: 1rem;
+            }
+
+            .profile-info,
+            .recent-orders {
+                padding: 1rem;
+            }
+
+            .order-history th,
+            .order-history td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -199,10 +291,8 @@
         <a href="#" class="logo">FROSTINE</a>
         <ul>
             <li><a href="<?php echo URLROOT ?>/customer/customerhomepage">Home</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage#about">About</a></li>
             <li><a href="<?php echo URLROOT ?>/customer/customerproducts">Products</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#review">Reviews</a></li>
             <li><a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
             <li><a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
         </ul>
@@ -212,98 +302,59 @@
     <!-- Customer Profile Page -->
     <header>Customer Profile</header>
 
-        <div class="profile-info">
-            <label for="username" style="color: #783b31;">Username</label>
-            <input type="text" id="username" value="JohnDoe123" disabled>
-
-            <label for="email" style="color: #783b31;">Email</label>
-            <input type="email" id="email" value="johndoe@example.com" disabled>
-
-            <label for="password" style="color: #783b31;">Password</label>
-            <input type="password" id="password" value="********" disabled>
-        </div>
-        <div class="reset-password">
-            <button>Reset Password</button>
-        </div>
-        </div>
-
-        <div class="tabs">
-            <button class="active" data-tab="order-history">Order History</button>
-            <button data-tab="current-orders">Current Orders</button>
-        </div>
-
-        <div class="tab-content active" id="order-history">
-            
-            <table class="order-history">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>101</td>
-                        <td>2024-11-01</td>
-                        <td>LKR 5,000</td>
-                        <td>Delivered</td>
-                    </tr>
-                    <tr>
-                        <td>102</td>
-                        <td>2024-11-10</td>
-                        <td>LKR 2,800</td>
-                        <td>Delivered</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="tab-content" id="current-orders">
-            <h2>Current Orders</h2>
-            <table class="current-orders">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>103</td>
-                        <td>2024-11-20</td>
-                        <td>LKR 3,000</td>
-                        <td>In Progress</td>
-                    </tr>
-                    <tr>
-                        <td>104</td>
-                        <td>2024-11-22</td>
-                        <td>LKR 1,500</td>
-                        <td>Preparing</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
+    <!-- Profile Info Section -->
+    <div class="profile-info">
+        <?php flash('profile_success'); ?>
+        <?php flash('profile_error'); ?>
         
+        <form action="<?php echo URLROOT; ?>/customer/updateProfile" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" 
+                       value="<?php echo $data['customerData']->customer_name; ?>" required>
+            </div>
 
-    <script>
-        // Tab Switching Logic
-        const tabs = document.querySelectorAll('.tabs button');
-        const tabContents = document.querySelectorAll('.tab-content');
+            <div class="form-group">
+                <label for="contact">Contact</label>
+                <input type="tel" id="contact" name="contact" 
+                       value="<?php echo $data['customerData']->customer_contact; ?>" required>
+            </div>
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" required><?php echo $data['customerData']->customer_address; ?></textarea>
+            </div>
 
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
-            });
-        });
-    </script>
+            <button type="submit" class="btn">Update Profile</button>
+        </form>
+    </div>
+
+    <div class="recent-orders">
+        <h2>Recent Orders</h2>
+        <table class="order-history">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($data['orderHistory'] as $order): ?>
+                    <tr>
+                        <td><?php echo $order->order_id; ?></td>
+                        <td><?php echo date('Y-m-d', strtotime($order->order_date)); ?></td>
+                        <td>LKR <?php echo number_format($order->total, 2); ?></td>
+                        <td><?php echo $order->status; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    
 </body>
 </html>

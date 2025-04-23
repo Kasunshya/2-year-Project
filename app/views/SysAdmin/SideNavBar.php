@@ -9,7 +9,8 @@
             <li><a href="<?php echo URLROOT; ?>/SysAdmin/EmployeeManagement"><i class="fas fa-user"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/SysAdminP/CustomerManagement"><i class="fas fa-users"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/SysAdminP/CategoryManagement"><i class="fas fa-tags"></i></a></li>  
-            <li><a href="<?php echo URLROOT; ?>/SysAdminP/ProductManagement"><i class="fas fa-utensils"></i></a></li>          
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/ProductManagement"><i class="fas fa-utensils"></i></a></li>  
+            <li><a href="<?php echo URLROOT; ?>/SysAdminP/promotionManagement"><i class="fas fa-box"></i></a></li>      
             <li><a href="<?php echo URLROOT; ?>/SysAdminP/BranchManagement"><i class="fas fa-building"></i></a></li>
             <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
@@ -37,6 +38,7 @@
                 'fa-users': 'Customer Management',
                 'fa-tags': 'Category Management',
                 'fas fa-utensils': 'Product Management',
+                'fas fa-box': 'Promotion Management',
                 'fas fa-building': 'Branch Management',
                 'fa-sign-out-alt': 'Logout'
             };
