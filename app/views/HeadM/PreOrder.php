@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frostine Head Manager - View Preorders</title>
+    <title>Frostine Head Manager - View Enquiries</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -16,71 +16,59 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-clock"></i>&nbsp VIEW PRE ORDERS</h1>
+                <h1><i class="fas fa-question-circle"></i>&nbsp VIEW ENQUIRIES</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>
             </header>
 
             <div class="content">
-                <!-- Preorders Table -->
                 <div class="preorder-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Preorder ID">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/preOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="search" placeholder="Search by Name or Email" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Preorder ID</th>
+                                    <th>Enquiry ID</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
-                                    <th>Contact Number</th>
-                                    <th>Description</th>
-                                    <th>Actions</th>
+                                    <th>Phone Number</th>
+                                    <th>Message</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>P001</td>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>john.doe@example.com</td>
-                                    <td>9876543210</td>
-                                    <td>Wedding Cake for 150 guests</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P002</td>
-                                    <td>Jane</td>
-                                    <td>Smith</td>
-                                    <td>jane.smith@example.com</td>
-                                    <td>9123456780</td>
-                                    <td>Customized Birthday Cake</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>P003</td>
-                                    <td>Michael</td>
-                                    <td>Brown</td>
-                                    <td>michael.brown@example.com</td>
-                                    <td>9988776655</td>
-                                    <td>Anniversary Cake with a heart design</td>
-                                    <td>
-                                        <button class="btn edit">View</button>
-                                        <button class="btn delete">Delete</button>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['preOrders'])): ?>
+                                    <?php foreach ($data['preOrders'] as $enquiry): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($enquiry->enquiry_id); ?></td>
+                                            <td><?php echo htmlspecialchars($enquiry->first_name); ?></td>
+                                            <td><?php echo htmlspecialchars($enquiry->last_name); ?></td>
+                                            <td><?php echo htmlspecialchars($enquiry->email); ?></td>
+                                            <td><?php echo htmlspecialchars($enquiry->phone_number); ?></td>
+                                            <td><?php echo htmlspecialchars($enquiry->description); ?></td>
+                                            <td>
+                                                <button class="btn reply" onclick="replyToEnquiry('<?php echo htmlspecialchars($enquiry->email); ?>', '<?php echo htmlspecialchars($enquiry->enquiry_id); ?>')">
+                                                    <i class="fas fa-reply"></i> Reply
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7">No enquiries found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -88,5 +76,11 @@
             </div>
         </main>
     </div>
+
+    <script>
+    function replyToEnquiry(email, enquiryId) {
+        window.location.href = `mailto:${email}?subject=Re: Enquiry #${enquiryId}`;
+    }
+    </script>
 </body>
 </html>

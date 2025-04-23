@@ -13,6 +13,7 @@
     require APPROOT.'/views/inc/components/cverticalbar.php';
     ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/servicedesk.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/stock-badges.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="base-url" content="<?php echo URLROOT; ?>">
 </head>
@@ -26,6 +27,22 @@
   </header>
 
   <div class="main-content">
+    <?php if(isset($_SESSION['branch_id'])): ?>
+      <div class="branch-info">
+        <span>Branch ID: <?php echo $_SESSION['branch_id']; ?></span>
+        <?php
+          // Get branch name if available
+          $db = new Database();
+          $db->query("SELECT branch_name FROM branch WHERE branch_id = :branch_id");
+          $db->bind(':branch_id', $_SESSION['branch_id']);
+          $branch = $db->single();
+          if($branch): 
+        ?>
+          <span> | Branch: <?php echo htmlspecialchars($branch->branch_name); ?></span>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
+
     <div class="search-container">
       <div class="search-box">
         <i class="fas fa-search search-icon"></i>
@@ -43,7 +60,7 @@
         <tr>
           <th>Product</th>
           <th>Category</th>
-          <th>Availability</th>
+          <th>Branch Stock</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Action</th>
@@ -52,20 +69,35 @@
       <tbody>
         <?php if (isset($products) && (is_array($products) || is_object($products)) && count($products) > 0): ?>
             <?php foreach ($products as $product): ?>
-            <tr data-product-id="<?php echo $product->product_id; ?>">
-              <td><?php echo htmlspecialchars($product->product_name); ?></td>
-              <td><?php echo htmlspecialchars($product->category_name); ?></td>
-              <td><?php echo $product->available_quantity; ?></td>
-              <td><?php echo number_format($product->price, 2); ?></td>
-              <td>
-                <div class="quantity-selector">
-                  <button class="decrement-btn">-</button>
-                  <input type="number" class="quantity-input" value="1" min="1" max="<?php echo $product->available_quantity; ?>">
-                  <button class="increment-btn">+</button>
-                </div>
-              </td>
-              <td><button class="add-btn" onclick="addToCart(<?php echo $product->product_id; ?>, '<?php echo $product->product_name; ?>', <?php echo $product->price; ?>)">Add</button></td>
-            </tr>
+              <?php 
+                // Use branch_quantity if available, otherwise use general availability
+                $stockQuantity = isset($product->branch_quantity) ? $product->branch_quantity : $product->available_quantity;
+                $outOfStock = $stockQuantity <= 0;
+              ?>
+              <tr data-product-id="<?php echo $product->product_id; ?>" class="<?php echo $outOfStock ? 'out-of-stock' : ''; ?>">
+                <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                <td><?php echo htmlspecialchars($product->category_name); ?></td>
+                <td class="stock-cell">
+                  <span class="stock-badge <?php echo $outOfStock ? 'out-of-stock' : 'in-stock'; ?>">
+                    <?php echo $stockQuantity; ?>
+                  </span>
+                </td>
+                <td><?php echo number_format($product->price, 2); ?></td>
+                <td>
+                  <div class="quantity-selector">
+                    <button class="decrement-btn" <?php echo $outOfStock ? 'disabled' : ''; ?>>-</button>
+                    <input type="number" class="quantity-input" value="1" min="1" max="<?php echo $stockQuantity; ?>" <?php echo $outOfStock ? 'disabled' : ''; ?>>
+                    <button class="increment-btn" <?php echo $outOfStock ? 'disabled' : ''; ?>>+</button>
+                  </div>
+                </td>
+                <td>
+                  <button class="add-btn" 
+                    onclick="addToCart(<?php echo $product->product_id; ?>, '<?php echo $product->product_name; ?>', <?php echo $product->price; ?>)" 
+                    <?php echo $outOfStock ? 'disabled' : ''; ?>>
+                    <?php echo $outOfStock ? 'Out of Stock' : 'Add'; ?>
+                  </button>
+                </td>
+              </tr>
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
@@ -75,10 +107,26 @@
       </tbody>
     </table>
   </div>
+
   <script>
     function addToCart(productId, name, price) {
-        const quantityInput = document.querySelector(`tr[data-product-id="${productId}"] .quantity-input`);
+        const row = document.querySelector(`tr[data-product-id="${productId}"]`);
+        const quantityInput = row.querySelector('.quantity-input');
         const quantity = parseInt(quantityInput.value);
+        const maxQuantity = parseInt(quantityInput.getAttribute('max'));
+        
+        // Check if product is in stock
+        if (maxQuantity <= 0) {
+            alert('Sorry, this product is out of stock at your branch.');
+            return;
+        }
+        
+        // Check if requested quantity is available
+        if (quantity > maxQuantity) {
+            alert(`Sorry, only ${maxQuantity} items available in your branch.`);
+            quantityInput.value = maxQuantity;
+            return;
+        }
         
         fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/addToCart`, {
             method: 'POST',
@@ -106,7 +154,7 @@
         const decrementBtn = selector.querySelector('.decrement-btn');
         const incrementBtn = selector.querySelector('.increment-btn');
         const input = selector.querySelector('.quantity-input');
-        const maxQuantity = parseInt(input.getAttribute('max'));
+        const maxQuantity = parseInt(input.getAttribute('max')) || 0;
 
         decrementBtn.addEventListener('click', () => {
             let value = parseInt(input.value);
@@ -135,7 +183,7 @@
         });
     });
 
-    // Add this before closing </body> tag
+    // Search functionality
     document.getElementById('searchInput').addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
         const rows = document.querySelectorAll('#productTable tbody tr');
@@ -149,6 +197,23 @@
             } else {
                 row.style.display = 'none';
             }
+        });
+    });
+
+    // Initialize cart count from session
+    window.addEventListener('load', function() {
+        // Use AJAX to get cart count
+        fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/getCartCount`, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.count !== undefined) {
+                document.getElementById('cart-count').textContent = data.count;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching cart count:', error);
         });
     });
   </script>

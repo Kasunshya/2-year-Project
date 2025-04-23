@@ -28,9 +28,13 @@
                 <!-- Customization Table -->
                 <div class="customization-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Customisation ID">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/customization" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="customer_name" placeholder="Search by Customer Name" value="<?php echo isset($_GET['customer_name']) ? htmlspecialchars($_GET['customer_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <section class="dashboard-content">
@@ -38,56 +42,50 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Customization ID</th>
-                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
                                     <th>Flavor</th>
                                     <th>Size</th>
                                     <th>Toppings</th>
-                                    <th>Custom Message</th>
+                                    <th>Premium Toppings</th>
+                                    <th>Message</th>
+                                    <th>Delivery Option</th>
+                                    <th>Delivery Address</th>
                                     <th>Delivery Date</th>
+                                    <th>Order Status</th>
+                                    <th>Created At</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>C001</td>
-                                    <td>101</td>
-                                    <td>Vanilla</td>
-                                    <td>Medium</td>
-                                    <td>Chocolate Chips, Nuts</td>
-                                    <td>Happy Birthday, John!</td>
-                                    <td>2024-12-17</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>C002</td>
-                                    <td>102</td>
-                                    <td>Chocolate</td>
-                                    <td>Large</td>
-                                    <td>Fresh Fruits, Sprinkles</td>
-                                    <td>Happy Anniversary!</td>
-                                    <td>2024-12-12</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>C003</td>
-                                    <td>103</td>
-                                    <td>Red Velvet</td>
-                                    <td>Small</td>
-                                    <td>Nuts</td>
-                                    <td>Congratulations!</td>
-                                    <td>2024-12-15</td>
-                                    <td>
-                                        <button class="btn edit">Confirm</button>
-                                        <button class="btn delete">Completed</button>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($data['customizations'])): ?>
+                                    <?php foreach ($data['customizations'] as $customization): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($customization->customer_name); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->flavor); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->size); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->toppings); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->premium_toppings); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->message); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->delivery_option); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->delivery_address); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($customization->delivery_date)); ?></td>
+                                            <td><?php echo htmlspecialchars($customization->order_status); ?></td>
+                                            <td><?php echo date('Y-m-d H:i:s', strtotime($customization->created_at)); ?></td>
+                                            <td class="actions">
+                                                <button class="btn approve" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'approved')">
+                                                    Approve
+                                                </button>
+                                                <button class="btn reject" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'rejected')">
+                                                    Reject
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="12">No customizations found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -95,7 +93,7 @@
                 </div>
         </main>
     </div>
-    <script src="<?php echo URLROOT; ?>/public/js/HeadM/BranchManagers.js"></script>
+    
 </body>
 
 </html>

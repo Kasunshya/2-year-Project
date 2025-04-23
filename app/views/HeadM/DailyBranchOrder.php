@@ -28,71 +28,53 @@
                 <!-- Daily Branch Orders Table -->
                 <div class="branch-orders-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" placeholder="Search by Date">
-                            <button class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/dailyBranchOrder" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="branch_name" placeholder="Search by Branch Name" value="<?php echo isset($_GET['branch_name']) ? htmlspecialchars($_GET['branch_name']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($branch->branch_name); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                            </div>
                         </form>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Daily Branch Order ID</th>
-                                    <th>Branch Manager ID</th>
-                                    <th>Date</th>
-                                    <th>Products & Quantities</th>
+                                    <th>Branch Name</th>
+                                    <th>Description</th>
+                                    <th>Order Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>B001</td>
-                                    <td>BM101</td>
-                                    <td>2024-11-25</td>
-                                    <td>
-                                        <ul>
-                                            <li>Butter and honey bread - 20</li>
-                                            <li>Strawberry pancake - 12</li>
-                                            <li>choclate cake - 09</li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <button class="btn ready">Ready</button>
-                                        <button class="btn confirm">Confirm</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>B002</td>
-                                    <td>BM102</td>
-                                    <td>2024-11-26</td>
-                                    <td>
-                                        <ul>
-                                            <li>Chocolate cake - 30</li>
-                                            <li>Honey pancake - 200 </li>
-                                            <li>Honey waffles - 40</li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <button class="btn ready">Ready</button>
-                                        <button class="btn confirm">Confirm</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>B003</td>
-                                    <td>BM103</td>
-                                    <td>2024-11-27</td>
-                                    <td>
-                                        <ul>
-                                            <li>Rose pink cake - 05</li>
-                                            <li>Blueberry pancake - 100</li>
-                                            <li>Honey waffles - 15</li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <button class="btn ready">Ready</button>
-                                        <button class="btn confirm">Confirm</button>
-                                    </td>
-                                </tr>
+                            <?php if (!empty($data['orders'])): ?>
+                                <?php foreach ($data['orders'] as $order): ?>
+                                        <tr>
+                                            <td><?php echo $order->branch_name; ?></td>
+                                            <td><?php echo $order->description; ?></td>
+                                            <td><?php echo $order->orderdate; ?></td>
+                                            <td>
+                                                <button class="btn approve">Approve</button>
+                                                <button class="btn reject">Reject</button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4">No orders found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

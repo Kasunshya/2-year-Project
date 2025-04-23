@@ -30,10 +30,10 @@
 
     <header>
       <div class="header-container">
-        <h7><i class="fas fa-home">&nbsp</i> <?php echo $_SESSION['user_id'];  ?>Dashboard</h7>
-        <div class="user-profile-header">
-          <i class="fas fa-user avatar"></i>
-          <h7 class="role">Cashier</h7>
+        <h7><i class="fas fa-home">&nbsp</i> Dashboard</h7>
+        <div class="user-profile-header" onclick="window.location.href='<?php echo URLROOT; ?>/Profile/index'" style="cursor: pointer;">
+            <i class="fas fa-user avatar"></i>
+            <h7 class="role">Cashier</h7>
         </div>
       </div>
     </header>
@@ -42,6 +42,18 @@
         <div class="dashboard-top">
             <!-- Clock Widget -->
             <div class="clock-widget">
+                <!-- Analog Clock Face -->
+                <div class="clock-face">
+                    <div class="clock-marking" id="hour-marks">
+                        <!-- Hour marks will be added via JavaScript -->
+                    </div>
+                    <div class="clock-hand hour-hand" id="hour-hand"></div>
+                    <div class="clock-hand minute-hand" id="minute-hand"></div>
+                    <div class="clock-hand second-hand" id="second-hand"></div>
+                    <div class="clock-center"></div>
+                </div>
+                
+                <!-- Digital Clock Display -->
                 <div id="digital-clock"></div>
                 <div id="current-date"></div>
             </div>
@@ -64,15 +76,12 @@
             </div>
             <div class="metric">
                 <h3>Today's Revenue</h3>
-                <p>Rs <?php echo number_format($data['totalRevenue'], 2); ?></p>
+                <p>Rs <?php echo number_format($data['todaysRevenue'], 2); ?></p>
             </div>
-            <div class="metric">
-                <h3>Pending Orders</h3>
-                <p>0</p>
-            </div>
+            
             <div class="metric">
                 <h3>Average Order Value</h3>
-                <p>Rs <?php echo $data['totalOrders'] > 0 ? number_format($data['totalRevenue'] / $data['totalOrders'], 2) : '0.00'; ?></p>
+                <p>Rs <?php echo number_format($data['averageOrderValue'], 2); ?></p>
             </div>
         </div>
 
@@ -129,16 +138,29 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // Create hour markers for analog clock
+                const hourMarksContainer = document.getElementById('hour-marks');
+                for (let i = 0; i < 12; i++) {
+                    const span = document.createElement('span');
+                    span.style.transform = `rotate(${i * 30}deg)`;
+                    hourMarksContainer.appendChild(span);
+                }
+                
                 // Clock Function
                 function updateClock() {
                     const now = new Date();
-                    document.getElementById('digital-clock').textContent = 
-                        now.toLocaleTimeString('en-US', { 
-                            hour12: false,
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit'
-                        });
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    const milliseconds = now.getMilliseconds();
+                    
+                    // Update digital clock
+                    const period = hours >= 12 ? 'PM' : 'AM';
+                    const hours12 = hours % 12 || 12;
+                    
+                    document.getElementById('digital-clock').innerHTML = 
+                        `${String(hours12).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} <span class="clock-period">${period}</span>`;
+                    
                     document.getElementById('current-date').textContent = 
                         now.toLocaleDateString('en-US', {
                             weekday: 'long',
@@ -146,6 +168,27 @@
                             month: 'long',
                             day: 'numeric'
                         });
+                    
+                    // Calculate rotations for analog clock hands
+                    const hourRotation = 30 * hours + minutes / 2;
+                    const minuteRotation = 6 * minutes + seconds / 10;
+                    const secondRotation = 6 * seconds + milliseconds / 166.67;
+                    
+                    // Apply rotations to clock hands
+                    document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourRotation}deg)`;
+                    document.getElementById('minute-hand').style.transform = `translateX(-50%) rotate(${minuteRotation}deg)`;
+                    
+                    const secondHand = document.getElementById('second-hand');
+                    secondHand.style.setProperty('--rotation', `${secondRotation}deg`);
+                    secondHand.style.transform = `translateX(-50%) rotate(${secondRotation}deg)`;
+                    
+                    // Add pulse animation to second hand at start of each second
+                    if (milliseconds < 100) {
+                        secondHand.style.animation = 'pulse 0.5s ease-in-out';
+                        setTimeout(() => {
+                            secondHand.style.animation = 'none';
+                        }, 500);
+                    }
                 }
 
                 // Initialize Calendar
@@ -163,7 +206,7 @@
                 
                 calendar.render();
                 updateClock();
-                setInterval(updateClock, 1000);
+                setInterval(updateClock, 50); // Update more frequently for smoother second hand
 
                 // Process sales data
                 const salesData = <?php echo json_encode($data['salesAnalytics']); ?>;
