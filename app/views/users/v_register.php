@@ -15,8 +15,8 @@
             <h2>Create an Account</h2>
             <form action="<?php echo URLROOT?>/Register/signup" method="POST">
                 <div class="input-group">
-                <input type="text" name="full_name" id="full_name" placeholder="Full Name" value="<?= htmlspecialchars($data['full_name'] ?? '') ?>">
-                <span><?= $data['errors']['full_name'] ?? '' ?></span>
+                <input type="text" name="customer_name" id="customer_name" placeholder="Full Name" value="<?= htmlspecialchars($data['customer_name'] ?? '') ?>">
+                <span><?= $data['errors']['customer_name'] ?? '' ?></span>
                 </div>
                 <div class="input-group">
                 <input type="email" name="email" id="email" placeholder="Email (This will be your username)" value="<?= htmlspecialchars($data['email'] ?? '') ?>">
