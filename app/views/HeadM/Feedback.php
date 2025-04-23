@@ -46,7 +46,6 @@
                             <tr>
                                 <th>Customer Name</th>
                                 <th>Product Name</th>
-                                <th>Rating</th>
                                 <th>Feedback</th>
                                 <th>Date</th>
                                 <th>Action</th>
@@ -58,16 +57,6 @@
                                     <tr>
                                         <td><?php echo !is_null($feedback->customer_name) ? htmlspecialchars($feedback->customer_name) : 'N/A'; ?></td>
                                         <td><?php echo !is_null($feedback->product_name) ? htmlspecialchars($feedback->product_name) : 'N/A'; ?></td>
-                                        <td>
-                                            <?php 
-                                            $rating = isset($feedback->rating) ? (int)$feedback->rating : 0;
-                                            for ($i = 0; $i < $rating; $i++): ?>
-                                                <span class="rating">★</span>
-                                            <?php endfor; 
-                                            for ($i = $rating; $i < 5; $i++): ?>
-                                                <span class="rating">☆</span>
-                                            <?php endfor; ?>
-                                        </td>
                                         <td><?php echo !is_null($feedback->feedback_text) ? htmlspecialchars($feedback->feedback_text) : 'No feedback'; ?></td>
                                         <td><?php echo !is_null($feedback->created_at) ? date('Y-m-d', strtotime($feedback->created_at)) : 'N/A'; ?></td>
                                         <td>
@@ -79,7 +68,7 @@
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">No feedback found</td>
+                                    <td colspan="5" style="text-align: center;">No feedback found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
