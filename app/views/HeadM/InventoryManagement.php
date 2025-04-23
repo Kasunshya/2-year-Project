@@ -18,7 +18,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp INVENTORY</h1>
+                <h1><i class="fas fa-warehouse icon-inventory"></i>&nbsp Branch Stocks</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>

@@ -110,17 +110,48 @@ class HeadM extends Controller
 
     public function dashboard()
     {
+        // Base metrics
         $totalCashiers = $this->headManagerModel->getTotalCashiers();
         $totalCustomers = $this->headManagerModel->getTotalCustomers();
         $totalBranchManagers = $this->headManagerModel->getTotalBranchManagers();
-
-
+        $totalProducts = $this->headManagerModel->getTotalProducts();
+        $totalOrders = $this->headManagerModel->getTotalOrders();
+        $totalRevenue = $this->headManagerModel->getTotalRevenue();
+        
+        // Sales analytics for chart
+        $salesAnalytics = $this->headManagerModel->getSalesAnalytics();
+        
+        // Best selling products
+        $bestSellers = $this->headManagerModel->getBestSellingProducts();
+        
+        // Recent orders
+        $recentOrders = $this->headManagerModel->getRecentOrders();
+        
+        // Calendar data - orders by date
+        $orderDates = $this->headManagerModel->getOrderDates();
+        
+        // Branch performance
+        $branchPerformance = $this->headManagerModel->getBranchPerformance();
+        
+        // Add this new section to fetch latest feedback
+        $latestFeedbacks = $this->headManagerModel->getLatestFeedbacks();
+    
         $data = [
             'totalCashiers' => $totalCashiers,
             'totalCustomers' => $totalCustomers,
-            'totalBranchManagers' => $totalBranchManagers
+            'totalBranchManagers' => $totalBranchManagers,
+            'totalProducts' => $totalProducts,
+            'totalOrders' => $totalOrders,
+            'totalRevenue' => $totalRevenue,
+            'salesAnalytics' => $salesAnalytics,
+            'bestSellers' => $bestSellers,
+            'recentOrders' => $recentOrders,
+            'orderDates' => $orderDates,
+            'branchPerformance' => $branchPerformance,
+            'latestFeedbacks' => $latestFeedbacks // Add this line
         ];
-        $this->view('HeadM/Dashboard',$data);
+        
+        $this->view('HeadM/Dashboard', $data);
     }
 
     public function inventoryManagement()
@@ -378,38 +409,51 @@ class HeadM extends Controller
     // Fetch branch details
     $branch = $this->headManagerModel->getBranchById($branch_id);
     
-    // Check if branch exists
     if (!$branch) {
-        die('Branch not found');
+        redirect('headm/branches');
+        return;
     }
 
     // Fetch branch manager and cashiers
     $branchManager = $this->headManagerModel->getBranchManagerByBranchId($branch_id);
     $cashiers = $this->headManagerModel->getCashiersByBranchId($branch_id);
 
-    // Prepare filters for sales data based on request
+    // Initialize filters array and reportType
     $filters = [];
+    $reportType = '';
     
-    // Handle date filter (daily report)
+    // Determine report type and set appropriate filters
     if (isset($_GET['date']) && !empty($_GET['date'])) {
         $filters['date'] = $_GET['date'];
-    } 
-    // Handle month and year filter (monthly report)
-    else if (isset($_GET['month']) && !empty($_GET['month'])) {
+        $reportType = 'daily';
+    } elseif (isset($_GET['month']) && !empty($_GET['month']) && isset($_GET['year']) && !empty($_GET['year'])) {
         $filters['month'] = $_GET['month'];
-        $filters['year'] = isset($_GET['year']) ? $_GET['year'] : date('Y');
-    } 
-    // Handle year filter (yearly report)
-    else if (isset($_GET['year']) && !empty($_GET['year'])) {
         $filters['year'] = $_GET['year'];
+        $reportType = 'monthly';
+    } elseif (isset($_GET['year']) && !empty($_GET['year'])) {
+        $filters['year'] = $_GET['year'];
+        $reportType = 'yearly';
     }
 
     // Fetch sales data with filters
     $salesData = $this->headManagerModel->getSalesByBranch($branch_id, $filters);
     
-    // Calculate total sales
+    // Calculate total sales with the same filters
     $totalSalesObj = $this->headManagerModel->getTotalSalesByBranch($branch_id, $filters);
-    $totalSales = $totalSalesObj ? $totalSalesObj->total_sales : 0;
+    $totalSales = 0;
+    if ($totalSalesObj && isset($totalSalesObj->total_sales)) {
+        $totalSales = $totalSalesObj->total_sales;
+    }
+
+    // Prepare report title for the PDF based on filter type
+    $reportTitle = 'All Time Report';
+    if ($reportType === 'daily' && isset($filters['date'])) {
+        $reportTitle = 'Daily Report: ' . date('d F Y', strtotime($filters['date']));
+    } elseif ($reportType === 'monthly' && isset($filters['month']) && isset($filters['year'])) {
+        $reportTitle = 'Monthly Report: ' . date('F Y', mktime(0, 0, 0, $filters['month'], 1, $filters['year']));
+    } elseif ($reportType === 'yearly' && isset($filters['year'])) {
+        $reportTitle = 'Yearly Report: ' . $filters['year'];
+    }
 
     $data = [
         'branch' => $branch,
@@ -417,7 +461,9 @@ class HeadM extends Controller
         'cashiers' => $cashiers,
         'salesData' => $salesData,
         'totalSales' => $totalSales,
-        'filters' => $filters
+        'filters' => $filters,
+        'reportType' => $reportType,
+        'reportTitle' => $reportTitle
     ];
 
     $this->view('HeadM/Branch', $data);

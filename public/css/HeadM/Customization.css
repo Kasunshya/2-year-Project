@@ -100,7 +100,7 @@ main {
     margin-top: 1rem;
     display: inline-block;
     padding: 1rem 3rem;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     color: var(--white);
     border-radius: 0.5rem;
     box-shadow: var(--box-shadow);
@@ -358,47 +358,55 @@ header {
     border-radius: 5px;
 }
 
+/* Table Styling - Updated to match Dashboard */
 .table-container {
     margin-top: 2rem;
     background-color: white;
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     position: relative;
-    padding-bottom: 40px; /* Add space for the button */
+    padding-bottom: 40px;
     margin-bottom: 20px;
 }
 
 .table-container table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .table-container th,
 .table-container td {
-    padding: 1rem;
+    padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #f2f1ec;
 }
 
 .table-container th {
-    background-color: #f9f4f2;
+    background-color: #f9f9f9;
     color: #783b31;
+    font-weight: 600;
+}
+
+.table-container tr:hover {
+    background-color: rgba(201, 141, 131, 0.05);
 }
 
 .table-container .rating {
     color: gold;
     font-size: 1.5rem;
+    display: inline-block;
 }
 
 .table-container .btn {
-    background-color: #c98d83;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .table-container .btn.delete {
@@ -406,7 +414,31 @@ header {
 }
 
 .table-container .btn:hover {
-    background-color: #783b31;
+    background-color: var(--secondary-color);
+}
+
+/* Status indicators like in Dashboard */
+.status {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-paid, .status-active, .status-completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-pending {
+    background-color: #fff8e1;
+    color: #f57c00;
+}
+
+.status-failed, .status-inactive, .status-cancelled {
+    background-color: #ffebee;
+    color: #c62828;
 }
 
 .table-container img {

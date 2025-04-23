@@ -355,9 +355,9 @@
                             <label>Report Type:</label>
                             <select name="report_type" id="reportType" onchange="toggleFilterFields()">
                                 <option value="">Select Type</option>
-                                <option value="daily" <?php echo isset($_GET['date']) ? 'selected' : ''; ?>>Daily Report</option>
-                                <option value="monthly" <?php echo isset($_GET['month']) && !isset($_GET['date']) ? 'selected' : ''; ?>>Monthly Report</option>
-                                <option value="yearly" <?php echo isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['date']) ? 'selected' : ''; ?>>Yearly Report</option>
+                                <option value="daily" <?php echo $data['reportType'] === 'daily' ? 'selected' : ''; ?>>Daily Report</option>
+                                <option value="monthly" <?php echo $data['reportType'] === 'monthly' ? 'selected' : ''; ?>>Monthly Report</option>
+                                <option value="yearly" <?php echo $data['reportType'] === 'yearly' ? 'selected' : ''; ?>>Yearly Report</option>
                             </select>
                         </div>
 
@@ -433,13 +433,40 @@
                             </table>
                         </div>
                     <?php else: ?>
-                        <p>No sales data available for this branch.</p>
+                        <div class="no-data-message" style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                            <i class="fas fa-exclamation-circle"></i> 
+                            <span style="margin-left: 10px;">
+                                <?php 
+                                if (!empty($data['reportType'])) {
+                                    echo "No sales data found for the selected " . $data['reportType'] . " report filters.";
+                                } else {
+                                    echo "No sales data available for this branch.";
+                                }
+                                ?>
+                            </span>
+                        </div>
                     <?php endif; ?>
 
                     <!-- Graphs Section -->
-                    <div class="graphs-container">
-                        <div class="graph-left">
-                            <canvas id="salesChart"></canvas>
+                    <div class="graphs-container" style="display: flex; gap: 20px; margin-top: 30px;">
+                        <!-- Left side: Bar Chart -->
+                        <div class="graph-left" style="flex: 1; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px;">
+                            <h3 style="color: #783b31; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
+                                Sales by Date
+                            </h3>
+                            <div style="height: 250px;">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Right side: Analysis Chart -->
+                        <div class="graph-right" style="flex: 1; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px;">
+                            <h3 style="color: #783b31; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
+                                Sales Trend Analysis
+                            </h3>
+                            <div style="height: 250px;">
+                                <canvas id="salesAnalysisChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -476,18 +503,8 @@
                     <p><strong>Contact:</strong> <?php echo htmlspecialchars($data['branch']->branch_contact); ?></p>
                 </div>
                 <div class="report-info">
-                    <p><strong>Report Period:</strong> 
-                        <?php 
-                        if (isset($_GET['date'])) {
-                            echo date('d F Y', strtotime($_GET['date']));
-                        } elseif (isset($_GET['month']) && isset($_GET['year'])) {
-                            echo date('F Y', mktime(0, 0, 0, $_GET['month'], 1, $_GET['year']));
-                        } elseif (isset($_GET['year'])) {
-                            echo $_GET['year'];
-                        } else {
-                            echo 'All Time';
-                        }
-                        ?>
+                    <p><strong>Report Type:</strong> 
+                        <?php echo isset($data['reportTitle']) ? $data['reportTitle'] : 'All Time Report'; ?>
                     </p>
                     <p><strong>Report Generated:</strong> <?php echo date('d F Y, h:i A'); ?></p>
                 </div>
@@ -534,51 +551,166 @@
     </div>
 
     <script>
-        // Bar chart logic
+        // Bar chart logic - Updated with dashboard colors
         const salesData = <?php echo json_encode(array_map(function($sales) {
             return [
-                'date' => $sales->sales_date,
+                'date' => date('d M', strtotime($sales->sales_date)),
                 'total_sales' => $sales->total_sales
             ];
         }, $data['salesData'])); ?>;
 
         const labels = salesData.map(sale => sale.date);
         const data = salesData.map(sale => sale.total_sales);
+        
+        // Calculate running average for analysis chart
+        const runningAvg = [];
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+            sum += parseFloat(data[i]);
+            runningAvg.push(sum / (i + 1));
+        }
 
+        // Bar Chart
         const ctx = document.getElementById('salesChart').getContext('2d');
         const salesChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total Sales',
+                    label: 'Total Sales (LKR)',
                     data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(201, 141, 131, 0.7)',
+                    borderColor: '#c98d83',
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'top'
+                        position: 'top',
+                        labels: {
+                            boxWidth: 10,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'LKR ' + context.raw.toLocaleString();
+                            }
+                        }
                     }
                 },
                 scales: {
-                    x: {
-                        title: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
                             display: true,
-                            text: 'Date'
+                            color: 'rgba(201, 141, 131, 0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'LKR ' + value;
+                            },
+                            font: {
+                                size: 9
+                            }
                         }
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Total Sales (LKR)'
+                    x: {
+                        grid: {
+                            display: false
                         },
-                        beginAtZero: true
+                        ticks: {
+                            font: {
+                                size: 9
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sales Analysis Chart (Trend Line)
+        const analysisCtx = document.getElementById('salesAnalysisChart').getContext('2d');
+        const salesAnalysisChart = new Chart(analysisCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Daily Sales',
+                    data: data,
+                    backgroundColor: 'rgba(201, 141, 131, 0.2)',
+                    borderColor: '#c98d83',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#c98d83',
+                    fill: false
+                }, {
+                    label: 'Average Trend',
+                    data: runningAvg,
+                    backgroundColor: 'rgba(120, 59, 49, 0.1)',
+                    borderColor: '#783b31',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    pointRadius: 0,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 10,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': LKR ' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                            color: 'rgba(201, 141, 131, 0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'LKR ' + value;
+                            },
+                            font: {
+                                size: 9
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 9
+                            }
+                        }
                     }
                 }
             }
@@ -620,17 +752,30 @@
             const form = document.getElementById('reportForm');
             const reportType = document.getElementById('reportType').value;
             
-            // Create a new FormData object to manipulate what gets submitted
+            if (!reportType) {
+                alert('Please select a report type');
+                return;
+            }
+            
+            // Create a new FormData object
             const formData = new FormData(form);
             
-            // Remove all parameters first
+            // Get the branch ID
+            const branchId = formData.get('id');
+            
+            // Clear existing filter parameters
             formData.delete('date');
             formData.delete('month');
             formData.delete('year');
             
-            // Only add the relevant parameters based on report type
+            // Set parameters based on report type
             if (reportType === 'daily') {
-                formData.set('date', document.getElementById('date').value);
+                const dateValue = document.getElementById('date').value;
+                if (!dateValue) {
+                    alert('Please select a date');
+                    return;
+                }
+                formData.set('date', dateValue);
             } else if (reportType === 'monthly') {
                 formData.set('month', document.getElementById('month').value);
                 formData.set('year', document.getElementById('year').value);
@@ -638,31 +783,21 @@
                 formData.set('year', document.getElementById('year').value);
             }
             
-            // Build the query string manually
+            // Build the query string
             const params = new URLSearchParams();
             formData.forEach((value, key) => {
                 params.append(key, value);
             });
             
-            // Redirect with the correct parameters
+            // Redirect with parameters
             window.location.href = `${window.location.pathname}?${params.toString()}`;
         }
 
         // Initialize filter fields on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set the report type based on URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            let reportType = '';
+            // Set the report type based on parameters
+            const reportType = '<?php echo $data['reportType']; ?>';
             
-            if (urlParams.has('date')) {
-                reportType = 'daily';
-            } else if (urlParams.has('month')) {
-                reportType = 'monthly';
-            } else if (urlParams.has('year')) {
-                reportType = 'yearly';
-            }
-            
-            // Set the selected value
             if (reportType) {
                 document.getElementById('reportType').value = reportType;
             }

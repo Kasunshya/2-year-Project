@@ -500,76 +500,71 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getSalesByBranch($branch_id, $filter = []) {
-        $query = '
-            SELECT 
-                SUM(o.total) AS total_sales, 
-                DATE_FORMAT(o.order_date, "%Y-%m") AS sales_month,
-                YEAR(o.order_date) AS sales_year,
-                o.order_date AS sales_date
-            FROM orders o
-            WHERE o.branch_id = :branch_id
-        ';
+    public function getSalesByBranch($branch_id, $filters = [])
+    {
+        // Start building the query
+        $sql = "SELECT DATE(o.order_date) as sales_date, SUM(o.total) as total_sales 
+                FROM orders o 
+                WHERE o.branch_id = :branch_id";
 
-        // Add filtering conditions
-        if (!empty($filter['year'])) {
-            $query .= ' AND YEAR(o.order_date) = :year';
-        }
-        if (!empty($filter['month'])) {
-            $query .= ' AND MONTH(o.order_date) = :month';
-        }
-        if (!empty($filter['date'])) {
-            $query .= ' AND o.order_date = :date';
+        // Apply date filters based on what was provided
+        if (isset($filters['date']) && !empty($filters['date'])) {
+            // Daily filter - exact date
+            $sql .= " AND DATE(o.order_date) = :date";
+        } elseif (isset($filters['month']) && isset($filters['year'])) {
+            // Monthly filter - specific month and year
+            $sql .= " AND MONTH(o.order_date) = :month AND YEAR(o.order_date) = :year";
+        } elseif (isset($filters['year'])) {
+            // Yearly filter - only year
+            $sql .= " AND YEAR(o.order_date) = :year";
         }
 
-        $query .= ' GROUP BY sales_date ORDER BY o.order_date ASC';
-
-        $this->db->query($query);
+        // Group by date for proper aggregation
+        $sql .= " GROUP BY DATE(o.order_date) ORDER BY sales_date DESC";
+        
+        // Prepare and execute query
+        $this->db->query($sql);
         $this->db->bind(':branch_id', $branch_id);
-
-        if (!empty($filter['year'])) {
-            $this->db->bind(':year', $filter['year']);
-        }
-        if (!empty($filter['month'])) {
-            $this->db->bind(':month', $filter['month']);
-        }
-        if (!empty($filter['date'])) {
-            $this->db->bind(':date', $filter['date']);
+        
+        // Bind date parameters if set
+        if (isset($filters['date']) && !empty($filters['date'])) {
+            $this->db->bind(':date', $filters['date']);
+        } elseif (isset($filters['month']) && isset($filters['year'])) {
+            $this->db->bind(':month', $filters['month']);
+            $this->db->bind(':year', $filters['year']);
+        } elseif (isset($filters['year'])) {
+            $this->db->bind(':year', $filters['year']);
         }
 
         return $this->db->resultSet();
     }
 
-    public function getTotalSalesByBranch($branch_id, $filter = []) {
-        $query = '
-            SELECT 
-                SUM(o.total) AS total_sales
-            FROM orders o
-            WHERE o.branch_id = :branch_id
-        ';
+    // Also update getTotalSalesByBranch with the same filter logic
+    public function getTotalSalesByBranch($branch_id, $filters = [])
+    {
+        // Similar SQL with the same filters but just getting the sum
+        $sql = "SELECT SUM(o.total) as total_sales 
+                FROM orders o 
+                WHERE o.branch_id = :branch_id";
 
-        // Add filtering conditions
-        if (!empty($filter['year'])) {
-            $query .= ' AND YEAR(o.order_date) = :year';
+        if (isset($filters['date']) && !empty($filters['date'])) {
+            $sql .= " AND DATE(o.order_date) = :date";
+        } elseif (isset($filters['month']) && isset($filters['year'])) {
+            $sql .= " AND MONTH(o.order_date) = :month AND YEAR(o.order_date) = :year";
+        } elseif (isset($filters['year'])) {
+            $sql .= " AND YEAR(o.order_date) = :year";
         }
-        if (!empty($filter['month'])) {
-            $query .= ' AND MONTH(o.order_date) = :month';
-        }
-        if (!empty($filter['date'])) {
-            $query .= ' AND o.order_date = :date';
-        }
-
-        $this->db->query($query);
+        
+        $this->db->query($sql);
         $this->db->bind(':branch_id', $branch_id);
-
-        if (!empty($filter['year'])) {
-            $this->db->bind(':year', $filter['year']);
-        }
-        if (!empty($filter['month'])) {
-            $this->db->bind(':month', $filter['month']);
-        }
-        if (!empty($filter['date'])) {
-            $this->db->bind(':date', $filter['date']);
+        
+        if (isset($filters['date']) && !empty($filters['date'])) {
+            $this->db->bind(':date', $filters['date']);
+        } elseif (isset($filters['month']) && isset($filters['year'])) {
+            $this->db->bind(':month', $filters['month']);
+            $this->db->bind(':year', $filters['year']);
+        } elseif (isset($filters['year'])) {
+            $this->db->bind(':year', $filters['year']);
         }
 
         return $this->db->single();
@@ -859,8 +854,125 @@ class M_HeadM
 
         return $this->db->resultSet();
     }
+
+    public function getTotalProducts()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM product');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalOrders()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM orders');
+        return $this->db->single()->total;
+    }
+
+    public function getTotalRevenue()
+    {
+        $this->db->query('SELECT SUM(total) as total_revenue FROM orders');
+        $result = $this->db->single();
+        return $result ? $result->total_revenue : 0;
+    }
+
+    public function getSalesAnalytics()
+    {
+        $this->db->query('
+            SELECT 
+                DATE(order_date) as day,
+                SUM(total) as daily_total
+            FROM orders
+            GROUP BY DATE(order_date)
+            ORDER BY day DESC
+            LIMIT 14
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getBestSellingProducts()
+    {
+        $this->db->query('
+            SELECT 
+                p.product_id,
+                p.product_name,
+                p.price,
+                SUM(od.quantity) as quantity_sold,
+                SUM(od.quantity * od.price) as total_revenue
+            FROM orderdetails od
+            JOIN product p ON od.product_id = p.product_id
+            GROUP BY p.product_id
+            ORDER BY quantity_sold DESC
+            LIMIT 4
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getRecentOrders()
+    {
+        $this->db->query('
+            SELECT 
+                o.order_id,
+                o.order_date,
+                o.total,
+                o.payment_status,
+                b.branch_name,
+                COUNT(od.order_detail_id) as items
+            FROM orders o
+            LEFT JOIN orderdetails od ON o.order_id = od.order_id
+            LEFT JOIN branch b ON o.branch_id = b.branch_id
+            GROUP BY o.order_id
+            ORDER BY o.order_date DESC
+            LIMIT 5
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getOrderDates()
+    {
+        $this->db->query('
+            SELECT 
+                DATE(order_date) as order_day,
+                COUNT(*) as order_count,
+                SUM(total) as day_total
+            FROM orders
+            WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+            GROUP BY order_day
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getBranchPerformance()
+    {
+        $this->db->query('
+            SELECT 
+                b.branch_name,
+                COUNT(o.order_id) as order_count,
+                SUM(o.total) as total_sales
+            FROM branch b
+            LEFT JOIN orders o ON b.branch_id = o.branch_id
+            GROUP BY b.branch_id
+            ORDER BY total_sales DESC
+        ');
+        return $this->db->resultSet();
+    }
+
+    public function getLatestFeedbacks()
+    {
+        $this->db->query('
+            SELECT 
+                f.feedback_id,
+                f.rating,
+                f.feedback_text,
+                f.created_at AS feedback_date,
+                p.product_id,
+                p.product_name,
+                p.image_path AS product_image
+            FROM feedback f
+            JOIN product p ON f.order_id = p.product_id
+            ORDER BY f.created_at DESC
+            LIMIT 5
+        ');
+        
+        return $this->db->resultSet();
+    }
 }
-
-
-
 ?>

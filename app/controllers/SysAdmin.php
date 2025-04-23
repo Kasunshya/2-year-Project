@@ -152,7 +152,7 @@ class SysAdmin extends Controller {
                 $cvFileName = $_FILES['cv_upload']['name'];
                 move_uploaded_file($_FILES['cv_upload']['tmp_name'], UPLOADROOT . '/' . $cvFileName);
             }
-
+            $userId= $this->sysAdminModel->getEmployeeById($_POST['employee_id'])->user_id;
             $data = [
                 'employee_id' => trim($_POST['employee_id']),
                 'full_name' => trim($_POST['full_name']),
@@ -162,13 +162,14 @@ class SysAdmin extends Controller {
                 'dob' => trim($_POST['dob']),
                 'gender' => trim($_POST['gender']),
                 'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']), // Optional
+                'password' => trim($_POST['password']),
                 'join_date' => trim($_POST['join_date']),
-                'cv_upload' => $cvFileName, // Optional
+                'cv_upload' => $cvFileName,
                 'branch_id' => trim($_POST['branch_id']),
                 'user_role' => trim($_POST['user_role']),
+                'user_id' => $userId
             ];
-
+            
             if ($this->sysAdminModel->updateEmployee($data)) {
                 flash('employee_message', 'Employee updated successfully');
                 redirect('sysadmin/employeeManagement');
@@ -261,6 +262,78 @@ class SysAdmin extends Controller {
     public function getBranches() {
         $branches = $this->sysAdminModel->getAllBranches();
         echo json_encode($branches);
+    }
+
+    public function checkEmailExists($email)
+    {
+        // URL decode the email
+        $email = urldecode($email);
+        
+        // Check if email exists
+        $exists = $this->employeeModel->findEmployeeByEmail($email);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function checkNicExists($nic)
+    {
+        // URL decode the NIC
+        $nic = urldecode($nic);
+        
+        // Check if NIC exists
+        $exists = $this->employeeModel->findEmployeeByNIC($nic);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function checkBranchManagerExists($branchId)
+    {
+        // Check if branch manager exists for this branch
+        $exists = $this->employeeModel->findBranchManagerByBranchId($branchId);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function checkEmailExistsExcept($email, $employeeId)
+    {
+        // URL decode the email
+        $email = urldecode($email);
+        
+        // Check if email exists except for this employee
+        $exists = $this->employeeModel->findEmployeeByEmailExcept($email, $employeeId);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function checkNicExistsExcept($nic, $employeeId)
+    {
+        // URL decode the NIC
+        $nic = urldecode($nic);
+        
+        // Check if NIC exists except for this employee
+        $exists = $this->employeeModel->findEmployeeByNICExcept($nic, $employeeId);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function checkBranchManagerExistsExcept($branchId, $employeeId)
+    {
+        // Check if branch manager exists for this branch except for this employee
+        $exists = $this->employeeModel->findBranchManagerByBranchIdExcept($branchId, $employeeId);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => !empty($exists)]);
     }
 }
 ?>

@@ -45,6 +45,7 @@
             // Map of icons to labels
             const labelMap = {
                 'fa-tachometer-alt': 'Dashboard',
+                'fa-building' : 'Branches',
                 'fa-cash-register': 'Cashier',
                 'fa-birthday-cake': 'Products',
                 'fa-warehouse': 'Inventory',
