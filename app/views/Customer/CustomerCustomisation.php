@@ -27,6 +27,7 @@
             background-color: var(--bg);
             color: var(--secondary);
         }
+        /*
         header {
             background-color: var(--primary-color);
             padding: 2rem;
@@ -35,7 +36,7 @@
             font-size: 2.5rem;
             text-transform: uppercase;
         }
-        /* Navigation Bar */
+        /* Navigation Bar 
         .navbar {
             background-color: var(--white);
             box-shadow: var(--box-shadow);
@@ -96,7 +97,35 @@
             width: 100%;
         }
 
-        /* Add responsive navbar styles */
+        Add responsive navbar styles */
+        .profile-title {
+            background-color: #c98d83;
+            padding: 1.5rem;
+            text-align: center;
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.5rem;
+                padding: 1.2rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+
         @media (max-width: 992px) {
             .navbar {
                 padding: 1rem 2%;
@@ -343,19 +372,10 @@
 <body >
 
 
-<!-- Navigation Bar -->
-<div class="navbar">
-        <a href="#" class="logo">FROSTINE</a>
-        <ul>
-            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage">Home</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage#about">About</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerproducts">Products</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-        </ul>
-    </div>
+<?php require_once APPROOT . '/views/Customer/RegisteredCustomerNav.php'; ?>
 
-<header>Customization</header>
+
+<div class="profile-title">Customization</div>
 
 <section>
     <div class="customization-form">

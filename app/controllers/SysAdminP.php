@@ -1,38 +1,75 @@
 <?php
 class SysAdminP extends Controller {
-    private $categoryModel;
-    private $productModel;
-    private $M_SysAdminP;  // Add this line
+    private $sysAdminModel;
 
     public function __construct() {
-        // Initialize all models
-        $this->categoryModel = $this->model('M_SysAdminP');
-        $this->productModel = $this->model('M_SysAdminP');
-        $this->M_SysAdminP = $this->model('M_SysAdminP');  // Add this line if missing
+        // Initialize only the M_SysAdminP model
+        $this->sysAdminModel = $this->model('M_SysAdminP');
     }
 
     public function categoryManagement() {
-        $categories = $this->categoryModel->getAllCategories();
+        $categories = $this->sysAdminModel->getAllCategories();
+        
         $data = [
-            'categories' => $categories
+            'categories' => $categories,
+            'name' => '',
+            'name_err' => '',
+            'description' => '',
+            'description_err' => '',
+            'image_err' => '',
+            'title' => 'Category Management'
         ];
+        
         $this->view('SysAdmin/CategoryManagement', $data);
     }
 
     public function addCategory() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
             $data = [
                 'name' => trim($_POST['name']),
-                'description' => trim($_POST['description'])
+                'description' => trim($_POST['description']),
+                'name_err' => '',
+                'description_err' => '',
+                'image_err' => '',
+                'categories' => $this->sysAdminModel->getAllCategories() // Add this to maintain table data
             ];
 
-            if ($this->categoryModel->addCategory($data)) {
-                // Category added successfully
-                header('Location: ' . URLROOT . '/SysAdminP/categoryManagement');
-            } else {
-                die('Something went wrong');
+            // Check if category name already exists
+            if ($this->sysAdminModel->getCategoryByName($data['name'])) {
+                $data['name_err'] = 'Category name already exists';
+                // Return to the same page with error
+                return $this->view('SysAdmin/CategoryManagement', $data);
             }
+
+            // Handle image upload only if no errors
+            if (empty($data['name_err'])) {
+                $imageFile = $_FILES['category_image'] ?? null;
+                $imagePath = null;
+                
+                if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
+                    $imagePath = $this->sysAdminModel->uploadCategoryImage($imageFile);
+                    if (!$imagePath) {
+                        $data['image_err'] = 'Error uploading image';
+                        return $this->view('SysAdmin/CategoryManagement', $data);
+                    }
+                }
+                
+                $data['image_path'] = $imagePath;
+
+                if ($this->sysAdminModel->addCategory($data)) {
+                    flash('category_message', 'Category Added Successfully');
+                    redirect('sysadminp/categoryManagement');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                // Load view with errors
+                $this->view('SysAdmin/CategoryManagement', $data);
+            }
+        } else {
+            redirect('sysadminp/categoryManagement');
         }
     }
 
@@ -45,7 +82,7 @@ class SysAdminP extends Controller {
                 'description' => trim($_POST['description'])
             ];
 
-            if ($this->categoryModel->updateCategory($data)) {
+            if ($this->sysAdminModel->updateCategory($data)) {
                 // Category updated successfully
                 header('Location: ' . URLROOT . '/SysAdminP/categoryManagement');
             } else {
@@ -55,23 +92,27 @@ class SysAdminP extends Controller {
     }
 
     public function deleteCategory($id) {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->categoryModel->deleteCategory($id)) {
-                // Category deleted successfully
-                header('Location: ' . URLROOT . '/SysAdminP/categoryManagement');
+        // Check if id exists
+        if($id) {
+            // Try to delete the category
+            if($this->sysAdminModel->deleteCategory($id)) {
+                flash('category_message', 'Category Deleted Successfully');
             } else {
-                die('Something went wrong');
+                flash('category_message', 'Failed to delete category', 'alert alert-danger');
             }
         }
+        
+        // Redirect back to category management
+        redirect('sysadminp/categoryManagement');
     }
 
     public function productManagement() {
         // Update expired products first
-        $this->productModel->updateExpiredProducts();
+        $this->sysAdminModel->updateExpiredProducts();
         
         // Then get all products including expired ones for admin view
-        $products = $this->productModel->getAllProducts();
-        $categories = $this->productModel->getAllCategories();
+        $products = $this->sysAdminModel->getAllProducts();
+        $categories = $this->sysAdminModel->getAllCategories();
         
         $data = [
             'products' => $products,
@@ -86,24 +127,6 @@ class SysAdminP extends Controller {
             // Handle file upload
             $image_path = '';
             
-            /*
-            $upload_dir = APP_ROOT.'/public/img/products/';
-            $directoryPath = APP_ROOT.'/public/img/products';
-
-            // Step 1: Create the directory
-            if (!mkdir($directoryPath, 0755, true)) {
-                die("Failed to create directory: $directoryPath");
-            }
-
-            // Step 2: Set ownership
-            $currentUser = get_current_user(); // Get the current user
-            if (!chown($directoryPath, $currentUser)) {
-                die("Failed to set ownership for: $directoryPath");
-            }
-
-            //echo "Directory created and ownership set successfully!";
-            */
-
             // Check if the directory exists and is writable    
             if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
                 //Define the APP_ROOT and join it with the image relative path
@@ -124,7 +147,7 @@ class SysAdminP extends Controller {
                 'expiry_date' => !empty($_POST['expiry_date']) ? $_POST['expiry_date'] : null
             ];
 
-            if ($this->productModel->addProduct($data, $image_path)) {
+            if ($this->sysAdminModel->addProduct($data, $image_path)) {
                 flash('product_message', 'Product added successfully');
                 redirect('SysAdminP/productManagement');
             } else {
@@ -153,7 +176,7 @@ class SysAdminP extends Controller {
                 'expiry_date' => !empty($_POST['expiry_date']) ? $_POST['expiry_date'] : null
             ];
 
-            if ($this->productModel->updateProduct($data, $image_path)) {
+            if ($this->sysAdminModel->updateProduct($data, $image_path)) {
                 flash('product_message', 'Product updated successfully');
                 redirect('SysAdminP/productManagement');
             } else {
@@ -164,7 +187,7 @@ class SysAdminP extends Controller {
 
     public function deleteProduct($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            if ($this->productModel->deleteProduct($id)) {
+            if ($this->sysAdminModel->deleteProduct($id)) {
                 flash('product_message', 'Product deleted successfully');
                 redirect('SysAdminP/productManagement');
             } else {
@@ -177,8 +200,8 @@ class SysAdminP extends Controller {
         $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
         
         // Get both products and categories for the view
-        $products = $this->productModel->searchProducts($searchTerm);
-        $categories = $this->productModel->getAllCategories();
+        $products = $this->sysAdminModel->searchProducts($searchTerm);
+        $categories = $this->sysAdminModel->getAllCategories();
         
         $data = [
             'products' => $products,
@@ -190,7 +213,7 @@ class SysAdminP extends Controller {
     }
 
     public function branchManagement() {
-        $branches = $this->productModel->getAllBranches();
+        $branches = $this->sysAdminModel->getAllBranches();
         $data = [
             'branches' => $branches
         ];
@@ -214,7 +237,7 @@ class SysAdminP extends Controller {
             }
 
             try {
-                if ($this->productModel->addBranch($data)) {
+                if ($this->sysAdminModel->addBranch($data)) {
                     flash('branch_message', 'Branch added successfully');
                 } else {
                     flash('branch_message', 'Failed to add branch', 'alert alert-danger');
@@ -245,7 +268,7 @@ class SysAdminP extends Controller {
             }
 
             try {
-                if ($this->productModel->updateBranch($data)) {
+                if ($this->sysAdminModel->updateBranch($data)) {
                     flash('branch_message', 'Branch updated successfully');
                 } else {
                     flash('branch_message', 'Failed to update branch', 'alert alert-danger');
@@ -260,7 +283,7 @@ class SysAdminP extends Controller {
 
     public function deleteBranch($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->productModel->deleteBranch($id)) {
+            if ($this->sysAdminModel->deleteBranch($id)) {
                 flash('branch_message', 'Branch deleted successfully');
                 redirect('SysAdminP/branchManagement');
             } else {
@@ -281,7 +304,7 @@ class SysAdminP extends Controller {
                 // Convert boolean to string status
                 $status = $data->status ? 'active' : 'inactive';
                 
-                if ($this->productModel->updateBranchStatus($branchId, $status)) {
+                if ($this->sysAdminModel->updateBranchStatus($branchId, $status)) {
                     echo json_encode([
                         'success' => true,
                         'message' => 'Branch status updated successfully'
@@ -299,7 +322,7 @@ class SysAdminP extends Controller {
     }
 
     public function customerManagement() {
-        $customers = $this->productModel->getAllCustomers();
+        $customers = $this->sysAdminModel->getAllCustomers();
         $data = [
             'customers' => $customers
         ];
@@ -319,7 +342,7 @@ class SysAdminP extends Controller {
         }
 
         // Get all promotions and display the view
-        $promotions = $this->M_SysAdminP->getAllPromotions();
+        $promotions = $this->sysAdminModel->getAllPromotions();
         $data = [
             'promotions' => $promotions
         ];
@@ -349,7 +372,7 @@ class SysAdminP extends Controller {
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
-            if($this->M_SysAdminP->addPromotion($data)) {
+            if($this->sysAdminModel->addPromotion($data)) {
                 flash('promotion_message', 'Promotion Added Successfully');
             } else {
                 flash('promotion_message', 'Something went wrong', 'error');
@@ -360,7 +383,7 @@ class SysAdminP extends Controller {
 
     public function updatePromotion() {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $current_promotion = $this->M_SysAdminP->getPromotionById($_POST['promotion_id']);
+            $current_promotion = $this->sysAdminModel->getPromotionById($_POST['promotion_id']);
             
             // Handle image upload
             $image_name = $current_promotion->image_path;
@@ -391,7 +414,7 @@ class SysAdminP extends Controller {
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
-            if($this->M_SysAdminP->updatePromotion($data)) {
+            if($this->sysAdminModel->updatePromotion($data)) {
                 flash('promotion_message', 'Promotion Updated Successfully');
             } else {
                 flash('promotion_message', 'Something went wrong', 'error');
@@ -401,7 +424,7 @@ class SysAdminP extends Controller {
     }
 
     public function deletePromotion($id) {
-        $promotion = $this->M_SysAdminP->getPromotionById($id);
+        $promotion = $this->sysAdminModel->getPromotionById($id);
         if($promotion) {
             // Delete image if exists
             if($promotion->image_path) {
@@ -411,7 +434,7 @@ class SysAdminP extends Controller {
                 }
             }
             
-            if($this->M_SysAdminP->deletePromotion($id)) {
+            if($this->sysAdminModel->deletePromotion($id)) {
                 flash('promotion_message', 'Promotion Removed Successfully');
             } else {
                 flash('promotion_message', 'Something went wrong', 'error');

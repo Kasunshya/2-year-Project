@@ -7,11 +7,35 @@ class Customer extends Controller {
             session_start();
         }
         $this->customerModel = $this->model('M_Customer');
+        
+        // Debug which method is being called
+        error_log('Customer controller method called: ' . $_SERVER['REQUEST_URI']);
     }
 
-    // Add default index method
     public function index() {
-        $this->customerhomepage();
+        try {
+            // Get posted feedbacks
+            $postedFeedbacks = $this->customerModel->getPostedFeedbacks();
+            error_log("Found " . count($postedFeedbacks) . " feedbacks in index method");
+            
+            // Get other data
+            $products = $this->customerModel->getLatestProducts(6);
+            $categories = $this->customerModel->getAllCategories();
+            $promotions = $this->customerModel->getActivePromotions();
+            
+            $data = [
+                'title' => 'Welcome to Frostine Bakery',
+                'products' => $products,
+                'categories' => $categories,
+                'promotions' => $promotions,
+                'postedFeedbacks' => $postedFeedbacks
+            ];
+            
+            // Ensure correct case in view path
+            $this->view('Customer/CustomerHomepage', $data);
+        } catch (Exception $e) {
+            error_log("Error in index: " . $e->getMessage());
+        }
     }
 
     public function customerhomepage() {
@@ -24,6 +48,9 @@ class Customer extends Controller {
             // Get customer data and latest products
             $customerData = $this->customerModel->getActiveCustomerByUserId($_SESSION['user_id']);
             $products = $this->customerModel->getLatestProducts(6); // Changed variable name for consistency
+            $categories = $this->customerModel->getAllCategories();
+            $promotions = $this->customerModel->getActivePromotions();
+            $postedFeedbacks = $this->customerModel->getPostedFeedbacks();
 
             error_log('Customer Data: ' . print_r($customerData, true));
             error_log('Products Data: ' . print_r($products, true));
@@ -35,16 +62,18 @@ class Customer extends Controller {
             }
 
             $data = [
-                'title' => 'Customer Homepage',
+                'title' => 'Frostine Bakery - Home',
                 'customer' => $customerData,
                 'products' => $products, // Changed key name to match view
-                'promotions' => $this->customerModel->getActivePromotions()
+                'promotions' => $promotions,
+                'categories' => $categories,
+                'postedFeedbacks' => $postedFeedbacks
             ];
             
             // Debug the data array
             error_log('View Data: ' . print_r($data, true));
             
-            $this->view('customer/customerhomepage', $data);
+            $this->view('Customer/CustomerHomepage', $data);
         } catch (Exception $e) {
             error_log('Error in customerhomepage: ' . $e->getMessage());
             header('Location: ' . URLROOT . '/error');
@@ -65,7 +94,13 @@ class Customer extends Controller {
             $maxPrice = isset($_GET['max_price']) ? floatval($_GET['max_price']) : null;
 
             // Get filtered products and categories
-            $products = $this->customerModel->getFilteredProducts($category, $minPrice, $maxPrice);
+            if ($category) {
+                // Get products by category name instead of ID
+                $products = $this->customerModel->getProductsByCategory($category);
+            } else {
+                $products = $this->customerModel->getFilteredProducts($category, $minPrice, $maxPrice);
+            }
+            
             $categories = $this->customerModel->getAllCategories();
 
             // Debug logging
@@ -656,6 +691,31 @@ class Customer extends Controller {
             flash('profile_error', 'Error updating profile');
             redirect('customer/customerprofile');
         }
+    }
+
+    public function debugFeedback() {
+        // For debugging purposes only
+        $postedFeedbacks = $this->customerModel->getPostedFeedbacks();
+        echo '<pre>';
+        print_r($postedFeedbacks);
+        echo '</pre>';
+        
+        echo '<h3>Database Check:</h3>';
+        $this->customerModel->checkFeedbackTable();
+        exit;
+    }
+
+    public function testFeedbacks() {
+        $postedFeedbacks = $this->customerModel->getPostedFeedbacks();
+        echo "<h2>Posted Feedbacks Test</h2>";
+        echo "<pre>";
+        print_r($postedFeedbacks);
+        echo "</pre>";
+        
+        echo "<h3>Rendering homepage with these feedbacks:</h3>";
+        $data = ['postedFeedbacks' => $postedFeedbacks];
+        $this->view('Customer/CustomerHomepage', $data);
+        exit;
     }
 }
 ?>

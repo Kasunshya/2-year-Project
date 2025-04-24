@@ -148,6 +148,93 @@
             background-color: #783b31;
         }
 
+        /* Add these to your existing styles */
+        .category-image img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .alert-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .alert-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .alert-buttons button {
+            padding: 8px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .confirm-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .cancel-delete {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Add this to your existing <style> section */
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        .is-invalid + .invalid-feedback {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +260,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Actions</th>
@@ -182,41 +270,84 @@
     <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
         <?php foreach ($data['categories'] as $category) : ?>
             <tr id="category-<?php echo $category->category_id; ?>">
+                <td class="category-image">
+                    <?php if (!empty($category->image_path)): ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
+                             alt="<?php echo htmlspecialchars($category->name); ?>"
+                             onerror="this.src='<?php echo URLROOT; ?>/public/img/default-category.jpg'">
+                    <?php else: ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
+                             alt="Default category image">
+                    <?php endif; ?>
+                </td>
                 <td><?php echo htmlspecialchars($category->name); ?></td>
                 <td><?php echo htmlspecialchars($category->description); ?></td>
                 <td class="actions">
                     <button class="btn" onclick="openEditCategoryModal(<?php echo $category->category_id; ?>)">Edit</button>
-                    <form method="POST" action="<?php echo URLROOT; ?>/SysAdminP/deleteCategory/<?php echo $category->category_id; ?>" style="display: inline;">
-                        <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
-                    </form>
+                    <button class="btn delete-btn" onclick="deleteCategory(<?php echo $category->category_id; ?>)">Delete</button>
                 </td>
             </tr>
         <?php endforeach; ?>
     <?php else : ?>
         <tr>
-            <td colspan="3" style="text-align: center;">No categories found</td>
+            <td colspan="4" style="text-align: center;">No categories found</td>
         </tr>
     <?php endif; ?>
-</tbody>
+    </tbody>
         </table>
     </div>
 
     <!-- Modal -->
     <div class="modal" id="categoryModal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('categoryModal')">&times;</span>
-        <h2 id="categoryModalTitle">Add Category</h2>
-        <form id="categoryForm" method="POST" action="<?php echo URLROOT; ?>/SysAdminP/addCategory">
-            <!-- We'll add hidden input for category_id dynamically when editing -->
-            <label for="name">Category Name:</label>
-            <input type="text" id="category_name" name="name" required>
-            <label for="description">Description:</label>
-            <input type="text" id="category_description" name="description" required>
-            <button type="submit" class="btn">Save</button>
-            <button type="button" class="btn" onclick="closeModal('categoryModal')">Close</button>
-        </form>
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('categoryModal')">&times;</span>
+            <h2 id="categoryModalTitle">Add Category</h2>
+            <form id="categoryForm" action="<?php echo URLROOT; ?>/sysadminp/addCategory" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Category Name: <sup>*</sup></label>
+                    <input type="text" 
+                           id="category_name"
+                           name="name" 
+                           class="form-control <?php echo (isset($data['name_err']) && !empty($data['name_err'])) ? 'is-invalid' : ''; ?>" 
+                           value="<?php echo isset($data['name']) ? htmlspecialchars($data['name']) : ''; ?>">
+                    <span class="invalid-feedback"><?php echo isset($data['name_err']) ? htmlspecialchars($data['name_err']) : ''; ?></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" 
+                           id="category_description"
+                           name="description" 
+                           class="form-control <?php echo (isset($data['description_err']) && !empty($data['description_err'])) ? 'is-invalid' : ''; ?>"
+                           value="<?php echo isset($data['description']) ? htmlspecialchars($data['description']) : ''; ?>">
+                    <span class="invalid-feedback"><?php echo isset($data['description_err']) ? htmlspecialchars($data['description_err']) : ''; ?></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="category_image">Category Image:</label>
+                    <input type="file" 
+                           name="category_image" 
+                           class="form-control" 
+                           accept="image/*">
+                    <span class="invalid-feedback"><?php echo isset($data['image_err']) ? htmlspecialchars($data['image_err']) : ''; ?></span>
+                </div>
+
+                <input type="submit" class="btn btn-success" value="Add Category" id="submitButton">
+            </form>
+        </div>
     </div>
 </div>
+</div>
+
+<div class="alert-overlay" id="deleteAlert">
+    <div class="alert-box">
+        <h3>Delete Category</h3>
+        <p>Are you sure you want to delete this category?</p>
+        <div class="alert-buttons">
+            <button class="cancel-delete" onclick="closeDeleteAlert()">Cancel</button>
+            <button class="confirm-delete" id="confirmDelete">Delete</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -224,9 +355,9 @@
 
     function openAddCategoryModal() {
         document.getElementById('categoryModalTitle').textContent = "Add Category";
+        document.getElementById('submitButton').value = "Add Category";  // Add this line
         document.getElementById('categoryForm').reset();
         document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/addCategory";
-        // Remove any hidden category_id field if it exists
         const hiddenInput = document.getElementById('category_id_input');
         if (hiddenInput) {
             hiddenInput.remove();
@@ -235,15 +366,14 @@
     }
 
     function openEditCategoryModal(categoryId) {
-        // Get the correct row
         let row = document.getElementById(`category-${categoryId}`);
         let cells = row.getElementsByTagName("td");
 
-        // Update form for editing
         document.getElementById('categoryModalTitle').textContent = "Update Category";
+        document.getElementById('submitButton').value = "Update Category";  // Add this line
         document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/updateCategory";
         
-        // Add hidden input for category_id if it doesn't exist
+        // Add hidden input for category_id
         if (!document.getElementById('category_id_input')) {
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
@@ -255,9 +385,10 @@
             document.getElementById('category_id_input').value = categoryId;
         }
 
-        // Populate modal fields with existing values - adjusted indices because Category ID column is removed
-        document.getElementById("category_name").value = cells[0].textContent.trim();
-        document.getElementById("category_description").value = cells[1].textContent.trim();
+        // Populate modal fields with existing values
+        // Note: cells[0] is image, cells[1] is name, cells[2] is description
+        document.getElementById("category_name").value = cells[1].textContent.trim();
+        document.getElementById("category_description").value = cells[2].textContent.trim();
 
         document.getElementById('categoryModal').style.display = 'flex';
     }
@@ -274,11 +405,61 @@
         for (let i = 0; i < rows.length; i++) {
             const cells = rows[i].getElementsByTagName('td');
             if (cells.length > 0) {
-                const categoryName = cells[0].textContent.toLowerCase();
-                rows[i].style.display = categoryName.includes(input) ? '' : 'none';
+                const categoryName = cells[1].textContent.toLowerCase(); // Changed index to 1 for name column
+                const categoryDesc = cells[2].textContent.toLowerCase(); // Also search in description
+                const shouldShow = categoryName.includes(input) || categoryDesc.includes(input);
+                rows[i].style.display = shouldShow ? '' : 'none';
             }
         }
     }
+
+    function deleteCategory(categoryId) {
+        const deleteAlert = document.getElementById('deleteAlert');
+        const confirmBtn = document.getElementById('confirmDelete');
+        
+        deleteAlert.style.display = 'flex';
+        
+        confirmBtn.onclick = function() {
+            window.location.href = `<?php echo URLROOT; ?>/SysAdminP/deleteCategory/${categoryId}`;
+        }
+    }
+
+    function closeDeleteAlert() {
+        document.getElementById('deleteAlert').style.display = 'none';
+    }
+
+    // Add this function to your existing <script> section
+    function showError(message) {
+        const nameInput = document.getElementById('category_name');
+        const errorSpan = nameInput.nextElementSibling;
+        
+        nameInput.classList.add('is-invalid');
+        errorSpan.textContent = message;
+        errorSpan.style.display = 'block';
+    }
+
+    // Update the form submission to use AJAX
+    document.getElementById('categoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            if (html.includes('Category name already exists')) {
+                showError('Category name already exists');
+            } else {
+                window.location.href = '<?php echo URLROOT; ?>/sysadminp/categoryManagement';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
 </script>
 
 </body>

@@ -13,6 +13,31 @@
             color: #FFD700;
             font-size: 18px;
         }
+        
+        /* Add styling for notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        
+        .notification.error {
+            background-color: #F44336;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -77,6 +102,50 @@
             </div>
         </main>
     </div>
+    
+    <!-- Add notification div -->
+    <div id="notification" class="notification"></div>
+    
+    <!-- Add JavaScript for posting feedback -->
+    <script>
+        function postFeedback(feedbackId) {
+            if (confirm('Are you sure you want to post this feedback to the homepage?')) {
+                fetch('<?php echo URLROOT; ?>/HeadM/postFeedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ feedback_id: feedbackId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('Feedback posted to homepage successfully!', 'success');
+                    } else {
+                        showNotification('Error: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    showNotification('Error connecting to server', 'error');
+                    console.error('Error:', error);
+                });
+            }
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 
 </html>

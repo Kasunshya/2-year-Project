@@ -17,277 +17,160 @@
             --transition: all 0.3s ease;
         }
 
-        * {
-            font-family: 'Vidaloka', serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Keep only the product-specific styles here */
+        
+        .heading {
+    text-align: center;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    padding: 1.2rem 0;
+    font-size: 4rem;
+}
 
-        body {
-            background: var(--background-color);
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: var(--white);
-            box-shadow: var(--box-shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar .logo {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            font-weight: 600;
-            text-decoration: none;
-            letter-spacing: 2px;
-        }
-
-        .navbar ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar ul li {
-            position: relative;
-        }
-
-        .navbar ul li a {
-            color: var(--black);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: var(--transition);
-            padding: 0.5rem 0;
-        }
-
-        .navbar ul li a:hover {
-            color: var(--primary-color);
-        }
-
-        .navbar ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .navbar ul li a:hover::after {
-            width: 100%;
-        }
-
-        @media (max-width: 992px) {
-            .navbar {
-                padding: 1rem 2%;
-            }
-
-            .navbar .logo {
-                font-size: 1.5rem;
-            }
-
-            .navbar ul {
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
-            }
-
-            .navbar .logo {
-                margin-bottom: 1rem;
-            }
-
-            .navbar ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-            }
-
-            .navbar ul li a {
-                font-size: 0.9rem;
-            }
-        }
-
+.heading span {
+    color: var(--secondary);
+}
+        /* Cart Icon Styles */
         .cart-icon {
-            position: relative;
-            margin-left: 20px;
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            z-index: 1001;
         }
 
-        .cart-link {
-            color: #333;
-            font-size: 24px;
-            text-decoration: none;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: var(--primary-color);
-            color: var(--white);
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 12px;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        /* Filter Bar */
+        /* Filter Bar Styles */
         .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 10px 20px;
             background: var(--white);
-            box-shadow: var(--box-shadow);
+            padding: 20px;
             border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            margin: 20px auto;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .filter-bar select, .filter-bar input {
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
+        .filter-bar select, 
+        .filter-bar input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-        }
-
-        .filter-bar select:focus, .filter-bar input:focus {
-            outline: none;
-            border-color: var(--primary-color);
+            min-width: 150px;
         }
 
         .filter-bar button {
-            padding: 10px 20px;
             background: var(--primary-color);
             color: var(--white);
             border: none;
+            padding: 10px 25px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            transition: var(--transition);
         }
 
         .filter-bar button:hover {
             background: var(--secondary-color);
         }
 
-        /* Products Section */
+        /* Products Container */
         .products-container {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
         }
 
+        /* Product Card */
         .product-card {
             background: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--box-shadow);
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            min-width: 200px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .product-card img {
             width: 100%;
-            height: 180px;
+            height: 250px;
             object-fit: cover;
         }
 
-        .product-card .product-info {
-            padding: 15px;
+        .product-info {
+            padding: 20px;
             text-align: center;
         }
 
-        .product-card .product-info h3 {
-            font-size: 18px;
+        .product-info h3 {
             color: var(--black);
             margin-bottom: 10px;
+            font-size: 1.2rem;
         }
 
-        .product-card .product-info .price {
-            font-size: 16px;
+        .price {
             color: var(--secondary-color);
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .product-card .product-info .stars {
             margin-bottom: 15px;
         }
 
-        .product-card .product-info .stars i {
-            color: var(--primary-color);
-            margin-right: 5px;
-        }
-
-        .product-card .product-info .add-to-cart-btn {
-            padding: 10px 20px;
+        .add-to-cart-btn {
             background: var(--primary-color);
             color: var(--white);
             border: none;
+            padding: 12px 25px;
             border-radius: 5px;
-            font-size: 14px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: var(--transition);
+            width: 100%;
+            font-size: 1rem;
         }
 
-        .product-card .product-info .add-to-cart-btn:hover {
+        .add-to-cart-btn:hover {
             background: var(--secondary-color);
+        }
+
+        /* Cart Count Badge */
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                margin: 20px;
+            }
+
+            .products-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                margin: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <?php require_once APPROOT . '/views/Customer/RegisteredCustomerNav.php'; ?>
+
    
-
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="#" class="logo">FROSTINE</a>
-        <ul>
-            <li><a href="<?php echo URLROOT ?>/Customer/customerhomepage">Home</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage#about">About</a></li>
-            <li><a href="<?php echo URLROOT ?>Customer/customerproducts" class="active">Products</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-
-        </ul>
-        <div class="icons">
-            <div class="cart-icon">
-                <a href="<?php echo URLROOT; ?>/Customer/customercart" class="cart-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">
-                        <?php 
-                        $cartCount = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-                        echo $cartCount;
-                        ?>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- Filter Bar -->
     <div class="filter-bar">
