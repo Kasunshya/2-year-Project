@@ -124,7 +124,11 @@ if (!class_exists('M_SysAdmin')) {
         // Employee Management Methods
         public function getAllEmployees()
         {
-            $this->db->query('SELECT employee_id, full_name, address, contact_no, nic, dob, gender, email, join_date, cv_upload, branch, user_id, user_role FROM employee');
+            $this->db->query('SELECT e.employee_id, e.full_name, e.address, e.contact_no, e.nic, 
+                             e.dob, e.gender, e.email, e.join_date, e.cv_upload, e.branch, 
+                             b.branch_name, e.user_role 
+                             FROM employee e 
+                             LEFT JOIN branch b ON e.branch = b.branch_id');
             return $this->db->resultSet();
         }
 
@@ -392,10 +396,11 @@ if (!class_exists('M_SysAdmin')) {
         }
 
 
-        public function getAllBranches() {
+        public function getAllBranches()
+        {
             $this->db->query('SELECT branch_id, branch_name FROM branch');
             return $this->db->resultSet();
-}
+        }
         public function getDashboardStats() {
 
             try {
@@ -439,6 +444,38 @@ if (!class_exists('M_SysAdmin')) {
                 ];
             }
 
+        }
+
+        public function searchEmployees($search, $branch)
+        {
+            $sql = 'SELECT e.employee_id, e.full_name, e.address, e.contact_no, e.nic, 
+                           e.dob, e.gender, e.email, e.join_date, e.cv_upload, e.branch, 
+                           b.branch_name, e.user_role 
+                    FROM employee e 
+                    LEFT JOIN branch b ON e.branch = b.branch_id 
+                    WHERE 1=1';
+
+            // Add search condition
+            if (!empty($search)) {
+                $sql .= ' AND (e.full_name LIKE :search OR e.email LIKE :search)';
+            }
+
+            // Add branch filter condition
+            if (!empty($branch)) {
+                $sql .= ' AND e.branch = :branch';
+            }
+
+            $this->db->query($sql);
+
+            // Bind parameters
+            if (!empty($search)) {
+                $this->db->bind(':search', '%' . $search . '%');
+            }
+            if (!empty($branch)) {
+                $this->db->bind(':branch', $branch);
+            }
+
+            return $this->db->resultSet();
         }
     }
 }

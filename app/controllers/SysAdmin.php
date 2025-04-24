@@ -29,11 +29,22 @@ class SysAdmin extends Controller {
         $this->view('SysAdmin/Dashboard', $data);
     }
 
-    public function employeeManagement() {
-        $employees = $this->sysAdminModel->getAllEmployees();
+    public function employeeManagement()
+    {
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $branch = isset($_GET['branch']) ? trim($_GET['branch']) : '';
+
+        // Fetch employees based on search and branch filter
+        $employees = $this->sysAdminModel->searchEmployees($search, $branch);
+
+        // Fetch all branches for the branch filter dropdown
+        $branches = $this->sysAdminModel->getAllBranches();
+
         $data = [
-            'employees' => $employees
+            'employees' => $employees,
+            'branches' => $branches
         ];
+
         $this->view('SysAdmin/EmployeeManagement', $data);
     }
 
