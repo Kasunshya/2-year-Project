@@ -333,12 +333,9 @@
                     <input type="file" name="cv_upload" id="cv_upload">
 
                     <label for="branch_id">Branch:</label>
-                    <select name="branch_id" id="branch_id" required>
-                        <option value="">Select Branch</option>
-                        <option value="1">Branch 1</option>
-                        <option value="2">Branch 2</option>
-                        <!-- Add more branches as needed -->
-                    </select>
+<select name="branch_id" id="branch_id" required>
+    <!-- Branch options will be populated dynamically -->
+</select>
 
                     <label for="user_role">User Role:</label>
                     <select name="user_role" id="user_role" required>
@@ -717,9 +714,32 @@
                 }
             }
 
-            function openAddModal() {
-                document.getElementById('addEmployeeModal').style.display = 'block';
-            }
+            // Modify your openAddModal() function to load branches
+function openAddModal() {
+    // Fetch branches and populate branch dropdown
+    fetch(`<?php echo URLROOT; ?>/sysadmin/getBranches`)
+        .then(response => response.json())
+        .then(branches => {
+            const branchSelect = document.getElementById('branch_id');
+            branchSelect.innerHTML = ''; // Clear existing options
+            // Add a default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Select Branch --';
+            branchSelect.appendChild(defaultOption);
+            // Add branches from database
+            branches.forEach(branch => {
+                const option = document.createElement('option');
+                option.value = branch.branch_id;
+                option.textContent = branch.branch_name;
+                branchSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error loading branches:', error));
+        
+    // Show the modal
+    document.getElementById('addEmployeeModal').style.display = 'block';
+}
 
             function closeModal(modalId) {
                 document.getElementById(modalId).style.display = 'none';
