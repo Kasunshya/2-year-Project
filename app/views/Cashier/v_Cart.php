@@ -22,8 +22,8 @@
                             <input type="number" class="quantity-input" value="<?php echo $item['quantity']; ?>" min="1">
                             <button class="cart-button increment-btn">+</button>
                         </div>
-                        <span class="item-price">$<?php echo number_format($item['price'], 2); ?></span>
-                        <span class="item-subtotal">$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></span>
+                        <span class="item-price">LKR<?php echo number_format($item['price'], 2); ?></span>
+                        <span class="item-subtotal">LKR<?php echo number_format($item['price'] * $item['quantity'], 2); ?></span>
                         <button class="remove-btn"><i class="fas fa-trash"></i></button>
                     </div>
                 <?php endforeach; ?>
@@ -34,9 +34,9 @@
                         <button onclick="applyDiscount()" class="apply-discount-btn">Apply Discount</button>
                     </div>
                     <div class="cart-total">
-                        <h3>Subtotal: $<span id="subtotal-amount"><?php echo number_format($data['total'], 2); ?></span></h3>
-                        <h3>Discount: $<span id="discount-amount">0.00</span></h3>
-                        <h3>Total: $<span id="total-amount"><?php echo number_format($data['total'], 2); ?></span></h3>
+                        <h3>Subtotal: LKR<span id="subtotal-amount"><?php echo number_format($data['total'], 2); ?></span></h3>
+                        <h3>Discount: LKR<span id="discount-amount">0.00</span></h3>
+                        <h3>Total: LKR<span id="total-amount"><?php echo number_format($data['total'], 2); ?></span></h3>
                     </div>
                     <div class="checkout-actions">
                         <a href="<?php echo URLROOT; ?>/Cashier/servicedesk" class="continue-shopping">Continue Shopping</a>
@@ -73,7 +73,7 @@
                 if (data.success) {
                     // Update item subtotal
                     const subtotal = price * newQuantity;
-                    subtotalSpan.textContent = `$${subtotal.toFixed(2)}`;
+                    subtotalSpan.textContent = `LKR${subtotal.toFixed(2)}`;
                     
                     // Update cart total
                     document.getElementById('total-amount').textContent = data.newTotal.toFixed(2);

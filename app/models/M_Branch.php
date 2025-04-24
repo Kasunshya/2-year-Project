@@ -338,7 +338,7 @@ class M_Branch {
                      o.payment_method, o.payment_status, e.full_name
             ORDER BY o.order_date DESC");
         
-        $this->db->bind(':branch_id', $BranchId);
+        $this->db->bind(':branch_id', $branchId); // Fixed capitalization
         $this->db->bind(':start_date', $startDate);
         $this->db->bind(':end_date', $endDate);
         return $this->db->resultSet();
@@ -387,16 +387,16 @@ class M_Branch {
             p.product_id,
             p.product_name,
             c.name as category_name,
-            SUM(od.quantity) as total_sold,
-            SUM(od.quantity * od.price) as total_revenue,
+            COALESCE(SUM(od.quantity), 0) as total_sold,
+            COALESCE(SUM(od.quantity * od.price), 0) as total_revenue,
             COUNT(DISTINCT o.order_id) as order_count,
-            AVG(od.price) as average_price
+            COALESCE(AVG(od.price), 0) as average_price
             FROM product p
             JOIN category c ON p.category_id = c.category_id
             LEFT JOIN orderdetails od ON p.product_id = od.product_id
-            LEFT JOIN orders o ON od.order_id = o.order_id
-            WHERE o.branch_id = :branch_id 
-            AND DATE(o.order_date) BETWEEN :start_date AND :end_date
+            LEFT JOIN orders o ON od.order_id = o.order_id AND o.branch_id = :branch_id 
+                AND DATE(o.order_date) BETWEEN :start_date AND :end_date
+                AND o.payment_status IN ('Paid', 'Completed')
             GROUP BY p.product_id, p.product_name, c.name
             ORDER BY total_revenue DESC");
         
@@ -410,14 +410,14 @@ class M_Branch {
         $this->db->query("SELECT 
             c.name as category_name,
             COUNT(DISTINCT p.product_id) as product_count,
-            SUM(od.quantity) as total_sold,
-            SUM(od.quantity * od.price) as total_revenue
+            COALESCE(SUM(od.quantity), 0) as total_sold,
+            COALESCE(SUM(od.quantity * od.price), 0) as total_revenue
             FROM category c
             JOIN product p ON c.category_id = p.category_id
             LEFT JOIN orderdetails od ON p.product_id = od.product_id
-            LEFT JOIN orders o ON od.order_id = o.order_id
-            WHERE o.branch_id = :branch_id 
-            AND DATE(o.order_date) BETWEEN :start_date AND :end_date
+            LEFT JOIN orders o ON od.order_id = o.order_id AND o.branch_id = :branch_id 
+                AND DATE(o.order_date) BETWEEN :start_date AND :end_date
+                AND o.payment_status IN ('Paid', 'Completed')
             GROUP BY c.category_id, c.name
             ORDER BY total_revenue DESC");
         

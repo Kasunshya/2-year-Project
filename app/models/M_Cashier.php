@@ -23,7 +23,7 @@
         // If branch_id is available in session, show only products with stock for that branch
         if (isset($_SESSION['branch_id'])) {
             $branch_id = $_SESSION['branch_id'];
-            $this->db->query("SELECT p.*, c.name as category_name, 
+            $this->db->query("SELECT p.*, c.name as category_name, p.image_path,
                               COALESCE(bs.quantity, 0) as branch_quantity 
                               FROM product p 
                               LEFT JOIN category c ON p.category_id = c.category_id
@@ -33,7 +33,7 @@
             error_log("Getting available products for branch_id: " . $branch_id);
         } else {
             // Fallback to showing products with stock in any branch
-            $this->db->query("SELECT p.*, c.name as category_name, 
+            $this->db->query("SELECT p.*, c.name as category_name, p.image_path,
                               p.available_quantity as branch_quantity
                               FROM product p 
                               LEFT JOIN category c ON p.category_id = c.category_id
@@ -136,7 +136,7 @@
     public function calculateAverageOrderValue() {
         try {
             // Build query with branch and employee filters if available
-            $whereClause = "WHERE 1=1";
+            $whereClause = "WHERE DATE(order_date) = CURDATE()";
             $params = [];
             
             if (isset($_SESSION['branch_id'])) {
@@ -170,15 +170,19 @@
             // Show all data we're working with
             error_log("createOrder data: " . print_r($data, true));
             
+            // Check if we have a PayPal transaction ID
+            $transactionIdField = isset($data['transaction_id']) ? ', transaction_id' : '';
+            $transactionIdValue = isset($data['transaction_id']) ? ', :transaction_id' : '';
+            
             // Use the SQL query with all required fields
             $sql = "INSERT INTO orders (
                 customer_id, total, order_date, order_type, payment_method, 
                 payment_status, discount, employee_id, branch_id,
-                amount_tendered, change_amount
+                amount_tendered, change_amount" . $transactionIdField . "
             ) VALUES (
                 :customer_id, :total, NOW(), :order_type, :payment_method,
                 'Paid', :discount, :employee_id, :branch_id, 
-                :amount_tendered, :change_amount
+                :amount_tendered, :change_amount" . $transactionIdValue . "
             )";
             
             $this->db->query($sql);
@@ -193,6 +197,11 @@
             $this->db->bind(':branch_id', (int)$data['branch_id']);
             $this->db->bind(':amount_tendered', (float)$data['amount_tendered']);
             $this->db->bind(':change_amount', (float)$data['change_amount']);
+            
+            // Bind transaction_id if available
+            if (isset($data['transaction_id'])) {
+                $this->db->bind(':transaction_id', $data['transaction_id']);
+            }
             
             // Debug the final values being used
             error_log("SQL execution with employee_id=" . $data['employee_id'] . ", branch_id=" . $data['branch_id']);
@@ -483,6 +492,36 @@
         } catch (Exception $e) {
             error_log("Error updating stock: " . $e->getMessage());
             return false;
+        }
+    }
+
+    public function getTodayOrderCount() {
+        try {
+            // Build query with branch and employee filters if available
+            $whereClause = "WHERE DATE(order_date) = CURDATE()";
+            $params = [];
+            
+            if (isset($_SESSION['branch_id'])) {
+                $whereClause .= " AND branch_id = :branch_id";
+                $params[':branch_id'] = $_SESSION['branch_id'];
+            }
+            
+            if (isset($_SESSION['employee_id'])) {
+                $whereClause .= " AND employee_id = :employee_id";
+                $params[':employee_id'] = $_SESSION['employee_id'];
+            }
+            
+            $this->db->query("SELECT COUNT(*) AS today_orders FROM orders $whereClause");
+            
+            foreach ($params as $param => $value) {
+                $this->db->bind($param, $value);
+            }
+            
+            $result = $this->db->single();
+            return $result ?: (object)['today_orders' => 0];
+        } catch (Exception $e) {
+            error_log("Error counting today's orders: " . $e->getMessage());
+            return (object)['today_orders' => 0];
         }
     }
  }

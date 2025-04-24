@@ -306,7 +306,7 @@
                             <?php if (!empty($data['transactions'])) : ?>
                                 <?php foreach ($data['transactions'] as $transaction) : ?>
                                     <tr>
-                                        <td>#<?php echo $transaction->order_id; ?></td>
+                                        <td>OID<?php echo $transaction->order_id; ?></td>
                                         <td><?php echo date('h:i A', strtotime($transaction->order_date)); ?></td>
                                         <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
                                         <td><?php echo $transaction->payment_method; ?></td>
@@ -484,12 +484,13 @@
             </div>
         </div>
 
+        <!-- Product Performance Report Content -->
         <div class="tab-content" id="product">
             <div class="report-header">
                 <h2>Product Performance Report</h2>
                 <div class="report-actions">
-                    <input type="date" id="productStartDate" value="<?php echo $data['startDate'] ?? date('Y-m-d', strtotime('-30 days')); ?>">
-                    <input type="date" id="productEndDate" value="<?php echo $data['endDate'] ?? date('Y-m-d'); ?>">
+                    <input type="date" id="productStartDate" value="<?php echo isset($data['startDate']) ? $data['startDate'] : date('Y-m-d', strtotime('-30 days')); ?>">
+                    <input type="date" id="productEndDate" value="<?php echo isset($data['endDate']) ? $data['endDate'] : date('Y-m-d'); ?>">
                     <button class="btn-generate" onclick="generateProductReport()">
                         <i class="fas fa-sync"></i> Generate
                     </button>
@@ -501,7 +502,6 @@
 
             <div class="product-report print-section">
                 <div class="invoice-container">
-                    <!-- Header section similar to other reports -->
                     <div class="watermark">FROSTINE</div>
                     <div class="invoice-header">
                         <div class="invoice-logo">
@@ -517,7 +517,6 @@
                         </div>
                     </div>
 
-                    <!-- Company and Report Information -->
                     <div class="company-info">
                         <div class="company-info-left">
                             <h3>Branch Information</h3>
@@ -526,7 +525,11 @@
                             <p>Contact: <?php echo $data['branch']->branch_contact; ?></p>
                         </div>
                         <div class="report-info">
-                            <p><strong>Period:</strong> <?php echo date('d F Y', strtotime($data['startDate'])) . ' to ' . date('d F Y', strtotime($data['endDate'])); ?></p>
+                            <p><strong>Period:</strong> <?php 
+                                $startDate = isset($data['startDate']) ? date('d F Y', strtotime($data['startDate'])) : date('d F Y', strtotime('-30 days'));
+                                $endDate = isset($data['endDate']) ? date('d F Y', strtotime($data['endDate'])) : date('d F Y');
+                                echo $startDate . ' to ' . $endDate;
+                            ?></p>
                             <p><strong>Branch ID:</strong> <?php echo $data['branch']->branch_id; ?></p>
                             <p><strong>Report Generated:</strong> <?php echo date('d F Y, h:i A'); ?></p>
                         </div>
@@ -549,10 +552,14 @@
                                     <tr>
                                         <td><?php echo $category->category_name; ?></td>
                                         <td><?php echo $category->product_count; ?></td>
-                                        <td><?php echo $category->total_sold; ?></td>
+                                        <td><?php echo number_format($category->total_sold); ?></td>
                                         <td>LKR <?php echo number_format($category->total_revenue, 2); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">No category data available</td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -576,12 +583,16 @@
                                     <tr>
                                         <td><?php echo $product->product_name; ?></td>
                                         <td><?php echo $product->category_name; ?></td>
-                                        <td><?php echo $product->total_sold; ?></td>
-                                        <td><?php echo $product->order_count; ?></td>
+                                        <td><?php echo number_format($product->total_sold); ?></td>
+                                        <td><?php echo number_format($product->order_count); ?></td>
                                         <td>LKR <?php echo number_format($product->average_price, 2); ?></td>
                                         <td>LKR <?php echo number_format($product->total_revenue, 2); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">No product data available</td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

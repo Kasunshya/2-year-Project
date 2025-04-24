@@ -123,22 +123,40 @@ class Branch extends Controller {
             die('Error: No branch association found');
         }
 
-        $startDate = $_POST['start_date'] ?? date('Y-m-d', strtotime('-7 days'));
-        $endDate = $_POST['end_date'] ?? date('Y-m-d');
-        
-        $transactions = $this->branchModel->getDateRangeTransactions($branch->branch_id, $startDate, $endDate);
-        $summary = $this->branchModel->getDateRangeSummary($branch->branch_id, $startDate, $endDate);
+        // Add input validation and default dates
+        $startDate = isset($_POST['start_date']) && !empty($_POST['start_date']) 
+            ? $_POST['start_date'] 
+            : date('Y-m-d', strtotime('-7 days'));
+        $endDate = isset($_POST['end_date']) && !empty($_POST['end_date']) 
+            ? $_POST['end_date'] 
+            : date('Y-m-d');
 
-        $data = [
-            'branch' => $branch,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'transactions' => $transactions,
-            'summary' => $summary,
-            'title' => 'Date Range Sales Report'
-        ];
-        
-        $this->view('BranchM/v_salesReport', $data);
+        // Validate date range
+        if (strtotime($startDate) > strtotime($endDate)) {
+            flash('report_error', 'Start date cannot be after end date', 'alert alert-danger');
+            redirect('Branch/salesReport');
+            return;
+        }
+
+        try {
+            $transactions = $this->branchModel->getDateRangeTransactions($branch->branch_id, $startDate, $endDate);
+            $summary = $this->branchModel->getDateRangeSummary($branch->branch_id, $startDate, $endDate);
+
+            $data = [
+                'branch' => $branch,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'transactions' => $transactions ?? [],
+                'summary' => $summary ?? (object)['total_orders' => 0, 'total_sales' => 0],
+                'title' => 'Date Range Sales Report'
+            ];
+            
+            $this->view('BranchM/v_salesReport', $data);
+        } catch (Exception $e) {
+            error_log("Error in dateRangeReport: " . $e->getMessage());
+            flash('report_error', 'Error generating report. Please try again.', 'alert alert-danger');
+            redirect('Branch/salesReport');
+        }
     }
 
     public function productPerformance() {
@@ -153,22 +171,32 @@ class Branch extends Controller {
             die('Error: No branch association found');
         }
 
-        $startDate = $_POST['start_date'] ?? date('Y-m-d', strtotime('-30 days'));
-        $endDate = $_POST['end_date'] ?? date('Y-m-d');
-        
-        $products = $this->branchModel->getProductPerformance($branch->branch_id, $startDate, $endDate);
-        $categories = $this->branchModel->getCategoryPerformance($branch->branch_id, $startDate, $endDate);
+        $startDate = isset($_POST['start_date']) && !empty($_POST['start_date']) 
+            ? $_POST['start_date'] 
+            : date('Y-m-d', strtotime('-30 days'));
+        $endDate = isset($_POST['end_date']) && !empty($_POST['end_date']) 
+            ? $_POST['end_date'] 
+            : date('Y-m-d');
 
-        $data = [
-            'branch' => $branch,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'products' => $products,
-            'categories' => $categories,
-            'title' => 'Product Performance Report'
-        ];
-        
-        $this->view('BranchM/v_salesReport', $data);
+        try {
+            $products = $this->branchModel->getProductPerformance($branch->branch_id, $startDate, $endDate);
+            $categories = $this->branchModel->getCategoryPerformance($branch->branch_id, $startDate, $endDate);
+
+            $data = [
+                'branch' => $branch,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'products' => $products ?? [],
+                'categories' => $categories ?? [],
+                'title' => 'Product Performance Report'
+            ];
+            
+            $this->view('BranchM/v_salesReport', $data);
+        } catch (Exception $e) {
+            error_log("Error in productPerformance: " . $e->getMessage());
+            flash('report_error', 'Error generating product report', 'alert alert-danger');
+            redirect('Branch/salesReport');
+        }
     }
 
     public function stockReport() {

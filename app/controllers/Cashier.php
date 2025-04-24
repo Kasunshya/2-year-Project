@@ -61,7 +61,8 @@ public function cashierdashboard(){
     
     // Get metrics specific to this cashier and branch
     $totalOrders = $this->CashierModel->getTotalOrderCount();
-    $totalRevenue = $this->CashierModel->calculateTotalRevenue();
+    $todayOrders = $this->CashierModel->getTodayOrderCount(); // Get today's order count
+    $totalRevenue = $this->CashierModel->calculateTotalRevenue(); // Fixed: added $this
     $todaysRevenue = $this->CashierModel->calculateTodaysRevenue();
     $avgOrderValue = $this->CashierModel->calculateAverageOrderValue();
     $bestSellers = $this->CashierModel->getBestSellingProducts();
@@ -70,6 +71,7 @@ public function cashierdashboard(){
     
     $data = [
         'totalOrders' => $totalOrders->total_orders,
+        'todayOrders' => $todayOrders->today_orders, // Add today's order count to data
         'totalRevenue' => $totalRevenue,
         'todaysRevenue' => $todaysRevenue,
         'averageOrderValue' => $avgOrderValue,
@@ -81,7 +83,6 @@ public function cashierdashboard(){
     $this->view('Cashier/v_CashierDashboard', $data);
 }
 
-// Add this to your Cashier.php controller
 public function search() {
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
       $searchTerm = trim($_POST['search']);
@@ -421,4 +422,173 @@ public function search() {
         exit;
     }
 
+    public function initiatePayPalPayment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Clear output buffer
+            if (ob_get_level()) ob_clean();
+            
+            // Get the amount from the form
+            $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
+            
+            if ($amount <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Invalid amount']);
+                return;
+            }
+            
+            // Load PayPal API library
+            require_once APPROOT . '/libraries/PayPalAPI.php';
+            $paypal = new PayPalAPI();
+            
+            // Set return URLs
+            $returnUrl = URLROOT . '/Cashier/checkout?paypal_success=true';
+            $cancelUrl = URLROOT . '/Cashier/checkout?paypal_cancel=true';
+            
+            // Create PayPal order
+            $response = $paypal->createOrder(
+                $amount,
+                'USD',
+                $returnUrl,
+                $cancelUrl
+            );
+            
+            // Return the response to the client
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+    }
+
+    public function completePayPalPayment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Clear output buffer
+            if (ob_get_level()) ob_clean();
+            
+            // Get PayPal order ID from the request
+            if (!isset($_POST['paypal_order_id'])) {
+                echo json_encode(['success' => false, 'message' => 'PayPal order ID is missing']);
+                return;
+            }
+            
+            $paypalOrderId = $_POST['paypal_order_id'];
+            
+            // Load PayPal API library
+            require_once APPROOT . '/libraries/PayPalAPI.php';
+            $paypal = new PayPalAPI();
+            
+            // Capture the payment
+            $captureResponse = $paypal->capturePayment($paypalOrderId);
+            
+            if (!$captureResponse['success']) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Failed to capture PayPal payment: ' . $captureResponse['message']
+                ]);
+                return;
+            }
+            
+            // If capture successful, create the order in our system
+            $total = isset($_POST['amount_tendered']) ? floatval($_POST['amount_tendered']) : 0;
+            $discountAmount = isset($_SESSION['discount']) ? floatval($_SESSION['discount']) : 0;
+            
+            if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+                echo json_encode(['success' => false, 'message' => 'Cart is empty']);
+                return;
+            }
+            
+            // Check session data
+            if (!isset($_SESSION['employee_id']) || !isset($_SESSION['branch_id'])) {
+                echo json_encode(['success' => false, 'message' => 'Session expired. Please login again.']);
+                return;
+            }
+            
+            $branch_id = $_SESSION['branch_id'] ?? 1;
+            
+            // Create order data
+            $orderData = [
+                'customer_id' => 1, // Default customer ID
+                'total' => $total,
+                'discount_amount' => $discountAmount,
+                'payment_method' => 'PayPal',
+                'order_type' => 'Online',
+                'employee_id' => $_SESSION['employee_id'] ?? 6,
+                'branch_id' => $branch_id,
+                'amount_tendered' => $total,
+                'change_amount' => 0,
+                'transaction_id' => $captureResponse['transactionId']
+            ];
+            
+            try {
+                // Create the order in our database
+                $orderId = $this->CashierModel->createOrder($orderData);
+                
+                if (!$orderId) {
+                    echo json_encode(['success' => false, 'message' => 'Failed to create order. Please try again.']);
+                    return;
+                }
+                
+                // Process order details and update stock
+                $detailsSuccess = true;
+                $stockUpdateSuccess = true;
+                foreach ($_SESSION['cart'] as $item) {
+                    $result = $this->CashierModel->addOrderDetail([
+                        'order_id' => $orderId,
+                        'product_id' => $item['productId'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price']
+                    ]);
+                    
+                    if (!$result) {
+                        $detailsSuccess = false;
+                        error_log("Failed to add order detail for product ID: " . $item['productId']);
+                    }
+                    
+                    // Update branch stock
+                    $stockResult = $this->CashierModel->updateBranchStock(
+                        $branch_id, 
+                        $item['productId'], 
+                        $item['quantity']
+                    );
+                    
+                    if (!$stockResult) {
+                        $stockUpdateSuccess = false;
+                        error_log("Failed to update stock for product ID: " . $item['productId']);
+                    }
+                }
+                
+                // Store order data in session
+                $_SESSION['last_order'] = [
+                    'order_id' => $orderId,
+                    'items' => $_SESSION['cart'],
+                    'subtotal' => array_reduce($_SESSION['cart'], function($sum, $item) {
+                        return $sum + ($item['price'] * $item['quantity']);
+                    }, 0),
+                    'discount' => $discountAmount,
+                    'total' => $total,
+                    'payment_method' => 'PayPal',
+                    'paypal_transaction_id' => $captureResponse['transactionId'],
+                    'amount_tendered' => $total,
+                    'change' => 0,
+                    'date' => date('Y-m-d H:i:s'),
+                    'stock_updated' => $stockUpdateSuccess
+                ];
+                
+                // Clear cart after successful order
+                unset($_SESSION['cart']);
+                unset($_SESSION['discount']);
+                
+                echo json_encode([
+                    'success' => true,
+                    'detailsComplete' => $detailsSuccess,
+                    'stockUpdated' => $stockUpdateSuccess,
+                    'message' => 'PayPal payment successful'
+                ]);
+            } catch (Exception $e) {
+                error_log("PayPal order processing error: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Error processing order: ' . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        }
+        exit;
+    }
 }

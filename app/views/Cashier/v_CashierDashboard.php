@@ -71,17 +71,17 @@
         <!-- Metrics Container -->
         <div class="metrics-container">
             <div class="metric">
-                <h3>Total Orders</h3>
-                <p><?php echo $data['totalOrders']; ?></p>
+                <h3>Today's Orders</h3>
+                <p><?php echo $data['todayOrders']; ?></p>
             </div>
             <div class="metric">
                 <h3>Today's Revenue</h3>
-                <p>Rs <?php echo number_format($data['todaysRevenue'], 2); ?></p>
+                <p>LKR <?php echo number_format($data['todaysRevenue'], 2); ?></p>
             </div>
             
             <div class="metric">
                 <h3>Average Order Value</h3>
-                <p>Rs <?php echo number_format($data['averageOrderValue'], 2); ?></p>
+                <p>LKR <?php echo number_format($data['averageOrderValue'], 2); ?></p>
             </div>
         </div>
 
@@ -93,7 +93,7 @@
                     <div class="best-seller-card">
                         <div class="best-seller-info">
                             <h3><?php echo $product->product_name; ?></h3>
-                            <p class="price">Rs <?php echo number_format($product->price, 2); ?></p>
+                            <p class="price">LKR <?php echo number_format($product->price, 2); ?></p>
                             <p class="sold"><?php echo $product->quantity_sold; ?> units sold</p>
                         </div>
                         <div class="best-seller-progress">
@@ -123,7 +123,7 @@
                             <td>OID<?php echo $order->order_id; ?></td>
                             <td><?php echo date('M d, H:i', strtotime($order->order_date)); ?></td>
                             <td><?php echo $order->items; ?></td>
-                            <td>Rs <?php echo number_format($order->total, 2); ?></td>
+                            <td>LKR <?php echo number_format($order->total, 2); ?></td>
                             <td>
                                 <span class="status <?php echo strtolower($order->payment_status); ?>">
                                     <?php echo $order->payment_status; ?>
@@ -220,7 +220,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Daily Sales (Rs)',
+                            label: 'Daily Sales (LKR)',
                             data: values,
                             borderColor: '#c98d83',
                             tension: 0.4,
@@ -238,7 +238,7 @@
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return 'Rs ' + context.parsed.y.toFixed(2);
+                                        return 'LKR ' + context.parsed.y.toFixed(2);
                                     }
                                 }
                             }
@@ -251,7 +251,7 @@
                                 },
                                 ticks: {
                                     callback: function(value) {
-                                        return 'Rs ' + value;
+                                        return 'LKR ' + value;
                                     }
                                 }
                             },
