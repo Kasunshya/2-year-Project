@@ -1,4 +1,3 @@
-
 <?php require APPROOT.'/views/inc/components/verticalnavbar.php'?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/BranchManager/DailyOrder.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -33,7 +32,7 @@
                             <tr>
                                 <th>Product Name</th>
                                 <th>Category</th>
-                                <th>Unit Price (Rs)</th>
+                                <th>Unit Price (LKR)</th>
                                 <th>Quantity</th>
                             </tr>
                         </thead>

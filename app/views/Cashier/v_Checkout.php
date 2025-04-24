@@ -7,6 +7,43 @@
     <title>Checkout</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/checkout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .payment-method-btn.paypal {
+            background-color: #0070ba;
+            color: white;
+        }
+        .payment-method-btn.paypal:hover {
+            background-color: #003087;
+        }
+        #paypalProcessingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            color: white;
+            display: none;
+        }
+        #paypalProcessingOverlay .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0070ba;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <div class="checkout-container">
@@ -14,9 +51,9 @@
         <div class="order-summary">
             <h3>Order Summary</h3>
             <div class="summary-details">
-                <p>Subtotal: $<span id="subtotal"><?php echo number_format($data['subtotal'], 2); ?></span></p>
-                <p>Discount: $<span id="discount"><?php echo number_format($data['discount'] ?? 0, 2); ?></span></p>
-                <p>Total: $<span id="total"><?php echo number_format($data['total'], 2); ?></span></p>
+                <p>Subtotal: LKR<span id="subtotal"><?php echo number_format($data['subtotal'], 2); ?></span></p>
+                <p>Discount: LKR<span id="discount"><?php echo number_format($data['discount'] ?? 0, 2); ?></span></p>
+                <p>Total: LKR<span id="total"><?php echo number_format($data['total'], 2); ?></span></p>
             </div>
         </div>
 
@@ -31,6 +68,10 @@
                     <i class="fas fa-credit-card"></i>
                     Card
                 </button>
+                <button class="payment-method-btn paypal" onclick="selectPaymentMethod('paypal')">
+                    <i class="fab fa-paypal"></i>
+                    PayPal
+                </button>
             </div>
 
             <!-- Cash Payment Form -->
@@ -41,7 +82,7 @@
                 </div>
                 <div class="form-group">
                     <label>Change:</label>
-                    <span id="changeAmount">$0.00</span>
+                    <span id="changeAmount">LKR0.00</span>
                 </div>
                 <button type="submit" class="process-btn">Process Payment</button>
             </form>
@@ -64,13 +105,30 @@
                 </div>
                 <button type="submit" class="process-btn">Process Payment</button>
             </form>
+
+            <!-- PayPal Payment Form -->
+            <form id="paypalPaymentForm" class="payment-form" style="display:none;">
+                <div class="form-group paypal-info">
+                    <p>You will be redirected to PayPal to complete your payment securely.</p>
+                    <p>Total to pay: LKR<span id="paypalAmount"><?php echo number_format($data['total'], 2); ?></span></p>
+                </div>
+                <button type="submit" class="process-btn">Pay with PayPal</button>
+            </form>
         </div>
+    </div>
+
+    <!-- PayPal Processing Overlay -->
+    <div id="paypalProcessingOverlay">
+        <div class="spinner"></div>
+        <p>Processing your PayPal payment...</p>
+        <p>Please do not close this window.</p>
     </div>
 
     <script>
         function selectPaymentMethod(method) {
             document.getElementById('cashPaymentForm').style.display = 'none';
             document.getElementById('cardPaymentForm').style.display = 'none';
+            document.getElementById('paypalPaymentForm').style.display = 'none';
             
             document.getElementById(method + 'PaymentForm').style.display = 'block';
         }
@@ -80,7 +138,7 @@
             const total = parseFloat(document.getElementById('total').textContent);
             const tendered = parseFloat(this.value) || 0;
             const change = tendered - total;
-            document.getElementById('changeAmount').textContent = '$' + Math.max(0, change).toFixed(2);
+            document.getElementById('changeAmount').textContent = 'LKR' + Math.max(0, change).toFixed(2);
         });
 
         // Handle form submissions
@@ -92,6 +150,11 @@
         document.getElementById('cardPaymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             processPayment('card');
+        });
+
+        document.getElementById('paypalPaymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            processPayment('paypal');
         });
 
         function processPayment(method) {
@@ -154,12 +217,48 @@
                 
                 // For card payments, amount tendered equals total
                 formData.append('amount_tendered', total);
+            } else if (method === 'paypal') {
+                // For PayPal, show overlay and initiate PayPal process
+                document.getElementById('paypalProcessingOverlay').style.display = 'flex';
+                formData.append('amount', total);
+                
+                fetch('<?php echo URLROOT; ?>/Cashier/initiatePayPalPayment', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.approvalUrl) {
+                        // Store the PayPal order ID in session
+                        localStorage.setItem('paypal_order_id', data.orderId);
+                        // Redirect to PayPal
+                        window.location.href = data.approvalUrl;
+                    } else {
+                        document.getElementById('paypalProcessingOverlay').style.display = 'none';
+                        alert(data.message || 'Failed to initiate PayPal payment');
+                        processBtns.forEach(btn => {
+                            btn.disabled = false;
+                            btn.textContent = 'Pay with PayPal';
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('paypalProcessingOverlay').style.display = 'none';
+                    console.error('PayPal Error:', error);
+                    alert('Failed to initiate PayPal payment. Please try again.');
+                    processBtns.forEach(btn => {
+                        btn.disabled = false;
+                        btn.textContent = 'Pay with PayPal';
+                    });
+                });
+                
+                return; // Early return for PayPal as it redirects
             }
             
             // Add customer_id (using a valid ID from the database)
             formData.append('customer_id', 1);
 
-            // Make AJAX request
+            // Make AJAX request for cash & card methods
             fetch('<?php echo URLROOT; ?>/Cashier/processPayment', {
                 method: 'POST',
                 body: formData
@@ -243,6 +342,40 @@
                 
                 console.log('Added hidden fields - employee_id:', employeeIdField.value, 
                             'cashier_id:', cashierId, 'branch_id:', branchIdField.value);
+            });
+        }
+        
+        // Check if we're coming back from PayPal
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('paypal_success') && localStorage.getItem('paypal_order_id')) {
+            const overlay = document.getElementById('paypalProcessingOverlay');
+            overlay.style.display = 'flex';
+            
+            // Complete the PayPal payment
+            const formData = new FormData();
+            formData.append('payment_method', 'paypal');
+            formData.append('paypal_order_id', localStorage.getItem('paypal_order_id'));
+            formData.append('customer_id', 1);
+            formData.append('amount_tendered', parseFloat(document.getElementById('total').textContent));
+            
+            fetch('<?php echo URLROOT; ?>/Cashier/completePayPalPayment', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('paypal_order_id');
+                    window.location.href = '<?php echo URLROOT; ?>/Cashier/generateBill';
+                } else {
+                    overlay.style.display = 'none';
+                    alert(data.message || 'Failed to complete PayPal payment');
+                }
+            })
+            .catch(error => {
+                overlay.style.display = 'none';
+                console.error('Error:', error);
+                alert('Failed to complete PayPal payment. Please try again.');
             });
         }
       });

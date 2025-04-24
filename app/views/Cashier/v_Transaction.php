@@ -349,7 +349,7 @@
                 <?php if (!empty($data['transactions'])) : ?>
                     <?php foreach ($data['transactions'] as $transaction) : ?>
                         <tr>
-                            <td>#<?php echo $transaction->order_id; ?></td>
+                            <td>OID<?php echo $transaction->order_id; ?></td>
                             <td><?php echo date('d M Y, H:i', strtotime($transaction->order_date)); ?></td>
                             <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
                             <td><?php echo $transaction->payment_method; ?></td>
@@ -431,7 +431,7 @@
                     <?php if (!empty($data['transactions'])) : ?>
                         <?php foreach ($data['transactions'] as $transaction) : ?>
                             <tr>
-                                <td>#<?php echo $transaction->order_id; ?></td>
+                                <td>OID<?php echo $transaction->order_id; ?></td>
                                 <td><?php echo date('h:i A', strtotime($transaction->order_date)); ?></td>
                                 <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
                                 <td><?php echo $transaction->payment_method; ?></td>

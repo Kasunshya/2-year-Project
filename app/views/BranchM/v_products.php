@@ -1,4 +1,3 @@
-
 <?php require APPROOT.'/views/inc/components/verticalnavbar.php'?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/BranchManager/salesReport.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -22,7 +21,7 @@
                     <tr>
                         <td><?php echo htmlspecialchars($product->product_name); ?></td>
                         <td><?php echo htmlspecialchars($product->category_name); ?></td>
-                        <td>$<?php echo number_format($product->price, 2); ?></td>
+                        <td>LKR <?php echo number_format($product->price, 2); ?></td>
                         <td>
                             <?php
                             $currentStock = 0;

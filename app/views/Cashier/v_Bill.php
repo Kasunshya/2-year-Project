@@ -48,8 +48,8 @@
                             <tr>
                                 <td><?php echo htmlspecialchars($item['name']); ?></td>
                                 <td><?php echo $item['quantity']; ?></td>
-                                <td>$<?php echo number_format($item['price'], 2); ?></td>
-                                <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                                <td>LKR<?php echo number_format($item['price'], 2); ?></td>
+                                <td>LKR<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -61,24 +61,24 @@
             <div class="receipt-summary">
                 <div class="summary-row">
                     <span>Subtotal:</span>
-                    <span>$<?php echo number_format($data['subtotal'] ?? 0, 2); ?></span>
+                    <span>LKR<?php echo number_format($data['subtotal'] ?? 0, 2); ?></span>
                 </div>
                 <div class="summary-row">
                     <span>Discount:</span>
-                    <span>$<?php echo number_format($data['discount'] ?? 0, 2); ?></span>
+                    <span>LKR<?php echo number_format($data['discount'] ?? 0, 2); ?></span>
                 </div>
                 <div class="summary-row total">
                     <span>Total:</span>
-                    <span>$<?php echo number_format($data['total'] ?? 0, 2); ?></span>
+                    <span>LKR<?php echo number_format($data['total'] ?? 0, 2); ?></span>
                 </div>
                 <?php if (isset($data['payment_method']) && $data['payment_method'] === 'cash'): ?>
                 <div class="summary-row">
                     <span>Amount Tendered:</span>
-                    <span>$<?php echo number_format($data['amount_tendered'] ?? 0, 2); ?></span>
+                    <span>LKR<?php echo number_format($data['amount_tendered'] ?? 0, 2); ?></span>
                 </div>
                 <div class="summary-row">
                     <span>Change:</span>
-                    <span>$<?php echo number_format($data['change'] ?? 0, 2); ?></span>
+                    <span>LKR<?php echo number_format($data['change'] ?? 0, 2); ?></span>
                 </div>
                 <?php endif; ?>
             </div>

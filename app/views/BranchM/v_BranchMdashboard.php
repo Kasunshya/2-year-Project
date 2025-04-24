@@ -58,7 +58,7 @@
         <div class="metric">
             <i class="fas fa-shopping-cart fa-2x"></i>
             <h3>Today's Sales</h3>
-            <p>Rs. 1,500.50</p> <!-- Hardcoded value for now -->
+            <p>LKR 1,500.50</p> <!-- Changed from Rs. to LKR -->
         </div>
         <div class="metric">
             <i class="fas fa-receipt fa-2x"></i>
@@ -68,7 +68,7 @@
         <div class="metric">
             <i class="fas fa-chart-line fa-2x"></i>
             <h3>Weekly Sales</h3>
-            <p>Rs. 9,750.75</p> <!-- Hardcoded value for now -->
+            <p>LKR 9,750.75</p> <!-- Changed from Rs. to LKR -->
         </div>
         <div class="metric">
             <i class="fas fa-box fa-2x"></i>

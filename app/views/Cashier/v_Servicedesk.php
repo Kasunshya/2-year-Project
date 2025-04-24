@@ -16,6 +16,27 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/stock-badges.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="base-url" content="<?php echo URLROOT; ?>">
+    <style>
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+        .product-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
   <header>
@@ -25,7 +46,7 @@
       </div>
     </div>
   </header>
-
+  
   <div class="main-content">
     <?php if(isset($_SESSION['branch_id'])): ?>
       <div class="branch-info">
@@ -42,7 +63,7 @@
         <?php endif; ?>
       </div>
     <?php endif; ?>
-
+    
     <div class="search-container">
       <div class="search-box">
         <i class="fas fa-search search-icon"></i>
@@ -54,7 +75,7 @@
         </a>
       </div>
     </div>
-
+    
     <table class="product-table" id="productTable">
       <thead>
         <tr>
@@ -73,16 +94,26 @@
                 // Use branch_quantity if available, otherwise use general availability
                 $stockQuantity = isset($product->branch_quantity) ? $product->branch_quantity : $product->available_quantity;
                 $outOfStock = $stockQuantity <= 0;
+                
+                // Debug the image path
+                error_log("Product: " . $product->product_name . ", Image path: " . ($product->image_path ?? 'No image'));
               ?>
               <tr data-product-id="<?php echo $product->product_id; ?>" class="<?php echo $outOfStock ? 'out-of-stock' : ''; ?>">
-                <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                <td>
+                    <?php if(isset($product->image_path) && !empty($product->image_path)): ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $product->image_path; ?>" alt="<?php echo htmlspecialchars($product->product_name); ?>" class="product-image">
+                    <?php else: ?>
+                        <img src="<?php echo URLROOT; ?>/public/img/products/placeholder.jpg" alt="No Image" class="product-image">
+                    <?php endif; ?>
+                    <div class="product-name"><?php echo htmlspecialchars($product->product_name); ?></div>
+                </td>
                 <td><?php echo htmlspecialchars($product->category_name); ?></td>
                 <td class="stock-cell">
                   <span class="stock-badge <?php echo $outOfStock ? 'out-of-stock' : 'in-stock'; ?>">
                     <?php echo $stockQuantity; ?>
                   </span>
                 </td>
-                <td><?php echo number_format($product->price, 2); ?></td>
+                <td>LKR <?php echo number_format($product->price, 2); ?></td>
                 <td>
                   <div class="quantity-selector">
                     <button class="decrement-btn" <?php echo $outOfStock ? 'disabled' : ''; ?>>-</button>
@@ -92,7 +123,7 @@
                 </td>
                 <td>
                   <button class="add-btn" 
-                    onclick="addToCart(<?php echo $product->product_id; ?>, '<?php echo $product->product_name; ?>', <?php echo $product->price; ?>)" 
+                    onclick="addToCart(<?php echo $product->product_id; ?>, '<?php echo addslashes($product->product_name); ?>', <?php echo $product->price; ?>)" 
                     <?php echo $outOfStock ? 'disabled' : ''; ?>>
                     <?php echo $outOfStock ? 'Out of Stock' : 'Add'; ?>
                   </button>
@@ -114,20 +145,20 @@
         const quantityInput = row.querySelector('.quantity-input');
         const quantity = parseInt(quantityInput.value);
         const maxQuantity = parseInt(quantityInput.getAttribute('max'));
-        
+
         // Check if product is in stock
         if (maxQuantity <= 0) {
             alert('Sorry, this product is out of stock at your branch.');
             return;
         }
-        
+
         // Check if requested quantity is available
         if (quantity > maxQuantity) {
             alert(`Sorry, only ${maxQuantity} items available in your branch.`);
             quantityInput.value = maxQuantity;
             return;
         }
-        
+
         fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/addToCart`, {
             method: 'POST',
             headers: {
@@ -187,11 +218,11 @@
     document.getElementById('searchInput').addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
         const rows = document.querySelectorAll('#productTable tbody tr');
-        
+
         rows.forEach(row => {
             const productName = row.cells[0].textContent.toLowerCase();
             const category = row.cells[1].textContent.toLowerCase();
-            
+
             if (productName.includes(searchTerm) || category.includes(searchTerm)) {
                 row.style.display = '';
             } else {
