@@ -38,21 +38,38 @@ $checkout = new CustomerCheckout();
             box-sizing: border-box;
             text-transform: capitalize;
         }
-        header {
-            background-color: var(--primary-color);
-            padding: 2rem;
+        .profile-title {
+            background-color: #c98d83;
+            padding: 1.5rem;
             text-align: center;
-            color: var(--white);
-            font-size: 2.5rem;
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 500;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 2rem;
         }
 
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.5rem;
+                padding: 1.2rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
         body {
             background: var(--background-color) url('/images/banner-bg.jpg') no-repeat center center fixed;
             background-size: cover;
             color: var(--black);
         }
-
+   }
         /* Navigation Bar */
         /* Add these styles in the <style> tag after the existing navbar styles */
 .navbar {
@@ -380,21 +397,11 @@ $checkout = new CustomerCheckout();
 </head>
 <body>
     <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="#" class="logo">FROSTINE</a>
-        <ul>
-            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage">Home</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerhomepage#about">About</a></li>
-            <li><a href="<?php echo URLROOT ?>/customer/customerproducts">Products</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#review">Reviews</a></li>
-            <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a></li>
-            <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a></li>
-        </ul>
-    </div>
+    <?php require_once APPROOT . '/views/customer/RegisteredCustomerNav.php'; ?>
 
     <!-- Payment Form -->
-    <header>Payment Details</header>
+    
+    <div class="profile-title">Payment Details</div>
     <div class="container">
         <!-- Add this before the payment form -->
         <div class="section-container">

@@ -747,6 +747,12 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
+    public function getEnquiryById($enquiry_id) {
+        $this->db->query('SELECT * FROM enquiry WHERE enquiry_id = :enquiry_id');
+        $this->db->bind(':enquiry_id', $enquiry_id);
+        return $this->db->single();
+    }
+
     public function getOrders($filters = [])
     {
         $sql = '
@@ -855,6 +861,43 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
+    public function getCustomizationById($customization_id) {
+        $this->db->query('
+            SELECT 
+                cc.customization_id,
+                c.customer_name,
+                u.email AS customer_email,
+                cc.flavor,
+                cc.size,
+                cc.toppings,
+                cc.premium_toppings,
+                cc.message,
+                cc.delivery_option,
+                cc.delivery_address,
+                cc.delivery_date,
+                cc.order_status,
+                cc.created_at
+            FROM cake_customization cc
+            JOIN customer c ON cc.customer_id = c.customer_id
+            JOIN users u ON c.user_id = u.user_id
+            WHERE cc.customization_id = :customization_id
+        ');
+        $this->db->bind(':customization_id', $customization_id);
+        return $this->db->single();
+    }
+
+    public function updateCustomizationStatus($customization_id, $status) {
+        $this->db->query('
+            UPDATE cake_customization 
+            SET order_status = :status 
+            WHERE customization_id = :customization_id
+        ');
+        $this->db->bind(':customization_id', $customization_id);
+        $this->db->bind(':status', $status);
+        
+        return $this->db->execute();
+    }
+
     public function getTotalProducts()
     {
         $this->db->query('SELECT COUNT(*) as total FROM product');
@@ -960,7 +1003,6 @@ class M_HeadM
         $this->db->query('
             SELECT 
                 f.feedback_id,
-                f.rating,
                 f.feedback_text,
                 f.created_at AS feedback_date,
                 p.product_id,
@@ -970,6 +1012,35 @@ class M_HeadM
             JOIN product p ON f.order_id = p.product_id
             ORDER BY f.created_at DESC
             LIMIT 5
+        ');
+        
+        return $this->db->resultSet();
+    }
+
+    public function postFeedbackToHomepage($feedback_id) {
+        // Update the feedback to mark it as "posted" without requiring star_rating
+        $this->db->query('UPDATE feedback SET is_posted = 1 WHERE feedback_id = :feedback_id');
+        $this->db->bind(':feedback_id', $feedback_id);
+        
+        return $this->db->execute();
+    }
+
+    public function getPostedFeedbacks() {
+        // Get feedbacks that have been posted to the homepage (limit to 3 most recent)
+        $this->db->query('
+            SELECT 
+                f.feedback_id,
+                c.customer_name,
+                f.feedback_text,
+                f.star_rating,
+                f.created_at,
+                p.product_name
+            FROM feedback f
+            LEFT JOIN customer c ON f.customer_id = c.customer_id
+            LEFT JOIN product p ON f.product_id = p.product_id
+            WHERE f.is_posted = 1
+            ORDER BY f.created_at DESC
+            LIMIT 3
         ');
         
         return $this->db->resultSet();

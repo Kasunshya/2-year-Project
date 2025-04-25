@@ -7,38 +7,108 @@ class M_SysAdminP {
     }
 
     public function getAllCategories() {
-        $this->db->query('SELECT * FROM category ORDER BY category_id DESC');
+        $this->db->query('SELECT * FROM category ORDER BY name');
         return $this->db->resultSet();
     }
 
     public function addCategory($data) {
-        $this->db->query('INSERT INTO category (name, description) VALUES (:name, :description)');
+        $this->db->query('INSERT INTO category (name, description, image_path) 
+                         VALUES (:name, :description, :image_path)');
+        
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
-
+        $this->db->bind(':image_path', $data['image_path'] ?? null);
+        
         return $this->db->execute();
     }
 
+    public function uploadCategoryImage($file) {
+        $targetDir = "../public/img/categories/";
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+        
+        // Generate unique filename
+        $fileName = uniqid() . '_' . basename($file['name']);
+        $targetFile = $targetDir . $fileName;
+        
+        // Check file type
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        if (!in_array($imageFileType, $allowedTypes)) {
+            return false;
+        }
+        
+        // Check if it's a valid image
+        $check = getimagesize($file['tmp_name']);
+        if ($check === false) {
+            return false;
+        }
+        
+        // Try to upload file
+        if (move_uploaded_file($file['tmp_name'], $targetFile)) {
+            // Set proper permissions
+            chmod($targetFile, 0644);
+            return $fileName;
+        }
+        
+        return false;
+    }
+
     public function updateCategory($data) {
-        $this->db->query('UPDATE category SET name = :name, description = :description WHERE category_id = :category_id');
+        $sql = 'UPDATE category SET name = :name, description = :description';
+        
+        // Only update image if a new one is provided
+        if (isset($data['image_path'])) {
+            $sql .= ', image_path = :image_path';
+        }
+        
+        $sql .= ' WHERE category_id = :category_id';
+        
+        $this->db->query($sql);
+        
         $this->db->bind(':category_id', $data['category_id']);
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
-
+        
+        if (isset($data['image_path'])) {
+            $this->db->bind(':image_path', $data['image_path']);
+        }
+        
         return $this->db->execute();
     }
 
     public function deleteCategory($id) {
-        $this->db->query('DELETE FROM category WHERE category_id = :category_id');
-        $this->db->bind(':category_id', $id);
+        // Get category image before deleting
+        $this->db->query('SELECT image_path FROM category WHERE category_id = :id');
+        $this->db->bind(':id', $id);
+        $category = $this->db->single();
 
+        // Delete image file if exists
+        if ($category && $category->image_path) {
+            $imagePath = "../public/img/categories/" . $category->image_path;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        // Delete the category
+        $this->db->query('DELETE FROM category WHERE category_id = :id');
+        $this->db->bind(':id', $id);
+        
         return $this->db->execute();
     }
 
     public function getCategoryById($id) {
         $this->db->query('SELECT * FROM category WHERE category_id = :category_id');
         $this->db->bind(':category_id', $id);
+        return $this->db->single();
+    }
 
+    public function getCategoryByName($name) {
+        $this->db->query('SELECT * FROM category WHERE name = :name');
+        $this->db->bind(':name', $name);
         return $this->db->single();
     }
 
