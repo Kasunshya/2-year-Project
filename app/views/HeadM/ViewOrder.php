@@ -18,7 +18,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-clipboard-list"></i>&nbsp VIEW ORDERS</h1>
+                <h1><i class="fas fa-clipboard-list"></i>&nbsp View Orders</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>

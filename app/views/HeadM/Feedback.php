@@ -49,7 +49,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-comments"></i>&nbsp FEEDBACK VIEW</h1>
+                <h1><i class="fas fa-comments"></i>&nbsp Feedback View</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>
