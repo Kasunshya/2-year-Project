@@ -7,6 +7,15 @@
   --hover-bg: rgba(120, 59, 49, 0.05);
 }
 
+/* Add global font family */
+* {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: #f8e5f4;
+}
+
 .sidebar {
   position: fixed;
   left: 0;
@@ -70,7 +79,7 @@
   align-items: center;
   padding: 14px 22px;
   text-decoration: none;
-  color: var(--secondary);
+  color: #5d2e46;
   position: relative;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -129,7 +138,7 @@
   bottom: 20px;
   width: 40px;
   height: 40px;
-  background-color: var(--primary-color);
+  background-color:#5d2e46;
   color: var(--white);
   border-radius: 50%;
   display: flex;
@@ -202,7 +211,7 @@
 }
 
 header {
-  background-color: var(--primary-color);
+  background-color: #5d2e46;
   padding: 2rem;
   color: var(--white);
   font-size: 2.5rem;
@@ -225,6 +234,7 @@ header {
 .title-section h1 {
   margin: 0;
   font-size: 2.5rem;
+  font-weight: normal;
 }
 
 .main-content {
@@ -253,9 +263,12 @@ header {
 
 .product-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* Changed from collapse to separate to allow border-radius */
+  border-spacing: 0; /* Keep cells tight together */
   background-color: white;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 10px; /* Add rounded corners to the entire table */
+  overflow: hidden; /* This ensures the inner elements don't overflow the rounded corners */
 }
 
 .product-table th, .product-table td {
@@ -265,8 +278,26 @@ header {
 }
 
 .product-table th {
-  background-color:#c98d83;
+  background-color:#a26b98;
   color: white;
+}
+
+/* Make top-left and top-right corners rounded */
+.product-table th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.product-table th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Make bottom-left and bottom-right corners rounded */
+.product-table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.product-table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
 }
 
 .product-table tr:nth-child(even) {
@@ -539,30 +570,30 @@ font-size: 18px;
 }
 /* Add Button Styling */
 .add-btn {
-  background-color: #783b31;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
+  background-color: #a26b98; /* Changed from #783b31 to #a26b98 */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* Hover Effect */
 .add-btn:hover {
-  background-color: #c98d83; /* Slightly darker green */
+  background-color: #b587ae; /* Lighter shade of #a26b98 */
   transform: scale(1.05); /* Zoom effect */
 }
 
 /* Active (Pressed) Effect */
 .add-btn:active {
-  background-color:#783b31; /* Darkest green */
+  background-color: #875582; /* Darker shade of #a26b98 */
   transform: scale(0.95); /* Shrink effect */
 }
 
 /* Focus Effect */
 .add-btn:focus {
   outline: none; /* Remove default focus outline */
-  box-shadow: 0 0 8px #c98d83; /* Add a glowing border */
+  box-shadow: 0 0 8px #a26b98; /* Changed to match new color */
 }
 .quantity-selector {
   display: flex;

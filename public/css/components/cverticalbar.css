@@ -70,7 +70,7 @@
   align-items: center;
   padding: 14px 22px;
   text-decoration: none;
-  color: var(--secondary);
+  color: #5d2e46;  /* Updated color for icons */
   position: relative;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -125,23 +125,24 @@
 }
 
 .sidebar .toggle-btn {
-  position: absolute;
-  bottom: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: var(--primary-color);
-  color: var(--white);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  margin-bottom: 25px;
+    position: absolute;
+    bottom: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #5d2e46;  /* Updated color */
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Added background transition */
+    margin-bottom: 25px;
 }
 
 .sidebar .toggle-btn:hover {
-  transform: rotate(180deg);
+    transform: rotate(180deg);
+    background-color: #734358; /* Slightly lighter shade for hover effect */
 }
 
 /* Tooltip Styles */

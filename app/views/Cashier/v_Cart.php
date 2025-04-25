@@ -131,12 +131,18 @@
             return;
         }
         
-        const subtotal = parseFloat(document.getElementById('subtotal-amount').textContent);
+        const subtotal = parseFloat(document.getElementById('subtotal-amount').textContent.replace(/,/g, ''));
         const discountAmount = (subtotal * discountPercent / 100);
         const newTotal = subtotal - discountAmount;
         
-        document.getElementById('discount-amount').textContent = discountAmount.toFixed(2);
-        document.getElementById('total-amount').textContent = newTotal.toFixed(2);
+        document.getElementById('discount-amount').textContent = discountAmount.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        document.getElementById('total-amount').textContent = newTotal.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
         
         // Store discount in session
         fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/applyDiscount`, {

@@ -1,7 +1,7 @@
 :root {
   --primary-color: #c98d83;
   --secondary: #783b31;
-  --bg: #f2f1ec;
+  --bg: #f8e5f4; /* Updated background color */
   --white: #ffffff;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -16,12 +16,18 @@ body, html {
   /*background-color: var(--bg);*/
 }
 
+body {
+  background-color: #f8e5f4;
+}
+* {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 .container {
   display: flex;
   height: 100vh;
   
 }header {
-  background-color: var(--primary-color);
+  background-color:#5d2e46;
   padding: 2rem;
   text-align: left;
   color: var(--white);
@@ -133,10 +139,14 @@ h2 {
 
 .transaction-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* Changed from collapse to separate */
+  border-spacing: 0; /* Ensure no spacing between cells */
   margin-bottom: 20px;
   table-layout: fixed;
   border-radius: 10px;
+  overflow: hidden; /* Ensures content doesn't overflow rounded corners */
+  box-shadow: 0 0 10px rgba(0,0,0,0.05); /* Optional: adds slight shadow for depth */
+  background-color: white; /* Adding white background to the entire table */
 }
 
 .transaction-table th, .transaction-table td {
@@ -145,18 +155,48 @@ h2 {
   text-align: left;
 }
 
+/* Style first row top corners */
+.transaction-table thead tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.transaction-table thead tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Style last row bottom corners */
+.transaction-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.transaction-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
 .transaction-table th {
-  background: var(--primary-color);
+  background: #a26b98; /* Updated to Medium berry color */
   color: var(--white);
 }
 
+.transaction-table tr {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: white; /* Setting each row to white background */
+}
+
 .transaction-table tr:hover {
+  background-color: #f9f5fb; /* Light purple/berry shade on hover */
   color: var(--bg-color);
   transform: scale(1.02); /* Slightly enlarges the row */
 }
 /* Table Rows Styling */
 .transaction-table tr {
   transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.transaction-table tr:hover {
+  background-color: #f9f5fb; /* Light purple/berry shade on hover */
+  color: var(--bg-color);
+  transform: scale(1.02); /* Slightly enlarges the row */
 }
 /* Summary Box */
 .summary-box {
@@ -174,18 +214,18 @@ h2 {
 }
 
 .summary-box h3 {
-  color: #783b31;
+  color:#5d2e46;
   margin-bottom: 20px;
 }
 
 .summary-box p {
   margin-bottom: 10px;
-  color: #333;
+  color:#5d2e46;
 }
 
 .invoice-btn {
   display: block;
-  background: var(--primary-color);
+  background: #5d2e46; /* Changed to deep plum color */
   color: var(--white);
   padding: 1rem 2rem;
   border: none;
@@ -194,11 +234,12 @@ h2 {
   cursor: pointer;
   text-align: center;
   width: fit-content;
-  
+  transition: background-color 0.3s ease;
 }
 
 .invoice-btn:hover {
-  background: var(--secondary);}
+  background: #4a2539; /* Slightly darker shade for hover state */
+}
 
 .invoice-image img {
   width: 100%;

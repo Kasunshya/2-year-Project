@@ -274,7 +274,7 @@
         
         /* Print button */
         .invoice-btn {
-            background-color: #783b31;
+            background-color:#5d2e46;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -286,7 +286,7 @@
         }
         
         .invoice-btn:hover {
-            background-color: #62302a;
+            background-color:;
         }
         
         /* Additional styles to mimic a professional PDF */
@@ -321,19 +321,7 @@
     <header><i class="fas fa-chart-bar">&nbsp</i> Daily Transactions</header>
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Debug info - remove in production -->
-        <?php if(isset($_SESSION['employee_id'])): ?>
-            <p class="debug-info">Logged in as employee ID: <?php echo $_SESSION['employee_id']; ?></p>
-        <?php else: ?>
-            <!-- Display a more user-friendly message and provide a fallback ID -->
-            <?php
-                // Set default employee_id for cashier if not set
-                if (!isset($_SESSION['employee_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'cashier') {
-                    $_SESSION['employee_id'] = 1; // Fallback ID
-                }
-            ?>
-            <p class="debug-info">Using system default cashier ID</p>
-        <?php endif; ?>
+        
         
         <table class="transaction-table">
             <thead>
