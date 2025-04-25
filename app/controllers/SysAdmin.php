@@ -1,5 +1,5 @@
 <?php
-require_once APPROOT . '/helpers/Session_Helper.php';
+require_once APPROOT . '/helpers/session_helper.php';
 
 class SysAdmin extends Controller {
     private $sysAdminModel;
