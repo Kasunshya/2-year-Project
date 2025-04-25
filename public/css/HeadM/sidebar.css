@@ -1,10 +1,25 @@
 :root {
-    --primary-color: #c98d83;
-    --secondary: #783b31;
-    --bg: #f2f1ec;
+    /* Primary Colors */
+    --primary-color: #a26b98; /* Medium berry */
+    --secondary: #5d2e46; /* Deep plum */
+    --bg: #f9f5f0; /* Cream */
     --white: #ffffff;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --hover-bg: rgba(120, 59, 49, 0.05);
+    --hover-bg: rgba(93, 46, 70, 0.05); /* Semi-transparent plum */
+    
+    /* Additional Colors from Bakery Design System */
+    --primary-dark: #5d2e46;      /* Deep plum */
+    --primary-main: #a26b98;      /* Medium berry */
+    --primary-light: #e8d7e5;     /* Light lavender */
+    --accent-gold: #f1c778;       /* Soft gold */
+    --accent-cream: #f9f5f0;      /* Cream */
+    --accent-cinnamon: #b06f42;   /* Amber brown */
+    
+    /* Neutral Colors */
+    --neutral-white: #ffffff;
+    --neutral-light: #f8f7f4;
+    --neutral-medium: #f2f1ec;
+    --neutral-gray: #e0e0e0;
 }
 
 .sidebar {
@@ -13,12 +28,12 @@
     top: 0;
     height: 100vh;
     width: 80px;
-    background-color: var(--white);
+    background-color: var(--primary-dark); /* Changed to plum to match Employee Management */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow-md);
     transition: width 0.3s ease-in-out;
     overflow: hidden;
     z-index: 10000;
@@ -70,7 +85,7 @@
     align-items: center;
     padding: 10px 22px;
     text-decoration: none;
-    color: var(--secondary);
+    color: var(--neutral-white); /* Changed to white for better contrast */
     position: relative;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -80,7 +95,7 @@
     margin-right: 15px;
     min-width: 30px;
     text-align: center;
-    opacity: 0.7;
+    opacity: 0.9;
     transition: opacity 0.3s;
 }
 
@@ -99,12 +114,12 @@
 }
 
 .sidebar nav ul li a:hover {
-    background-color: var(--hover-bg);
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter hover for dark background */
 }
 
 .sidebar nav ul li a.active {
-    background-color: var(--hover-bg);
-    color: var(--secondary);
+    background-color: var(--primary-main); /* Active item uses medium berry */
+    color: var(--neutral-white);
 }
 
 .sidebar nav ul li a::after {
@@ -115,7 +130,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 0;
-    background-color: var(--primary-color);
+    background-color: var(--accent-gold); /* Changed to gold accent for visibility */
     transition: height 0.3s ease;
 }
 
@@ -129,8 +144,8 @@
     bottom: 20px;
     width: 40px;
     height: 40px;
-    background-color: var(--primary-color);
-    color: var(--white);
+    background-color: var(--primary-main);
+    color: var(--neutral-white);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -142,6 +157,7 @@
 
 .sidebar .toggle-btn:hover {
     transform: rotate(180deg);
+    background-color: var(--accent-gold); /* Gold on hover for better interaction */
 }
 
 /* Tooltip Styles */
@@ -150,8 +166,8 @@
     left: 100%;
     top: 50%;
     transform: translateY(-50%);
-    background-color: var(--secondary);
-    color: var(--white);
+    background-color: var(--primary-main);
+    color: var(--neutral-white);
     padding: 5px 10px;
     border-radius: 5px;
     white-space: nowrap;
