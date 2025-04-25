@@ -58,8 +58,13 @@
                                             <td><?php echo htmlspecialchars($enquiry->phone_number); ?></td>
                                             <td><?php echo htmlspecialchars($enquiry->description); ?></td>
                                             <td>
-                                                <button class="btn reply" onclick="replyToEnquiry('<?php echo htmlspecialchars($enquiry->email); ?>', '<?php echo htmlspecialchars($enquiry->enquiry_id); ?>')">
-                                                    <i class="fas fa-reply"></i> Reply
+                                                <button class="btn btn-primary btn-sm" 
+                                                        onclick="showReplyModal(
+                                                            '<?php echo $enquiry->enquiry_id; ?>', 
+                                                            '<?php echo htmlspecialchars($enquiry->first_name . ' ' . $enquiry->last_name); ?>', 
+                                                            '<?php echo htmlspecialchars($enquiry->email); ?>'
+                                                        )">
+                                                    Reply
                                                 </button>
                                             </td>
                                         </tr>
@@ -77,10 +82,43 @@
         </main>
     </div>
 
-    <script>
-    function replyToEnquiry(email, enquiryId) {
-        window.location.href = `mailto:${email}?subject=Re: Enquiry #${enquiryId}`;
-    }
-    </script>
+    <!-- Add this modal HTML at the bottom of your PreOrder view -->
+    <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="replyModalLabel">Reply to Enquiry</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="replyForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="enquiry_id" name="enquiry_id">
+                        <div class="form-group">
+                            <label>Customer: <span id="customer_name"></span></label>
+                            <br>
+                            <label>Email: <span id="customer_email"></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="reply_message">Your Reply:</label>
+                            <textarea class="form-control" id="reply_message" name="reply_message" rows="5" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add jQuery and Bootstrap JS if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Your custom JavaScript file -->
+    <script src="<?php echo URLROOT; ?>/public/assets/js/headm/preorder.js"></script>
 </body>
 </html>

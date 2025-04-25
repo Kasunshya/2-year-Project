@@ -44,14 +44,30 @@ class M_Customer {
         return $this->db->resultSet();
     }
 
-    public function getProductsByCategory($categoryId) {
-        $this->db->query("SELECT p.*, c.name as category_name 
-                         FROM product p 
-                         LEFT JOIN category c ON p.category_id = c.category_id 
-                         WHERE p.category_id = :category_id 
-                         ORDER BY p.product_id DESC");
-        $this->db->bind(':category_id', $categoryId);
-        return $this->db->resultSet();
+    public function getProductsByCategory($categoryIdentifier) {
+        try {
+            // Check if the identifier is numeric (ID) or string (name)
+            $isId = is_numeric($categoryIdentifier);
+            
+            $this->db->query("SELECT p.*, c.name as category_name 
+                             FROM product p 
+                             LEFT JOIN category c ON p.category_id = c.category_id 
+                             WHERE " . ($isId ? "p.category_id = :identifier" : "c.name = :identifier") . "
+                             AND p.is_active = 1 
+                             AND p.available_quantity > 0 
+                             AND (p.expiry_date IS NULL OR p.expiry_date > NOW()) 
+                             ORDER BY p.created_at DESC");
+                             
+            $this->db->bind(':identifier', $categoryIdentifier);
+            $results = $this->db->resultSet();
+            
+            error_log("Found " . count($results) . " products for category " . 
+                     ($isId ? "ID: " : "name: ") . $categoryIdentifier);
+            return $results;
+        } catch (Exception $e) {
+            error_log("Error in getProductsByCategory: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getFilteredProducts($category = null, $minPrice = null, $maxPrice = null) {
@@ -881,6 +897,38 @@ class M_Customer {
             error_log("Error saving feedback: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function checkFeedbackTable() {
+        // Direct query to check what's in the feedback table
+        $this->db->query('SELECT * FROM feedback WHERE is_posted = 1');
+        $result = $this->db->resultSet();
+        
+        echo '<h4>Feedback with is_posted=1:</h4>';
+        echo '<pre>';
+        print_r($result);
+        echo '</pre>';
+        
+        // Check if is_posted column exists
+        $this->db->query('SHOW COLUMNS FROM feedback LIKE "is_posted"');
+        $column = $this->db->single();
+        
+        echo '<h4>is_posted column check:</h4>';
+        echo '<pre>';
+        print_r($column);
+        echo '</pre>';
+    }
+
+    public function getPostedFeedbacks() {
+        $this->db->query("SELECT f.*, 
+             CONCAT(c.customer_name, '') as customer_name 
+             FROM feedback f 
+             JOIN customer c ON f.customer_id = c.customer_id 
+             WHERE f.is_posted = 1 
+             ORDER BY f.created_at DESC 
+             LIMIT 6");
+        
+        return $this->db->resultSet();
     }
 
     public function beginTransaction() {

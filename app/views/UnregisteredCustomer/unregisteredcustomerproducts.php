@@ -125,11 +125,13 @@
             max-width: 1200px;
             margin: 20px auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(4, 1fr); /* Changed from auto-fit to 4 columns */
             gap: 20px;
+            padding: 0 20px;
         }
 
         .product-card {
+            min-width: 250px; /* Added minimum width */
             background: var(--white);
             border-radius: 8px;
             box-shadow: var(--box-shadow);
@@ -160,10 +162,10 @@
         }
 
         .product-card .product-info .price {
-            font-size: 16px;
-            color: var(--secondary-color);
+            color: var(--primary-color);
             font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.2rem;
+            margin: 10px 0;
         }
 
         .product-card .product-info .stars {
@@ -189,6 +191,147 @@
         .product-card .product-info .add-to-cart-btn:hover {
             background: var(--secondary-color);
         }
+
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .product-card .description {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 10px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .out-of-stock-btn {
+            padding: 10px 20px;
+            background: #ccc;
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .modal .btn {
+            display: inline-block;
+            padding: 10px 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 2rem;  /* Reduced from 0.8rem 3rem */
+            font-size: 1.2rem;     /* Reduced from 1.7rem */
+            border-radius: 0.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            letter-spacing: 1px;
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-info h3 {
+            font-size: 18px;
+            color: var(--black);
+            margin-bottom: 10px;
+        }
+
+        .product-info .price {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        /* Add media queries for responsiveness */
+        @media (max-width: 1200px) {
+            .products-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .products-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -197,148 +340,150 @@
         <a href="#" class="logo">FROSTINE</a>
         <ul>
             <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage">Home</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage#about">About</a></li>
             <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerproducts" class="active">Products</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#order">Pre Order</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage#gallery">Gallery</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage#review">Reviews</a></li>
+            <li><a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerhomepage#order">Enquiry</a></li>
         </ul>
-        <div class="icons">
-            <i class="fas fa-shopping-cart" onclick="navigateTo('<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomercart')"></i>
-        </div>
     </div>
 
     <!-- Filter Bar -->
     <div class="filter-bar">
         <select name="category" id="category">
             <option value="">All Categories</option>
-            <option value="cakes">Cakes</option>
-            <option value="breads">Breads</option>
-            <option value="pancakes">Pancakes</option>
-            <option value="waffles">Waffles</option>
+            <?php foreach ($data['categories'] as $category): ?>
+                <option value="<?php echo htmlspecialchars($category->name); ?>"
+                        <?php echo (isset($_GET['category']) && $_GET['category'] === $category->name) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($category->name); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
-        <input type="number" name="min-price" id="min-price" placeholder="Min Price" min="0">
-        <input type="number" name="max-price" id="max-price" placeholder="Max Price" min="0">
+        <input type="number" name="min-price" id="min-price" 
+               placeholder="Min Price" min="0" 
+               value="<?php echo isset($_GET['min_price']) ? htmlspecialchars($_GET['min_price']) : ''; ?>">
+               
+        <input type="number" name="max-price" id="max-price" 
+               placeholder="Max Price" min="0"
+               value="<?php echo isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : ''; ?>">
 
         <button onclick="filterProducts()">Filter</button>
     </div>
 
     <!-- Products Section -->
     <div class="products-container">
-        <!-- Example Product -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-1.jpg" alt="Product 1">
-            <div class="product-info">
-                <h3>Strawberry Pancake</h3>
-                <p class="price">LKR 1,250.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+        <?php if (!empty($data['products'])): ?>
+            <?php foreach ($data['products'] as $product): ?>
+                <div class="product-card">
+                    <div class="image">
+                        <?php if (!empty($product->image_path)): ?>
+                            <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo htmlspecialchars($product->image_path); ?>" 
+                                 alt="<?php echo htmlspecialchars($product->product_name); ?>"
+                                 onerror="this.src='<?php echo URLROOT; ?>/public/img/default-product.jpg'">
+                        <?php else: ?>
+                            <img src="<?php echo URLROOT; ?>/public/img/default-product.jpg" 
+                                 alt="Default product image">
+                        <?php endif; ?>
+                    </div>
+                    <div class="product-info">
+                        <h3><?php echo htmlspecialchars($product->product_name); ?></h3>
+                        <p class="price">LKR <?php echo number_format($product->price, 2); ?></p>
+                        <button class="btn" onclick="showLoginPrompt()">Add to Cart</button>
+                    </div>
                 </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="no-products">
+                <p>No products available at the moment.</p>
             </div>
-        </div>
-        <!-- Product 2 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-2.jpg" alt="Product 2">
-            <div class="product-info">
-                <h3>Blueberry Pancake</h3>
-                <p class="price">LKR 1,450.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
+        <?php endif; ?>
+    </div>
 
-        <!-- Product 3 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-3.jpg" alt="Product 3">
-            <div class="product-info">
-                <h3>Butter & Honey Bread</h3>
-                <p class="price">LKR 1,950.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
+    <!-- Add this right after your notification div -->
+    <div id="loginPromptModal" class="modal">
+        <div class="modal-content">
+            <h2>Register to Add Products</h2>
+            <p>Please register or login to add products to your cart.</p>
+            <div class="modal-buttons">
+                <a href="<?php echo URLROOT ?>/Register/signup" class="btn">Sign Up</a>
+                <a href="<?php echo URLROOT ?>/Login/indexx" class="btn">Login</a>
             </div>
+            <span class="close-modal">&times;</span>
         </div>
     </div>
 
-    
-    
-    <div class="products-container">
-        <!-- Product 4 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-4.jpg" alt="Rose Pink Cake">
-            <div class="product-info">
-                <h3>Rose Pink Cake</h3>
-                <p class="price">LKR 9,550.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
+    <!-- Add this before </body> tag -->
+    <div id="loginPromptModal" class="modal">
+        <div class="modal-content">
+            <h2>Register to Add Products</h2>
+            <p>Please register or login to add products to your cart.</p>
+            <div class="modal-buttons">
+                <a href="<?php echo URLROOT ?>/Register/signup" class="btn">Sign Up</a>
+                <a href="<?php echo URLROOT ?>/Login/indexx" class="btn">Login</a>
             </div>
-        </div>
-
-        <!-- Product 5-->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-5.jpg" alt="Honey Waffles">
-            <div class="product-info">
-                <h3>Honey Waffles</h3>
-                <p class="price">LKR 1,200.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 6 -->
-        <div class="product-card">
-            <img src="../public/img/Customer/product-6.jpg" alt="Honey Pancake">
-            <div class="product-info">
-                <h3>Honey Pancake</h3>
-                <p class="price">LKR 1,050.00</p>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <button class="add-to-cart-btn">Add to Cart</button>
-            </div>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
         </div>
     </div>
-    
 
     <script>
         function filterProducts() {
-            alert('Filter functionality will be implemented here.');
+            const category = document.getElementById('category').value;
+            const minPrice = document.getElementById('min-price').value;
+            const maxPrice = document.getElementById('max-price').value;
+            
+            // Redirect with filter parameters
+            let url = '<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomerproducts';
+            let params = [];
+            
+            if (category) params.push(`category=${category}`);
+            if (minPrice) params.push(`min_price=${minPrice}`);
+            if (maxPrice) params.push(`max_price=${maxPrice}`);
+            
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+            
+            window.location.href = url;
         }
+
+        function addToCart(productId) {
+            // Implement cart functionality here
+            alert('Product will be added to cart. Product ID: ' + productId);
+        }
+
         function navigateTo(url) {
             window.location.href = url;
+        }
+
+        function showLoginPrompt() {
+            const modal = document.getElementById('loginPromptModal');
+            modal.style.display = "block";
+
+            // Close modal when clicking the X
+            document.querySelector('.close-modal').onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        // Add this to your existing script section
+        function closeModal() {
+            document.getElementById('loginPromptModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginPromptModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 </body>

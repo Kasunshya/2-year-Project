@@ -1,5 +1,11 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Fix the path to point to the vendor directory at the project root
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 class HeadM extends Controller
 {
     private $cashierModel;
@@ -468,6 +474,241 @@ class HeadM extends Controller
 
     $this->view('HeadM/Branch', $data);
 }
+
+    public function sendEnquiryReply() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get the form data
+            $enquiry_id = $_POST['enquiry_id'];
+            $reply_message = $_POST['reply_message'];
+            
+            // Get enquiry details from database
+            $enquiry = $this->headManagerModel->getEnquiryById($enquiry_id);
+            
+            if (!$enquiry) {
+                echo json_encode(['status' => 'error', 'message' => 'Enquiry not found']);
+                return;
+            }
+            
+            // Create a new PHPMailer instance
+            $mail = new PHPMailer(true);
+            
+            try {
+                // Server settings - using the same config as password reset
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = '2022is042@stu.ucsc.cmb.ac.lk'; 
+                $mail->Password = 'wgcj mhtk gbwc eviv'; 
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
+                
+                // Recipients
+                $mail->setFrom('2022is042@stu.ucsc.cmb.ac.lk', 'Frostine Bakery');
+                $mail->addAddress($enquiry->email_address); 
+                
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Response to Your Bakery Enquiry';
+                $mail->Body = "
+                    <html>
+                    <head>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; }
+                            .container { max-width: 600px; margin: 0 auto; }
+                            .header { background-color: #f5f5f5; padding: 15px; text-align: center; }
+                            .content { padding: 20px; }
+                            .footer { font-size: 12px; text-align: center; margin-top: 30px; color: #777; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='header'>
+                                <h2>Frostine Bakery</h2>
+                            </div>
+                            <div class='content'>
+                                <p>Dear {$enquiry->first_name},</p>
+                                <p>Thank you for your enquiry (#$enquiry_id). Below is our response:</p>
+                                <p>" . nl2br(htmlspecialchars($reply_message)) . "</p>
+                                <p>If you have any further questions, please don't hesitate to contact us.</p>
+                            </div>
+                            <div class='footer'>
+                                <p>Best regards,<br>Frostine Bakery Management Team</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                ";
+                
+                $mail->AltBody = "Dear {$enquiry->first_name},\n\nThank you for your enquiry (#$enquiry_id). Below is our response:\n\n$reply_message\n\nBest regards,\nFrostine Bakery Management Team";
+                
+                $mail->send();
+                echo json_encode(['status' => 'success', 'message' => 'Reply sent successfully']);
+                
+            } catch (Exception $e) {
+                echo json_encode(['status' => 'error', 'message' => 'Email could not be sent. Error: ' . $mail->ErrorInfo]);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+        }
+    }
+
+    public function updateCustomizationStatus() {
+        // Check if it's an AJAX request
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get JSON data from request body
+            $data = json_decode(file_get_contents('php://input'));
+            
+            if (isset($data->customization_id) && isset($data->status)) {
+                // Get the customization info (to get customer email)
+                $customization = $this->headManagerModel->getCustomizationById($data->customization_id);
+                
+                if (!$customization) {
+                    echo json_encode(['success' => false, 'message' => 'Customization order not found']);
+                    return;
+                }
+                
+                // Update status in database
+                $result = $this->headManagerModel->updateCustomizationStatus($data->customization_id, $data->status);
+                
+                if ($result) {
+                    // Send email based on status
+                    $emailSent = $this->sendCustomizationStatusEmail($customization, $data->status);
+                    
+                    if ($emailSent) {
+                        echo json_encode(['success' => true, 'message' => 'Status updated and email sent successfully']);
+                    } else {
+                        echo json_encode(['success' => true, 'message' => 'Status updated but email could not be sent']);
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Invalid data received']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        }
+    }
+
+    private function sendCustomizationStatusEmail($customization, $status) {
+        // Create a new PHPMailer instance
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Server settings - using the same config as in the sendEnquiryReply method
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = '2022is042@stu.ucsc.cmb.ac.lk'; 
+            $mail->Password = 'wgcj mhtk gbwc eviv'; 
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            
+            // Recipients
+            $mail->setFrom('2022is042@stu.ucsc.cmb.ac.lk', 'Frostine Bakery');
+            $mail->addAddress($customization->customer_email); 
+            
+            // Content
+            $mail->isHTML(true);
+            
+            if ($status == 'approved') {
+                $mail->Subject = 'Your Customization Order has been Approved';
+                $mail->Body = "
+                    <html>
+                    <head>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; }
+                            .container { max-width: 600px; margin: 0 auto; }
+                            .header { background-color: #f5f5f5; padding: 15px; text-align: center; }
+                            .content { padding: 20px; }
+                            .footer { font-size: 12px; text-align: center; margin-top: 30px; color: #777; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='header'>
+                                <h2>Frostine Bakery</h2>
+                            </div>
+                            <div class='content'>
+                                <p>Dear {$customization->customer_name},</p>
+                                <p>We are pleased to inform you that your customization order has been approved.</p>
+                                <p>Please contact us for more details regarding payment and delivery.</p>
+                                <p>Thank you for choosing Frostine Bakery!</p>
+                            </div>
+                            <div class='footer'>
+                                <p>Best regards,<br>Frostine Bakery Management Team</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                ";
+                $mail->AltBody = "Dear {$customization->customer_name},\n\nWe are pleased to inform you that your customization order has been approved. Please contact us for more details regarding payment and delivery.\n\nThank you for choosing Frostine Bakery!\n\nBest regards,\nFrostine Bakery Management Team";
+            } else {
+                $mail->Subject = 'Your Customization Order Status Update';
+                $mail->Body = "
+                    <html>
+                    <head>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; }
+                            .container { max-width: 600px; margin: 0 auto; }
+                            .header { background-color: #f5f5f5; padding: 15px; text-align: center; }
+                            .content { padding: 20px; }
+                            .footer { font-size: 12px; text-align: center; margin-top: 30px; color: #777; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='header'>
+                                <h2>Frostine Bakery</h2>
+                            </div>
+                            <div class='content'>
+                                <p>Dear {$customization->customer_name},</p>
+                                <p>We regret to inform you that your customization order cannot be processed at this time.</p>
+                                <p>We apologize for any inconvenience this may cause.</p>
+                                <p>Please feel free to contact us if you would like to discuss alternatives.</p>
+                            </div>
+                            <div class='footer'>
+                                <p>Best regards,<br>Frostine Bakery Management Team</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                ";
+                $mail->AltBody = "Dear {$customization->customer_name},\n\nWe regret to inform you that your customization order cannot be processed at this time. We apologize for any inconvenience this may cause.\n\nPlease feel free to contact us if you would like to discuss alternatives.\n\nBest regards,\nFrostine Bakery Management Team";
+            }
+            
+            $mail->send();
+            return true;
+            
+        } catch (Exception $e) {
+            // Log the error
+            error_log('Email could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+    public function postFeedback() {
+        // Check if it's an AJAX request with POST method
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get JSON data from request body
+            $data = json_decode(file_get_contents('php://input'));
+            
+            if (isset($data->feedback_id)) {
+                // Call model method to update feedback status
+                $result = $this->headManagerModel->postFeedbackToHomepage($data->feedback_id);
+                
+                if ($result) {
+                    echo json_encode(['success' => true, 'message' => 'Feedback posted successfully']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to post feedback']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Invalid data received']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        }
+    }
 
 }
 
