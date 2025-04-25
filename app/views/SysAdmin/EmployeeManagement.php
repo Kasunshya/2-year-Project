@@ -7,7 +7,224 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/SysAdmin/EmployeeManagement.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f1ec ;
+        }
+
+        /* Header Styling */
+.header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    margin-left: 150px;
+    margin-top:10px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    font-size: 1.8rem;
+}
+
+.header-left i {
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.header-role {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: var(--white);
+    text-align: right;
+}
+
+        /* Main content styles */
+        .content {
+            margin-left: 150px; /* Matches sidebar width */
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #c98d83;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background-color: #783b31;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #c98d83;
+            color: white;
+        }
+
+        table td {
+            background-color: #ffff;
+
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 40%; /* Adjust width as needed */
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            color: #783b31;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #783b31;
+        }
+
+        .modal-content .close:hover {
+            color: #c98d83;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons .btn.submit {
+            background-color: #c98d83;
+            color: white;
+        }
+
+        .buttons .btn.submit:hover {
+            background-color: #783b31;
+        }
+
+        .buttons .btn.reset {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .buttons .btn.reset:hover {
+            background-color: #d32f2f;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-bar input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #c98d83;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #783b31;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #783b31;
+            text-align: left; /* Align labels to the left */
+        }
+
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -26,33 +243,10 @@
 
     
         <div class="content">
-            <!-- Updated Professional Search Bar -->
-<div class="search-bar">
-    <form id="searchForm" method="GET" action="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="search-form">
-        <div class="search-field">
-            <input type="text" name="search" id="searchInput" placeholder="Search by name or email" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-        </div>
-        
-        <div class="search-field">
-            <select name="branch" id="branchFilter">
-                <option value="">All Branches</option>
-                <?php foreach ($data['branches'] as $branch): ?>
-                    <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch']) && $_GET['branch'] == $branch->branch_id) ? 'selected' : ''; ?>>
-                        <?php echo $branch->branch_name; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        
-        <button type="submit" class="search-btn">
-            <i class="fas fa-search"></i> Search
-        </button>
-        
-        <a href="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="filter-btn">
-            Reset
-        </a>
-    </form>
-</div>
+            <div class="search-bar">
+                <input type="text" id="searchEmployeeInput" placeholder="Search Employee by ID">
+                <button onclick="searchEmployee()">Search</button>
+            </div>
             <button class="btn" onclick="openAddModal()">+ Add Employee</button>
             <table>
                 <thead>
@@ -78,7 +272,7 @@
                         <td><?php echo $employee->address; ?></td>
                         <td><?php echo $employee->contact_no; ?></td>
                         <td><?php echo $employee->email; ?></td>
-                        <td><?php echo $employee->branch_name;?></td>
+                        <td><?php echo $employee->branch; ?></td>
                         <td><?php echo $employee->user_role; ?></td>
                         <td>
     <?php if (!empty($employee->cv_upload)): ?>
