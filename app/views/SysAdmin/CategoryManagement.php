@@ -4,236 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f1ec ;
+        /* Page-specific styles only */
+        .table-container {
+            margin: var(--space-lg) 0;
         }
-
-        .header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 10px;
-            margin-left: 150px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
+        
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
-
-        .content {
-            margin-left: 150px;
-            padding: 20px;
-            width: calc(100% - 250px);
+        
+        .category-image img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
         }
-
-        .btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
+        
+        .category-image img:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        
+        /* File upload container */
+        .file-input-container {
+            background-color: var(--neutral-light);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--neutral-gray);
         }
-
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
+        
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            display: none;
+            margin-top: var(--space-md);
+            box-shadow: var(--shadow-md);
         }
-
-        table th {
-            background-color: #c98d83;
-            color: white;
-        }
-
-        table td {
-            background-color: #ffff;
-
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal {
+        
+        /* Enhanced alert overlay */
+        .alert-overlay {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            width: 40%;
-            position: relative;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal-content label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .modal-content .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .search-bar input {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .search-bar button:hover {
-            background-color: #783b31;
-        }
-
-        /* Add these to your existing styles */
-        .category-image img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 1rem;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .alert-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
             z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-
+        
         .alert-box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
+            background-color: var(--neutral-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            max-width: 450px;
             width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: alertFadeIn 0.3s ease;
         }
-
-        .alert-buttons {
-            margin-top: 20px;
+        
+        .alert-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: var(--space-md);
+        }
+        
+        .alert-actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
-
-        .alert-buttons button {
-            padding: 8px 20px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .confirm-delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .cancel-delete {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        /* Add this to your existing <style> section */
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 5px;
-            margin-bottom: 10px;
+        
+        .error-message {
+            color: var(--error-dark);
+            background-color: var(--error-light);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-sm);
             display: none;
         }
-
-        .is-invalid {
-            border-color: #dc3545 !important;
+        
+        #currentImageText {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-dark);
+            margin-top: var(--space-xs);
         }
-
-        .is-invalid + .invalid-feedback {
-            display: block;
+        
+        @keyframes alertFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -243,224 +134,306 @@
 
     <header class="header">
         <div class="header-left">
-            <i class="fas fa-tags"></i>
+            <i class="fas fa-th-list"></i>
             <span>Category Management</span>
         </div>
         <div class="header-role">
+            <div class="header-role-avatar">
+                <i class="fas fa-user"></i>
+            </div>
             <span>System Administrator</span>
         </div>
     </header>
 
     <div class="content">
+        <?php flash('category_message'); ?>
+        
         <div class="search-bar">
-            <input type="text" id="searchCategoryInput" placeholder="Search Category by Name">
-            <button onclick="searchCategory()">Search</button>
+            <form onsubmit="searchCategory(); return false;">
+                <input type="text" 
+                       class="form-control"
+                       id="searchCategoryInput" 
+                       placeholder="Search by category name..." 
+                       value="">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
         </div>
-        <button class="btn" onclick="openAddCategoryModal()">+ Add Category</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="categoryTable">
-    <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
-        <?php foreach ($data['categories'] as $category) : ?>
-            <tr id="category-<?php echo $category->category_id; ?>">
-                <td class="category-image">
-                    <?php if (!empty($category->image_path)): ?>
-                        <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
-                             alt="<?php echo htmlspecialchars($category->name); ?>"
-                             onerror="this.src='<?php echo URLROOT; ?>/public/img/default-category.jpg'">
-                    <?php else: ?>
-                        <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
-                             alt="Default category image">
+        
+        <button class="btn" onclick="openAddCategoryModal()">
+            <i class="fas fa-plus"></i> Add Category
+        </button>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTable">
+                    <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
+                        <?php foreach($data['categories'] as $category) : ?>
+                            <tr id="category-<?php echo $category->category_id; ?>">
+                                <td class="category-image">
+                                    <?php if (!empty($category->image_path)): ?>
+                                        <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
+                                             alt="<?php echo htmlspecialchars($category->name); ?>"
+                                             onerror="this.src='<?php echo URLROOT; ?>/public/img/default-category.jpg'">
+                                    <?php else: ?>
+                                        <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
+                                             alt="Default category image">
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="category-badge">
+                                        <?php echo htmlspecialchars($category->name); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo htmlspecialchars($category->description); ?></td>
+                                <td class="actions">
+                                    <button class="btn btn-sm" onclick="openEditCategoryModal(
+                                        <?php echo $category->category_id; ?>, 
+                                        '<?php echo htmlspecialchars(addslashes($category->name)); ?>', 
+                                        '<?php echo htmlspecialchars(addslashes($category->description)); ?>',
+                                        '<?php echo htmlspecialchars($category->image_path ?? ''); ?>'
+                                    )">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteCategory(<?php echo $category->category_id; ?>)">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No categories found</td>
+                        </tr>
                     <?php endif; ?>
-                </td>
-                <td><?php echo htmlspecialchars($category->name); ?></td>
-                <td><?php echo htmlspecialchars($category->description); ?></td>
-                <td class="actions">
-                    <button class="btn" onclick="openEditCategoryModal(<?php echo $category->category_id; ?>)">Edit</button>
-                    <button class="btn delete-btn" onclick="deleteCategory(<?php echo $category->category_id; ?>)">Delete</button>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    <?php else : ?>
-        <tr>
-            <td colspan="4" style="text-align: center;">No categories found</td>
-        </tr>
-    <?php endif; ?>
-    </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Category Modal (used for both Add and Edit) -->
     <div class="modal" id="categoryModal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('categoryModal')">&times;</span>
-            <h2 id="categoryModalTitle">Add Category</h2>
-            <form id="categoryForm" action="<?php echo URLROOT; ?>/sysadminp/addCategory" method="POST" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Add New Category</h3>
+                <button type="button" class="close" onclick="closeModal('categoryModal')">&times;</button>
+            </div>
+            
+            <form id="categoryForm" action="<?php echo URLROOT; ?>/SysAdminP/addCategory" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="category_id" name="category_id" value="0">
+                
                 <div class="form-group">
-                    <label for="name">Category Name: <sup>*</sup></label>
-                    <input type="text" 
-                           id="category_name"
-                           name="name" 
-                           class="form-control <?php echo (isset($data['name_err']) && !empty($data['name_err'])) ? 'is-invalid' : ''; ?>" 
-                           value="<?php echo isset($data['name']) ? htmlspecialchars($data['name']) : ''; ?>">
-                    <span class="invalid-feedback"><?php echo isset($data['name_err']) ? htmlspecialchars($data['name_err']) : ''; ?></span>
+                    <label class="form-label" for="name">Category Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div id="nameError" class="error-message"></div>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="description">Description:</label>
-                    <input type="text" 
-                           id="category_description"
-                           name="description" 
-                           class="form-control <?php echo (isset($data['description_err']) && !empty($data['description_err'])) ? 'is-invalid' : ''; ?>"
-                           value="<?php echo isset($data['description']) ? htmlspecialchars($data['description']) : ''; ?>">
-                    <span class="invalid-feedback"><?php echo isset($data['description_err']) ? htmlspecialchars($data['description_err']) : ''; ?></span>
+                    <label class="form-label" for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                 </div>
-
-                <div class="form-group">
-                    <label for="category_image">Category Image:</label>
-                    <input type="file" 
-                           name="category_image" 
-                           class="form-control" 
-                           accept="image/*">
-                    <span class="invalid-feedback"><?php echo isset($data['image_err']) ? htmlspecialchars($data['image_err']) : ''; ?></span>
+                
+                <div class="file-input-container">
+                    <label class="form-label" for="category_image">Category Image:</label>
+                    <input type="file" class="form-control" id="category_image" name="category_image" accept="image/*" onchange="previewImage(this, 'imagePreview')">
+                    <p class="form-text">Recommended size: 400x400px, Max: 2MB</p>
+                    <img id="imagePreview" class="image-preview">
+                    <p id="currentImageText"></p>
                 </div>
-
-                <input type="submit" class="btn btn-success" value="Add Category" id="submitButton">
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('categoryModal')">Cancel</button>
+                    <button type="submit" id="submitBtn" class="btn">
+                        <i class="fas fa-save"></i> <span id="submitBtnText">Add Category</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
-</div>
-</div>
 
-<div class="alert-overlay" id="deleteAlert">
-    <div class="alert-box">
-        <h3>Delete Category</h3>
-        <p>Are you sure you want to delete this category?</p>
-        <div class="alert-buttons">
-            <button class="cancel-delete" onclick="closeDeleteAlert()">Cancel</button>
-            <button class="confirm-delete" id="confirmDelete">Delete</button>
+    <!-- Delete Confirmation Alert -->
+    <div class="alert-overlay" id="deleteAlert">
+        <div class="alert-box">
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this category? This action cannot be undone.</p>
+            <div class="alert-actions">
+                <button class="btn btn-outline" onclick="closeDeleteAlert()">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    let editingCategoryId = null;
+    <script>
+        let editingCategoryId = null;
+        let currentImagePath = '';
 
-    function openAddCategoryModal() {
-        document.getElementById('categoryModalTitle').textContent = "Add Category";
-        document.getElementById('submitButton').value = "Add Category";  // Add this line
-        document.getElementById('categoryForm').reset();
-        document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/addCategory";
-        const hiddenInput = document.getElementById('category_id_input');
-        if (hiddenInput) {
-            hiddenInput.remove();
-        }
-        document.getElementById('categoryModal').style.display = 'flex';
-    }
-
-    function openEditCategoryModal(categoryId) {
-        let row = document.getElementById(`category-${categoryId}`);
-        let cells = row.getElementsByTagName("td");
-
-        document.getElementById('categoryModalTitle').textContent = "Update Category";
-        document.getElementById('submitButton').value = "Update Category";  // Add this line
-        document.getElementById('categoryForm').action = "<?php echo URLROOT; ?>/SysAdminP/updateCategory";
-        
-        // Add hidden input for category_id
-        if (!document.getElementById('category_id_input')) {
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.id = 'category_id_input';
-            hiddenInput.name = 'category_id';
-            hiddenInput.value = categoryId;
-            document.getElementById('categoryForm').appendChild(hiddenInput);
-        } else {
-            document.getElementById('category_id_input').value = categoryId;
+        function openAddCategoryModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Category';
+            document.getElementById('submitBtnText').textContent = 'Add Category';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> Add Category';
+            
+            document.getElementById('categoryForm').action = '<?php echo URLROOT; ?>/SysAdminP/addCategory';
+            document.getElementById('category_id').value = '0';
+            document.getElementById('name').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('nameError').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('currentImageText').textContent = '';
+            document.getElementById('category_image').value = '';
+            
+            currentImagePath = '';
+            document.getElementById('categoryModal').style.display = 'flex';
         }
 
-        // Populate modal fields with existing values
-        // Note: cells[0] is image, cells[1] is name, cells[2] is description
-        document.getElementById("category_name").value = cells[1].textContent.trim();
-        document.getElementById("category_description").value = cells[2].textContent.trim();
-
-        document.getElementById('categoryModal').style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    function searchCategory() {
-        const input = document.getElementById('searchCategoryInput').value.toLowerCase();
-        const table = document.getElementById('categoryTable');
-        const rows = table.getElementsByTagName('tr');
-
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName('td');
-            if (cells.length > 0) {
-                const categoryName = cells[1].textContent.toLowerCase(); // Changed index to 1 for name column
-                const categoryDesc = cells[2].textContent.toLowerCase(); // Also search in description
-                const shouldShow = categoryName.includes(input) || categoryDesc.includes(input);
-                rows[i].style.display = shouldShow ? '' : 'none';
-            }
-        }
-    }
-
-    function deleteCategory(categoryId) {
-        const deleteAlert = document.getElementById('deleteAlert');
-        const confirmBtn = document.getElementById('confirmDelete');
-        
-        deleteAlert.style.display = 'flex';
-        
-        confirmBtn.onclick = function() {
-            window.location.href = `<?php echo URLROOT; ?>/SysAdminP/deleteCategory/${categoryId}`;
-        }
-    }
-
-    function closeDeleteAlert() {
-        document.getElementById('deleteAlert').style.display = 'none';
-    }
-
-    // Add this function to your existing <script> section
-    function showError(message) {
-        const nameInput = document.getElementById('category_name');
-        const errorSpan = nameInput.nextElementSibling;
-        
-        nameInput.classList.add('is-invalid');
-        errorSpan.textContent = message;
-        errorSpan.style.display = 'block';
-    }
-
-    // Update the form submission to use AJAX
-    document.getElementById('categoryForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(html => {
-            if (html.includes('Category name already exists')) {
-                showError('Category name already exists');
+        function openEditCategoryModal(categoryId, name, description, imagePath) {
+            document.getElementById('modalTitle').textContent = 'Edit Category';
+            document.getElementById('submitBtnText').textContent = 'Update Category';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Category';
+            
+            document.getElementById('categoryForm').action = '<?php echo URLROOT; ?>/SysAdminP/updateCategory';
+            document.getElementById('category_id').value = categoryId;
+            document.getElementById('name').value = name;
+            document.getElementById('description').value = description;
+            document.getElementById('nameError').style.display = 'none';
+            document.getElementById('category_image').value = '';
+            
+            // Handle image preview
+            const imagePreview = document.getElementById('imagePreview');
+            if (imagePath) {
+                imagePreview.src = '<?php echo URLROOT; ?>/public/img/categories/' + imagePath;
+                imagePreview.style.display = 'block';
+                document.getElementById('currentImageText').textContent = 'Current image: ' + imagePath;
             } else {
-                window.location.href = '<?php echo URLROOT; ?>/sysadminp/categoryManagement';
+                imagePreview.style.display = 'none';
+                document.getElementById('currentImageText').textContent = 'No image currently uploaded';
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-</script>
+            
+            currentImagePath = imagePath;
+            editingCategoryId = categoryId;
+            document.getElementById('categoryModal').style.display = 'flex';
+        }
 
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            editingCategoryId = null;
+        }
+
+        function searchCategory() {
+            const input = document.getElementById('searchCategoryInput').value.toLowerCase();
+            const table = document.getElementById('categoryTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const nameCell = rows[i].getElementsByTagName('td')[1]; // Name is in second column
+                if (nameCell) {
+                    const name = nameCell.textContent.toLowerCase();
+                    rows[i].style.display = name.includes(input) ? '' : 'none';
+                }
+            }
+        }
+
+        function deleteCategory(categoryId) {
+            document.getElementById('deleteAlert').style.display = 'flex';
+            document.getElementById('confirmDeleteBtn').onclick = function() {
+                window.location.href = '<?php echo URLROOT; ?>/SysAdminP/deleteCategory/' + categoryId;
+            }
+        }
+
+        function closeDeleteAlert() {
+            document.getElementById('deleteAlert').style.display = 'none';
+        }
+
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('currentImageText').textContent = 'New image selected';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add this function to display error messages
+        function showError(message) {
+            const errorElement = document.getElementById('nameError');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // Update the form submission to use AJAX for validation
+        document.getElementById('categoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('name');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                showError('Category name is required');
+                return;
+            }
+            
+            // Clear any previous errors
+            document.getElementById('nameError').style.display = 'none';
+            
+            // Check if name already exists (except for editing category)
+            const existingCategories = <?php echo json_encode(array_column($data['categories'] ?? [], 'name')); ?>;
+            const isDuplicate = existingCategories.some(category => 
+                category.toLowerCase() === name.toLowerCase() && 
+                (!editingCategoryId || !document.querySelector(`tr#category-${editingCategoryId} .category-badge`)?.textContent?.trim().toLowerCase() === name.toLowerCase())
+            );
+            
+            if (isDuplicate) {
+                showError('Category name already exists');
+                return;
+            }
+            
+            // Submit the form if validation passes
+            this.submit();
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('categoryModal');
+            const deleteAlert = document.getElementById('deleteAlert');
+            
+            if (event.target == modal) {
+                closeModal('categoryModal');
+            }
+            
+            if (event.target == deleteAlert) {
+                closeDeleteAlert();
+            }
+        }
+
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.classList.add('fade-out');
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 </html>

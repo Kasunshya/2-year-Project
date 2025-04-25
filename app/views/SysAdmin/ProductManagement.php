@@ -4,414 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
     <style>
-        body {
-            display: flex;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f1ec ;
-        }
-
-        .header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 10px;
-            margin-left: 150px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .content {
-            margin-left: 150px;
-            padding: 20px;
-            width: calc(100% - 180px); /* Increased from 250px to give more space */
-            overflow-x: auto; /* Adds horizontal scroll if needed */
-        }
-
-        .btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
+        /* Page-specific styles only */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
             min-width: 1200px;
-            border-spacing: 0; /* Remove any spacing between cells */
         }
-
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-            height: 100px; /* Set a fixed height for all cells */
-            box-sizing: border-box; /* Include padding in height calculation */
-        }
-
-        table th {
-            background-color: #c98d83;
-            color: white;
-        }
-
-        table td {
-            background-color: #ffff;
-            vertical-align: middle; /* Vertically center content */
-            padding: 12px;
-            height: 100px; /* Set fixed height */
-        }
-
+        
         /* Adjust specific column widths */
-        table th:nth-child(1), /* Image column */
+        table th:nth-child(1),
         table td:nth-child(1) {
             width: 120px;
         }
 
-        table th:nth-child(2), /* Name column */
+        table th:nth-child(2),
         table td:nth-child(2) {
             width: 20%;
         }
 
-        table th:nth-child(3), /* Price column */
+        table th:nth-child(3),
         table td:nth-child(3) {
             width: 12%;
         }
 
-        table th:nth-child(4), /* Quantity column */
+        table th:nth-child(4),
         table td:nth-child(4) {
             width: 10%;
         }
 
-        table th:nth-child(5), /* Expiry Date column */
+        table th:nth-child(5),
         table td:nth-child(5) {
             width: 12%;
         }
 
-        table th:nth-child(6), /* Category column */
+        table th:nth-child(6),
         table td:nth-child(6) {
             width: 15%;
         }
 
-        table th:nth-child(7), /* Actions column */
+        table th:nth-child(7),
         table td:nth-child(7) {
             width: 15%;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center; /* Center the buttons */
-            align-items: center; /* Center buttons vertically */
-            height: 100%; /* Full height */
-        }
-
-        .actions .btn {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            margin: 0; /* Remove any margins */
-            min-width: 70px;
-        }
-
-        /* Specific style for the actions column */
-        table td:last-child {
-            padding: 12px;
-            width: auto; /* Let it adjust to content */
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 700px; /* Increased width */
-            max-height: 85vh; /* Slightly taller */
-            position: relative;
-            overflow-y: auto;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .modal-content form {
-            padding-right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .modal-content h2 {
-            color: #783b31;
-            margin-bottom: 25px;
-            font-size: 24px;
-            border-bottom: 2px solid #c98d83;
-            padding-bottom: 10px;
-        }
-
-        .modal-content label {
-            color: #555;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .modal-content input,
-        .modal-content select,
-        .modal-content textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            margin-bottom: 0;
-            box-sizing: border-box;
-        }
-
-        .modal-content input:focus,
-        .modal-content select:focus,
-        .modal-content textarea:focus {
-            border-color: #c98d83;
-            box-shadow: 0 0 0 2px rgba(201, 141, 131, 0.2);
-            outline: none;
-        }
-
-        .file-input-container {
-            background: #f8f8f8;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .file-input-container label {
-            margin-bottom: 10px;
-        }
-
-        .modal-content .btn {
-            background-color: #c98d83;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-            align-self: flex-end;
-        }
-
-        .modal-content .btn:hover {
-            background-color: #783b31;
-        }
-
-        .modal-content::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .modal-content::-webkit-scrollbar-track {
-            background: #f5f5f5;
-            border-radius: 6px;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb {
-            background: #c98d83;
-            border-radius: 6px;
-            border: 2px solid #f5f5f5;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            background: #783b31;
-        }
-
-        .modal-content .close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            color: #783b31;
-            cursor: pointer;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .modal-content .close:hover {
-            color: #c98d83;
-            background-color: rgba(120, 59, 49, 0.1);
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .search-bar form {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        .search-bar input {
-            width: 85%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 12%;
-        }
-
-        .search-bar button:hover {
-            background-color: #783b31;
         }
 
         .product-image {
             width: 100px;
             height: 100px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
         }
 
         .product-image-preview {
             width: 200px;
             height: 200px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             margin: 10px 0;
-            border: 2px solid #ddd;
+            border: 1px solid var(--neutral-gray);
+            box-shadow: var(--shadow-md);
+            transition: transform var(--transition-fast);
+        }
+        
+        .product-image-preview:hover {
+            transform: scale(1.02);
         }
 
         .file-input-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .file-input-container input[type="file"] {
-            padding-top: 5px;
+            background-color: var(--neutral-light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--neutral-gray);
         }
 
         #currentImageText {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
+            font-size: var(--font-size-sm);
+            color: var(--neutral-dark);
+            margin-top: var(--space-xs);
+        }
+        
+        /* Enhanced modal - adds to base design system */
+        .modal-content {
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: slideIn 0.5s ease-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--neutral-light);
+            border-radius: var(--radius-md);
         }
 
-        .alert-success {
-            background-color: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            color: #2e7d32;
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary-main);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--neutral-light);
         }
 
-        .alert-error {
-            background-color: #fdecea;
-            border-left: 4px solid #f44336;
-            color: #c62828;
-        }
-
-        .alert-info {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            color: #1565c0;
-        }
-
-        .alert i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .alert .close-btn {
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            padding: 0 5px;
-            font-size: 20px;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .alert .close-btn:hover {
-            opacity: 1;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeOut {
-            from {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-        }
-
-        .alert.fade-out {
-            animation: fadeOut 0.5s ease-out forwards;
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
         }
     </style>
 </head>
@@ -425,6 +130,9 @@
             <span>Product Management</span>
         </div>
         <div class="header-role">
+            <div class="header-role-avatar">
+                <i class="fas fa-user"></i>
+            </div>
             <span>System Administrator</span>
         </div>
     </header>
@@ -449,110 +157,133 @@
         <div class="search-bar">
             <form action="<?php echo URLROOT; ?>/SysAdminP/searchProduct" method="GET">
                 <input type="text" 
+                       class="form-control"
                        name="search" 
                        placeholder="Search by product name..." 
                        value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
-                <button type="submit">
-                    Search
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
                 </button>
             </form>
         </div>
         
-        <button class="btn" onclick="openAddModal()">+ Add Product</button>
+        <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add Product
+        </button>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Expiry Date</th>
-                    <th>Category</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="productTable">
-                <?php if(isset($data['products']) && is_array($data['products'])) : ?>
-                    <?php foreach($data['products'] as $product) : ?>
-                        <tr id="product-<?php echo $product->product_id; ?>">
-                            <td>
-                                <?php if(!empty($product->image_path)): ?>
-                                    <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $product->image_path; ?>" 
-                                        alt="<?php echo htmlspecialchars($product->product_name); ?>" class="product-image">
-                                <?php else: ?>
-                                    <img src="<?php echo URLROOT; ?>/public/img/no-image.png" alt="No Image" class="product-image">
-                                <?php endif; ?>
-                            </td>
-                            <td><?php echo htmlspecialchars($product->product_name); ?></td>
-                            <td>LKR <?php echo number_format($product->price, 2); ?></td>
-                            <td><?php echo $product->available_quantity; ?></td>
-                            <td><?php echo $product->expiry_date ? date('Y-m-d', strtotime($product->expiry_date)) : 'Not set'; ?></td>
-                            <td><?php echo htmlspecialchars($product->category_name); ?></td>
-                            <td class="actions">
-                                <button class="btn" onclick="openEditModal(<?php echo $product->product_id; ?>, 
-                                    '<?php echo htmlspecialchars(addslashes($product->product_name)); ?>', 
-                                    '<?php echo htmlspecialchars(addslashes($product->description)); ?>', 
-                                    <?php echo $product->price; ?>, 
-                                    <?php echo $product->available_quantity; ?>, 
-                                    <?php echo $product->category_id; ?>,
-                                    '<?php echo $product->image_path; ?>',
-                                    '<?php echo $product->expiry_date; ?>')">
-                                    Edit
-                                </button>
-                                <button class="btn delete-btn" onclick="confirmDelete(<?php echo $product->product_id; ?>)">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td colspan="7" style="text-align: center;">No products found</td>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Expiry Date</th>
+                        <th>Category</th>
+                        <th>Actions</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="productTable">
+                    <?php if(isset($data['products']) && is_array($data['products'])) : ?>
+                        <?php foreach($data['products'] as $product) : ?>
+                            <tr id="product-<?php echo $product->product_id; ?>">
+                                <td>
+                                    <?php if(!empty($product->image_path)): ?>
+                                        <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $product->image_path; ?>" 
+                                            alt="<?php echo htmlspecialchars($product->product_name); ?>" class="product-image">
+                                    <?php else: ?>
+                                        <img src="<?php echo URLROOT; ?>/public/img/no-image.png" alt="No Image" class="product-image">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                                <td>LKR <?php echo number_format($product->price, 2); ?></td>
+                                <td><?php echo $product->available_quantity; ?></td>
+                                <td><?php echo $product->expiry_date ? date('Y-m-d', strtotime($product->expiry_date)) : 'Not set'; ?></td>
+                                <td><?php echo htmlspecialchars($product->category_name); ?></td>
+                                <td class="actions">
+                                    <button class="btn btn-sm btn-primary" onclick="openEditModal(<?php echo $product->product_id; ?>, 
+                                        '<?php echo htmlspecialchars(addslashes($product->product_name)); ?>', 
+                                        '<?php echo htmlspecialchars(addslashes($product->description)); ?>', 
+                                        <?php echo $product->price; ?>, 
+                                        <?php echo $product->available_quantity; ?>, 
+                                        <?php echo $product->category_id; ?>,
+                                        '<?php echo $product->image_path; ?>',
+                                        '<?php echo $product->expiry_date; ?>')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo $product->product_id; ?>)">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7" style="text-align: center;">No products found</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Add Product Modal -->
     <div class="modal" id="addProductModal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('addProductModal')">&times;</span>
-            <h2>Add Product</h2>
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Product</h3>
+                <button type="button" class="close" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            
             <form id="addProductForm" action="<?php echo URLROOT; ?>/SysAdminP/addProduct" method="POST" enctype="multipart/form-data" onsubmit="return validateAddProductForm()">
                 <div class="file-input-container">
-                    <label for="product_image">Product Image:</label>
-                    <input type="file" id="add_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
+                    <label class="form-label" for="product_image">Product Image:</label>
+                    <input type="file" class="form-control" id="add_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
                     <img id="addImagePreview" class="product-image-preview" src="" alt="Preview">
                 </div>
                 
-                <label for="product_name">Product Name:</label>
-                <input type="text" id="product_name" name="product_name" required>
+                <div class="form-group">
+                    <label class="form-label" for="product_name">Product Name:</label>
+                    <input type="text" class="form-control" id="product_name" name="product_name" required>
+                </div>
                 
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="3"></textarea>
+                <div class="form-group">
+                    <label class="form-label" for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                </div>
                 
-                <label for="price">Price (LKR):</label>
-                <input type="number" id="price" name="price" step="0.01" min="0" required>
+                <div class="form-group">
+                    <label class="form-label" for="price">Price (LKR):</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                </div>
                 
-                <label for="available_quantity">Available Quantity:</label>
-                <input type="number" id="available_quantity" name="available_quantity" min="0" required>
+                <div class="form-group">
+                    <label class="form-label" for="available_quantity">Available Quantity:</label>
+                    <input type="number" class="form-control" id="available_quantity" name="available_quantity" min="0" required>
+                </div>
                 
-                <label for="category_id">Category:</label>
-                <select id="category_id" name="category_id" required>
-                    <option value="">Select Category</option>
-                    <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
-                        <?php foreach($data['categories'] as $category) : ?>
-                            <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+                <div class="form-group">
+                    <label class="form-label" for="category_id">Category:</label>
+                    <select class="form-select" id="category_id" name="category_id" required>
+                        <option value="">Select Category</option>
+                        <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
+                            <?php foreach($data['categories'] as $category) : ?>
+                                <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
                 
-                <label for="expiry_date">Expiry Date:</label>
-                <input type="date" id="expiry_date" name="expiry_date">
+                <div class="form-group">
+                    <label class="form-label" for="expiry_date">Expiry Date:</label>
+                    <input type="date" class="form-control" id="expiry_date" name="expiry_date">
+                </div>
                 
-                <button type="submit" class="btn">Add Product</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('addProductModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
             </form>
         </div>
     </div>
@@ -560,44 +291,62 @@
     <!-- Edit Product Modal -->
     <div class="modal" id="editProductModal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('editProductModal')">&times;</span>
-            <h2>Edit Product</h2>
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Product</h3>
+                <button type="button" class="close" onclick="closeModal('editProductModal')">&times;</button>
+            </div>
+            
             <form id="editProductForm" action="<?php echo URLROOT; ?>/SysAdminP/updateProduct" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="edit_product_id" name="product_id">
                 
                 <div class="file-input-container">
-                    <label for="edit_product_image">Product Image:</label>
-                    <input type="file" id="edit_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
+                    <label class="form-label" for="edit_product_image">Product Image:</label>
+                    <input type="file" class="form-control" id="edit_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
                     <img id="editImagePreview" class="product-image-preview" src="" alt="Preview">
                     <p id="currentImageText">Current image: <span id="currentImageName"></span></p>
                 </div>
                 
-                <label for="edit_product_name">Product Name:</label>
-                <input type="text" id="edit_product_name" name="product_name" required>
+                <div class="form-group">
+                    <label class="form-label" for="edit_product_name">Product Name:</label>
+                    <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
+                </div>
                 
-                <label for="edit_description">Description:</label>
-                <textarea id="edit_description" name="description" rows="3"></textarea>
+                <div class="form-group">
+                    <label class="form-label" for="edit_description">Description:</label>
+                    <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                </div>
                 
-                <label for="edit_price">Price (LKR):</label>
-                <input type="number" id="edit_price" name="price" step="0.01" min="0" required>
+                <div class="form-group">
+                    <label class="form-label" for="edit_price">Price (LKR):</label>
+                    <input type="number" class="form-control" id="edit_price" name="price" step="0.01" min="0" required>
+                </div>
                 
-                <label for="edit_available_quantity">Available Quantity:</label>
-                <input type="number" id="edit_available_quantity" name="available_quantity" min="0" required>
+                <div class="form-group">
+                    <label class="form-label" for="edit_available_quantity">Available Quantity:</label>
+                    <input type="number" class="form-control" id="edit_available_quantity" name="available_quantity" min="0" required>
+                </div>
                 
-                <label for="edit_category_id">Category:</label>
-                <select id="edit_category_id" name="category_id" required>
-                    <option value="">Select Category</option>
-                    <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
-                        <?php foreach($data['categories'] as $category) : ?>
-                            <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+                <div class="form-group">
+                    <label class="form-label" for="edit_category_id">Category:</label>
+                    <select class="form-select" id="edit_category_id" name="category_id" required>
+                        <option value="">Select Category</option>
+                        <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
+                            <?php foreach($data['categories'] as $category) : ?>
+                                <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
                 
-                <label for="edit_expiry_date">Expiry Date:</label>
-                <input type="date" id="edit_expiry_date" name="expiry_date">
+                <div class="form-group">
+                    <label class="form-label" for="edit_expiry_date">Expiry Date:</label>
+                    <input type="date" class="form-control" id="edit_expiry_date" name="expiry_date">
+                </div>
                 
-                <button type="submit" class="btn">Update Product</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editProductModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </div>
             </form>
         </div>
     </div>
@@ -703,14 +452,6 @@
     function closeAlert(alertElement) {
         alertElement.classList.add('fade-out');
         setTimeout(() => alertElement.remove(), 500);
-    }
-
-    // Add this to your existing script section
-    function closeAlert(alert) {
-        alert.classList.add('fade-out');
-        setTimeout(() => {
-            alert.remove();
-        }, 500);
     }
 
     // Auto-hide alerts after 5 seconds

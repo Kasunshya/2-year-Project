@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'bakery');
+define('DB_NAME', 'bakery_app');
 
 //approot
 define('APPROOT',dirname(dirname(__FILE__)));

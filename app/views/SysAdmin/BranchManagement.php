@@ -4,184 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Branch Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
     <style>
-        body {
-     
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f1ec ;
-            
+        /* Page-specific styles only */
+        .table-container {
+            margin: var(--space-lg) 0;
         }
-
-        .header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 10px;
-            margin-left: 150px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .content {
-            margin-left: 150px;
-            padding: 20px;
-            width: calc(100% - 250px);
-            
-        }
-
-        .btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            
-        }
-
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #c98d83;
-            color: white;
-        }
-
-        table td {
-            background-color: #ffff;
-
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            width: 40%;
-            position: relative;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal-content label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .modal-content .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .search-bar input {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #c98d83;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .search-bar button:hover {
-            background-color: #783b31;
-        } 
-
-        /* Alert/Message Styling */
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: slideIn 0.5s ease-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .alert-success {
-            background-color: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            color: #2e7d32;
-        }
-
-        .alert-error {
-            background-color: #fdecea;
-            border-left: 4px solid #f44336;
-            color: #c62828;
-        }
-
+        
         /* Status Toggle Switch */
         .status-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 30px;
+            width: 50px;
+            height: 24px;
+            margin-left: var(--space-md);
         }
 
         .status-switch input {
@@ -197,7 +43,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: var(--neutral-gray);
             transition: .4s;
             border-radius: 34px;
         }
@@ -205,8 +51,8 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 22px;
-            width: 22px;
+            height: 16px;
+            width: 16px;
             left: 4px;
             bottom: 4px;
             background-color: white;
@@ -215,37 +61,39 @@
         }
 
         input:checked + .slider {
-            background-color: #4CAF50;
+            background-color: var(--success-main);
         }
 
         input:checked + .slider:before {
-            transform: translateX(30px);
+            transform: translateX(26px);
         }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
         }
-
-        @keyframes fadeOut {
-            from {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
+        
+        .status-text {
+            font-size: 0.9rem;
+            font-weight: 500;
         }
-
-        .alert.fade-out {
-            animation: fadeOut 0.5s ease-out forwards;
+        
+        .status-text.active {
+            color: var(--success-dark);
+        }
+        
+        .status-text.inactive {
+            color: var(--error-dark);
+        }
+        
+        .error-message {
+            color: var(--error-dark);
+            background-color: var(--error-light);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-sm);
+            display: none;
         }
     </style>
 </head>
@@ -259,6 +107,9 @@
             <span>Branch Management</span>
         </div>
         <div class="header-role">
+            <div class="header-role-avatar">
+                <i class="fas fa-user"></i>
+            </div>
             <span>System Administrator</span>
         </div>
     </header>
@@ -267,108 +118,189 @@
         <?php flash('branch_message'); ?>
         
         <div class="search-bar">
-            <input type="text" id="searchBranchInput" placeholder="Search Branch by name...">
-            <button onclick="searchBranch()">Search</button>
+            <form onsubmit="searchBranch(); return false;">
+                <input type="text" 
+                       class="form-control"
+                       id="searchBranchInput" 
+                       placeholder="Search by branch name..." 
+                       value="">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
         </div>
         
-        <button class="btn" onclick="openAddModal()">+ Add Branch</button>
+        <button class="btn" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add Branch
+        </button>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>Branch Name</th>
-                    <th>Address</th>
-                    <th>Contact No</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="branchTable">
-                <?php if(isset($data['branches'])) : ?>
-                    <?php foreach($data['branches'] as $branch) : ?>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch Name</th>
+                        <th>Address</th>
+                        <th>Contact No</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="branchTable">
+                    <?php if(isset($data['branches']) && !empty($data['branches'])) : ?>
+                        <?php foreach($data['branches'] as $branch) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($branch->branch_name); ?></td>
+                                <td><?php echo htmlspecialchars($branch->branch_address); ?></td>
+                                <td><?php echo htmlspecialchars($branch->branch_contact); ?></td>
+                                <td>
+                                    <div class="status-container">
+                                        <span class="status-text <?php echo $branch->status === 'active' ? 'active' : 'inactive'; ?>">
+                                            <?php echo ucfirst($branch->status); ?>
+                                        </span>
+                                        <label class="status-switch">
+                                            <input type="checkbox" 
+                                                onchange="updateBranchStatus(<?php echo $branch->branch_id; ?>, this.checked)"
+                                                <?php echo ($branch->status === 'active') ? 'checked' : ''; ?>>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="actions">
+                                    <button class="btn btn-sm" onclick="openEditModal(<?php echo $branch->branch_id; ?>, 
+                                        '<?php echo htmlspecialchars(addslashes($branch->branch_name)); ?>', 
+                                        '<?php echo htmlspecialchars(addslashes($branch->branch_address)); ?>', 
+                                        '<?php echo htmlspecialchars($branch->branch_contact); ?>')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($branch->branch_name); ?></td>
-                            <td><?php echo htmlspecialchars($branch->branch_address); ?></td>
-                            <td><?php echo htmlspecialchars($branch->branch_contact); ?></td>
-                            <td>
-                                <label class="status-switch">
-                                    <input type="checkbox" 
-                                           onchange="updateBranchStatus(<?php echo $branch->branch_id; ?>, this.checked)"
-                                           <?php echo ($branch->status === 'active') ? 'checked' : ''; ?>>
-                                    <span class="slider"></span>
-                                </label>
-                            </td>
-                            <td class="actions">
-                                <button class="btn" onclick="openEditModal(<?php echo $branch->branch_id; ?>, 
-                                    '<?php echo htmlspecialchars(addslashes($branch->branch_name)); ?>', 
-                                    '<?php echo htmlspecialchars(addslashes($branch->branch_address)); ?>', 
-                                    '<?php echo htmlspecialchars($branch->branch_contact); ?>')">Edit</button>
-                            </td>
+                            <td colspan="5" style="text-align: center;">No branches found</td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
-        <div class="modal" id="addBranchModal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('addBranchModal')">&times;</span>
-                <h2>Add Branch</h2>
-                <form id="addBranchForm" action="<?php echo URLROOT; ?>/SysAdminP/addBranch" method="POST" onsubmit="return validateForm('addBranchForm')">
-                    <label for="add_branch_name">Branch Name:</label>
-                    <input type="text" id="add_branch_name" name="branch_name" required>
-                    <label for="add_branch_address">Address:</label>
-                    <input type="text" id="add_branch_address" name="branch_address" required>
-                    <label for="add_branch_contact">Contact No:</label>
-                    <input type="text" id="add_branch_contact" name="branch_contact" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
-                    <button type="submit" class="btn">Add Branch</button>
-                </form>
-            </div>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-        <div class="modal" id="editBranchModal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('editBranchModal')">&times;</span>
-                <h2>Edit Branch</h2>
-                <form id="editBranchForm" action="<?php echo URLROOT; ?>/SysAdminP/updateBranch" method="POST" onsubmit="return validateForm('editBranchForm')">
-                    <input type="hidden" name="branch_id" id="edit_branch_id">
-                    <label for="edit_branch_name">Branch Name:</label>
-                    <input type="text" id="edit_branch_name" name="branch_name" required>
-                    <label for="edit_branch_address">Address:</label>
-                    <input type="text" id="edit_branch_address" name="branch_address" required>
-                    <label for="edit_branch_contact">Contact No:</label>
-                    <input type="text" id="edit_branch_contact" name="branch_contact" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
-                    <button type="submit" class="btn">Update Branch</button>
-                </form>
+    <!-- Add Branch Modal -->
+    <div class="modal" id="addBranchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Add New Branch
+                </h3>
+                <button type="button" class="close" onclick="closeModal('addBranchModal')">&times;</button>
             </div>
+            
+            <form id="addBranchForm" action="<?php echo URLROOT; ?>/SysAdminP/addBranch" method="POST" onsubmit="return validateForm('addBranchForm')">
+                <div class="form-group">
+                    <label class="form-label" for="add_branch_name">Branch Name:</label>
+                    <input type="text" class="form-control" id="add_branch_name" name="branch_name" required placeholder="Enter branch name">
+                    <div id="add_name_error" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="add_branch_address">Address:</label>
+                    <input type="text" class="form-control" id="add_branch_address" name="branch_address" required placeholder="Enter branch address">
+                    <div id="add_address_error" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="add_branch_contact">Contact No:</label>
+                    <input type="text" class="form-control" id="add_branch_contact" name="branch_contact" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" placeholder="10-digit phone number">
+                    <div id="add_contact_error" class="error-message"></div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('addBranchModal')">Cancel</button>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-plus"></i> Add Branch
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Branch Modal -->
+    <div class="modal" id="editBranchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-edit"></i>
+                    Edit Branch
+                </h3>
+                <button type="button" class="close" onclick="closeModal('editBranchModal')">&times;</button>
+            </div>
+            
+            <form id="editBranchForm" action="<?php echo URLROOT; ?>/SysAdminP/updateBranch" method="POST" onsubmit="return validateForm('editBranchForm')">
+                <input type="hidden" name="branch_id" id="edit_branch_id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit_branch_name">Branch Name:</label>
+                    <input type="text" class="form-control" id="edit_branch_name" name="branch_name" required>
+                    <div id="edit_name_error" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit_branch_address">Address:</label>
+                    <input type="text" class="form-control" id="edit_branch_address" name="branch_address" required>
+                    <div id="edit_address_error" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit_branch_contact">Contact No:</label>
+                    <input type="text" class="form-control" id="edit_branch_contact" name="branch_contact" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                    <div id="edit_contact_error" class="error-message"></div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editBranchModal')">Cancel</button>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Update Branch
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         function openAddModal() {
             document.getElementById('addBranchModal').style.display = 'flex';
+            
+            // Clear any previous error styling
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.style.borderColor = '';
+            });
         }
 
         function openEditModal(branchId, branchName, branchAddress, branchContact) {
             document.getElementById('edit_branch_id').value = branchId;
             document.getElementById('edit_branch_name').value = branchName;
-            document.getElementById('edit_branch_address').value = branchAddress;  // Changed from edit_address
-            document.getElementById('edit_branch_contact').value = branchContact;  // Changed from edit_contact
+            document.getElementById('edit_branch_address').value = branchAddress;
+            document.getElementById('edit_branch_contact').value = branchContact;
+            
+            // Clear any previous error styling
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.style.borderColor = '';
+            });
+            
             document.getElementById('editBranchModal').style.display = 'flex';
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
-        }
-
-        function confirmDelete(branchId) {
-            if (confirm('Are you sure you want to delete this branch?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `<?php echo URLROOT; ?>/SysAdminP/deleteBranch/${branchId}`;
-                document.body.appendChild(form);
-                form.submit();
-            }
         }
 
         function searchBranch() {
@@ -378,7 +310,7 @@
             const tr = table.getElementsByTagName('tr');
 
             for (let i = 0; i < tr.length; i++) {
-                const td = tr[i].getElementsByTagName('td')[1]; // Branch Name column
+                const td = tr[i].getElementsByTagName('td')[0]; // Branch Name column
                 if (td) {
                     const txtValue = td.textContent || td.innerText;
                     tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
@@ -391,29 +323,47 @@
             const branchName = form.querySelector('[name="branch_name"]').value.trim();
             const branchAddress = form.querySelector('[name="branch_address"]').value.trim();
             const branchContact = form.querySelector('[name="branch_contact"]').value.trim();
+            
+            const prefix = formId === 'addBranchForm' ? 'add_' : 'edit_';
 
             // Clear any previous error styling
-            form.querySelectorAll('input').forEach(input => {
-                input.style.borderColor = '#ddd';
+            form.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            form.querySelectorAll('.form-control').forEach(input => {
+                input.style.borderColor = '';
             });
 
             let isValid = true;
 
             if (branchName === '') {
-                form.querySelector('[name="branch_name"]').style.borderColor = 'red';
-                alert('Please enter a branch name');
+                const input = form.querySelector('[name="branch_name"]');
+                const error = document.getElementById(`${prefix}name_error`);
+                
+                input.style.borderColor = 'var(--error-main)';
+                error.textContent = 'Please enter a branch name';
+                error.style.display = 'block';
                 isValid = false;
             }
 
             if (branchAddress === '') {
-                form.querySelector('[name="branch_address"]').style.borderColor = 'red';
-                alert('Please enter an address');
+                const input = form.querySelector('[name="branch_address"]');
+                const error = document.getElementById(`${prefix}address_error`);
+                
+                input.style.borderColor = 'var(--error-main)';
+                error.textContent = 'Please enter an address';
+                error.style.display = 'block';
                 isValid = false;
             }
 
             if (!branchContact || !/^\d{10}$/.test(branchContact)) {
-                form.querySelector('[name="branch_contact"]').style.borderColor = 'red';
-                alert('Please enter a valid 10-digit contact number');
+                const input = form.querySelector('[name="branch_contact"]');
+                const error = document.getElementById(`${prefix}contact_error`);
+                
+                input.style.borderColor = 'var(--error-main)';
+                error.textContent = 'Please enter a valid 10-digit contact number';
+                error.style.display = 'block';
                 isValid = false;
             }
 
@@ -426,7 +376,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: isActive })
+                body: JSON.stringify({ status: isActive ? 'active' : 'inactive' })
             })
             .then(response => {
                 if (!response.ok) {
@@ -437,6 +387,17 @@
             .then(data => {
                 if (data.success) {
                     showAlert('success', data.message);
+                    
+                    // Update the status text without reloading the page
+                    const row = document.querySelector(`tr:has(input[onchange*="updateBranchStatus(${branchId}"])`);
+                    if (row) {
+                        const statusText = row.querySelector('.status-text');
+                        if (statusText) {
+                            statusText.className = `status-text ${isActive ? 'active' : 'inactive'}`;
+                            statusText.textContent = isActive ? 'Active' : 'Inactive';
+                        }
+                    }
+                    
                 } else {
                     showAlert('error', data.message || 'Failed to update branch status');
                 }
@@ -474,7 +435,7 @@
             }, 500);
         }
 
-        // Add event listeners to handle modal clicks outside
+        // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target.className === 'modal') {
                 event.target.style.display = 'none';
