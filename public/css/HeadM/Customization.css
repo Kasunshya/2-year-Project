@@ -43,7 +43,9 @@ header {
     padding: 10px 20px;
     color: var(--white);
 }
-
+body{
+    background-color:#f8e5f4;
+}
 /* Update main content styles */
 main {
     display: flex;

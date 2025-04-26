@@ -17,9 +17,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-question-circle"></i>&nbsp View Enquiries</h1>
-                <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+                
             </header>
 
             <div class="content">

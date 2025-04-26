@@ -19,9 +19,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-calendar-check"></i>&nbsp Daily Branch Orders</h1>
-                <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+                
             </header>
 
             <div class="content">
