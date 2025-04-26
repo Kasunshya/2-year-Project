@@ -18,13 +18,13 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-user-tie icon-branch-manager"></i> BRANCH MANAGERS</h1>
+                <h1><i class="fas fa-user-tie icon-branch-manager"></i> Branch Managers</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>
             </header>
             <div class="content">
-                
+
 
                 <!-- Add employee Modal -->
                 <div id="employeeModal" class="modal">
@@ -45,19 +45,23 @@
                                 pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
 
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" required pattern="^[A-Za-z0-9\s,.-/]{5,100}$" title="Address should only contain letters, numbers, spaces, and special characters">
+                            <input type="text" id="address" name="address" required pattern="^[A-Za-z0-9\s,.-/]{5,100}$"
+                                title="Address should only contain letters, numbers, spaces, and special characters">
 
 
                             <label for="email">Email:</label>
                             <input type="email" id="email" name="email" required
-                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" title="Please enter a valid email address">
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+                                title="Please enter a valid email address">
 
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" required pattern="[0-9]{10}" title="Contact number should be 10 digits">
+                            <input type="text" id="contact_number" name="contact_number" required pattern="[0-9]{10}"
+                                title="Contact number should be 10 digits">
 
                             <label for="password">Password:</label>
                             <input type="password" id="password" name="password" required
-                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit">
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit">
 
                             <div class="buttons">
                                 <button type="reset" class="btn reset">Reset</button>
@@ -88,9 +92,24 @@
 
                 <div class="employee-list">
                     <div class="search-bar">
-                        <form method="GET" action="">
-                            <input type="text" name="search" placeholder="Search by Name or Branch" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-                            <button type="submit" class="search-btn">🔍</button>
+                        <form method="GET" action="<?php echo URLROOT; ?>/HeadM/branchManager" class="search-form">
+                            <div class="search-field">
+                                <input type="text" name="search" placeholder="Search by Manager Name"
+                                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            </div>
+                            <div class="search-field">
+                                <select name="branch_id">
+                                    <option value="">All Branches</option>
+                                    <?php foreach ($data['branches'] as $branch): ?>
+                                        <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                            <?php echo $branch->branch_name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i> Search
+                            </button>
                         </form>
                     </div>
                     <!-- Edit employee Modal -->
@@ -116,8 +135,8 @@
                                     pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
 
                                 <label for="edit_address">Address:</label>
-                                <input type="text" id="edit_address" name="address" required pattern="^[A-Za-z0-9\s,.-/]{5,100}$"
-                                    title="Please enter a valid address">
+                                <input type="text" id="edit_address" name="address" required
+                                    pattern="^[A-Za-z0-9\s,.-/]{5,100}$" title="Please enter a valid address">
 
                                 <!--label for="edit_email">Email:</label-->
                                 <!--input type="email" id="edit_email" name="email" required-->
@@ -127,8 +146,9 @@
                                     pattern="[0-9]{10}" title="Please enter a valid 10-digit contact number">
 
                                 <label for="edit_password">Password (leave empty to keep current):</label>
-                                <input type="password" id="edit_password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.">
+                                <input type="password" id="edit_password" name="password"
+                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                    title="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.">
 
                                 <div class="buttons">
                                     <button type="reset" class="btn reset">Reset</button>
@@ -164,7 +184,8 @@
                                             <td><?php echo htmlspecialchars($branchManager->employee_email); ?></td>
                                             <td>
                                                 <?php if (!empty($branchManager->cv_upload)): ?>
-                                                    <a href="<?php echo URLROOT; ?>/HeadM/downloadCV/<?php echo $branchManager->employee_id; ?>" class="btn download-cv">
+                                                    <a href="<?php echo URLROOT; ?>/HeadM/downloadCV/<?php echo $branchManager->employee_id; ?>"
+                                                        class="btn download-cv">
                                                         <i class="fas fa-download"></i> Download CV
                                                     </a>
                                                 <?php else: ?>

@@ -16,7 +16,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-question-circle"></i>&nbsp VIEW ENQUIRIES</h1>
+                <h1><i class="fas fa-question-circle"></i>&nbsp View Enquiries</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>
@@ -95,18 +95,17 @@
                 <form id="replyForm">
                     <div class="modal-body">
                         <input type="hidden" id="enquiry_id" name="enquiry_id">
-                        <div class="form-group">
-                            <label>Customer: <span id="customer_name"></span></label>
-                            <br>
-                            <label>Email: <span id="customer_email"></span></label>
+                        <div class="customer-info">
+                            <p><i class="fas fa-user"></i><span id="customer_name"></span></p>
+                            <p><i class="fas fa-envelope"></i><span id="customer_email"></span></p>
                         </div>
                         <div class="form-group">
                             <label for="reply_message">Your Reply:</label>
-                            <textarea class="form-control" id="reply_message" name="reply_message" rows="5" required></textarea>
+                            <textarea class="form-control" id="reply_message" name="reply_message" rows="5" required placeholder="Type your response here..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Send Reply</button>
                     </div>
                 </form>

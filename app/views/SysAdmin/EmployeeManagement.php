@@ -146,7 +146,7 @@
                         <td><?php echo htmlspecialchars($employee->address); ?></td>
                         <td><?php echo htmlspecialchars($employee->contact_no); ?></td>
                         <td><?php echo htmlspecialchars($employee->email); ?></td>
-                        <td><?php echo htmlspecialchars($employee->branch); ?></td>
+                        <td><?php echo htmlspecialchars($employee->branch_name ?? 'No Branch'); ?></td>
                         <td>
                             <span class="badge" style="background-color: var(--primary-light); color: var(--primary-dark); padding: 5px 10px; border-radius: var(--radius-md); font-weight: 500;">
                                 <?php echo ucfirst(htmlspecialchars($employee->user_role)); ?>
@@ -297,7 +297,7 @@
             </div>
             
             <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateEditEmployeeForm()">
-                <input type="hidden" name="employee_id" id="edit_employee_id">
+                <input type="hidden" name="employee_id" id="edit_employee_id" value="">
 
                 <div class="form-row">
                     <div class="form-group">

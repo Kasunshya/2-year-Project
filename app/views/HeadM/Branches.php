@@ -19,7 +19,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-building"></i>&nbsp BRANCHES</h1>
+                <h1><i class="fas fa-building"></i>&nbsp Branches</h1>
                 <div>
                     <span><b>HEAD MANAGER</b></span>
                 </div>

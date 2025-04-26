@@ -25,7 +25,7 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <h1><i class="fas fa-tachometer-alt"></i>&nbsp DASHBOARD</h1>
+                <h1><i class="fas fa-tachometer-alt"></i>&nbsp Dashboard</h1>
                 <div class="user-info">
                     <span><b>HEAD MANAGER</b></span>
                 </div>
@@ -97,7 +97,7 @@
                     <div class="right-column">
                         <!-- Sales Analysis -->
                         <div class="sales-widget">
-                            <h3 style="color: #783b31; margin-bottom: 15px;">Sales Analysis</h3>
+                            <h3 style="color: #5d2e46; margin-bottom: 15px;">Sales Analysis</h3>
                             <canvas id="salesChart"></canvas>
                         </div>
                         
@@ -286,8 +286,8 @@
                 {
                     title: '<?php echo $date->order_count; ?> orders',
                     start: '<?php echo $date->order_day; ?>',
-                    backgroundColor: '#c98d83',
-                    borderColor: '#783b31',
+                    backgroundColor: '#a26b98', // Changed from #c98d83 to primary-main
+                    borderColor: '#5d2e46', // Changed from #783b31 to primary-dark
                     textColor: 'white',
                     display: 'block',
                     extendedProps: {
@@ -300,9 +300,10 @@
             eventDidMount: function(info) {
                 const tooltip = document.createElement('div');
                 tooltip.classList.add('fc-tooltip');
+                // Optional enhancement for the tooltip
                 tooltip.innerHTML = `
                     <div style="padding: 5px; background: rgba(0,0,0,0.8); color: white; border-radius: 3px; font-size: 12px;">
-                        ${info.event.title}<br>
+                        <span style="color: #f1c778;">${info.event.title}</span><br>
                         Total: Rs ${info.event.extendedProps.total}
                     </div>
                 `;
@@ -339,12 +340,12 @@
                     datasets: [{
                         label: 'Daily Sales',
                         data: salesValues,
-                        backgroundColor: 'rgba(201, 141, 131, 0.2)',
-                        borderColor: '#c98d83',
+                        backgroundColor: 'rgba(162, 107, 152, 0.2)', // Changed from rgba(201, 141, 131, 0.2)
+                        borderColor: '#a26b98', // Changed from #c98d83
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
-                        pointBackgroundColor: '#783b31'
+                        pointBackgroundColor: '#5d2e46' // Changed from #783b31
                     }]
                 },
                 options: {
@@ -374,7 +375,7 @@
                             beginAtZero: true,
                             grid: {
                                 display: true,
-                                color: 'rgba(201, 141, 131, 0.1)'
+                                color: 'rgba(162, 107, 152, 0.1)' // Changed from rgba(201, 141, 131, 0.1)
                             },
                             ticks: {
                                 callback: function(value) {
@@ -417,18 +418,18 @@
                     datasets: [{
                         label: 'Total Sales (Rs)',
                         data: branchValues,
-                        backgroundColor: 'rgba(201, 141, 131, 0.7)',
-                        borderColor: '#c98d83',
+                        backgroundColor: 'rgba(162, 107, 152, 0.7)', // Changed from rgba(201, 141, 131, 0.7)
+                        borderColor: '#a26b98', // Changed from #c98d83
                         borderWidth: 1,
                         yAxisID: 'y'
                     }, {
                         label: 'Order Count',
                         data: branchOrders,
                         type: 'line',
-                        backgroundColor: 'rgba(120, 59, 49, 0.2)',
-                        borderColor: '#783b31',
+                        backgroundColor: 'rgba(93, 46, 70, 0.2)', // Changed from rgba(120, 59, 49, 0.2)
+                        borderColor: '#5d2e46', // Changed from #783b31
                         borderWidth: 2,
-                        pointBackgroundColor: '#783b31',
+                        pointBackgroundColor: '#5d2e46', // Changed from #783b31
                         yAxisID: 'y1'
                     }]
                 },
