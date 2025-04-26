@@ -40,74 +40,7 @@ html::-webkit-scrollbar-thumb {
     background: var(--primary-color);
     border-radius: 5rem;
 }
-.navbar {
-  background-color: var(--white);
-  box-shadow: var(--box-shadow);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  padding: 1rem 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.navbar .logo {
-  color: var(--secondary);
-  font-size: 1.8rem;
-  font-weight: 600;
-  text-decoration: none;
-  letter-spacing: 2px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-img {
-  height: 40px;
-  width: auto;
-}
-
-.navbar ul {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-
-.navbar ul li {
-  position: relative;
-}
-
-.navbar ul li a {
-  color: var(--black);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
-  transition: var(--transition);
-  padding: 0.5rem 0;
-}
-
-.navbar ul li a:hover {
-  color: var(--primary-color);
-}
-
-.navbar ul li a::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary-color);
-  transition: var(--transition);
-}
-
-.navbar ul li a:hover::after {
-  width: 100%;
-}
 
 .cart-link {
   position: relative;
@@ -127,9 +60,6 @@ html::-webkit-scrollbar-thumb {
 }
 
 
-body {
-    padding-top: 80px; /* Match header height */
-}
 
 section {
     padding: 2rem 7%;

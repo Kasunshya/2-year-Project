@@ -380,16 +380,69 @@ class Branch extends Controller {
             die('Error: Branch manager not associated with any branch. Please contact support.');
         }
 
-        // Check if stock metrics are available
-        $stockMetrics = $this->branchModel->getStockMetrics($branch->branch_id);
-        if (!$stockMetrics || !is_object($stockMetrics)) {
-            $stockMetrics = (object)['total_products' => 0];
-        }
+        // Get today's date and this week's date range
+        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $weekStart = date('Y-m-d', strtotime('-6 days'));
         
+        // Collect all dashboard metrics
         $data = [
             'title' => 'Branch Manager Dashboard',
             'branch' => $branch,
-            'stockMetrics' => $stockMetrics
+            
+            // Sales metrics
+            'todaySales' => $this->branchModel->getDailySalesSummary($branch->branch_id, $today),
+            'yesterdaySales' => $this->branchModel->getDailySalesSummary($branch->branch_id, $yesterday),
+            'weeklySales' => $this->branchModel->getDateRangeSummary($branch->branch_id, $weekStart, $today),
+            
+            // Order metrics
+            'todayOrders' => $this->branchModel->getDailyOrderCount($branch->branch_id, $today),
+            'pendingOrders' => $this->branchModel->getPendingOrdersCount($branch->branch_id),
+            
+            // Stock metrics
+            'stockMetrics' => $this->branchModel->getStockMetrics($branch->branch_id),
+            'lowStock' => $this->branchModel->getLowStockCount($branch->branch_id),
+            'expiringStock' => $this->branchModel->getExpiringStockCount($branch->branch_id),
+            
+            // Product performance
+            'topProducts' => $this->branchModel->getTopSellingProducts($branch->branch_id, $weekStart),
+            
+            // Charts data
+            'salesChartData' => $this->branchModel->getDailySalesForLastDays($branch->branch_id, 7),
+            'categoryPerformance' => $this->branchModel->getCategoryPerformance($branch->branch_id, $weekStart, $today)
+        ];
+        
+        $this->view('BranchM/v_BranchMdashboard', $data);
+    }
+
+    public function index() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
+            redirect('Login/indexx');
+        }
+
+        // Get branch ID of the logged-in manager
+        $userId = $_SESSION['user_id'];
+        $branch = $this->branchModel->getBranchByManager($userId);
+        
+        if (!$branch) {
+            die('Error: No branch association found.');
+        }
+        
+        $branchId = $branch->branch_id;
+        
+        // Get today's and yesterday's date
+        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $weekStart = date('Y-m-d', strtotime('-6 days'));
+        
+        // Add stockMetrics to the data array
+        $data = [
+            'branch' => $branch,
+            'todaySales' => $this->branchModel->getDailySalesSummary($branchId, $today),
+            'yesterdaySales' => $this->branchModel->getDailySalesSummary($branchId, $yesterday),
+            'todayOrders' => $this->branchModel->getDailyOrderCount($branchId, $today),
+            'weeklySales' => $this->branchModel->getWeeklySalesSummary($branchId, $weekStart, $today),
+            'stockMetrics' => $this->branchModel->getStockMetrics($branchId)
         ];
         
         $this->view('BranchM/v_BranchMdashboard', $data);

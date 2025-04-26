@@ -202,9 +202,9 @@
     }
 
     .tab-btn.active {
-        background: #783b31;
+        background: #a26b98;
         color: white;
-        border-color: #783b31;
+        border-color: #a26b98;
     }
 
     .report-tabs {

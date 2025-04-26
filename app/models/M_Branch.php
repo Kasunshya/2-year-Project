@@ -146,7 +146,7 @@ class M_Branch {
                          c.name as category_name 
                          FROM product p 
                          JOIN category c ON p.category_id = c.category_id 
-                         WHERE p.status = 1
+                         WHERE p.is_active = 1
                          ORDER BY p.product_name');
         return $this->db->resultSet();
     }
@@ -222,82 +222,33 @@ class M_Branch {
         return $this->db->resultSet();
     }
 
-    public function getDailySalesSummary($branchId, $date = null) {
-        // --- TEMPORARY DEBUGGING ---
-        $ignoreFilters = true; // Set to false or remove this block after testing
-        // --- END TEMPORARY DEBUGGING ---
+    public function getDailySalesSummary($branchId, $date) {
+        $this->db->query("SELECT 
+                 COALESCE(SUM(total), 0) as total_sales,
+                 COUNT(*) as transaction_count
+                 FROM orders
+                 WHERE branch_id = :branch_id 
+                 AND DATE(order_date) = :date
+                 AND payment_status IN ('Paid', 'Completed')");
+        $this->db->bind(':branch_id', $branchId);
+        $this->db->bind(':date', $date);
+        
+        return $this->db->single();
+    }
 
-        try {
-            $date = $date ?? date('Y-m-d');
-            error_log("[getDailySalesSummary] Fetching sales for Branch ID: {$branchId}, Date: {$date}" . ($ignoreFilters ? " (IGNORING FILTERS)" : ""));
-
-            // Build WHERE clause based on debug flag
-            $whereClause = "WHERE o.branch_id = :branch_id";
-            if (!$ignoreFilters) {
-                $whereClause .= " AND DATE(o.order_date) = :date AND o.payment_status IN ('Paid', 'Completed')";
-            }
-
-            // Primary Query (JOIN)
-            $sql_primary = "SELECT
-                COUNT(DISTINCT o.order_id) as total_orders,
-                COALESCE(SUM(od.quantity * od.price), 0) as total_sales
-                FROM orders o
-                JOIN orderdetails od ON o.order_id = od.order_id
-                {$whereClause}"; // Use dynamic WHERE clause
-            
-            $this->db->query($sql_primary);
-            $this->db->bind(':branch_id', $branchId);
-            if (!$ignoreFilters) { // Only bind date if not ignoring filters
-                $this->db->bind(':date', $date);
-            }
-            $result_primary = $this->db->single();
-
-            error_log("[getDailySalesSummary] Primary Query Result: " . json_encode($result_primary));
-
-            if ($result_primary && is_object($result_primary) && isset($result_primary->total_sales) && $result_primary->total_sales > 0) {
-                 error_log("[getDailySalesSummary] Primary query successful. Returning: Orders=" . $result_primary->total_orders . ", Sales=" . $result_primary->total_sales);
-                 return (object)[
-                     'total_orders' => (int)$result_primary->total_orders,
-                     'total_sales' => (float)$result_primary->total_sales
-                 ];
-            }
-
-            error_log("[getDailySalesSummary] Primary query returned 0 sales or failed. Trying fallback query.");
-
-            // Build WHERE clause for fallback
-            $whereClauseFallback = "WHERE branch_id = :branch_id";
-             if (!$ignoreFilters) {
-                $whereClauseFallback .= " AND DATE(order_date) = :date AND payment_status IN ('Paid', 'Completed')";
-            }
-
-            // Fallback Query (Orders only)
-            $sql_fallback = "SELECT
-                COUNT(*) as total_orders,
-                COALESCE(SUM(total), 0) as total_sales
-                FROM orders
-                {$whereClauseFallback}"; // Use dynamic WHERE clause
-
-            $this->db->query($sql_fallback);
-            $this->db->bind(':branch_id', $branchId);
-             if (!$ignoreFilters) { // Only bind date if not ignoring filters
-                $this->db->bind(':date', $date);
-            }
-            $result_fallback = $this->db->single();
-
-            error_log("[getDailySalesSummary] Fallback Query Result: " . json_encode($result_fallback));
-
-            return (object)[
-                'total_orders' => (int)($result_fallback->total_orders ?? 0),
-                'total_sales' => (float)($result_fallback->total_sales ?? 0)
-            ];
-
-        } catch (Exception $e) {
-            error_log("[getDailySalesSummary] EXCEPTION: " . $e->getMessage());
-            return (object)[
-                'total_orders' => 0,
-                'total_sales' => 0.0
-            ];
-        }
+    public function getWeeklySalesSummary($branchId, $startDate, $endDate) {
+        $this->db->query("SELECT 
+                 COALESCE(SUM(total), 0) as total_sales,
+                 COUNT(*) as total_orders
+                 FROM orders
+                 WHERE branch_id = :branch_id 
+                 AND DATE(order_date) BETWEEN :start_date AND :end_date
+                 AND payment_status IN ('Paid', 'Completed')");
+        $this->db->bind(':branch_id', $branchId);
+        $this->db->bind(':start_date', $startDate);
+        $this->db->bind(':end_date', $endDate);
+        
+        return $this->db->single();
     }
 
     public function getTopSellingProducts($branchId, $date = null) {
@@ -518,16 +469,28 @@ class M_Branch {
         return $this->db->resultSet();
     }
 
+    /**
+     * Get stock metrics for a branch
+     */
     public function getStockMetrics($branchId) {
+        // Get total quantity from branchstock table - same as used in v_stock page
         $this->db->query("SELECT 
-            COUNT(DISTINCT bs.product_id) as total_products,
-            SUM(bs.quantity) as total_stock,
-            AVG(bs.quantity) as average_stock_per_product
-            FROM branchstock bs
-            WHERE bs.branch_id = :branch_id");
-            
+                        COUNT(DISTINCT bs.product_id) as total_products,
+                        SUM(bs.quantity) as total_items
+                        FROM branchstock bs
+                        WHERE bs.branch_id = :branch_id");
         $this->db->bind(':branch_id', $branchId);
-        return $this->db->single();
+        
+        $result = $this->db->single();
+        
+        // Create default object if query returns nothing
+        if (!$result) {
+            $result = new stdClass();
+            $result->total_products = 0;
+            $result->total_items = 0;
+        }
+        
+        return $result;
     }
 
     public function getCategorySalesByPaymentMethod($branchId, $startDate, $endDate) {
@@ -549,6 +512,79 @@ class M_Branch {
         $this->db->bind(':start_date', $startDate);
         $this->db->bind(':end_date', $endDate);
         return $this->db->resultSet();
+    }
+
+    // Get daily order count
+    public function getDailyOrderCount($branchId, $date) {
+        $this->db->query("SELECT COUNT(*) as order_count FROM dailybranchorder 
+                         WHERE branch_id = :branch_id 
+                         AND DATE(orderdate) = :date");
+        $this->db->bind(':branch_id', $branchId);
+        $this->db->bind(':date', $date);
+        
+        $result = $this->db->single();
+        return $result ? $result->order_count : 0;
+    }
+
+    // Get pending orders count
+    public function getPendingOrdersCount($branchId) {
+        $this->db->query("SELECT COUNT(*) as pending_count FROM dailybranchorder 
+                         WHERE branch_id = :branch_id 
+                         AND status = 'pending'");
+        $this->db->bind(':branch_id', $branchId);
+        
+        $result = $this->db->single();
+        return $result ? $result->pending_count : 0;
+    }
+
+    // Get count of low stock items
+    public function getLowStockCount($branchId) {
+        $this->db->query("SELECT COUNT(*) as low_count FROM branchstock 
+                         WHERE branch_id = :branch_id 
+                         AND quantity <= 5");
+        $this->db->bind(':branch_id', $branchId);
+        
+        $result = $this->db->single();
+        return $result ? $result->low_count : 0;
+    }
+
+    // Get count of expiring stock items (next 3 days)
+    public function getExpiringStockCount($branchId) {
+        $today = date('Y-m-d');
+        $threeDaysLater = date('Y-m-d', strtotime('+3 days'));
+        
+        $this->db->query("SELECT COUNT(*) as expiring_count FROM branchstock 
+                         WHERE branch_id = :branch_id 
+                         AND expiry_date BETWEEN :today AND :three_days");
+        $this->db->bind(':branch_id', $branchId);
+        $this->db->bind(':today', $today);
+        $this->db->bind(':three_days', $threeDaysLater);
+        
+        $result = $this->db->single();
+        return $result ? $result->expiring_count : 0;
+    }
+
+    // Get daily sales data for last N days (for chart)
+    public function getDailySalesForLastDays($branchId, $days = 7) {
+        $result = [];
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $this->db->query("SELECT COALESCE(SUM(total), 0) as sales
+                         FROM orders
+                         WHERE branch_id = :branch_id 
+                         AND DATE(order_date) = :date
+                         AND payment_status IN ('Paid', 'Completed')");
+            $this->db->bind(':branch_id', $branchId);
+            $this->db->bind(':date', $date);
+            
+            $sales = $this->db->single();
+            
+            $result[] = [
+                'date' => date('M d', strtotime($date)),
+                'sales' => $sales ? $sales->sales : 0
+            ];
+        }
+        return $result;
     }
 }
 ?>
