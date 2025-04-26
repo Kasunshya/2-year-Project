@@ -20,9 +20,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-building"></i>&nbsp Branches</h1>
-                <div>
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+
             </header>
             <section class="dashboard-content">
                 <div class="overview">

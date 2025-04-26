@@ -91,5 +91,13 @@ class M_Employee {
                          ORDER BY e.full_name');
         return $this->db->resultSet();
     }
+
+    public function getEmployeeByUserId($userId) {
+        $this->db->query('SELECT * FROM employee WHERE user_id = :user_id AND user_role = "headmanager"');
+        $this->db->bind(':user_id', $userId);
+        
+        $row = $this->db->single();
+        return $row;
+    }
 }
 ?>

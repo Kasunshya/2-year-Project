@@ -137,7 +137,7 @@
 .user-info span {
     font-family: 'Arial Black', sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
+   
     color: var(--white);
 }
 
@@ -395,7 +395,18 @@
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table th:first-child {
+    border-top-left-radius: 10px;
+}
+
+table th:last-child {
+    border-top-right-radius: 10px;
 }
 
 table th, table td {
@@ -405,8 +416,8 @@ table th, table td {
 }
 
 table th {
-    background-color: #f9f9f9;
-    color: var(--primary-dark);
+    background-color: #a26b98;
+    color: var(--white);
     font-weight: 600;
 }
 
@@ -594,5 +605,27 @@ table tr:hover {
 .fc .fc-button-primary.fc-today-button:hover {
     background-color: #e0b76b !important; /* Slightly darker gold */
     border-color: #e0b76b !important;
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+   
+}
+
+.user-profile-header .role {
+    font-weight: 500;
+    color: #f5f5f5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-profile-header .avatar {
+    color: #f5f5f5;
+    font-size: 1em;
 }
 

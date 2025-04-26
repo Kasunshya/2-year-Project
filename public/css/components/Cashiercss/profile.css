@@ -7,10 +7,11 @@
     --accent-cream: #f9f5f0;    /* Cream */
     --accent-cinnamon: #b06f42; /* Amber brown */
 
-    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family: 'poppins', -apple-system, blinkmacrosystem-font, 'segoe ui', roboto, sans-serif;
 }
 
-body { /* Apply base font family */
+body {
+    text-transform: lowercase;
     font-family: var(--font-family);
 }
 

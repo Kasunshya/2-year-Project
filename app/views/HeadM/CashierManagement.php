@@ -19,9 +19,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-cash-register icon-cashier"></i>&nbsp Cashiers</h1>
-                <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+                
             </header>
             <div class="content">
                 <div class="employee-list">
@@ -45,8 +43,8 @@
                             </div>
                         </form>
                     </div>
-                    <div class="table-container">
-                        <table>
+                    <div class="table-container" style="border-radius: 10px; overflow: hidden;">
+                        <table style="border-collapse: separate; border-spacing: 0; border-radius: 10px;">
                             <thead>
                                 <tr>
                                     <th>Cashier ID</th>

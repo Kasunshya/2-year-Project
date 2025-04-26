@@ -27,7 +27,10 @@
             <header class="header">
                 <h1><i class="fas fa-tachometer-alt"></i>&nbsp Dashboard</h1>
                 <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
+                    <div class="user-profile-header" onclick="window.location.href='<?php echo URLROOT; ?>/headmanager/profile'">
+                        <i class="fas fa-user avatar"></i>
+                        <span class="role" style="font-weight: normal;">Head Manager</span>
+                    </div>
                 </div>
             </header>
             <section class="dashboard-content">
@@ -187,7 +190,7 @@
                             <?php if(isset($data['recentOrders']) && !empty($data['recentOrders'])): ?>
                                 <?php foreach($data['recentOrders'] as $order): ?>
                                     <tr>
-                                        <td>#<?php echo $order->order_id; ?></td>
+                                        <td>OID<?php echo $order->order_id; ?></td>
                                         <td><?php echo date('M d, H:i', strtotime($order->order_date)); ?></td>
                                         <td><?php echo $order->items; ?></td>
                                         <td><?php echo $order->branch_name ?? 'N/A'; ?></td>
