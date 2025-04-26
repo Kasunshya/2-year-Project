@@ -57,9 +57,7 @@
                 <button onclick="openEditModal()" class="btn edit-btn">
                     <i class="fas fa-edit"></i> Edit Profile
                 </button>
-                <button onclick="openPasswordModal()" class="btn password-btn">
-                    <i class="fas fa-key"></i> Change Password
-                </button>
+               
             </div>
         </div>
     </div>
