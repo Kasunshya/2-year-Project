@@ -412,6 +412,20 @@ if (!class_exists('M_SysAdmin')) {
             return $this->db->execute();
         }
 
+        public function isEmailUnique($email, $excludeUserId = null) {
+            $query = 'SELECT COUNT(*) as count FROM users WHERE email = :email';
+            if ($excludeUserId) {
+                $query .= ' AND id != :excludeUserId';
+            }
+            $this->db->query($query);
+            $this->db->bind(':email', $email);
+            if ($excludeUserId) {
+                $this->db->bind(':excludeUserId', $excludeUserId);
+            }
+            $result = $this->db->single();
+            return $result->count == 0;
+        }
+
 
         public function getAllBranches() {
             $this->db->query('SELECT branch_id, branch_name FROM branch');

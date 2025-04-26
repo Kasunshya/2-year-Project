@@ -347,7 +347,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="edit_email">Email:</label>
-                        <input type="email" class="form-control" name="email" id="edit_email" required>
+                        <input type="email" 
+                               id="edit_email" 
+                               name="email" 
+                               value="" 
+                               onblur="validateEmailUniqueness(this.value, document.getElementById('edit_employee_id').value)" 
+                               required>
+                        <span id="emailError" class="error-message"></span>
                     </div>
                     
                     <div class="form-group">
@@ -538,7 +544,7 @@
             if (emailXhr.status === 200) {
                 const response = JSON.parse(emailXhr.responseText);
                 if (response.exists) {
-                    alert('This email address is already in use by another employee.');
+                    alert('Email already exists. Please use a different email.');
                     return false;
                 }
             }
@@ -659,7 +665,7 @@
             if (emailXhr.status === 200) {
                 const response = JSON.parse(emailXhr.responseText);
                 if (response.exists) {
-                    alert('This email address is already in use by another employee.');
+                    alert('Email already exists. Please use a different email.');
                     return false;
                 }
             }
@@ -843,6 +849,42 @@
                 }
             }
         };
+
+        function isEmailUnique(email, userId = null) {
+            let url = `<?php echo URLROOT; ?>/sysadmin/checkEmailExists/${encodeURIComponent(email)}`;
+            if (userId) {
+                url = `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${userId}`;
+            }
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false); // Synchronous request
+            xhr.send();
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                return !response.exists;
+            }
+            return false;
+        }
+
+        function validateEmailUniqueness(email, employeeId) {
+            if (!email) return;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${employeeId}`, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const emailError = document.getElementById('emailError');
+                    if (response.exists) {
+                        emailError.textContent = 'This email is already in use by another employee.';
+                        emailError.style.display = 'block';
+                    } else {
+                        emailError.textContent = '';
+                        emailError.style.display = 'none';
+                    }
+                }
+            };
+            xhr.send();
+        }
     </script>
 </body>
 </html>
