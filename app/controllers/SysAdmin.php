@@ -74,6 +74,11 @@ class SysAdmin extends Controller {
                 'user_role' => trim($_POST['user_role'])
             ];
 
+            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+            }
+
             if ($this->sysAdminModel->addEmployee($data)) {
                 flash('employee_message', 'Employee added successfully');
                 redirect('sysadmin/employeeManagement');
@@ -125,6 +130,12 @@ class SysAdmin extends Controller {
                 'user_role' => trim($_POST['user_role']),
                 'user_id' => trim($_POST['user_id'])
             ];
+
+            // Check if the email is unique for other employees
+            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+            }
 
             if ($this->sysAdminModel->updateEmployee($data)) {
                 // Update related table based on user_role
@@ -304,17 +315,11 @@ class SysAdmin extends Controller {
         echo json_encode(['exists' => !empty($exists)]);
     }
 
-    public function checkEmailExistsExcept($email, $employeeId)
-    {
-        // URL decode the email
+    public function checkEmailExistsExcept($email, $employeeId) {
         $email = urldecode($email);
-        
-        // Check if email exists except for this employee
-        $exists = $this->employeeModel->findEmployeeByEmailExcept($email, $employeeId);
-        
-        // Return JSON response
+        $exists = !$this->sysAdminModel->isEmailUnique($email, $employeeId);
         header('Content-Type: application/json');
-        echo json_encode(['exists' => !empty($exists)]);
+        echo json_encode(['exists' => $exists]);
     }
 
     public function checkNicExistsExcept($nic, $employeeId)

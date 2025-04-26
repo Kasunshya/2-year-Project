@@ -436,6 +436,20 @@
                             <input type="date" class="form-control" name="join_date" id="edit_join_date" required>
                         </div>
                     </div>
+
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="edit_email">Email:</label>
+                        <input type="email" 
+                               id="edit_email" 
+                               name="email" 
+                               value="" 
+                               onblur="validateEmailUniqueness(this.value, document.getElementById('edit_employee_id').value)" 
+                               required>
+                        <span id="emailError" class="error-message"></span>
+
                     
                     <div class="form-row">
                         <div class="form-group">
@@ -447,6 +461,7 @@
                             <label class="form-label" for="edit_password">Password (Leave blank to keep unchanged):</label>
                             <input type="password" class="form-control" name="password" id="edit_password">
                         </div>
+
                     </div>
                     
                     <div class="form-group">
@@ -652,6 +667,17 @@
                 return true;
             }
             
+
+            // Check email uniqueness via AJAX
+            const emailXhr = new XMLHttpRequest();
+            emailXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExists/${encodeURIComponent(email)}`, false);
+            emailXhr.send();
+            
+            if (emailXhr.status === 200) {
+                const response = JSON.parse(emailXhr.responseText);
+                if (response.exists) {
+                    alert('Email already exists. Please use a different email.');
+
             // Function to validate the Edit Employee form
             function validateEditEmployeeForm() {
                 const employeeId = document.getElementById('edit_employee_id').value;
@@ -671,6 +697,7 @@
                     dob === '' || email === '' || joinDate === '' || 
                     branchId === '' || userRole === '') {
                     alert('All fields except password are required');
+
                     return false;
                 }
                 
@@ -756,6 +783,33 @@
                         return false;
                     }
                 }
+
+            }
+            
+            // Check email uniqueness via AJAX (excluding current employee)
+            const emailXhr = new XMLHttpRequest();
+            emailXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${employeeId}`, false);
+            emailXhr.send();
+            
+            if (emailXhr.status === 200) {
+                const response = JSON.parse(emailXhr.responseText);
+                if (response.exists) {
+                    alert('Email already exists. Please use a different email.');
+                    return false;
+                }
+            }
+            
+            // Check NIC uniqueness via AJAX (excluding current employee)
+            const nicXhr = new XMLHttpRequest();
+            nicXhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkNicExistsExcept/${encodeURIComponent(nic)}/${employeeId}`, false);
+            nicXhr.send();
+            
+            if (nicXhr.status === 200) {
+                const response = JSON.parse(nicXhr.responseText);
+                if (response.exists) {
+                    alert('This NIC number is already in use by another employee.');
+                    return false;
+
                 
                 // Check NIC uniqueness via AJAX (excluding current employee)
                 const nicXhr = new XMLHttpRequest();
@@ -768,6 +822,7 @@
                         alert('This NIC number is already in use by another employee.');
                         return false;
                     }
+
                 }
                 
                 return true;
@@ -935,9 +990,46 @@
                         modals[i].style.display = 'none';
                     }
                 }
+
+            }
+        };
+
+        function isEmailUnique(email, userId = null) {
+            let url = `<?php echo URLROOT; ?>/sysadmin/checkEmailExists/${encodeURIComponent(email)}`;
+            if (userId) {
+                url = `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${userId}`;
+            }
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false); // Synchronous request
+            xhr.send();
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                return !response.exists;
+            }
+            return false;
+        }
+
+        function validateEmailUniqueness(email, employeeId) {
+            if (!email) return;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${employeeId}`, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const emailError = document.getElementById('emailError');
+                    if (response.exists) {
+                        emailError.textContent = 'This email is already in use by another employee.';
+                        emailError.style.display = 'block';
+                    } else {
+                        emailError.textContent = '';
+                        emailError.style.display = 'none';
+                    }
+                }
             };
-        </script>
-    </div>
-</div>
+            xhr.send();
+        }
+    </script>
+
 </body>
 </html>
