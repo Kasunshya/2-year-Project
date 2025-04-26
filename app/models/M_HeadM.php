@@ -26,35 +26,48 @@ class M_HeadM
         return $this->db->single()->total;
     }
 
-    public function getAllBranchManagers($search = '')
+    public function getAllBranchManagers($search = '', $branchId = '')
     {
         $query = '
-            SELECT 
-                bm.branchmanager_id, 
-                bm.branch_id,
-                bm.employee_id,
-                e.full_name AS branchmanager_name,
-                e.address,
-                e.contact_no, 
-                e.cv_upload, 
-                e.email AS employee_email,
-                b.branch_name 
-            FROM branchmanager bm
-            JOIN employee e ON bm.employee_id = e.employee_id
-            JOIN branch b ON bm.branch_id = b.branch_id
-        ';
-        
-        // Add search condition if a search query is provided
+        SELECT 
+            bm.branchmanager_id, 
+            bm.branch_id,
+            bm.employee_id,
+            e.full_name AS branchmanager_name,
+            e.address,
+            e.contact_no, 
+            e.cv_upload, 
+            e.email AS employee_email,
+            b.branch_name 
+        FROM branchmanager bm
+        JOIN employee e ON bm.employee_id = e.employee_id
+        JOIN branch b ON bm.branch_id = b.branch_id
+        WHERE 1=1  /* Add this line */
+    ';
+
+        // Now these AND clauses will work correctly
         if (!empty($search)) {
-            $query .= ' WHERE e.full_name LIKE :search OR b.branch_name LIKE :search';
-            $this->db->query($query);
-            $this->db->bind(':search', '%' . $search . '%');
-        } else {
-            $this->db->query($query);
+            $query .= ' AND e.full_name LIKE :search';
+            $params[':search'] = '%' . $search . '%';
         }
-        
+        // Add branch filter if branch ID is provided
+        if (!empty($branchId)) {
+            $query .= ' AND bm.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+
+        $this->db->query($query);
+
+        // Bind all parameters
+        if (!empty($params)) {
+            foreach ($params as $param => $value) {
+                $this->db->bind($param, $value);
+            }
+        }
+
         return $this->db->resultSet();
     }
+
 
     public function getBranchManagerById($id)
     {
@@ -77,7 +90,8 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function getBranchManagerByBranchId($branch_id) {
+    public function getBranchManagerByBranchId($branch_id)
+    {
         $this->db->query('
             SELECT 
                 bm.branchmanager_id, 
@@ -92,12 +106,14 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function getAllBranches() {
+    public function getAllBranches()
+    {
         $this->db->query('SELECT branch_id, branch_name, branch_address FROM branch'); // Include branch_address
         return $this->db->resultSet();
     }
 
-    public function addBranchManager($data) {
+    public function addBranchManager($data)
+    {
         // Insert into users table
         $this->db->query('INSERT INTO users (email, password, user_role, created_at) 
                           VALUES (:email, :password, :user_role, NOW())');
@@ -108,7 +124,7 @@ class M_HeadM
 
         if ($this->db->execute()) {
             $user_id = $this->db->lastInsertId();
-            
+
             // First insert into employee table
             $this->db->query('INSERT INTO employee (full_name, address, contact_no, email, user_id, user_role) 
                              VALUES (:full_name, :address, :contact_no, :email, :user_id, :user_role)');
@@ -122,7 +138,7 @@ class M_HeadM
 
             if ($this->db->execute()) {
                 $employee_id = $this->db->lastInsertId();
-                
+
                 // Then insert into branchmanager table
                 $this->db->query('INSERT INTO branchmanager (employee_id, branch_id, user_id) 
                                  VALUES (:employee_id, :branch_id, :user_id)');
@@ -137,16 +153,17 @@ class M_HeadM
         return false;
     }
 
-    public function updateBranchManager($data) {
+    public function updateBranchManager($data)
+    {
         // Get employee_id from branchmanager
         $this->db->query('SELECT employee_id FROM branchmanager WHERE branchmanager_id = :id');
         $this->db->bind(':id', $data['branchmanager_id']);
         $branchManager = $this->db->single();
-        
+
         if (!$branchManager) {
             return false;
         }
-        
+
         // Update employee table
         $this->db->query('UPDATE employee SET 
                           full_name = :full_name, 
@@ -184,7 +201,8 @@ class M_HeadM
         return ($result1 && $result2 && $result3);
     }
 
-    public function deleteBranchManager($data) {
+    public function deleteBranchManager($data)
+    {
         // Get user_id before deletion
         $this->db->query('SELECT user_id FROM branchmanager WHERE branchmanager_id = :id');
         $this->db->bind(':id', $data['branchmanager_id']);
@@ -236,7 +254,8 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function getEmployeeById($employee_id) {
+    public function getEmployeeById($employee_id)
+    {
         $this->db->query('
             SELECT 
                 employee_id, 
@@ -249,7 +268,8 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function getAllProducts() {
+    public function getAllProducts()
+    {
         $this->db->query('
             SELECT 
                 p.product_id, 
@@ -257,7 +277,7 @@ class M_HeadM
                 p.description, 
                 p.price, 
                 p.available_quantity, 
-                p.star_rating, 
+                /* Remove p.star_rating from here */
                 c.name AS category_name, 
                 c.category_id 
             FROM product p
@@ -266,7 +286,8 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function addProduct($data) {
+    public function addProduct($data)
+    {
         $this->db->query('INSERT INTO product (product_name, price, description, category_id, available_quantity) 
                           VALUES (:product_name, :price, :description, :category_id, :available_quantity)');
 
@@ -279,7 +300,8 @@ class M_HeadM
         return $this->db->execute();
     }
 
-    public function editProduct($data) {
+    public function editProduct($data)
+    {
         $this->db->query('UPDATE product 
                           SET product_name = :product_name, 
                               price = :price, 
@@ -298,7 +320,8 @@ class M_HeadM
         return $this->db->execute();
     }
 
-    public function updateProduct($data) {
+    public function updateProduct($data)
+    {
         $this->db->query('UPDATE product 
                           SET product_name = :product_name, 
                               price = :price, 
@@ -319,69 +342,74 @@ class M_HeadM
         return $this->db->execute();
     }
 
-    public function getProductById($productId) {
+    public function getProductById($productId)
+    {
         $this->db->query('SELECT * FROM product WHERE product_id = :product_id');
         $this->db->bind(':product_id', $productId);
         return $this->db->single();
     }
 
-    public function deleteProductById($productId) {
+    public function deleteProductById($productId)
+    {
         $this->db->query('DELETE FROM product WHERE product_id = :product_id');
         $this->db->bind(':product_id', $productId);
 
         return $this->db->execute();
     }
 
-    public function getAllCategories() {
+    public function getAllCategories()
+    {
         $this->db->query('SELECT category_id, name FROM category');
         return $this->db->resultSet();
     }
 
-    public function searchProducts($productName, $categoryId, $minPrice, $maxPrice) {
+    public function searchProducts($productName, $categoryId, $minPrice, $maxPrice)
+    {
         $query = 'SELECT 
                     p.product_id, 
                     p.product_name, 
                     p.description, 
                     p.price, 
-                    p.available_quantity, 
-                    p.star_rating, 
+                    p.available_quantity,
                     c.name AS category_name 
                   FROM product p
                   INNER JOIN category c ON p.category_id = c.category_id
                   WHERE 1=1';
 
+        $params = [];
+
         if (!empty($productName)) {
             $query .= ' AND p.product_name LIKE :product_name';
+            $params[':product_name'] = '%' . $productName . '%';
         }
+
         if (!empty($categoryId)) {
             $query .= ' AND p.category_id = :category_id';
+            $params[':category_id'] = $categoryId;
         }
+
         if (!empty($minPrice)) {
             $query .= ' AND p.price >= :min_price';
+            $params[':min_price'] = $minPrice;
         }
+
         if (!empty($maxPrice)) {
             $query .= ' AND p.price <= :max_price';
+            $params[':max_price'] = $maxPrice;
         }
 
         $this->db->query($query);
 
-        if (!empty($productName)) {
-            $this->db->bind(':product_name', '%' . $productName . '%');
-        }
-        if (!empty($categoryId)) {
-            $this->db->bind(':category_id', $categoryId);
-        }
-        if (!empty($minPrice)) {
-            $this->db->bind(':min_price', $minPrice);
-        }
-        if (!empty($maxPrice)) {
-            $this->db->bind(':max_price', $maxPrice);
+        // Bind all parameters
+        foreach ($params as $param => $value) {
+            $this->db->bind($param, $value);
         }
 
         return $this->db->resultSet();
     }
 
-    public function getDailyBranchOrders($branchId = '') {
+    public function getDailyBranchOrders($branchId = '')
+    {
         $sql = '
             SELECT 
                 dbo.dailybranchorder_id, 
@@ -406,7 +434,8 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getAllFeedbacks($search = '') {
+    public function getAllFeedbacks($search = '')
+    {
         $query = '
             SELECT 
                 p.product_name, 
@@ -429,7 +458,8 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getAllOrders($search = '') {
+    public function getAllOrders($search = '')
+    {
         $query = '
             SELECT 
                 c.customer_name, 
@@ -459,13 +489,15 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getBranchById($branch_id) {
+    public function getBranchById($branch_id)
+    {
         $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch WHERE branch_id = :branch_id');
         $this->db->bind(':branch_id', $branch_id);
         return $this->db->single();
     }
 
-    public function getCashiersByBranchId($branch_id) {
+    public function getCashiersByBranchId($branch_id)
+    {
         $this->db->query('
             SELECT 
                 e.employee_id, 
@@ -480,14 +512,16 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getBranchByIdentifier($branchIdentifier) {
+    public function getBranchByIdentifier($branchIdentifier)
+    {
         $this->db->query('SELECT branch_id, branch_name, branch_address, branch_contact FROM branch WHERE branch_name = :branch_name OR branch_id = :branch_id');
         $this->db->bind(':branch_name', $branchIdentifier);
         $this->db->bind(':branch_id', $branchIdentifier);
         return $this->db->single();
     }
 
-    public function getSalesReportsByBranchId($branch_id) {
+    public function getSalesReportsByBranchId($branch_id)
+    {
         $this->db->query('
             SELECT 
                 sr.report_id, 
@@ -521,11 +555,11 @@ class M_HeadM
 
         // Group by date for proper aggregation
         $sql .= " GROUP BY DATE(o.order_date) ORDER BY sales_date DESC";
-        
+
         // Prepare and execute query
         $this->db->query($sql);
         $this->db->bind(':branch_id', $branch_id);
-        
+
         // Bind date parameters if set
         if (isset($filters['date']) && !empty($filters['date'])) {
             $this->db->bind(':date', $filters['date']);
@@ -554,10 +588,10 @@ class M_HeadM
         } elseif (isset($filters['year'])) {
             $sql .= " AND YEAR(o.order_date) = :year";
         }
-        
+
         $this->db->query($sql);
         $this->db->bind(':branch_id', $branch_id);
-        
+
         if (isset($filters['date']) && !empty($filters['date'])) {
             $this->db->bind(':date', $filters['date']);
         } elseif (isset($filters['month']) && isset($filters['year'])) {
@@ -569,8 +603,8 @@ class M_HeadM
 
         return $this->db->single();
     }
-    
-    
+
+
 
     public function getInventoryData($productName = '', $branchId = '')
     {
@@ -712,10 +746,10 @@ class M_HeadM
         }
 
         $result = $this->db->resultSet();
-        
+
         // Debug result
         error_log("Query Result: " . print_r($result, true));
-        
+
         return $result;
     }
 
@@ -747,7 +781,8 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getEnquiryById($enquiry_id) {
+    public function getEnquiryById($enquiry_id)
+    {
         $this->db->query('SELECT * FROM enquiry WHERE enquiry_id = :enquiry_id');
         $this->db->bind(':enquiry_id', $enquiry_id);
         return $this->db->single();
@@ -861,7 +896,8 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getCustomizationById($customization_id) {
+    public function getCustomizationById($customization_id)
+    {
         $this->db->query('
             SELECT 
                 cc.customization_id,
@@ -886,7 +922,8 @@ class M_HeadM
         return $this->db->single();
     }
 
-    public function updateCustomizationStatus($customization_id, $status) {
+    public function updateCustomizationStatus($customization_id, $status)
+    {
         $this->db->query('
             UPDATE cake_customization 
             SET order_status = :status 
@@ -894,7 +931,7 @@ class M_HeadM
         ');
         $this->db->bind(':customization_id', $customization_id);
         $this->db->bind(':status', $status);
-        
+
         return $this->db->execute();
     }
 
@@ -1013,19 +1050,21 @@ class M_HeadM
             ORDER BY f.created_at DESC
             LIMIT 5
         ');
-        
+
         return $this->db->resultSet();
     }
 
-    public function postFeedbackToHomepage($feedback_id) {
+    public function postFeedbackToHomepage($feedback_id)
+    {
         // Update the feedback to mark it as "posted" without requiring star_rating
         $this->db->query('UPDATE feedback SET is_posted = 1 WHERE feedback_id = :feedback_id');
         $this->db->bind(':feedback_id', $feedback_id);
-        
+
         return $this->db->execute();
     }
 
-    public function getPostedFeedbacks() {
+    public function getPostedFeedbacks()
+    {
         // Get feedbacks that have been posted to the homepage (limit to 3 most recent)
         $this->db->query('
             SELECT 
@@ -1042,7 +1081,7 @@ class M_HeadM
             ORDER BY f.created_at DESC
             LIMIT 3
         ');
-        
+
         return $this->db->resultSet();
     }
 }

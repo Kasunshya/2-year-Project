@@ -124,7 +124,28 @@ if (!class_exists('M_SysAdmin')) {
         // Employee Management Methods
         public function getAllEmployees()
         {
-            $this->db->query('SELECT employee_id, full_name, address, contact_no, nic, dob, gender, email, join_date, cv_upload, branch, user_id, user_role FROM employee');
+            $this->db->query('
+                SELECT 
+                    e.employee_id, 
+                    e.full_name, 
+                    e.address, 
+                    e.contact_no, 
+                    e.nic, 
+                    e.dob, 
+                    e.gender, 
+                    e.email, 
+                    e.join_date, 
+                    e.cv_upload, 
+                    e.user_id, 
+                    e.user_role,
+                    b.branch_name AS branch_name
+                FROM 
+                    employee e
+                LEFT JOIN 
+                    branch b ON e.branch = b.branch_id
+                ORDER BY 
+                    e.employee_id DESC
+            ');
             return $this->db->resultSet();
         }
 

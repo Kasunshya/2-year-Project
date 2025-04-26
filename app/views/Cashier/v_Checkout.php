@@ -7,21 +7,148 @@
     <title>Checkout</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/checkout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-dark: #5d2e46;    /* Deep plum */
+            --primary-main: #a26b98;    /* Medium berry */
+            --primary-light: #e8d7e5;   /* Light lavender */
+            --accent-gold: #f1c778;     /* Soft gold */
+            --accent-cream: #f9f5f0;    /* Cream */
+            --accent-cinnamon: #b06f42; /* Amber brown */
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--accent-cream);
+            color: var(--primary-dark);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .checkout-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h2, h3 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+        
+        .order-summary {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-details p {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-main);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-family);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .payment-method-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
         .payment-method-btn.paypal {
             background-color: #0070ba;
             color: white;
         }
+        
         .payment-method-btn.paypal:hover {
             background-color: #003087;
         }
+        
+        .payment-form {
+            background-color: var(--primary-light);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: var(--font-family);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .process-btn {
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: var(--font-family);
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .process-btn:hover {
+            background-color: var(--accent-cinnamon);
+            color: white;
+        }
+        
         #paypalProcessingOverlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(93, 46, 70, 0.8); /* Using primary-dark with opacity */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,19 +156,35 @@
             z-index: 1000;
             color: white;
             display: none;
+            font-family: var(--font-family);
         }
+        
         #paypalProcessingOverlay .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #0070ba;
+            border: 5px solid var(--primary-light);
+            border-top: 5px solid var(--accent-gold);
             border-radius: 50%;
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        #changeAmount {
+            font-weight: bold;
+            color: var(--accent-cinnamon);
+            font-size: 1.1em;
+        }
+        
+        .paypal-info {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
         }
     </style>
 </head>
@@ -51,9 +194,9 @@
         <div class="order-summary">
             <h3>Order Summary</h3>
             <div class="summary-details">
-                <p>Subtotal: LKR<span id="subtotal"><?php echo number_format($data['subtotal'], 2); ?></span></p>
-                <p>Discount: LKR<span id="discount"><?php echo number_format($data['discount'] ?? 0, 2); ?></span></p>
-                <p>Total: LKR<span id="total"><?php echo number_format($data['total'], 2); ?></span></p>
+                <p>Subtotal: LKR<span id="subtotal"><?php echo number_format((float)$data['subtotal'], 2); ?></span></p>
+                <p>Discount: LKR<span id="discount"><?php echo number_format((float)($data['discount'] ?? 0), 2); ?></span></p>
+                <p>Total: LKR<span id="total"><?php echo number_format((float)$data['total'], 2); ?></span></p>
             </div>
         </div>
 
@@ -110,7 +253,7 @@
             <form id="paypalPaymentForm" class="payment-form" style="display:none;">
                 <div class="form-group paypal-info">
                     <p>You will be redirected to PayPal to complete your payment securely.</p>
-                    <p>Total to pay: LKR<span id="paypalAmount"><?php echo number_format($data['total'], 2); ?></span></p>
+                    <p>Total to pay: LKR<span id="paypalAmount"><?php echo number_format((float)$data['total'], 2); ?></span></p>
                 </div>
                 <button type="submit" class="process-btn">Pay with PayPal</button>
             </form>
@@ -135,10 +278,13 @@
 
         // Calculate change for cash payment
         document.getElementById('cashAmount').addEventListener('input', function() {
-            const total = parseFloat(document.getElementById('total').textContent);
+            const total = parseFloat(document.getElementById('total').textContent.replace(/,/g, ''));
             const tendered = parseFloat(this.value) || 0;
             const change = tendered - total;
-            document.getElementById('changeAmount').textContent = 'LKR' + Math.max(0, change).toFixed(2);
+            document.getElementById('changeAmount').textContent = 'LKR' + Math.max(0, change).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
         });
 
         // Handle form submissions

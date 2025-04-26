@@ -5,10 +5,12 @@
   --white: #ffffff;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --dark-bg: #1a1a1a;
-    --dark-text: #e0e0e0;
+  --dark-text: #e0e0e0;
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
 body.dark-mode {
-  background-color: var(--dark-bg);
+  background-color: #b495ae;
   color: var(--dark-text);
 }
 
@@ -21,14 +23,14 @@ body.dark-mode header {
   background-color: var(--secondary);
   color: var(--dark-text);
 }
+
 /* General Styles */
 body, html {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--font-family);
   margin: 0;
   padding: 0;
   height: 100%;
-  /*overflow: hidden;
-  /*background-color: var(--bg);*/
+  background-color:#f8e5f4;
 }
 
 .container {
@@ -36,7 +38,7 @@ body, html {
   height: 100vh;
   
 }header {
-  background-color: var(--primary-color);
+  background-color:5d2e46;
   padding: 2rem;
   text-align: center;
   color: var(--white);
@@ -135,6 +137,7 @@ body, html {
   color: var(--white);
   background: var(--secondary);
 }*/
+
 .chart-container {
   display: flex;
   flex-wrap: wrap;
@@ -162,66 +165,168 @@ canvas {
   height: 200px !important;
 }
 
+/* Shared Container Styles */
+.metrics-container,
+.best-sellers-container,
+.recent-orders {
+    width: 90%;  /* increased from 80% */
+    max-width: 1200px;  /* increased from 1000px */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 15px;
+    padding: 20px;
+}
+
 /* Improved Metrics Container */
 .metrics-container {
-  display: flex;
-  justify-content: space-around;
-  margin: 20px 80px;
-  margin-left: 140px;
-  margin-right:50px;
-  gap: 2rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  margin: 2rem 140px 2rem 140px;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    background: var(--accent-cream, #f9f5f0);
+    backdrop-filter: blur(10px);
+    border-top: 3px solid var(--primary-main, #a26b98);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.1);
+    padding: 30px;  /* increased padding */
 }
 
 .metric {
-  background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: var(--box-shadow);
-  text-align: center;
-  width: 20%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-left: 5px solid var(--primary-color);
-  transition: all 0.3s ease;
+    background: linear-gradient(135deg, #fff 0%, var(--primary-light, #e8d7e5) 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(93, 46, 70, 0.05);
+    text-align: center;
+    width: 28%;  /* increased from 25% */
+    min-width: 200px;  /* increased from 180px */
+    max-width: 280px;  /* increased from 220px */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid var(--primary-main, #a26b98);
 }
 
 .metric:hover {
-  transform: translateY(-10px);
-  background: linear-gradient(135deg, var(--primary-color) 0%, #fff 100%);
-  color: var(--secondary);
+    transform: translateY(-10px);
+    background: linear-gradient(135deg, var(--primary-light, #e8d7e5) 0%, #fff 100%);
+    border-left: 4px solid var(--accent-gold, #f1c778);
+    box-shadow: 0 5px 15px rgba(93, 46, 70, 0.15);
 }
 
 .metric h3 {
-  margin: 0;
-  font-size: 1.2rem;
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-dark, #5d2e46);
 }
 
 .metric p {
-  margin: 10px 0 0;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--secondary);
+    margin: 10px 0 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-cinnamon, #b06f42);
 }
 
+/* Best Sellers Box */
+.best-sellers-container {
+    background: var(--accent-cream, #f9f5f0);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.1);
+    border-top: 3px solid var(--primary-main, #a26b98);
+    padding: 30px;  /* increased padding */
+}
+
+.best-sellers-container h2 {
+    color: var(--primary-dark, #5d2e46);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--primary-light, #e8d7e5);
+    padding-bottom: 10px;
+}
+
+.best-sellers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));  /* increased from 200px */
+    gap: 20px;
+}
+
+.best-seller-card {
+    background: linear-gradient(135deg, #fff 0%, var(--primary-light, #e8d7e5) 100%);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-main, #a26b98);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(93, 46, 70, 0.05);
+}
+
+.best-seller-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(93, 46, 70, 0.15);
+    border-left: 4px solid var(--accent-gold, #f1c778);
+}
+
+.best-seller-info h3 {
+    color: var(--primary-dark, #5d2e46);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.best-seller-info .price {
+    color: var(--accent-cinnamon, #b06f42);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.best-seller-info .sold {
+    color: var(--primary-main, #a26b98);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.best-seller-progress {
+    margin-top: 10px;
+    background: var(--accent-cream, #f9f5f0);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(93, 46, 70, 0.1);
+}
+
+.best-seller-progress .progress-bar {
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-main, #a26b98), var(--accent-gold, #f1c778));
+    border-radius: 3px;
+    transition: width 1s ease-in-out;
+}
+
+/* Recent Orders Table */
 .recent-orders {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.2);;
-  margin-left: 190px;
-  margin-right:110px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(201, 141, 131, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201, 141, 131, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 30px;  /* increased padding */
 }
 .recent-orders table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
 }
+
+.recent-orders table th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.recent-orders table th:last-child {
+  border-top-right-radius: 10px;
+}
+
+.recent-orders table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.recent-orders table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
 .recent-orders table th,
 .recent-orders table td {
   padding: 10px;
@@ -230,13 +335,19 @@ canvas {
   font-size: 14px;
 }
 .recent-orders table th {
-  background-color: var(--primary-color);
+  background-color:#a26b98; ;
   color: var(--white);
-  background: var(--primary-color); /* Changed from gradient to solid color */
+  background: #a26b98; /* Changed from gradient to solid color */
   color: white;
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 1px;
+}
+
+.recent-orders h2 {
+    color: #5d2e46;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
 }
 
 .recent-orders tr:hover {
@@ -279,7 +390,7 @@ transition: all 0.3s ease;
 }
 
 .user-profile-header .role {
-  color: #333;
+  color: #e8d7e5;
   font-weight: 500;
 }
 
@@ -307,14 +418,14 @@ transition: all 0.3s ease;
 /* Style for FullCalendar inside a card */
 #calendar {
   background-color: var(--white);
-  box-shadow: var(--box-shadow);
+  box-shadow: none;
   border-radius: 8px;
   padding: 1rem;
   max-width: 100%;
   height: 500px;
   overflow-x: auto;
   background: linear-gradient(145deg, #ffffff, #f5f5f5);
-  box-shadow: 10px 10px 20px #d9d9d9, -10px -10px 20px #ffffff;
+  
 }
 
 /* Ensure calendar text respects theme */
@@ -530,7 +641,7 @@ body.dark-mode .fc .fc-daygrid-day-number {
     background: white;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: none;
 }
 
 .metrics-container {
@@ -545,7 +656,7 @@ body.dark-mode .fc .fc-daygrid-day-number {
 
 /* Calendar Customization */
 .fc-theme-standard .fc-toolbar {
-    background: var(--primary-color);
+    background:#e8d7e5;
     color: white;
     padding: 10px;
     border-radius: 8px;
@@ -636,8 +747,9 @@ body.dark-mode .fc .fc-daygrid-day-number {
     background: white;
     padding: 12px;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin-left: 0;  /* Remove left margin */
+    box-shadow: none;
+    width: 250px;
+    margin-left: 10px;
 }
 
 .widget-container {
@@ -652,7 +764,7 @@ body.dark-mode .fc .fc-daygrid-day-number {
     background: white;
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
     height: 320px;
     width: 320px;
     display: flex;
@@ -660,293 +772,10 @@ body.dark-mode .fc .fc-daygrid-day-number {
 }
 
 .clock-widget {
-    background: linear-gradient(45deg, #2b2b2b, #3a3a3a);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.calendar-widget {
-    background: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    height: 400px; /* Increased from 300px */
-    padding: 15px;
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.analysis-widget {
-    flex: 0 0 280px;  /* Slightly reduced width */
-    background: white;
-    padding: 15px;    /* Reduced padding */
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.analysis-widget h3 {
-    color: var(--secondary);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-.analysis-widget canvas {
-    width: 100% !important;
-    height: calc(100% - 40px) !important;
-}
-
-#digital-clock {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    color: #e7e7e7;
-    text-shadow: 0 0 20px rgba(201, 141, 131, 0.5);
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-#current-date {
-    font-size: 1rem;
-    color: var(--primary-color);
-    text-align: center;
-}
-
-#calendar {
-    flex: 1;
-    min-width: 400px;  /* Added minimum width */
-    max-width: 500px;  /* Added maximum width */
-    margin: 0 10px;    /* Added small margin */
-    width: 100% !important;
-    height: 100% !important;
-    font-size: 0.85rem; /* Slightly larger font */
-}
-
-.fc {
-    height: 100%; /* Make FullCalendar take full height */
-}
-
-.fc-view-harness {
-    height: calc(100% - 40px) !important; /* Adjusted for better header space */
-}
-
-.fc-header-toolbar {
-    margin-bottom: 0.5em !important;
-    padding: 5px !important;
-}
-
-.fc .fc-toolbar-title {
-    font-size: 1.2rem !important; /* Increased from 1rem */
-}
-
-.fc-theme-standard td, 
-.fc-theme-standard th {
-    padding: 6px !important; /* Increased from 3px */
-    font-size: 0.85rem !important; /* Increased from 0.75rem */
-}
-
-.clock-container {
-    flex: 1;
-    background: linear-gradient(45deg, #2b2b2b, #3a3a3a);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    width: 250px;
-    margin-right: 10px;
-}
-
-.small-calendar-container {
-    flex: 1;
-    background: white;
-    padding: 8px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 250px;
-    margin-left: 10px;
-}
-
-#calendar {
-    font-size: 0.7rem;
-    height: auto !important;
-    min-height: 350px !important; /* Increased from 200px */
-    max-width: 250px !important;
-}
-
-#digital-clock {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    color: black;
-    text-shadow: 0 0 20px rgba(201, 141, 131, 0.5);
-    margin-bottom: 10px;
-}
-
-#current-date {
-    font-size: 0.9rem;
-    color: var(--primary-color);
-}
-
-.best-sellers-container {
     background: white;
     border-radius: 15px;
-    padding: 20px;
-    margin: 20px 140px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin-left: 200px;
-}
-
-.best-sellers-container h2 {
-    color: var(--secondary);
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-}
-
-.best-sellers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.best-seller-card {
-    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 4px solid var(--primary-color);
-    transition: transform 0.3s ease;
-}
-
-.best-seller-card:hover {
-    transform: translateY(-5px);
-}
-
-.best-seller-info h3 {
-    color: var(--secondary);
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-}
-
-.best-seller-info .price {
-    color: var(--primary-color);
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.best-seller-info .sold {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-.best-seller-progress {
-    margin-top: 10px;
-    background: #eee;
-    height: 4px;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.best-seller-progress .progress-bar {
-    height: 100%;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary));
-    border-radius: 2px;
-    transition: width 1s ease-in-out;
-}
-
-.dashboard-top {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 2rem;
-    padding: 0;
-}
-
-.clock-widget {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 320px;
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Updated Calendar Styles */
-#calendar {
-    flex: 1;
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 320px;
-    min-width: 300px;
-    font-size: 0.85rem;
-}
-
-.analysis-widget {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 320px;
-    width: 320px;
-}
-
-/* Remove these old calendar-related styles */
-.widget-container,
-.calendar-widget,
-.small-calendar-container {
-    display: none;
-}
-
-/* Update FullCalendar specific styles */
-.fc {
-    height: 100%;
-}
-
-.fc .fc-toolbar {
-    margin-bottom: 1em !important;
-}
-
-.fc .fc-toolbar-title {
-    font-size: 1.2em !important;
-}
-
-.fc-theme-standard td, 
-.fc-theme-standard th {
-    padding: 8px !important;
-    font-size: 0.9em !important;
-}
-
-.dashboard-top {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 2rem;
-    padding: 0;
-}
-
-.clock-widget,
-#calendar,
-.analysis-widget {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 320px;
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-}
-
-.analysis-widget canvas {
-    width: 100% !important;
-    height: calc(100% - 40px) !important;
-}
-
-/* Add these styles to the existing cashierdash.css file */
-
-.clock-widget {
-    background: linear-gradient(145deg, #f9f1ef, #e8d7d3);
-    border-radius: 15px;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.05),
-                -10px -10px 20px rgba(255, 255, 255, 0.8);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03),
+                -5px -5px 10px rgba(255, 255, 255, 0.5);
     padding: 25px;
     text-align: center;
     position: relative;
@@ -955,9 +784,9 @@ body.dark-mode .fc .fc-daygrid-day-number {
 }
 
 .clock-widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.08),
-                -15px -15px 30px rgba(255, 255, 255, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.05),
+                -8px -8px 15px rgba(255, 255, 255, 0.6);
 }
 
 .clock-face {
@@ -1040,42 +869,93 @@ body.dark-mode .fc .fc-daygrid-day-number {
 
 #digital-clock {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 500;
-    color: #783b31;
-    margin: 10px 0 5px;
-    letter-spacing: 2px;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    font-size: 2.5rem;
+    color: #e7e7e7;
+    text-shadow: 0 0 20px rgba(201, 141, 131, 0.5);
+    margin-bottom: 10px;
 }
 
 #current-date {
     font-size: 1rem;
-    color: #a96c60;
-    margin-top: 5px;
-    font-style: italic;
+    color: var(--primary-color);
+    text-align: center;
 }
 
-.clock-period {
-    font-size: 0.8rem;
-    background: #c98d83;
-    color: white;
-    padding: 3px 6px;
-    border-radius: 10px;
-    margin-left: 5px;
-    display: inline-block;
-    vertical-align: middle;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+#calendar {
+    flex: 1;
+    min-width: 400px;  /* Added minimum width */
+    max-width: 500px;  /* Added maximum width */
+    margin: 0 10px;    /* Added small margin */
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 0.85rem; /* Slightly larger font */
 }
 
-/* Add animation for the second hand */
-@keyframes pulse {
-    0% {
-        transform: translateX(-50%) rotate(var(--rotation)) scale(1);
-    }
-    50% {
-        transform: translateX(-50%) rotate(var(--rotation)) scale(1.02);
-    }
-    100% {
-        transform: translateX(-50%) rotate(var(--rotation)) scale(1);
-    }
+.fc {
+    height: 100%; /* Make FullCalendar take full height */
+}
+
+.fc-view-harness {
+    height: calc(100% - 40px) !important; /* Adjusted for better header space */
+}
+
+.fc-header-toolbar {
+    margin-bottom: 0.5em !important;
+    padding: 5px !important;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.2rem !important; /* Increased from 1rem */
+}
+
+.fc-theme-standard td, 
+.fc-theme-standard th {
+    padding: 6px !important; /* Increased from 3px */
+    font-size: 0.85rem !important; /* Increased from 0.75rem */
+}
+
+.clock-container {
+    flex: 1;
+    background: linear-gradient(45deg, #2b2b2b, #3a3a3a);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 250px;
+    margin-right: 10px;
+}
+
+.small-calendar-container {
+    flex: 1;
+    background: white;
+    padding: 8px;
+    border-radius: 15px;
+    box-shadow: none;
+    width: 250px;
+    margin-left: 10px;
+}
+
+#calendar {
+    font-size: 0.7rem;
+    height: auto !important;
+    min-height: 350px !important; /* Increased from 200px */
+    max-width: 250px !important;
+}
+
+#digital-clock {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    color: black;
+    text-shadow: 0 0 20px rgba(201, 141, 131, 0.5);
+    margin-bottom: 10px;
+}
+
+#current-date {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.analysis-widget h3 {
+    color: #5d2e46;
+    margin-bottom: 1rem;
 }

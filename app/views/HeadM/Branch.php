@@ -55,7 +55,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid #783b31;
+            border-bottom: 2px solid #5d2e46;
             padding-bottom: 20px;
         }
         
@@ -74,7 +74,7 @@
         
         .invoice-logo-text h1 {
             font-size: 24px;
-            color: #783b31;
+            color: #5d2e46;
             margin: 0;
         }
         
@@ -91,7 +91,7 @@
         
         .invoice-title h2 {
             font-size: 28px;
-            color: #783b31;
+            color: #5d2e46;
             margin: 0 0 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -112,7 +112,7 @@
         
         .company-info-left h3 {
             font-size: 18px;
-            color: #783b31;
+            color: #5d2e46;
             margin: 0 0 10px;
         }
         
@@ -155,7 +155,7 @@
         
         .print-summary h3 {
             text-align: left;
-            color: #783b31;
+            color: #5d2e46;
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
@@ -176,7 +176,7 @@
             border-top: 1px solid #dee2e6;
             padding-top: 10px;
             margin-top: 10px;
-            color: #783b31;
+            color: #5d2e46;
         }
         
         .invoice-footer {
@@ -451,7 +451,7 @@
                     <div class="graphs-container" style="display: flex; gap: 20px; margin-top: 30px;">
                         <!-- Left side: Bar Chart -->
                         <div class="graph-left" style="flex: 1; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px;">
-                            <h3 style="color: #783b31; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
+                            <h3 style="color: #5d2e46; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
                                 Sales by Date
                             </h3>
                             <div style="height: 250px;">
@@ -461,7 +461,7 @@
                         
                         <!-- Right side: Analysis Chart -->
                         <div class="graph-right" style="flex: 1; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px;">
-                            <h3 style="color: #783b31; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
+                            <h3 style="color: #5d2e46; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #f2f1ec; padding-bottom: 8px;">
                                 Sales Trend Analysis
                             </h3>
                             <div style="height: 250px;">
@@ -579,8 +579,8 @@
                 datasets: [{
                     label: 'Total Sales (LKR)',
                     data: data,
-                    backgroundColor: 'rgba(201, 141, 131, 0.7)',
-                    borderColor: '#c98d83',
+                    backgroundColor: 'rgba(162, 107, 152, 0.7)',
+                    borderColor: '#a26b98',
                     borderWidth: 1
                 }]
             },
@@ -611,7 +611,7 @@
                         beginAtZero: true,
                         grid: {
                             display: true,
-                            color: 'rgba(201, 141, 131, 0.1)'
+                            color: 'rgba(162, 107, 152, 0.1)'
                         },
                         ticks: {
                             callback: function(value) {
@@ -645,18 +645,18 @@
                 datasets: [{
                     label: 'Daily Sales',
                     data: data,
-                    backgroundColor: 'rgba(201, 141, 131, 0.2)',
-                    borderColor: '#c98d83',
+                    backgroundColor: 'rgba(162, 107, 152, 0.2)',
+                    borderColor: '#a26b98',
                     borderWidth: 2,
                     tension: 0.4,
                     pointRadius: 3,
-                    pointBackgroundColor: '#c98d83',
+                    pointBackgroundColor: '#a26b98',
                     fill: false
                 }, {
                     label: 'Average Trend',
                     data: runningAvg,
-                    backgroundColor: 'rgba(120, 59, 49, 0.1)',
-                    borderColor: '#783b31',
+                    backgroundColor: 'rgba(93, 46, 70, 0.1)',
+                    borderColor: '#5d2e46',
                     borderWidth: 2,
                     borderDash: [5, 5],
                     tension: 0.4,
@@ -691,7 +691,7 @@
                         beginAtZero: true,
                         grid: {
                             display: true,
-                            color: 'rgba(201, 141, 131, 0.1)'
+                            color: 'rgba(162, 107, 152, 0.1)'
                         },
                         ticks: {
                             callback: function(value) {

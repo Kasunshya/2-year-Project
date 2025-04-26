@@ -1,22 +1,47 @@
 :root {
-    --primary-color: #c98d83;
-    --secondary: #783b31;
-    --secondary-color: #783b31;
-    --bg: #f2f1ec;
-    --white: #ffffff;
+    /* Primary Colors */
+    --primary-color: #a26b98; /* Changed from #c98d83 to match primary-main */
+    --secondary: #5d2e46; /* Changed from #783b31 to match primary-dark */
+    --secondary-color: #5d2e46; /* Changed from #783b31 to match primary-dark */
+    --bg: #f9f5f0; /* Changed from #f2f1ec to match accent-cream */
+    --white: #ffffff; /* Matches neutral-white */
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --border-color: #E0E0E0;       
+    --border-color: #e0e0e0; /* Matches neutral-gray */
     
+    /* Additional Colors from Bakery Design System */
+    --primary-dark: #5d2e46;      /* Deep plum */
+    --primary-main: #a26b98;      /* Medium berry */
+    --primary-light: #e8d7e5;     /* Light lavender */
+    --accent-gold: #f1c778;       /* Soft gold */
+    --accent-cream: #f9f5f0;      /* Cream */
+    --accent-cinnamon: #b06f42;   /* Amber brown */
+    
+    /* Neutral Colors */
+    --neutral-white: #ffffff;
+    --neutral-light: #f8f7f4;
+    --neutral-medium: #f2f1ec;
+    --neutral-gray: #e0e0e0;
+    --neutral-dark: #555555;
+    --neutral-black: #333333;
+    
+    /* Status Colors */
+    --success-dark: #2e7d32;
+    --success-main: #4caf50;
+    --success-light: #e8f5e9;
+    --error-dark: #c62828;
+    --error-main: #f44336;
+    --error-light: #fdecea;
 }
+
 /* Update header styles */
 header {
     position: sticky;
     top: 0;
     z-index: 100;
     margin-bottom: 20px;
-    background-color: #C98D83;
+    background-color: var(--primary-main); /* Changed from #C98D83 */
     padding: 10px 20px;
-    color: black;
+    color: var(--white);
 }
 
 /* Update main content styles */
@@ -39,7 +64,7 @@ main {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--primary-color);
+    background-color: var(--primary-dark);
     margin: 0;
     padding: 20px;
     border-radius: 5px;
@@ -49,7 +74,7 @@ main {
 /* General Styles */
 body,
 html {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--font-family, 'Poppins', sans-serif);
     margin: 0;
     padding: 0;
     height: 100%;
@@ -85,15 +110,12 @@ main {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-dark);
     color: var(--white);
     border-radius: 5px;
     margin-bottom: 20px;
     margin-top: 0;
-    
-    
 }
-
 
 /* Buttons */
 .btn {
@@ -104,17 +126,17 @@ main {
     color: var(--white);
     border-radius: 0.5rem;
     box-shadow: var(--box-shadow);
-    background: var(--primary-color);
+    background: var(--primary-main);
     cursor: pointer;
     text-align: center;
 }
 
 .btn:hover {
-    background: var(--secondary);
+    background: var(--primary-dark);
 }
 
 .btn.approve {
-    background-color: #4CAF50;
+    background-color: var(--success-main);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -122,7 +144,7 @@ main {
 }
 
 .btn.reject {
-    background-color: #f44336;
+    background-color: var(--error-main);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -157,7 +179,7 @@ main {
 }
 
 .modal-content h2 {
-    color: var(--secondary-color);
+    color: var(--primary-dark);
     margin-bottom: 20px;
     text-align: center;
 }
@@ -169,7 +191,7 @@ main {
 
 .modal-content label {
     margin-top: 10px;
-    color: var(--secondary-color);
+    color: var(--primary-dark);
     font-weight: 600;
 }
 
@@ -185,11 +207,11 @@ main {
 .modal-content input:focus,
 .modal-content select:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary-main);
 }
 
 .modal .close {
-    color: var(--secondary-color);
+    color: var(--primary-dark);
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -197,9 +219,8 @@ main {
 }
 
 .modal .close:hover {
-    color: var(--primary-color);
+    color: var(--primary-main);
 }
-
 
 .close {
     position: absolute;
@@ -211,7 +232,6 @@ main {
     cursor: pointer;
     transition: color 0.3s;
 }
-
 
 .buttons {
     margin-top: 20px;
@@ -243,21 +263,21 @@ main {
 }
 
 .reset {
-    background-color: #f44336;
+    background-color: var(--error-main);
     color: white;
 }
 
 .reset:hover {
-    background-color: #d32f2f;
+    background-color: var(--error-dark);
 }
 
 .submit {
-    background-color:#c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
     color: white;
 }
 
 .submit:hover {
-    background-color: #783b31;
+    background-color: var(--primary-dark); /* Changed from #783b31 */
 }
 
 .logo img {
@@ -276,9 +296,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #C98D83;
+    background-color: var(--primary-dark); /* Changed from #C98D83 */
     padding: 10px 20px;
-    color: black;
+    color: var(--white);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -314,13 +334,13 @@ header {
 
 .search-bar input {
     padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--neutral-gray);
     border-radius: 5px 0 0 5px;
     flex: 1;
 }
 
 .search-bar button {
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -329,11 +349,11 @@ header {
 }
 
 .search-bar button:hover {
-    background-color: #783b31;
+    background-color: var(--primary-dark); /* Changed from #783b31 */
 }
 
 .add-customer {
-    background-color: black;
+    background-color: var(--primary-dark);
     color: white;
     text-align: right;
     border: none;
@@ -347,7 +367,7 @@ header {
 }
 
 .add-customer:hover {
-    background-color: maroon;
+    background-color: var(--primary-main);
     color: white;
 }
 
@@ -380,27 +400,27 @@ header {
 .table-container td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #f2f1ec;
+    border-bottom: 1px solid var(--neutral-medium);
 }
 
 .table-container th {
-    background-color: #f9f9f9;
-    color: #783b31;
+    background-color: var(--primary-main); /* Changed from #f9f9f9 */
+    color: var(--white); /* Changed from #783b31 */
     font-weight: 600;
 }
 
 .table-container tr:hover {
-    background-color: rgba(201, 141, 131, 0.05);
+    background-color: rgba(162, 107, 152, 0.05); /* Changed from rgba(201, 141, 131, 0.05) */
 }
 
 .table-container .rating {
-    color: gold;
+    color: var(--accent-gold); /* Changed from gold */
     font-size: 1.5rem;
     display: inline-block;
 }
 
 .table-container .btn {
-    background-color: var(--primary-color);
+    background-color: var(--primary-main);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -410,11 +430,11 @@ header {
 }
 
 .table-container .btn.delete {
-    background-color: #f44336;
+    background-color: var(--error-main);
 }
 
 .table-container .btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-dark);
 }
 
 /* Status indicators like in Dashboard */
@@ -427,8 +447,8 @@ header {
 }
 
 .status-paid, .status-active, .status-completed {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: var(--success-light);
+    color: var(--success-dark);
 }
 
 .status-pending {
@@ -437,8 +457,8 @@ header {
 }
 
 .status-failed, .status-inactive, .status-cancelled {
-    background-color: #ffebee;
-    color: #c62828;
+    background-color: var(--error-light);
+    color: var(--error-dark);
 }
 
 .table-container img {
@@ -447,12 +467,12 @@ header {
 }
 
 .invalid {
-    border-color: #ff4444;
+    border-color: var(--error-main);
     background-color: #fff8f8;
 }
 
 .error-message {
-    color: #ff4444;
+    color: var(--error-main);
     font-size: 0.8em;
     margin-top: 4px;
     margin-bottom: 8px;
@@ -460,11 +480,11 @@ header {
 
 input:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: var(--success-main);
 }
 
 input:valid {
-    border-color: #4CAF50;
+    border-color: var(--success-main);
 }
 
 .search-bar {
@@ -501,12 +521,12 @@ input:valid {
 .search-field input:focus,
 .search-field select:focus {
     outline: none;
-    border-color: #c98d83;
-    box-shadow: 0 0 5px rgba(201, 141, 131, 0.5);
+    border-color: var(--primary-main); /* Changed from #c98d83 */
+    box-shadow: 0 0 5px rgba(162, 107, 152, 0.5); /* Changed rgba value */
 }
 
 .search-btn {
-    background-color: #783b31;
+    background-color: var(--primary-dark); /* Changed from #783b31 */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -523,13 +543,13 @@ input:valid {
     font-size: 1.2rem;
 }
 
-search-btn:hover {
-    background-color: #c98d83;
+.search-btn:hover {
+    background-color: var(--primary-main); /* Changed from #c98d83 */
 }
 
 .download-cv {
     padding: 5px 10px;
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
     color: white;
     border: none;
     border-radius: 4px;
@@ -541,7 +561,7 @@ search-btn:hover {
 }
 
 .download-cv:hover {
-    background-color: #c98d83;
+    background-color: var(--primary-dark); /* Changed from #c98d83 */
 }
 
 .styled-table {
@@ -556,7 +576,7 @@ search-btn:hover {
 }
 
 .styled-table thead tr {
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
     color: #ffffff;
     text-align: left;
     font-weight: bold;
@@ -564,23 +584,23 @@ search-btn:hover {
 
 .styled-table th, .styled-table td {
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--neutral-gray);
 }
 
 .styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid var(--neutral-gray);
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: var(--neutral-light);
 }
 
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #c98d83;
+    border-bottom: 2px solid var(--primary-main); /* Changed from #c98d83 */
 }
 
 .styled-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: var(--accent-cream);
 }
 
 form {
@@ -597,19 +617,19 @@ form label {
 form input, form button {
     padding: 8px;
     font-size: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--neutral-gray);
     border-radius: 4px;
 }
 
 form button {
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
     color: #fff;
     border: none;
     cursor: pointer;
 }
 
 form button:hover {
-    background-color: #b07a6f;
+    background-color: var(--primary-dark); /* Changed from #b07a6f */
 }
 
 .filter-form {
@@ -638,13 +658,13 @@ form button:hover {
 .filter-group select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--neutral-gray);
     border-radius: 5px;
     font-size: 1rem;
 }
 
 .filter-btn {
-    background-color: #783b31;
+    background-color: var(--primary-dark); /* Changed from #783b31 */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -654,12 +674,12 @@ form button:hover {
 }
 
 .filter-btn:hover {
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
 }
 
 .graph-container {
     margin-top: 30px;
-    background-color: #fff;
+    background-color: var(--white);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -701,16 +721,17 @@ form button:hover {
 
 .styled-table th, .styled-table td {
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--neutral-gray);
 }
 
 .styled-table th {
-    background-color: #c98d83;
+    background-color: var(--primary-main); /* Changed from #c98d83 */
+    color: var(--white);
     font-weight: bold;
 }
 
 .styled-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: var(--neutral-light);
 }
 
 .graph-left canvas {
@@ -724,12 +745,12 @@ form button:hover {
 }
 
 .stars {
-    color: #FFD700; /* Yellow color for stars */
+    color: var(--accent-gold); /* Changed from #FFD700 */
     font-size: 1.2em; /* Adjust the size of the stars if needed */
 }
 
 .post-btn {
-    background-color: var(--primary-color);
+    background-color: var(--primary-main);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -739,7 +760,7 @@ form button:hover {
 }
 
 .post-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-dark);
 }
 
 .post-btn i {
@@ -783,7 +804,7 @@ td:last-child {
     width: 100%;
     height: 40px;
     padding: 8px 15px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-main);
     color: white;
     border: none;
     border-radius: 0 0 4px 4px;
@@ -796,7 +817,7 @@ td:last-child {
 }
 
 .view-more-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-dark);
 }
 
 .view-more-btn i {
@@ -806,10 +827,6 @@ td:last-child {
 
 .view-more-btn.expanded i {
     transform: rotate(180deg);
-}
-
-.view-more-btn:hover {
-    background-color: var(--secondary-color);
 }
 
 .view-more-btn i {
@@ -849,7 +866,7 @@ td:last-child {
     display: none;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: white;
     color: #333;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -868,7 +885,7 @@ td:last-child {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    border-bottom: 2px solid var(--primary-color);
+    border-bottom: 2px solid var(--primary-main);
     padding-bottom: 20px;
 }
 
@@ -881,13 +898,13 @@ td:last-child {
 .print-table th,
 .print-table td {
     padding: 12px;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--neutral-gray);
 }
 
 .print-summary {
     margin: 30px 0;
-    background: #f9f9f9;
-    border: 1px solid #dee2e6;
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-gray);
     border-radius: 4px;
     padding: 20px;
     width: 350px;
@@ -900,7 +917,7 @@ td:last-child {
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
     font-size: 100px;
-    color: rgba(200, 200, 200, 0.1);
+    color: rgba(162, 107, 152, 0.1); /* Changed rgba value */
     font-weight: bold;
     z-index: 0;
 }
@@ -911,7 +928,7 @@ td:last-child {
 }
 
 .download-btn {
-    background-color: var(--primary-color);
+    background-color: var(--primary-main);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -921,9 +938,167 @@ td:last-child {
 }
 
 .download-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-dark);
 }
 
 .download-btn i {
     margin-right: 5px;
+}
+
+/* Add this CSS to your HeadM/Customization.css file */
+
+/* Enhanced Modal Styling */
+#replyModal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(93, 46, 70, 0.15);
+    overflow: hidden;
+    max-width: 450px; /* Reduced from 500px */
+    margin: 15% auto; /* Center the smaller modal */
+}
+
+#replyModal .modal-header {
+    background-color: var(--primary-main);
+    color: white;
+    padding: 1.2rem 1.5rem;
+    border-bottom: none;
+    position: relative;
+}
+
+#replyModal .modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#replyModal .modal-title::before {
+    content: "\f4ad";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+#replyModal .close {
+    color: black;
+    opacity: 0.8;
+    text-shadow: none;
+    transition: opacity 0.3s;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.2rem;
+    font-size: 1.5rem;
+}
+
+#replyModal .close:hover {
+    opacity: 0.5;
+}
+
+#replyModal .modal-body {
+    padding: 1.2rem;
+    background-color: #fafafa;
+}
+
+#replyModal .form-group {
+    margin-bottom: 1.2rem;
+}
+
+#replyModal .form-group label {
+    font-weight: 500;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+#replyModal .customer-info {
+    background-color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary-main);
+}
+
+#replyModal .customer-info p {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#replyModal .customer-info i {
+    width: 20px;
+    margin-right: 8px;
+    color: var(--primary-main);
+}
+
+#replyModal textarea.form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    min-height: 120px;
+    width: 90%;
+    transition: all 0.3s;
+}
+
+#replyModal textarea.form-control:focus {
+    border-color: var(--primary-main);
+    box-shadow: 0 0 0 3px rgba(162, 107, 152, 0.2);
+}
+
+#replyModal .modal-footer {
+    background-color: #f5f5f5;
+    border-top: none;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Add space between buttons */
+}
+
+#replyModal .btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin: 0;
+}
+
+#replyModal .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+}
+
+#replyModal .btn-secondary:hover {
+    background-color: #d0d0d0;
+}
+
+#replyModal .btn-primary {
+    background-color: var(--primary-main);
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#replyModal .btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.2);
+}
+
+#replyModal .btn-primary::after {
+    content: "\f1d8";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+/* Modal open/close animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
 }

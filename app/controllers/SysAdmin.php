@@ -31,9 +31,13 @@ class SysAdmin extends Controller {
 
     public function employeeManagement() {
         $employees = $this->sysAdminModel->getAllEmployees();
+        $branches = $this->sysAdminModel->getAllBranches(); // Add this line to fetch branches
+        
         $data = [
-            'employees' => $employees
+            'employees' => $employees,
+            'branches' => $branches // Add branches to the data array
         ];
+        
         $this->view('SysAdmin/EmployeeManagement', $data);
     }
 

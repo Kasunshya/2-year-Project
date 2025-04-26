@@ -39,12 +39,16 @@ class HeadM extends Controller
     public function branchManager() {
         // Get the search query from the GET request
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $branchId = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
         // Fetch branch managers based on the search query
-        $branchManagers = $this->headManagerModel->getAllBranchManagers($search);
+
+        $branchManagers = $this->headManagerModel->getAllBranchManagers( $search ,$branchId);
+        $branches = $this->headManagerModel->getAllBranches();
 
         $data = [
-            'branchManagers' => $branchManagers
+            'branchManagers' => $branchManagers,
+            'branches' => $branches
         ];
 
         $this->view('HeadM/BranchManagers', $data);

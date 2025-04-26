@@ -109,8 +109,86 @@
                 <i class="fas fa-user-tie"></i>
                 <span>Employee Management</span>
             </div>
-            
-        </header>
+
+            <span>System Administrator</span>
+        </div>
+    </header>
+
+    <div class="content">
+        <?php flash('employee_message'); ?>
+        
+        <div class="search-bar">
+            <form onsubmit="searchEmployee(); return false;">
+                <input type="text" 
+                       class="form-control"
+                       id="searchEmployeeInput" 
+                       placeholder="Search by employee ID..." 
+                       value="">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+        
+        <button class="btn" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add Employee
+        </button>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Full Name</th>
+                        <th>NIC</th>
+                        <th>Address</th>
+                        <th>Contact No</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>User Role</th>
+                        <th>CV</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTable">
+                    <?php foreach($data['employees'] as $employee): ?>
+                    <tr data-dob="<?php echo $employee->dob; ?>" data-join-date="<?php echo $employee->join_date; ?>">
+                        <td><?php echo $employee->employee_id; ?></td>
+                        <td><?php echo htmlspecialchars($employee->full_name); ?></td>
+                        <td><?php echo htmlspecialchars($employee->nic); ?></td>
+                        <td><?php echo htmlspecialchars($employee->address); ?></td>
+                        <td><?php echo htmlspecialchars($employee->contact_no); ?></td>
+                        <td><?php echo htmlspecialchars($employee->email); ?></td>
+                        <td><?php echo htmlspecialchars($employee->branch_name ?? 'No Branch'); ?></td>
+                        <td>
+                            <span class="badge" style="background-color: var(--primary-light); color: var(--primary-dark); padding: 5px 10px; border-radius: var(--radius-md); font-weight: 500;">
+                                <?php echo ucfirst(htmlspecialchars($employee->user_role)); ?>
+                            </span>
+                        </td>
+                        <td>
+                            <?php if (!empty($employee->cv_upload)): ?>
+                                <a href="<?php echo URLROOT . '/uploads/' . $employee->cv_upload; ?>" download class="cv-download">
+                                    <i class="fas fa-download"></i> Download CV
+                                </a>
+                            <?php else: ?>
+                                <span class="text-muted">No CV Uploaded</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-sm" onclick="openEditModal(<?php echo $employee->employee_id; ?>)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee(<?php echo $employee->employee_id; ?>)">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
         <div class="content">
             <?php flash('employee_message'); ?>
@@ -294,7 +372,11 @@
                     </div>
                 </form>
             </div>
-        </div>
+
+            
+            <form id="editEmployeeForm" action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateEditEmployeeForm()">
+                <input type="hidden" name="employee_id" id="edit_employee_id" value="">
+
 
         <!-- Edit Employee Modal -->
         <div id="editEmployeeModal" class="modal">
