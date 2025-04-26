@@ -29,7 +29,7 @@
     <!-- Time and Calendar Section - Moved to top -->
     <div class="datetime-container">
         <div class="clock-card">
-            <i class="fas fa-clock"></i>
+           
             <div class="clock-container">
                 <div class="clock-face">
                     <div class="hand hour-hand" id="hour-hand"></div>
@@ -53,29 +53,34 @@
         </div>
     </div>
 
-    <!-- Summary Metrics -->
+    <!-- Summary Metrics - ORIGINAL STYLING WITH REAL DATA -->
     <div class="metrics-container">
         <div class="metric">
             <i class="fas fa-shopping-cart fa-2x"></i>
             <h3>Today's Sales</h3>
-            <p>LKR 1,500.50</p> <!-- Changed from Rs. to LKR -->
+            <p>LKR <?php echo number_format($data['todaySales']->total_sales ?? 0, 2); ?></p>
         </div>
         <div class="metric">
             <i class="fas fa-receipt fa-2x"></i>
             <h3>Today's Orders</h3>
-            <p>5</p> <!-- Hardcoded value for now -->
+            <p><?php echo $data['todayOrders'] ?? 0; ?></p>
         </div>
         <div class="metric">
             <i class="fas fa-chart-line fa-2x"></i>
             <h3>Weekly Sales</h3>
-            <p>LKR 9,750.75</p> <!-- Changed from Rs. to LKR -->
+            <p>LKR <?php echo number_format($data['weeklySales']->total_sales ?? 0, 2); ?></p>
         </div>
         <div class="metric">
             <i class="fas fa-box fa-2x"></i>
             <h3>Products in Stock</h3>
-            <p><?php echo isset($data['stockMetrics']) && isset($data['stockMetrics']->total_products) 
-                ? $data['stockMetrics']->total_products 
-                : '0'; ?></p>
+            <p><?php 
+                // Updated to display total quantity of all items in stock
+                $stockCount = 0;
+                if (isset($data['stockMetrics']) && is_object($data['stockMetrics'])) {
+                    $stockCount = $data['stockMetrics']->total_items ?? 0;  // Changed from total_products to total_items
+                }
+                echo $stockCount;
+            ?></p>
         </div>
     </div>
 

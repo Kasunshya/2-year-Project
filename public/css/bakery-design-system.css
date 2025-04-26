@@ -48,8 +48,8 @@
             display: flex;
             margin: 0;
             font-family: var(--font-family);
-            background-color: var(--neutral-light);
-            color: var(--neutral-dark);
+            background-color: #e8d7e5 ;
+            color: #e8d7e5;
         }
 
         .header {
@@ -108,11 +108,28 @@
         }
 
         .btn {
-            padding: 0.75rem 1.25rem;
-            font-size: 0.95rem;
+            padding: 0.5rem 0.7rem;       
+            font-size: 0.75rem;         
             font-weight: 500;
             color: white;
             background-color: var(--primary-main);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            margin-bottom: 1rem;       
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;   
+        }
+
+        .btn.delete-btn{
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: white;
+            background-color:#c62828;
             border: none;
             border-radius: var(--radius-md);
             cursor: pointer;
@@ -123,6 +140,7 @@
             align-items: center;
             gap: 0.5rem;
         }
+        
 
         .btn:hover {
             background-color: var(--primary-dark);
@@ -135,7 +153,11 @@
         }
 
         .btn.delete-btn {
-            background-color: #e57373;
+            background-color: #c62828;;
+        }
+
+        .btn.edit-btn {
+            background-color:#2e7d32 ;
         }
 
         .btn.delete-btn:hover {
@@ -232,6 +254,7 @@
             vertical-align: middle;
             border-bottom: 1px solid var(--neutral-gray);
             transition: background-color 0.2s ease;
+            color: var(--neutral-black);
         }
 
         table tbody tr:hover td {
@@ -334,7 +357,7 @@
         }
 
         .modal-content h2 {
-            color: var(--primary-dark);
+            color: #5d2e46;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
             border-bottom: 2px solid var(--primary-light);

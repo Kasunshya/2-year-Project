@@ -1,0 +1,48 @@
+/* Fixed Size Container for SysAdmin Pages */
+
+.sysadmin-page-container {
+    width: 837px !important;
+    height: 812px !important;
+    margin: 0 auto !important;
+    overflow: hidden;
+    background-color: var(--neutral-light);
+    position: relative;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+}
+
+/* Adjust content area to respect the fixed container */
+.sysadmin-page-container .content {
+    width: calc(837px - 150px) !important; /* Accounting for sidebar */
+    height: calc(812px - 120px) !important; /* Accounting for header and margins */
+    overflow-y: auto;
+    margin-left: 150px !important;
+    padding: 1rem !important;
+    box-sizing: border-box !important;
+}
+
+/* Fix header to match container width */
+.sysadmin-page-container .header {
+    width: calc(837px - 170px) !important; /* Account for sidebar + margins */
+    margin-left: 150px !important;
+    margin-right: 20px !important;
+    box-sizing: border-box !important;
+}
+
+/* Make tables scroll within the fixed container */
+.sysadmin-page-container .table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* Make the sidebar fixed height */
+.sysadmin-page-container .sidebar {
+    height: 812px !important;
+}
+
+/* Make modals appear properly within fixed container */
+.sysadmin-page-container .modal-content {
+    max-width: 700px;
+    max-height: 700px;
+    overflow-y: auto;
+}

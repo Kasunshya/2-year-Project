@@ -7,6 +7,7 @@
   --dark-bg: #1a1a1a;
     --dark-text: #e0e0e0;
 }
+/*
 body.dark-mode {
   background-color: var(--dark-bg);
   color: var(--dark-text);
@@ -23,6 +24,7 @@ body.dark-mode header {
 }
 /* General Styles */
 body, html {
+  background-color:#f9e9f4;
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
@@ -35,17 +37,21 @@ body, html {
   display: flex;
   height: 100vh;
   
-}header {
-  background-color: var(--primary-color);
+}
+
+/* Updated header styles */
+header {
+  background-color: #5d2e46;
   padding: 2rem;
   text-align: center;
   color: var(--white);
   font-size: 2.5rem;
   text-transform: uppercase;
   margin-top: 10px;
-  margin-left: 0px;
+  margin-left: 120px;
   margin-right: 20px;
   border-radius: 5px;
+  width: 90%;
 }
 
 /* Sidebar 

@@ -5,6 +5,7 @@
 
 .header-container {
     margin-bottom: 30px;
+    
 }
 
 .header-container h1 {
@@ -15,13 +16,6 @@
     gap: 10px;
 }
 
-.products-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-left: 120px;
-}
 
 .filters {
     display: flex;
@@ -41,8 +35,11 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-}
+    margin-left: 12px;
+    margin-right:20px;
 
+
+}   
 .products-table th,
 .products-table td {
     padding: 12px;
@@ -51,7 +48,7 @@
 }
 
 .products-table th {
-    background-color: #f8f9fa;
+    background-color: #a26b98;
     font-weight: 600;
 }
 

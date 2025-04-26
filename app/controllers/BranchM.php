@@ -10,23 +10,32 @@ class BranchM extends Controller {
     }
 
     public function index() {
-        // Pass the data to the view
-        // Initialize $data with default empty values
+        // Get branch ID of the logged-in manager
+        $userId = $_SESSION['user_id'];
+        $branch = $this->branchModel->getBranchByManager($userId);
+        
+        if (!$branch) {
+            die('Error: No branch association found.');
+        }
+        
+        $branchId = $branch->branch_id;
+        
+        // Get today's and yesterday's date
+        $today = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        $weekStart = date('Y-m-d', strtotime('-6 days'));
+        
         $data = [
-            'Name' => '',
-            'Contact' => '',
-            'Address' => '',
-            'Email' => '',
-            'Join_Date' => '',
-            'Password' => '',
-            'Name_err' => '',
-            'Contact_err' => '',
-            'Address_err' => '',
-            'Email_err' => '',
-            'Join_Date_err' => '',
-            'Password_err' => ''
+            'branch' => $branch,
+            'todaySales' => $this->branchModel->getDailySalesSummary($branchId, $today),
+            'yesterdaySales' => $this->branchModel->getDailySalesSummary($branchId, $yesterday),
+            'todayOrders' => $this->branchModel->getDailyOrderCount($branchId, $today),
+            'weeklySales' => $this->branchModel->getWeeklySalesSummary($branchId, $weekStart, $today),
+            'stockMetrics' => $this->branchModel->getStockMetrics($branchId),
+            'salesChartData' => $this->branchModel->getDailySalesForLastDays($branchId, 7)
         ];
-        $this->view('BranchM/v_addCashier', $data);
+        
+        $this->view('BranchM/v_BranchMdashboard', $data);
     }
 
     public function addCashier() {

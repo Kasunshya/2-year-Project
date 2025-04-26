@@ -16,6 +16,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     
     <style>
+
+.header {
+          background-color: #5d2e46;
+          padding: 2rem;
+          text-align: center;
+          color: var(--white);
+          font-size: 2.5rem;
+          text-transform: uppercase;
+          margin-top: 10px;
+          margin-left: 120px;
+          margin-right: 20px;
+          border-radius: 5px;
+          width: 90%;
+}
+
         /* Page-specific styles only */
         table {
             min-width: 1200px;
@@ -121,233 +136,230 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+<div class="sysadmin-page-container">
+    <div class="container">
+        <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
 
-    <header class="header">
-        <div class="header-left">
-            <i class="fas fa-box"></i>
-            <span>Product Management</span>
-        </div>
-        <div class="header-role">
-            <div class="header-role-avatar">
-                <i class="fas fa-user"></i>
+        <header class="header">
+            <div class="header-left">
+                <i class="fas fa-box"></i>
+                <span>Product Management</span>
             </div>
-            <span>System Administrator</span>
-        </div>
-    </header>
+            
+        </header>
 
-    <div class="content">
-        <?php if(isset($_SESSION['flash_messages'])) : ?>
-            <?php foreach($_SESSION['flash_messages'] as $type => $message) : ?>
-                <div class="alert alert-<?php echo $type; ?>" id="alert-message">
-                    <?php if($type === 'success') : ?>
-                        <i class="fas fa-check-circle"></i>
-                    <?php elseif($type === 'error') : ?>
-                        <i class="fas fa-exclamation-circle"></i>
-                    <?php else : ?>
-                        <i class="fas fa-info-circle"></i>
-                    <?php endif; ?>
-                    <span><?php echo $message; ?></span>
-                    <button class="close-btn" onclick="closeAlert(this.parentElement)">&times;</button>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        
-        <div class="search-bar">
-            <form action="<?php echo URLROOT; ?>/SysAdminP/searchProduct" method="GET">
-                <input type="text" 
-                       class="form-control"
-                       name="search" 
-                       placeholder="Search by product name..." 
-                       value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </form>
-        </div>
-        
-        <button class="btn btn-primary" onclick="openAddModal()">
-            <i class="fas fa-plus"></i> Add Product
-        </button>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Expiry Date</th>
-                        <th>Category</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="productTable">
-                    <?php if(isset($data['products']) && is_array($data['products'])) : ?>
-                        <?php foreach($data['products'] as $product) : ?>
-                            <tr id="product-<?php echo $product->product_id; ?>">
-                                <td>
-                                    <?php if(!empty($product->image_path)): ?>
-                                        <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $product->image_path; ?>" 
-                                            alt="<?php echo htmlspecialchars($product->product_name); ?>" class="product-image">
-                                    <?php else: ?>
-                                        <img src="<?php echo URLROOT; ?>/public/img/no-image.png" alt="No Image" class="product-image">
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($product->product_name); ?></td>
-                                <td>LKR <?php echo number_format($product->price, 2); ?></td>
-                                <td><?php echo $product->available_quantity; ?></td>
-                                <td><?php echo $product->expiry_date ? date('Y-m-d', strtotime($product->expiry_date)) : 'Not set'; ?></td>
-                                <td><?php echo htmlspecialchars($product->category_name); ?></td>
-                                <td class="actions">
-                                    <button class="btn btn-sm btn-primary" onclick="openEditModal(<?php echo $product->product_id; ?>, 
-                                        '<?php echo htmlspecialchars(addslashes($product->product_name)); ?>', 
-                                        '<?php echo htmlspecialchars(addslashes($product->description)); ?>', 
-                                        <?php echo $product->price; ?>, 
-                                        <?php echo $product->available_quantity; ?>, 
-                                        <?php echo $product->category_id; ?>,
-                                        '<?php echo $product->image_path; ?>',
-                                        '<?php echo $product->expiry_date; ?>')">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo $product->product_id; ?>)">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
+        <div class="content">
+            <?php if(isset($_SESSION['flash_messages'])) : ?>
+                <?php foreach($_SESSION['flash_messages'] as $type => $message) : ?>
+                    <div class="alert alert-<?php echo $type; ?>" id="alert-message">
+                        <?php if($type === 'success') : ?>
+                            <i class="fas fa-check-circle"></i>
+                        <?php elseif($type === 'error') : ?>
+                            <i class="fas fa-exclamation-circle"></i>
+                        <?php else : ?>
+                            <i class="fas fa-info-circle"></i>
+                        <?php endif; ?>
+                        <span><?php echo $message; ?></span>
+                        <button class="close-btn" onclick="closeAlert(this.parentElement)">&times;</button>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+            <div class="search-bar">
+                <form action="<?php echo URLROOT; ?>/SysAdminP/searchProduct" method="GET">
+                    <input type="text" 
+                        class="form-control"
+                        name="search" 
+                        placeholder="Search by product name..." 
+                        value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+            
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
                         <tr>
-                            <td colspan="7" style="text-align: center;">No products found</td>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Expiry Date</th>
+                            <th>Category</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Add Product Modal -->
-    <div class="modal" id="addProductModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add New Product</h3>
-                <button type="button" class="close" onclick="closeModal('addProductModal')">&times;</button>
-            </div>
-            
-            <form id="addProductForm" action="<?php echo URLROOT; ?>/SysAdminP/addProduct" method="POST" enctype="multipart/form-data" onsubmit="return validateAddProductForm()">
-                <div class="file-input-container">
-                    <label class="form-label" for="product_image">Product Image:</label>
-                    <input type="file" class="form-control" id="add_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
-                    <img id="addImagePreview" class="product-image-preview" src="" alt="Preview">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="product_name">Product Name:</label>
-                    <input type="text" class="form-control" id="product_name" name="product_name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="description">Description:</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="price">Price (LKR):</label>
-                    <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="available_quantity">Available Quantity:</label>
-                    <input type="number" class="form-control" id="available_quantity" name="available_quantity" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="category_id">Category:</label>
-                    <select class="form-select" id="category_id" name="category_id" required>
-                        <option value="">Select Category</option>
-                        <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
-                            <?php foreach($data['categories'] as $category) : ?>
-                                <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
+                    </thead>
+                    <tbody id="productTable">
+                        <?php if(isset($data['products']) && is_array($data['products'])) : ?>
+                            <?php foreach($data['products'] as $product) : ?>
+                                <tr id="product-<?php echo $product->product_id; ?>">
+                                    <td>
+                                        <?php if(!empty($product->image_path)): ?>
+                                            <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $product->image_path; ?>" 
+                                                alt="<?php echo htmlspecialchars($product->product_name); ?>" class="product-image">
+                                        <?php else: ?>
+                                            <img src="<?php echo URLROOT; ?>/public/img/no-image.png" alt="No Image" class="product-image">
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($product->product_name); ?></td>
+                                    <td>LKR <?php echo number_format($product->price, 2); ?></td>
+                                    <td><?php echo $product->available_quantity; ?></td>
+                                    <td><?php echo $product->expiry_date ? date('Y-m-d', strtotime($product->expiry_date)) : 'Not set'; ?></td>
+                                    <td><?php echo htmlspecialchars($product->category_name); ?></td>
+                                    <td class="actions">
+                                        <button class="btn edit-btn" onclick="openEditModal(<?php echo $product->product_id; ?>, 
+                                            '<?php echo htmlspecialchars(addslashes($product->product_name)); ?>', 
+                                            '<?php echo htmlspecialchars(addslashes($product->description)); ?>', 
+                                            <?php echo $product->price; ?>, 
+                                            <?php echo $product->available_quantity; ?>, 
+                                            <?php echo $product->category_id; ?>,
+                                            '<?php echo $product->image_path; ?>',
+                                            '<?php echo $product->expiry_date; ?>')">
+                                            <i class="fas fa-edit"></i> 
+                                        </button>
+                                        <button class="btn delete-btn" onclick="confirmDelete(<?php echo $product->product_id; ?>)">
+                                            <i class="fas fa-trash"></i> 
+                                        </button>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="7" style="text-align: center;">No products found</td>
+                            </tr>
                         <?php endif; ?>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="expiry_date">Expiry Date:</label>
-                    <input type="date" class="form-control" id="expiry_date" name="expiry_date">
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('addProductModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Product</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Product Modal -->
-    <div class="modal" id="editProductModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Product</h3>
-                <button type="button" class="close" onclick="closeModal('editProductModal')">&times;</button>
+                    </tbody>
+                </table>
             </div>
-            
-            <form id="editProductForm" action="<?php echo URLROOT; ?>/SysAdminP/updateProduct" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="edit_product_id" name="product_id">
-                
-                <div class="file-input-container">
-                    <label class="form-label" for="edit_product_image">Product Image:</label>
-                    <input type="file" class="form-control" id="edit_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
-                    <img id="editImagePreview" class="product-image-preview" src="" alt="Preview">
-                    <p id="currentImageText">Current image: <span id="currentImageName"></span></p>
+        </div>
+
+        <!-- Add Product Modal -->
+        <div class="modal" id="addProductModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Product</h3>
+                    <button type="button" class="close" onclick="closeModal('addProductModal')">&times;</button>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label" for="edit_product_name">Product Name:</label>
-                    <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
+                <form id="addProductForm" action="<?php echo URLROOT; ?>/SysAdminP/addProduct" method="POST" enctype="multipart/form-data" onsubmit="return validateAddProductForm()">
+                    <div class="file-input-container">
+                        <label class="form-label" for="product_image">Product Image:</label>
+                        <input type="file" class="form-control" id="add_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'addImagePreview')">
+                        <img id="addImagePreview" class="product-image-preview" src="" alt="Preview">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="product_name">Product Name:</label>
+                        <input type="text" class="form-control" id="product_name" name="product_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="description">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="price">Price (LKR):</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="available_quantity">Available Quantity:</label>
+                        <input type="number" class="form-control" id="available_quantity" name="available_quantity" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="category_id">Category:</label>
+                        <select class="form-select" id="category_id" name="category_id" required>
+                            <option value="">Select Category</option>
+                            <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
+                                <?php foreach($data['categories'] as $category) : ?>
+                                    <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="expiry_date">Expiry Date:</label>
+                        <input type="date" class="form-control" id="expiry_date" name="expiry_date">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('addProductModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Product Modal -->
+        <div class="modal" id="editProductModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Product</h3>
+                    <button type="button" class="close" onclick="closeModal('editProductModal')">&times;</button>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label" for="edit_description">Description:</label>
-                    <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="edit_price">Price (LKR):</label>
-                    <input type="number" class="form-control" id="edit_price" name="price" step="0.01" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="edit_available_quantity">Available Quantity:</label>
-                    <input type="number" class="form-control" id="edit_available_quantity" name="available_quantity" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="edit_category_id">Category:</label>
-                    <select class="form-select" id="edit_category_id" name="category_id" required>
-                        <option value="">Select Category</option>
-                        <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
-                            <?php foreach($data['categories'] as $category) : ?>
-                                <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="edit_expiry_date">Expiry Date:</label>
-                    <input type="date" class="form-control" id="edit_expiry_date" name="expiry_date">
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('editProductModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Product</button>
-                </div>
-            </form>
+                <form id="editProductForm" action="<?php echo URLROOT; ?>/SysAdminP/updateProduct" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="edit_product_id" name="product_id">
+                    
+                    <div class="file-input-container">
+                        <label class="form-label" for="edit_product_image">Product Image:</label>
+                        <input type="file" class="form-control" id="edit_product_image" name="product_image" accept="image/*" onchange="previewImage(this, 'editImagePreview')">
+                        <img id="editImagePreview" class="product-image-preview" src="" alt="Preview">
+                        <p id="currentImageText">Current image: <span id="currentImageName"></span></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_product_name">Product Name:</label>
+                        <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_description">Description:</label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_price">Price (LKR):</label>
+                        <input type="number" class="form-control" id="edit_price" name="price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_available_quantity">Available Quantity:</label>
+                        <input type="number" class="form-control" id="edit_available_quantity" name="available_quantity" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_category_id">Category:</label>
+                        <select class="form-select" id="edit_category_id" name="category_id" required>
+                            <option value="">Select Category</option>
+                            <?php if(isset($data['categories']) && is_array($data['categories'])) : ?>
+                                <?php foreach($data['categories'] as $category) : ?>
+                                    <option value="<?php echo $category->category_id; ?>"><?php echo htmlspecialchars($category->name); ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit_expiry_date">Expiry Date:</label>
+                        <input type="date" class="form-control" id="edit_expiry_date" name="expiry_date">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('editProductModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

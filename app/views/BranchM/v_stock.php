@@ -13,59 +13,156 @@
             margin: 0 auto;
             padding: 20px 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
+        
+        /* Updated Search container styling */
+        .search-wrapper {
+            width: 90%;
+            margin: 20px auto;
+            margin-left: 120px; /* Match with table's left margin */
+            margin-right: auto; /* Remove the 1500px fixed margin */
+            max-width: calc(90% - 30px); /* Match width with header container */
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .search-input-group {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .search-wrapper input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            padding-right: 40px; /* Space for the icon */
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            color: #a26b98;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s ease;
+        }
+        
+        .search-icon:hover {
+            color: #5d2e46;
+        }
+        
+        .search-wrapper select {
+            min-width: 150px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .search-wrapper input:focus,
+        .search-wrapper select:focus {
+            outline: none;
+            border-color: #a26b98;
+            box-shadow: 0 0 0 2px rgba(162, 107, 152, 0.2);
+        }
+        
+        /* New table styles */
         .stock-table {
             width: 90%;
             margin: 0 auto;
-            border-collapse: collapse;
             margin-left: 120px;
+            min-width: 1200px;
+            border-collapse: collapse;
         }
-        .stock-table th, .stock-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+
         .stock-table th {
-            background-color: #f4f4f4;
+            background-color: #a26b98; /* var(--primary-main) */
+            color: white;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            border: none;
         }
+
+        .stock-table th:first-child {
+            border-top-left-radius: 4px; /* var(--radius-sm) */
+        }
+
+        .stock-table th:last-child {
+            border-top-right-radius: 4px; /* var(--radius-sm) */
+        }
+
+        .stock-table td {
+            background-color: white; /* var(--neutral-white) */
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e0e0e0; /* var(--neutral-gray) */
+            transition: background-color 0.2s ease;
+        }
+
+        .stock-table tbody tr:hover td {
+            background-color: #f9f5f0; /* var(--accent-cream) */
+        }
+
+        .stock-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Keep existing status styling */
         .low-stock {
             color: red;
         }
+        
         .expiring-soon {
             color: orange;
         }
-        .search-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .search-container input, .search-container select {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+        
         main {
             padding: 20px 0;
+            overflow-x: auto; /* Add horizontal scrolling for small screens */
         }
     </style>
 </head>
 <body>
+    <!-- Header with just the title -->
     <header>
         <div class="header-container">
             <h7><i class="fas fa-box-open">&nbsp;</i>Stock Management</h7>
-            <div class="search-container">
-                <input type="text" id="stockSearch" placeholder="Search products...">
-                <select id="categoryFilter">
-                    <option value="">All Categories</option>
-                    <?php foreach(array_unique(array_column($data['stocks'], 'category_name')) as $category): ?>
-                        <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
         </div>
     </header>
+    
+    <!-- Search and filter section moved BELOW the header -->
+    <div class="search-wrapper">
+        <div class="search-input-group">
+            <input type="text" id="stockSearch" placeholder="Search products...">
+            <button class="search-icon" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <?php foreach(array_unique(array_column($data['stocks'], 'category_name')) as $category): ?>
+                <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
     
     <main>
         <table class="stock-table">
@@ -109,6 +206,7 @@
     <script>
     document.getElementById('stockSearch').addEventListener('keyup', filterStock);
     document.getElementById('categoryFilter').addEventListener('change', filterStock);
+    document.getElementById('searchBtn').addEventListener('click', filterStock);
 
     function filterStock() {
         const searchText = document.getElementById('stockSearch').value.toLowerCase();

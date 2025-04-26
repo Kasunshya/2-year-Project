@@ -17,6 +17,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <style>
+
+.header {
+          background-color: #5d2e46;
+          padding: 2rem;
+          text-align: center;
+          color: var(--white);
+          font-size: 2.5rem;
+          text-transform: uppercase;
+          margin-top: 10px;
+          margin-left: 120px;
+          margin-right: 20px;
+          border-radius: 5px;
+          width: 90%;
+}
+
         /* Dashboard-specific styles */
         .dashboard-content {
             padding: var(--space-md);
@@ -228,103 +243,106 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+    <!-- Add this right after <body> in each SysAdmin page -->
+    <div class="sysadmin-page-container">
+        <div class="container">
+            <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
 
-        <header class="header">
-            <div class="header-left">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard Overview</span>
+            <header class="header">
+                <div class="header-left">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard Overview</span>
+                </div>
+                <div class="header-role">
+                    <div class="header-role-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>System Administrator</span>
+                </div>
+            </header>
+
+            <div class="content">
+                <section class="dashboard-content">
+                    <!-- Time and Calendar Section -->
+                    <div class="time-calendar-container">
+                        <div class="card time-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Current Time</p>
+                                <h2 id="digital-clock" class="clock-display">00:00:00</h2>
+                                <p class="card-subtitle">Local Time</p>
+                            </div>
+                        </div>
+
+                        <div class="card calendar-card animate-fadeIn">
+                            <div class="calendar-container">
+                                <h2>Calendar</h2>
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="overview">
+                        <div class="card stats-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Total Customers</p>
+                                <h2><?php echo isset($data['totalCustomers']) ? number_format($data['totalCustomers']) : '0'; ?></h2>
+                                <p class="card-subtitle">Registered Users</p>
+                            </div>
+                        </div>
+
+                        <div class="card stats-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Active Staff</p>
+                                <h2><?php echo isset($data['totalEmployees']) ? number_format($data['totalEmployees']) : '0'; ?></h2>
+                                <p class="card-subtitle">Active Employees</p>
+                            </div>
+                        </div>
+
+                        <div class="card stats-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Categories</p>
+                                <h2><?php echo isset($data['totalCategories']) ? number_format($data['totalCategories']) : '0'; ?></h2>
+                                <p class="card-subtitle">Product Categories</p>
+                            </div>
+                        </div>
+
+                        <div class="card stats-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Products</p>
+                                <h2><?php echo isset($data['totalProducts']) ? number_format($data['totalProducts']) : '0'; ?></h2>
+                                <p class="card-subtitle">Active Products</p>
+                            </div>
+                        </div>
+
+                        <div class="card stats-card animate-fadeIn">
+                            <div class="card-icon">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title">Branches</p>
+                                <h2><?php echo isset($data['activeBranches']) ? number_format($data['activeBranches']) : '0'; ?></h2>
+                                <p class="card-subtitle">Active Locations</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="header-role">
-                <div class="header-role-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <span>System Administrator</span>
-            </div>
-        </header>
-
-        <div class="content">
-            <section class="dashboard-content">
-                <!-- Time and Calendar Section -->
-                <div class="time-calendar-container">
-                    <div class="card time-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Current Time</p>
-                            <h2 id="digital-clock" class="clock-display">00:00:00</h2>
-                            <p class="card-subtitle">Local Time</p>
-                        </div>
-                    </div>
-
-                    <div class="card calendar-card animate-fadeIn">
-                        <div class="calendar-container">
-                            <h2>Calendar</h2>
-                            <div id="calendar"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="overview">
-                    <div class="card stats-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Total Customers</p>
-                            <h2><?php echo isset($data['totalCustomers']) ? number_format($data['totalCustomers']) : '0'; ?></h2>
-                            <p class="card-subtitle">Registered Users</p>
-                        </div>
-                    </div>
-
-                    <div class="card stats-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Active Staff</p>
-                            <h2><?php echo isset($data['totalEmployees']) ? number_format($data['totalEmployees']) : '0'; ?></h2>
-                            <p class="card-subtitle">Active Employees</p>
-                        </div>
-                    </div>
-
-                    <div class="card stats-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-tags"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Categories</p>
-                            <h2><?php echo isset($data['totalCategories']) ? number_format($data['totalCategories']) : '0'; ?></h2>
-                            <p class="card-subtitle">Product Categories</p>
-                        </div>
-                    </div>
-
-                    <div class="card stats-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-box"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Products</p>
-                            <h2><?php echo isset($data['totalProducts']) ? number_format($data['totalProducts']) : '0'; ?></h2>
-                            <p class="card-subtitle">Active Products</p>
-                        </div>
-                    </div>
-
-                    <div class="card stats-card animate-fadeIn">
-                        <div class="card-icon">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-title">Branches</p>
-                            <h2><?php echo isset($data['activeBranches']) ? number_format($data['activeBranches']) : '0'; ?></h2>
-                            <p class="card-subtitle">Active Locations</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
 
