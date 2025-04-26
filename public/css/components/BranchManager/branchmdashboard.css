@@ -9,7 +9,7 @@
 }
 
 body.dark-mode {
-  background-color: var(--dark-bg);
+  background-color:#f8e5f4;
   color: var(--dark-text);
 }
 
@@ -29,6 +29,7 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color:#f8e5f4;
 }
 
 .container {
@@ -37,7 +38,7 @@ body, html {
 }
 
 header {
-  background-color: var(--primary-color);
+  background-color:#5d2e46;
   padding: 2rem;
   text-align: center;
   color: var(--white);
@@ -171,6 +172,7 @@ header {
 .username, .role {
   margin: 0; /* Remove any default margin from the text */
   font-size: 1.2rem;
+  color:#e8d7e5;
 }
 
 .chart-container {
@@ -197,44 +199,70 @@ header {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More intense shadow */
 }
 
+/* Enlarged Metrics Container */
 .metrics-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 30px; /* Increased from 20px */
+  margin-bottom: 40px; /* Increased from 30px */
+  margin-top: 120px; /* Increased from 40px to 60px to add more space */
   margin-left: 190px;
   margin-right: 110px;
 }
 
+/* Enlarged metric cards */
 .metric {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 60px; /* Increased from 20px */
+  border-radius: 15px; /* Increased from 8px */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: #c98d83;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #b68aad 0%, #f2e5ef 100%);
 }
 
-.metric:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+/* Enlarged icons */
+.metric i {
+  margin-bottom: 20px; /* Increased from 15px */
+  font-size: 2.2rem; /* Increased from 1.8rem */
+  color: rgba(93, 46, 70, 0.8);
 }
 
+/* Enlarged text */
 .metric h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 18px; /* Increased from 16px */
+  margin-bottom: 15px; /* Increased from 10px */
+  font-weight: 500;
+  color: #5d2e46;
 }
 
 .metric p {
-  font-size: 2rem;
+  font-size: 2.2rem; /* Increased from 1.8rem */
   font-weight: 600;
+  margin: 8px 0 0 0; /* Added top margin */
+  color: #5d2e46;
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 1200px) {
+  .metrics-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .metrics-container {
+    grid-template-columns: 1fr; /* 1 column on small screens */
+    margin-left: 100px;
+    margin-right: 50px;
+  }
 }
 
 .datetime-container {
   display: flex;
   justify-content: space-between;
-  margin: 20px 190px 20px 190px;
+  margin: 20px 190px 40px 190px; /* Increased bottom margin from 20px to 40px */
   gap: 30px;
 }
 
@@ -258,8 +286,8 @@ header {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: #ffffff;
-  border: 10px solid var(--primary-color);
+  background-color: #ffffff; /* Keep background white/default */
+  border: 10px solid #a26b98; /* Changed from var(--primary-color) to #a26b98 */
   box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
   position: relative;
   margin: 0 auto;
@@ -269,6 +297,8 @@ header {
   width: 100%;
   height: 100%;
   position: relative;
+  color:#5d2e46;
+ 
 }
 
 .hand {
@@ -314,7 +344,7 @@ header {
 .time-display {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--primary-color);
+  color:#5d2e46;
   margin-top: 15px;
 }
 
@@ -326,7 +356,7 @@ header {
 }
 
 .calendar th {
-  background-color: var(--primary-color);
+  background-color:#5d2e46;  ;
   color: white;
   padding: 8px;
   text-align: center;
@@ -339,7 +369,7 @@ header {
 }
 
 .calendar .today {
-  background-color: var(--primary-color);
+  background-color:#5d2e46;  ;
   color: white;
   border-radius: 50%;
 }
@@ -352,7 +382,7 @@ header {
 }
 
 .calendar-header button {
-  background-color: var(--primary-color);
+  background-color:#a26b98;;
   border: none;
   color: white;
   border-radius: 50%;
@@ -366,7 +396,7 @@ header {
 }
 
 .calendar-header button:hover {
-  background-color: var(--secondary);
+  background-color: #a26b98;;
 }
 
 .month-year {
@@ -398,7 +428,7 @@ header {
 .card h3 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: var(--secondary);
+  
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -435,7 +465,7 @@ header {
 }
 
 .metric i {
-  color: var(--primary-color);
+  color:#a26b98;;
   margin-bottom: 10px;
 }
 
@@ -468,4 +498,106 @@ body.dark-mode .card h3,
 body.dark-mode .metric h3,
 body.dark-mode .metric p {
   color: var(--dark-text);
+}
+
+/* Card-like search bar */
+.search-bar {
+    margin: 20px 190px 30px 190px; /* Match your other container margins */
+    background-color: var(--neutral-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.search-bar:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.search-bar form {
+    display: flex;
+    width: 100%;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.search-bar input, 
+.search-bar select {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--neutral-gray);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar input {
+    flex-grow: 1;
+}
+
+.search-bar select {
+    min-width: 150px;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23a26b98' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 8px 8px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.search-bar input:focus,
+.search-bar select:focus {
+    border-color: var(--primary-main);
+    box-shadow: 0 0 0 3px rgba(162, 107, 152, 0.25);
+    outline: none;
+}
+
+.search-bar button {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--primary-main);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: var(--primary-dark);
+}
+
+.search-bar button i {
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .search-bar {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-bar {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    
+    .search-bar form {
+        flex-direction: column;
+    }
+    
+    .search-bar input,
+    .search-bar select,
+    .search-bar button {
+        width: 100%;
+    }
 }

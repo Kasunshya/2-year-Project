@@ -1,8 +1,24 @@
+:root {
+    /* Berry & Cream Palette */
+    --primary-dark: #5d2e46;    /* Deep plum */
+    --primary-main: #a26b98;    /* Medium berry */
+    --primary-light: #e8d7e5;   /* Light lavender */
+    --accent-gold: #f1c778;     /* Soft gold */
+    --accent-cream: #f9f5f0;    /* Cream */
+    --accent-cinnamon: #b06f42; /* Amber brown */
+
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body { /* Apply base font family */
+    font-family: var(--font-family);
+}
+
 .profile-container {
     max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
-    background: #fff;
+    background: var(--accent-cream);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -14,7 +30,7 @@
 
 .profile-avatar {
     font-size: 80px;
-    color: #c98d83;
+    color: var(--primary-main);
     margin-bottom: 10px;
 }
 
@@ -28,8 +44,8 @@
 }
 
 .profile-details h3 {
-    color: #c98d83;
-    border-bottom: 2px solid #c98d83;
+    color: var(--primary-main);
+    border-bottom: 2px solid var(--primary-main);
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
@@ -41,7 +57,7 @@
 }
 
 .info-item {
-    background: #f8f9fa;
+    background: var(--primary-light);
     padding: 15px;
     border-radius: 8px;
 }
@@ -54,7 +70,7 @@
 }
 
 .info-item p {
-    color: #333;
+    color: var(--primary-dark);
     font-size: 1.1em;
     margin: 0;
 }
@@ -78,12 +94,12 @@
 }
 
 .edit-btn {
-    background: #c98d83;
+    background: var(--accent-cinnamon);
     color: white;
 }
 
 .password-btn {
-    background: #6c757d;
+    background: var(--primary-dark);
     color: white;
 }
 
@@ -99,7 +115,7 @@
 }
 
 .modal-content {
-    background: white;
+    background: white; /* Keep modal background white for contrast */
     width: 90%;
     max-width: 500px;
     margin: 50px auto;
@@ -123,7 +139,7 @@
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--primary-dark);
 }
 
 .form-group input,
@@ -142,12 +158,12 @@
 }
 
 .save-btn {
-    background: #c98d83;
+    background: var(--accent-cinnamon);
     color: white;
 }
 
 .cancel-btn {
-    background: #6c757d;
+    background: var(--primary-dark);
     color: white;
 }
 
@@ -156,7 +172,7 @@
     top: 20px;
     right: 20px;
     padding: 15px 25px;
-    background-color: #4CAF50;
+    background-color: var(--primary-main); /* Use a theme color for success */
     color: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -180,6 +196,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: white; /* Keep header white */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }

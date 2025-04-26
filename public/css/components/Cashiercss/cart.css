@@ -1,9 +1,20 @@
+:root {
+    --primary-dark: #5d2e46; /* Deep plum */
+    --primary-main: #a26b98; /* Medium berry */
+    --primary-light: #e8d7e5; /* Light lavender */
+    --accent-gold: #f1c778; /* Soft gold */
+    --accent-cream: #f9f5f0; /* Cream */
+    --accent-cinnamon: #b06f42; /* Amber brown */
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .cart-container {
     max-width: 900px;
     margin: 20px auto;
     padding: 20px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: var(--accent-cream);
+    box-shadow: 0 0 10px rgba(93, 46, 70, 0.15);
+    font-family: var(--font-family);
 }
 
 .cart-item {
@@ -11,7 +22,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--primary-light);
 }
 
 .quantity-selector {
@@ -24,22 +35,24 @@
     width: 30px;
     height: 30px;
     border: 1px solid #ddd;
-    background: #f8f8f8;
+    background: #a26b98; /* Changed from #f8f8f8 to #a26b98 */
+    color: white; /* Added for better contrast */
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
 .quantity-selector button:hover {
-    background: #e8e8e8;
+    background: #875582; /* Darker shade of #a26b98 for hover state */
 }
 
 .quantity-selector .quantity-input {
     width: 50px;
     height: 30px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid var(--primary-light);
     border-radius: 4px;
+    font-family: var(--font-family);
 }
 
 .quantity-selector .quantity-input::-webkit-inner-spin-button,
@@ -56,22 +69,26 @@
 
 .item-quantity button {
     padding: 5px 10px;
-    background: #f0f0f0;
+    background: var(--primary-light);
     border: none;
     cursor: pointer;
+    color: var(--primary-dark);
 }
 
 .cart-total {
     margin-top: 20px;
     text-align: right;
     padding: 20px;
-    background: #f9f9f9;
+    background: var(--primary-light);
+    border-radius: 8px;
+    color: var(--primary-dark);
 }
 
 .payment-section {
     margin-top: 30px;
     padding: 20px;
-    background: #f9f9f9;
+    background: var(--primary-light);
+    border-radius: 8px;
 }
 
 .payment-methods {
@@ -84,7 +101,7 @@
     display: inline-block;
     width: auto;
     padding: 12px 35px;
-    background: #4a9e4f;
+    background: var(--primary-main);
     color: white;
     border: none;
     border-radius: 8px;
@@ -92,22 +109,27 @@
     font-size: 16px;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(93, 46, 70, 0.2);
+    font-family: var(--font-family);
 }
 
 .checkout-btn:hover {
-    background: #3d8a42;
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.3);
 }
 
 .remove-btn {
     padding: 5px 10px;
-    background: #ff4444;
+    background: #e74c3c; /* Changed from #ff4444 to #e74c3c */
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+}
+
+.remove-btn:hover {
+    background: #c0392b; /* Darker shade of #e74c3c for hover state */
 }
 
 .discount-section {
@@ -119,28 +141,31 @@
 
 .discount-section input {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--primary-light);
     border-radius: 4px;
     width: 100px;
+    font-family: var(--font-family);
 }
 
 .apply-discount-btn {
     padding: 8px 15px;
-    background-color: #c98d83;
-    color: white;
+    background-color: var(--accent-gold);
+    color: var(--primary-dark);
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-family: var(--font-family);
 }
 
 .apply-discount-btn:hover {
-    background-color: #783b31;
+    background-color: var(--accent-cinnamon);
+    color: white;
 }
 
 .continue-shopping {
     display: inline-block;
     padding: 12px 25px;
-    background-color: #c98d83;
+    background-color: var(--accent-cinnamon);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -148,13 +173,15 @@
     transition: all 0.3s ease;
     font-size: 16px;
     font-weight: 600;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(93, 46, 70, 0.2);
+    font-family: var(--font-family);
 }
 
 .continue-shopping:hover {
-    background-color: #b57a6f;
+    background-color: var(--accent-gold);
+    color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.3);
 }
 
 .checkout-actions {
@@ -163,7 +190,7 @@
     align-items: center;
     margin-top: 30px;
     padding: 20px;
-    background: #f9f9f9;
+    background: var(--primary-light);
     border-radius: 8px;
 }
 
@@ -173,7 +200,7 @@
     justify-content: center;
     min-width: 35px;
     height: 35px;
-    background-color: #c98d83;
+    background-color: var(--primary-main);
     color: white;
     border: none;
     border-radius: 8px;
@@ -181,22 +208,37 @@
     font-size: 18px;
     font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(93, 46, 70, 0.2);
     margin: 0 5px;
+    font-family: var(--font-family);
 }
 
 .cart-button:hover {
-    background-color: #b57a6f;
+    background-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(93, 46, 70, 0.3);
 }
 
 .cart-button.decrement-btn,
 .cart-button.increment-btn {
     padding: 0;
     line-height: 35px;
+    background-color: #a26b98; /* Changed from default to #a26b98 */
 }
 
 .cart-button i {
     font-size: 16px;
+}
+
+h2, h3 {
+    color: var(--primary-dark);
+    font-family: var(--font-family);
+}
+
+.empty-cart {
+    color: var(--primary-dark);
+    font-family: var(--font-family);
+    text-align: center;
+    margin: 30px 0;
+    font-size: 18px;
 }

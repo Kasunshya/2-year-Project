@@ -12,6 +12,10 @@
     
     require APPROOT.'/views/inc/components/cverticalbar.php';
     ?>
+    <!-- Add Google Fonts for Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/servicedesk.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/stock-badges.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -48,22 +52,6 @@
   </header>
   
   <div class="main-content">
-    <?php if(isset($_SESSION['branch_id'])): ?>
-      <div class="branch-info">
-        <span>Branch ID: <?php echo $_SESSION['branch_id']; ?></span>
-        <?php
-          // Get branch name if available
-          $db = new Database();
-          $db->query("SELECT branch_name FROM branch WHERE branch_id = :branch_id");
-          $db->bind(':branch_id', $_SESSION['branch_id']);
-          $branch = $db->single();
-          if($branch): 
-        ?>
-          <span> | Branch: <?php echo htmlspecialchars($branch->branch_name); ?></span>
-        <?php endif; ?>
-      </div>
-    <?php endif; ?>
-    
     <div class="search-container">
       <div class="search-box">
         <i class="fas fa-search search-icon"></i>

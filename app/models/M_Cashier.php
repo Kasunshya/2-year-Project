@@ -379,7 +379,7 @@
                          WHERE o.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                          GROUP BY p.product_id
                          ORDER BY quantity_sold DESC
-                         LIMIT 5");
+                         LIMIT 8");  // Changed from 5 to 8
         return $this->db->resultSet();
     }
 

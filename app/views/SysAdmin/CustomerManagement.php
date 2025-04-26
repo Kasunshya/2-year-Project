@@ -16,6 +16,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     
     <style>
+
+.header {
+          background-color: #5d2e46;
+          padding: 2rem;
+          text-align: center;
+          color: var(--white);
+          font-size: 2.5rem;
+          text-transform: uppercase;
+          margin-top: 10px;
+          margin-left: 120px;
+          margin-right: 20px;
+          border-radius: 5px;
+          width: 90%;
+}
+
         /* Page-specific styles only */
         .table-container {
             margin: var(--space-lg) 0;
@@ -68,81 +83,81 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+<div class="sysadmin-page-container">
+    <div class="container">
+        <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
 
-    <header class="header">
-        <div class="header-left">
-            <i class="fas fa-users"></i>
-            <span>Customer Management</span>
-        </div>
-        <div class="header-role">
-            <span>System Administrator</span>
-        </div>
-    </header>
+        <header class="header">
+            <div class="header-left">
+                <i class="fas fa-users"></i>
+                <span>Customer Management</span>
+            </div>
+            
+        </header>
 
-    <div class="content">
-        <?php flash('customer_message'); ?>
-        
-        <div class="search-bar">
-            <form onsubmit="searchCustomer(); return false;">
-                <input type="text" 
-                       class="form-control"
-                       id="searchCustomerInput" 
-                       placeholder="Search by customer name..." 
-                       value="">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Search
-                </button>
-                
-                <?php if(isset($data['customers']) && !empty($data['customers'])) : ?>
-                <button type="button" class="btn export-btn" onclick="exportCustomerData()">
-                    <i class="fas fa-file-export"></i> Export Data
-                </button>
-                <?php endif; ?>
-            </form>
-        </div>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Contact</th>
-                        <th>Address</th>
-                        <th>Gender</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="customerTable">
+        <div class="content">
+            <?php flash('customer_message'); ?>
+            
+            <div class="search-bar">
+                <form onsubmit="searchCustomer(); return false;">
+                    <input type="text" 
+                           class="form-control"
+                           id="searchCustomerInput" 
+                           placeholder="Search by customer name..." 
+                           value="">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    
                     <?php if(isset($data['customers']) && !empty($data['customers'])) : ?>
-                        <?php foreach($data['customers'] as $customer) : ?>
-                            <tr>
-                                <td>
-                                    <div class="customer-info">
-                                        <span class="customer-name"><?php echo htmlspecialchars($customer->customer_name); ?></span>
-                                    </div>
-                                </td>
-                                <td><?php echo htmlspecialchars($customer->email ?? '-'); ?></td>
-                                <td><?php echo htmlspecialchars($customer->customer_contact ?? '-'); ?></td>
-                                <td><?php echo htmlspecialchars($customer->customer_address ?? '-'); ?></td>
-                                <td><?php echo htmlspecialchars($customer->customer_gender ?? '-'); ?></td>
-                                <td>
-                                    <span class="status-badge <?php echo strtolower($customer->customer_status); ?>">
-                                        <i class="fas <?php echo strtolower($customer->customer_status) === 'active' ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
-                                        <?php echo htmlspecialchars($customer->customer_status); ?>
-                                    </span>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="6" style="text-align: center;">No customers found</td>
-                        </tr>
+                    <button type="button" class="btn export-btn" onclick="exportCustomerData()">
+                        <i class="fas fa-file-export"></i> Export Data
+                    </button>
                     <?php endif; ?>
-                </tbody>
-            </table>
+                </form>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Gender</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTable">
+                        <?php if(isset($data['customers']) && !empty($data['customers'])) : ?>
+                            <?php foreach($data['customers'] as $customer) : ?>
+                                <tr>
+                                    <td>
+                                        <div class="customer-info">
+                                            <span class="customer-name"><?php echo htmlspecialchars($customer->customer_name); ?></span>
+                                        </div>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($customer->email ?? '-'); ?></td>
+                                    <td><?php echo htmlspecialchars($customer->customer_contact ?? '-'); ?></td>
+                                    <td><?php echo htmlspecialchars($customer->customer_address ?? '-'); ?></td>
+                                    <td><?php echo htmlspecialchars($customer->customer_gender ?? '-'); ?></td>
+                                    <td>
+                                        <span class="status-badge <?php echo strtolower($customer->customer_status); ?>">
+                                            <i class="fas <?php echo strtolower($customer->customer_status) === 'active' ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
+                                            <?php echo htmlspecialchars($customer->customer_status); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center;">No customers found</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

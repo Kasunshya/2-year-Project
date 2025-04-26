@@ -12,6 +12,7 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color:#f8e5f4;
   /*overflow: hidden;
   /*background-color: var(--bg);*/
 }
@@ -139,11 +140,14 @@ main {
   border-radius: 10px;
   box-shadow: var(--box-shadow); 
   height: 90vh;
+  
 }
 
 .content-wrapper {
   margin-left: 120px;
+  margin: 20px auto;
   padding: 20px;
+  margin-top: 20px;
 }
 
 .report-container {
@@ -393,17 +397,19 @@ h3{
   color: #783b31;
 }
 header {
-  background-color: var(--primary-color);
+  background-color:#5d2e46;
   padding: 2rem; /* Reduce padding */
   color: var(--white);
   font-size: 2.5rem;
   text-transform: uppercase;
-  margin-left: 5px; /* Match the sidebar's width */
-  margin-right:5px;
+  margin-left: 120px; /* Match the sidebar's width */
+  margin-right:20px;
   border-radius: 5px;
+  margin-top: 10px;
   position: relative; /* Ensure it respects the flow */
   z-index: 1; /* Ensure it appears above other elements */
   margin-left: 111px;
+  
 }
 /* Style for header container */
 .header-container {
@@ -442,6 +448,7 @@ header {
 
 .header-container {
     margin-bottom: 30px;
+    
 }
 
 .header-container h1 {
@@ -817,6 +824,8 @@ input[type="date"] {
     padding: 20px;
     background: #f8f9fa;
     margin-left: 120px;
+    margin-right: 20px;
+    margin-top: 20px;
 }
 
 .report-tabs {
@@ -887,7 +896,7 @@ input[type="date"] {
 }
 
 .btn-generate {
-    background: #4361ee;
+    background: #a26b98;
     color: #fff;
 }
 
