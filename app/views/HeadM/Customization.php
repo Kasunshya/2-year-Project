@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--title>Frostine Head Manager Customization</title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Dashboard.css"-->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -22,6 +23,7 @@
                 <h1><i class="fas fa-palette icon-customization"></i> Customized Orders</h1>
                 
             </header>
+            <di class="content">
 
                 <!-- Customization Table -->
                 <div class="customization-list">
@@ -35,7 +37,7 @@
                             </div>
                         </form>
                     </div>
-                    <section class="dashboard-content">
+                    
                     <div class="table-container">
                         <table>
                             <thead>
@@ -70,7 +72,7 @@
                                             <td><?php echo htmlspecialchars($customization->order_status); ?></td>
                                             <td><?php echo date('Y-m-d H:i:s', strtotime($customization->created_at)); ?></td>
                                             <td class="actions">
-                                                <button class="btn approve" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'approved')">
+                                                <button class="btn accept" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'approved')">
                                                     Approve
                                                 </button>
                                                 <button class="btn reject" onclick="updateStatus(<?php echo $customization->customization_id; ?>, 'rejected')">
@@ -87,8 +89,8 @@
                             </tbody>
                         </table>
                     </div>
-                </section>
                 </div>
+            </div>
         </main>
     </div>
     
