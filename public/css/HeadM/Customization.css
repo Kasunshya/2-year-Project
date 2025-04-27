@@ -3,11 +3,14 @@
     --primary-color: #a26b98; /* Changed from #c98d83 to match primary-main */
     --secondary: #5d2e46; /* Changed from #783b31 to match primary-dark */
     --secondary-color: #5d2e46; /* Changed from #783b31 to match primary-dark */
-    --bg: #f9f5f0; /* Changed from #f2f1ec to match accent-cream */
+    --bg: #e8d7e5; /* Changed from #f2f1ec to match accent-cream */
     --white: #ffffff; /* Matches neutral-white */
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     --border-color: #e0e0e0; /* Matches neutral-gray */
-    
+
+    /* Font Family */
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
     /* Additional Colors from Bakery Design System */
     --primary-dark: #5d2e46;      /* Deep plum */
     --primary-main: #a26b98;      /* Medium berry */
@@ -15,7 +18,7 @@
     --accent-gold: #f1c778;       /* Soft gold */
     --accent-cream: #f9f5f0;      /* Cream */
     --accent-cinnamon: #b06f42;   /* Amber brown */
-    
+
     /* Neutral Colors */
     --neutral-white: #ffffff;
     --neutral-light: #f8f7f4;
@@ -23,7 +26,7 @@
     --neutral-gray: #e0e0e0;
     --neutral-dark: #555555;
     --neutral-black: #333333;
-    
+
     /* Status Colors */
     --success-dark: #2e7d32;
     --success-main: #4caf50;
@@ -43,9 +46,7 @@ header {
     padding: 10px 20px;
     color: var(--white);
 }
-body{
-    background-color:#f8e5f4;
-}
+
 /* Update main content styles */
 main {
     display: flex;
@@ -59,6 +60,7 @@ main {
     flex: 1;
     overflow-y: auto;
     padding-top: 20px;
+    background-color: #e8d7e5;
 }
 
 /* Ensure header stays on top */
@@ -76,12 +78,13 @@ main {
 /* General Styles */
 body,
 html {
-    font-family: var(--font-family, 'Poppins', sans-serif);
+    font-family: var(--font-family);
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
-    background-color: var(--bg);
+    background-color: #e8d7e5;
+    
 }
 
 .container {
@@ -103,7 +106,7 @@ main {
     /* Matches sidebar width */
     padding: 20px;
     flex: 1;
-    background-color: var(--bg);
+    background-color:#e8d7e5;
     overflow-y: auto;
 }
 
@@ -117,6 +120,10 @@ main {
     border-radius: 5px;
     margin-bottom: 20px;
     margin-top: 0;
+}
+
+.header h1 i{
+    color: #f1c778;;
 }
 
 /* Buttons */
@@ -152,6 +159,23 @@ main {
     padding: 5px 10px;
     cursor: pointer;
 }
+
+btn.accept {
+    background-color: var(--primary-main);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+btn.decline {
+    background-color: var(--error-main);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 
 .btn.approve:hover, .btn.reject:hover {
     opacity: 0.8;
@@ -396,6 +420,9 @@ header {
     width: 100%;
     border-collapse: collapse;
     font-size: 1rem;
+    border-radius: 10px; /* Add curved edges */
+    overflow: hidden; /* Ensure the border-radius applies properly */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visuals */
 }
 
 .table-container th,
@@ -412,7 +439,7 @@ header {
 }
 
 .table-container tr:hover {
-    background-color: rgba(162, 107, 152, 0.05); /* Changed from rgba(201, 141, 131, 0.05) */
+    background-color: var(--accent-cream) /* Changed from rgba(201, 141, 131, 0.05) */
 }
 
 .table-container .rating {
@@ -434,6 +461,15 @@ header {
 .table-container .btn.delete {
     background-color: var(--error-main);
 }
+
+.table-container .btn.btn.reject {
+    background-color: var(--error-main);
+}
+
+.table-container .btn.btn.reject:hover {
+    background-color: var(--error-dark);
+}
+
 
 .table-container .btn:hover {
     background-color: var(--primary-dark);
