@@ -11,6 +11,11 @@ class SysAdmin extends Controller {
         if (!file_exists(UPLOADROOT)) {
             mkdir(UPLOADROOT, 0755, true);
         }
+
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
     }
 
     public function dashboard() {
@@ -27,6 +32,30 @@ class SysAdmin extends Controller {
         ];
 
         $this->view('SysAdmin/Dashboard', $data);
+    }
+
+    public function profile() {
+        // Get the user_id from session
+        $user_id = $_SESSION['user_id'] ?? null;
+        
+        if (!$user_id) {
+            flash('profile_message', 'User not found', 'alert alert-danger');
+            redirect('sysadmin/dashboard');
+        }
+
+        // Get employee data by user_id
+        $employee = $this->sysAdminModel->getEmployeeByUserId($user_id);
+        
+        if (!$employee) {
+            flash('profile_message', 'Employee data not found', 'alert alert-danger');
+            redirect('sysadmin/dashboard');
+        }
+
+        $data = [
+            'employee' => $employee
+        ];
+
+        $this->view('SysAdmin/Profile', $data);
     }
 
     public function employeeManagement() {

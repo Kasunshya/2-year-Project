@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         /* Common container styles for perfect alignment */
-        .header-container, .products-container {
+        .products-container {
             width: 90%;
             margin-left: 120px;  /* Set explicit left margin */
             margin-right: 30px;  /* Set explicit right margin */
@@ -18,12 +18,7 @@
             box-sizing: border-box;
         }
 
-        /* Specific header styling */
-        .header-container {
-            padding: 20px 0;
-            display: flex;
-            align-items: center;
-        }
+        
         
         /* Specific products container styling */
         .products-container {
@@ -39,12 +34,7 @@
             margin: 0;           /* Remove any table margins */
         }
 
-        /* Header might have h7 with margin - reset this */
-        header h7 {
-            margin: 0;           /* Remove any margins from the header text */
-            padding-left: 0;      /* Remove any padding from the header text */
-        }
-
+    
         .products-table th {
             background-color: #a26b98; /* var(--primary-main) */
             color: white;

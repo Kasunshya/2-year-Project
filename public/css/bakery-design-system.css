@@ -70,15 +70,7 @@
             overflow: hidden;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-cream), var(--accent-gold), var(--accent-cream));
-        }
+        
 
         .header-left {
             display: flex;
@@ -94,16 +86,16 @@
         .header-role {
             font-size: 0.9rem;
             font-weight: 400;
-            background-color: rgba(255, 255, 255, 0.15);
+          
             padding: 0.4rem 1rem;
             border-radius: var(--radius-md);
             letter-spacing: 0.5px;
         }
 
         .content {
-            margin-left: 150px;
+            margin-left: 60px;
             padding: 1.5rem 2rem;
-            width: calc(100% - 180px);
+            
             overflow-x: auto;
         }
 
@@ -172,6 +164,7 @@
             box-shadow: var(--shadow-sm);
             padding: 1rem;
             transition: box-shadow 0.3s ease;
+            margin-right: 735px;
         }
 
         .search-bar:hover {
@@ -226,7 +219,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 0;
-            min-width: 1200px;
+            
         }
 
         table th {

@@ -45,5 +45,20 @@
             <a href="<?php echo URLROOT; ?>/Login/indexx" class="login-link">Already have an account? Log in</a>
         </div>
     </div>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+// Display SweetAlert if there's an error message in the session
+<?php if(isset($_SESSION['sweet_alert'])): ?>
+    Swal.fire({
+        icon: '<?php echo $_SESSION['sweet_alert']['type']; ?>',
+        title: '<?php echo $_SESSION['sweet_alert']['title']; ?>',
+        text: '<?php echo $_SESSION['sweet_alert']['text']; ?>',
+        confirmButtonColor: '#BD8C82'
+    });
+    <?php unset($_SESSION['sweet_alert']); ?>
+<?php endif; ?>
+</script>
 <?php require APPROOT.'/views/inc/footer.php'?>
 

@@ -10,10 +10,9 @@
     <style>
         .header-container {
             width: 90%;
-            margin: 0 auto;
-            padding: 20px 0;
+            padding: 5px ;
             display: flex;
-            align-items: center;
+            align-items: left;
         }
         
         /* Updated Search container styling */

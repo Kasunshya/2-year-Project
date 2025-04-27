@@ -215,6 +215,11 @@ if (!class_exists('M_SysAdmin')) {
             $this->db->bind(':employee_id', $employee_id);
             return $this->db->single();
         }
+        public function getEmployeeByUserId($user_id) {
+            $this->db->query('SELECT * FROM employee WHERE user_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            return $this->db->single();
+        }
 
         public function updateEmployee($data) {
             // Update users table
