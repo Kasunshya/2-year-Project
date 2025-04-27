@@ -7,6 +7,8 @@
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="base-url" content="<?php echo URLROOT; ?>">
 </head>
 <body>
@@ -103,31 +105,52 @@
         });
 
         item.querySelector('.remove-btn').addEventListener('click', () => {
-            if (confirm('Are you sure you want to remove this item?')) {
-                fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/removeFromCart`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId: productId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.cartEmpty) {
-                            location.reload();
-                        } else {
-                            item.remove();
-                            document.getElementById('total-amount').textContent = data.newTotal.toFixed(2);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to remove this item?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/removeFromCart`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId: productId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (data.cartEmpty) {
+                                location.reload();
+                            } else {
+                                item.remove();
+                                document.getElementById('total-amount').textContent = data.newTotal.toFixed(2);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Removed',
+                                    text: 'Item has been removed from cart',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     });
 
     function applyDiscount() {
         const discountPercent = parseFloat(document.getElementById('discount-input').value) || 0;
         if (discountPercent < 0 || discountPercent > 100) {
-            alert('Discount must be between 0 and 100');
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Discount',
+                text: 'Discount must be between 0 and 100'
+            });
             return;
         }
         
@@ -149,6 +172,18 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ discount: discountAmount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Discount Applied',
+                    text: `${discountPercent}% discount has been applied`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
         });
     }
 

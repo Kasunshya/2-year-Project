@@ -29,9 +29,9 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    width: 50%; /* Reduce the overall width */
-    max-width: 600px; /* Prevent it from getting too large */
-    padding: 10px;
+    width:auto;
+    height: 600px;
+    max-width: 1000px;
   }
   
   /* Left Image Section */

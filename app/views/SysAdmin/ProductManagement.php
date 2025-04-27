@@ -25,10 +25,10 @@
           font-size: 2.5rem;
           text-transform: uppercase;
           margin-top: 10px;
-          margin-left: 120px;
+          margin-left: 20px;
           margin-right: 20px;
           border-radius: 5px;
-          width: 90%;
+          width: 102%;
 }
 
         /* Page-specific styles only */

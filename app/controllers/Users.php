@@ -4,6 +4,8 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+require_once APPROOT . '/helpers/Session_Helper.php';
+require_once APPROOT . '/helpers/URL_Helper.php';
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 class Users extends Controller {
@@ -170,8 +172,13 @@ class Users extends Controller {
         unset($_SESSION['user_name']);
         unset($_SESSION['user_email']);
         session_destroy();
+        
+        // Clear browser cache
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        
         redirect('Users/login');
-
     }
     public function isLoggedIn(){
         if(isset($_SESSION['user_id'])){

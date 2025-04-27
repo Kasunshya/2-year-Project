@@ -8,7 +8,7 @@
         <ul>
             <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/viewinventory"><i class="fas fa-tachometer-alt"></i></a></li>          
             <li><a href="<?php echo URLROOT; ?>/Inventorykeeper/addinventory"><i class="fas fa-warehouse"></i></a></li>
-            <li><a href="<?php echo URLROOT; ?>/Login/indexx"><i class="fas fa-sign-out-alt"></i></a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/logout"><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
     </nav>
 

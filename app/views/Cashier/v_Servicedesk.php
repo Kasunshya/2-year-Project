@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/servicedesk.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/stock-badges.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Add SweetAlert2 library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="base-url" content="<?php echo URLROOT; ?>">
     <style>
         .product-image {
@@ -136,13 +139,21 @@
 
         // Check if product is in stock
         if (maxQuantity <= 0) {
-            alert('Sorry, this product is out of stock at your branch.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Out of Stock',
+                text: 'Sorry, this product is out of stock at your branch.'
+            });
             return;
         }
 
         // Check if requested quantity is available
         if (quantity > maxQuantity) {
-            alert(`Sorry, only ${maxQuantity} items available in your branch.`);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Limited Stock',
+                text: `Sorry, only ${maxQuantity} items available in your branch.`
+            });
             quantityInput.value = maxQuantity;
             return;
         }
@@ -163,7 +174,13 @@
         .then(data => {
             if(data.success) {
                 document.getElementById('cart-count').textContent = data.cartCount;
-                alert('Added to cart!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Added to cart!',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
         });
     }
@@ -187,7 +204,11 @@
             if (value < maxQuantity) {
                 input.value = value + 1;
             } else {
-                alert('Maximum available quantity reached!');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Maximum Quantity Reached',
+                    text: 'Maximum available quantity reached!'
+                });
             }
         });
 
@@ -197,7 +218,11 @@
             if (value < 1) input.value = 1;
             if (value > maxQuantity) {
                 input.value = maxQuantity;
-                alert('Maximum available quantity reached!');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Maximum Quantity Reached',
+                    text: 'Maximum available quantity reached!'
+                });
             }
         });
     });

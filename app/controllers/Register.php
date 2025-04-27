@@ -52,6 +52,7 @@ class Register extends Controller {
                     $data['errors']['email'] = 'Email is already registered';
                 }
             }
+            
             // Validate password
             if (empty($data['password'])) {
                 $data['errors']['password'] = 'Password is required';
@@ -78,9 +79,18 @@ class Register extends Controller {
             if (!empty($data['contact_number']) && !preg_match('/^[0-9]{10,15}$/', $data['contact_number'])) {
                 $data['errors']['contact_number'] = 'Please enter a valid contact number';
             }
-
-            // Address validation is optional
             
+            // If there are errors, set a SweetAlert message
+            if (!empty($data['errors'])) {
+                // Get the first error message for SweetAlert
+                $firstError = reset($data['errors']);
+                $_SESSION['sweet_alert'] = [
+                    'type' => 'error',
+                    'title' => 'Validation Error',
+                    'text' => $firstError
+                ];
+            }
+
             // Proceed if there are no errors
             if (empty($data['errors'])) {
                 $userModel = $this->model('User');
@@ -102,14 +112,24 @@ class Register extends Controller {
                     if ($customerModel->createCustomer($data['customer_name'], $userId, $data['contact_number'], $data['address'])) {
                         error_log("Customer creation successful");
                         
-                        // Set success message in session
-                        $_SESSION['registration_success'] = true;
+                        // Set success message in session for SweetAlert
+                        $_SESSION['sweet_alert'] = [
+                            'type' => 'success',
+                            'title' => 'Success!',
+                            'text' => 'Registration successful! Please login.'
+                        ];
                         
                         // Redirect to login
                         redirect('login/indexx');
                     } else {
                         error_log("Customer creation failed");
-                        $data['errors']['general'] = 'Error creating customer record';
+                        
+                        // Set error message in session for SweetAlert
+                        $_SESSION['sweet_alert'] = [
+                            'type' => 'error',
+                            'title' => 'Registration Error',
+                            'text' => 'Error creating customer record'
+                        ];
                         
                         // Since user was created but customer failed, we should clean up
                         $this->db = new Database();
@@ -119,7 +139,13 @@ class Register extends Controller {
                     }
                 } else {
                     error_log("User creation failed - email may already exist");
-                    $data['errors']['email'] = 'Email already exists or system error occurred';
+                    
+                    // Set error message in session for SweetAlert
+                    $_SESSION['sweet_alert'] = [
+                        'type' => 'error',
+                        'title' => 'Registration Error',
+                        'text' => 'Email already exists or system error occurred'
+                    ];
                 }
             }
         }

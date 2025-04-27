@@ -27,20 +27,14 @@
             color: white;
             font-size: 2.5rem;
             text-transform: uppercase;
-            margin-left: 30px;
-            margin-right: 30px; /* Keep this value */
+            margin-left: 20px;
+            margin-right: 0px; /* Keep this value */
             border-radius: 5px;
-            margin-top: 10px;
             z-index: 1;
             text-align: left;
         }
 
-        header h7 {
-            padding-left: 15px; /* Add some padding to the left of the text */
-            display: inline-block;
-            text-align: left;
-            margin: 0;
-        }
+       
 
         header i {
             margin-right: 10px;
@@ -171,14 +165,15 @@
         }
         
         .btn-reset {
-            background-color: transparent;
-            border: 1px solid #e0e0e0;
-            color: #555;
+            background-color: #4CAF50; /* Green background */
+            border: 1px solid #45a049;
+            color: white; /* White text for better contrast */
         }
         
         .btn-reset:hover {
-            background-color: #f9f5f0;
-            border-color: #a26b98;
+            background-color: #45a049; /* Darker green on hover */
+            border-color: #3d8b3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         /* Current Orders section styling */
@@ -262,7 +257,7 @@
                         <div class="form-group">
                             <label for="description">Order Summary:</label>
                             <textarea id="description" name="description" readonly class="form-control" rows="5"></textarea>
-                            <small class="form-text text-muted">Automatically generated based on quantities</small>
+                            
                         </div>
                     </div>
 
