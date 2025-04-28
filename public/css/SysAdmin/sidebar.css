@@ -16,6 +16,7 @@
         .table-container {
             margin: var(--space-lg) 0;
             overflow-x: auto;
+            max-width: 1420px;
         }
         
         table {
@@ -153,6 +154,7 @@ input:focus:valid {
 
 
 /* Updated Search Bar Styling */
+/* Updated Search Bar Styling */
 .search-bar {
     margin-bottom: 20px;
     background-color: #f8f9fa;
@@ -163,29 +165,34 @@ input:focus:valid {
 
 .search-form {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping to keep everything on one line */
+    flex-wrap: nowrap;
     gap: 10px;
     align-items: center;
+    width: 100%;
 }
 
 .search-field {
     flex: 1;
+    min-width: 0; /* Allow fields to shrink below min-content width */
 }
 
-/* Specific width adjustments */
+/* First field (search text) gets more space */
 .search-field:nth-child(1) {
-    flex: 2; /* Make the search input wider */
+    flex: 2;
 }
 
-.search-field:nth-child(2) {
-    flex: 1.5; /* Make the dropdown slightly narrower */
-}
-
+/* Dropdown fields get equal space */
+.search-field:nth-child(2),
 .search-field:nth-child(3) {
-    flex: none; /* Don't grow the button container */
-    white-space: nowrap;
+    flex: 1;
+}
+
+/* Button container doesn't grow */
+.search-field:nth-child(4) {
+    flex: 0 0 auto;
     display: flex;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .search-field input, 
@@ -195,27 +202,22 @@ input:focus:valid {
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
-    transition: all 0.3s ease;
 }
 
-/* Updated button styles */
 .search-btn {
-    background-color: #a26b98;;
+    white-space: nowrap;
+    background-color: var(--primary-main);
     color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.search-btn:hover {
-    background-color: #4a2438;
 }
 
 .reset-btn {
-    background-color: #dc3545; /* Changed to red */
+    white-space: nowrap;
+    background-color: #dc3545; /* Red color */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -223,32 +225,88 @@ input:focus:valid {
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
 }
 
-.reset-btn:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
+/* Responsive design */
+@media (max-width: 992px) {
     .search-form {
-        flex-direction: column;
+        flex-wrap: wrap;
     }
     
     .search-field {
-        width: 100%;
-        margin-bottom: 10px;
+        flex-basis: 48%;
     }
     
-    .search-field:nth-child(3) {
-        display: flex;
+    .search-field:nth-child(1) {
+        flex-basis: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-field {
+        flex-basis: 100%;
+    }
+    
+    .search-field:nth-child(4) {
         justify-content: space-between;
     }
     
     .search-btn, .reset-btn {
         flex: 1;
-        text-align: center;
     }
+}
+
+/* Status Badge Styling */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    position: relative;
+    padding-left: 22px;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-badge.active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.active::before {
+    background-color: #2e7d32;
+    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.status-badge.inactive {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.status-badge.inactive::before {
+    background-color: #c62828;
+    box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.2);
+}
+
+/* Animation for status changes */
+.status-badge {
+    transition: all 0.3s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
 }
 

@@ -27,8 +27,6 @@
                 <i class="fas fa-user-tie"></i>
                 <span>Employee Management</span>
             </div>
-
-            <span>System Administrator</span>
         </div>
     </header>
 
@@ -50,6 +48,13 @@
                                     <?php echo htmlspecialchars($branch->branch_name); ?>
                                 </option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <select name="status">
+                            <option value="active" <?php echo (!isset($_GET['status']) || $_GET['status'] == 'active') ? 'selected' : ''; ?>>Active</option>
+                            <option value="inactive" <?php echo (isset($_GET['status']) && $_GET['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive</option>
+                            <option value="">All Status</option>
                         </select>
                     </div>
                     <div class="search-field">
@@ -78,6 +83,7 @@
                         <th>User Role</th>
                         <th>CV</th>
                         <th>Actions</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="employeeTable">
@@ -108,10 +114,22 @@
                             <button class="btn btn-sm" onclick="openEditModal(<?php echo $employee->employee_id; ?>)">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee(<?php echo $employee->employee_id; ?>)">
-                                <i class="fas fa-trash"></i> Delete
+                            <?php if($employee->status === 'active'): ?>
+                            <button class="btn btn-sm btn-danger" onclick="deactivateEmployee(<?php echo $employee->employee_id; ?>)">
+                                <i class="fas fa-user-slash"></i> Deactivate
                             </button>
+                                <?php else: ?>
+                                    <button class="btn btn-sm btn-success" onclick="reactivateEmployee(<?php echo $employee->employee_id; ?>)">
+                                        <i class="fas fa-user-check"></i> Reactivate
+                                    </button>
+                                <?php endif; ?>
                         </td>
+                        <td>
+                            <span class="status-badge <?php echo $employee->status; ?>">
+                            <?php echo ucfirst(htmlspecialchars($employee->status ?? 'active')); ?>
+                            </span>
+                        </td>
+                        
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -615,16 +633,50 @@
             });
     }
 
-    function deleteEmployee(employeeId) {
-        // Set up the confirm delete button
-        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-        confirmDeleteButton.onclick = function() {
-            window.location.href = `<?php echo URLROOT; ?>/sysadmin/deleteEmployee/${employeeId}`;
-        };
-        
-        // Display the modal
-        document.getElementById('deleteEmployeeModal').style.display = 'flex';
-    }
+    // 
+    // Replace deleteEmployee function with this
+function deactivateEmployee(employeeId) {
+    // Set up the confirm deactivate button
+    const confirmDeactivateButton = document.getElementById('confirmDeleteButton');
+    
+    // Update modal title and content
+    document.querySelector('#deleteEmployeeModal .modal-title').innerHTML = 
+        '<i class="fas fa-user-slash" style="color: var(--error-main);"></i> <span style="color:var(--primary-main);">Confirm Deactivate</span>';
+    document.querySelector('#deleteEmployeeModal p').textContent = 
+        'This action will deactivate the employee. They will no longer have access to the system but their records will be preserved. Do you want to proceed?';
+    document.getElementById('confirmDeleteButton').innerHTML = 
+        '<i class="fas fa-user-slash"></i> Yes, Deactivate';
+    
+    confirmDeactivateButton.onclick = function() {
+        window.location.href = `<?php echo URLROOT; ?>/sysadmin/deactivateEmployee/${employeeId}`;
+    };
+    
+    // Display the modal
+    document.getElementById('deleteEmployeeModal').style.display = 'flex';
+}
+
+// Add reactivateEmployee function
+function reactivateEmployee(employeeId) {
+    // Set up the confirm reactivate button
+    const confirmReactivateButton = document.getElementById('confirmDeleteButton');
+    
+    // Update modal title and content
+    document.querySelector('#deleteEmployeeModal .modal-title').innerHTML = 
+        '<i class="fas fa-user-check" style="color: var(--success-main);"></i> Confirm Reactivate';
+    document.querySelector('#deleteEmployeeModal p').textContent = 
+        'This action will reactivate the employee. They will regain access to the system. Do you want to proceed?';
+    document.getElementById('confirmDeleteButton').innerHTML = 
+        '<i class="fas fa-user-check"></i> Yes, Reactivate';
+    
+    confirmReactivateButton.className = 'btn btn-success';
+    
+    confirmReactivateButton.onclick = function() {
+        window.location.href = `<?php echo URLROOT; ?>/sysadmin/reactivateEmployee/${employeeId}`;
+    };
+    
+    // Display the modal
+    document.getElementById('deleteEmployeeModal').style.display = 'flex';
+}
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';

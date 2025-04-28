@@ -53,7 +53,7 @@
                                 <tr>
                                     <th>Product Name</th>
                                     <th>Description</th>
-                                    <th>Price (Rs.)</th>
+                                    <th>Price (LKR)</th>
                                     <th>Available Quantity</th>
                                     <th>Category</th>
                                 </tr>
@@ -63,7 +63,7 @@
                                     <tr>
                                         <td><?php echo htmlspecialchars($product->product_name); ?></td>
                                         <td><?php echo htmlspecialchars($product->description); ?></td>
-                                        <td>Rs. <?php echo number_format($product->price, 2); ?></td>
+                                        <td>LKR <?php echo number_format($product->price, 2); ?></td>
                                         <td><?php echo htmlspecialchars($product->available_quantity); ?></td>
                                         <td><?php echo htmlspecialchars($product->category_name); ?></td>
                                     </tr>
