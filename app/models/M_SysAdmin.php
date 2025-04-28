@@ -420,7 +420,7 @@ if (!class_exists('M_SysAdmin')) {
         public function isEmailUnique($email, $excludeUserId = null) {
             $query = 'SELECT COUNT(*) as count FROM users WHERE email = :email';
             if ($excludeUserId) {
-                $query .= ' AND id != :excludeUserId';
+                $query .= ' AND user_id != :excludeUserId';
             }
             $this->db->query($query);
             $this->db->bind(':email', $email);
