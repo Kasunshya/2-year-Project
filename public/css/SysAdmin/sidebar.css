@@ -127,3 +127,26 @@
     from { opacity: 1; }
     to { opacity: 0; }
 }
+
+/* Add this to your stylesheet */
+input:invalid {
+    border-color: #dc3545;
+}
+
+input:valid {
+    border-color: #28a745;
+}
+
+/* Only show colors after user interaction */
+input:placeholder-shown {
+    border-color: #ced4da;
+}
+
+/* Improve tooltip appearance */
+input:focus:invalid {
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+input:focus:valid {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}

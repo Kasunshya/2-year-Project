@@ -123,27 +123,36 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="full_name">Full Name:</label>
-                            <input type="text" class="form-control <?php echo (!empty($data['data']['full_name_err'])) ? 'is-invalid' : ''; ?>" 
-                                   name="full_name" id="full_name" 
-                                   value="<?php echo $data['data']['full_name'] ?? ''; ?>" required>
-                            <span class="invalid-feedback"><?php echo $data['data']['full_name_err'] ?? ''; ?></span>
+                            <input type="text" class="form-control" name="full_name" id="full_name" 
+                                   pattern="^[A-Za-z\s\-'\.]{3,50}$"
+                                   title="Name can only contain letters, spaces, hyphens, apostrophes and periods (3-50 characters)"
+                                   required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="nic">NIC:</label>
-                            <input type="text" class="form-control" name="nic" id="nic" required>
+                            <input type="text" class="form-control" name="nic" id="nic" 
+                                   pattern="([0-9]{9}[VvXx]|[0-9]{12})"
+                                   title="Enter a valid NIC format: 9 digits followed by V/X or 12 digits"
+                                   required>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="address">Address:</label>
-                        <input type="text" class="form-control" name="address" id="address" required>
+                        <input type="text" class="form-control" name="address" id="address"
+                               pattern="^[A-Za-z0-9\s\-\.,#'/]{5,100}$"
+                               title="Enter a valid address (5-100 characters)"
+                               required>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="contact_no">Contact Number:</label>
-                            <input type="text" class="form-control" name="contact_no" id="contact_no" required>
+                            <input type="text" class="form-control" name="contact_no" id="contact_no"
+                                   pattern="(?:\+94|0)[0-9]{9}"
+                                   title="Enter a valid phone number: starting with 0 or +94 followed by 9 digits"
+                                   required>
                         </div>
                         
                         <div class="form-group">
@@ -171,13 +180,18 @@
                         <div class="form-group">
                             <label class="form-label" for="email">Email:</label>
                             <input type="email" class="form-control" name="email" id="email" 
+                                   pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                                   title="Enter a valid email address"
                                    onblur="validateEmailUniquenessForNew(this.value)" required>
                             <span id="newEmailError" class="error-message"></span>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="password">Password:</label>
-                            <input type="password" class="form-control" name="password" id="password" required>
+                            <input type="password" class="form-control" name="password" id="password"
+                                   pattern=".{8,}"
+                                   title="Password must be at least 8 characters long"
+                                   required>
                         </div>
                     </div>
                     
@@ -239,24 +253,36 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="edit_full_name">Full Name:</label>
-                            <input type="text" class="form-control" name="full_name" id="edit_full_name" required>
+                            <input type="text" class="form-control" name="full_name" id="edit_full_name"
+                                   pattern="^[A-Za-z\s\-'\.]{3,50}$"
+                                   title="Name can only contain letters, spaces, hyphens, apostrophes and periods (3-50 characters)"
+                                   required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="edit_nic">NIC:</label>
-                            <input type="text" class="form-control" name="nic" id="edit_nic" required>
+                            <input type="text" class="form-control" name="nic" id="edit_nic"
+                                   pattern="([0-9]{9}[VvXx]|[0-9]{12})"
+                                   title="Enter a valid NIC format: 9 digits followed by V/X or 12 digits"
+                                   required>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="edit_address">Address:</label>
-                        <input type="text" class="form-control" name="address" id="edit_address" required>
+                        <input type="text" class="form-control" name="address" id="edit_address"
+                               pattern="^[A-Za-z0-9\s\-\.,#'/]{5,100}$" 
+                               title="Enter a valid address (5-100 characters)"
+                               required>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="edit_contact_no">Contact Number:</label>
-                            <input type="text" class="form-control" name="contact_no" id="edit_contact_no" required>
+                            <input type="text" class="form-control" name="contact_no" id="edit_contact_no"
+                                   pattern="(?:\+94|0)[0-9]{9}"
+                                   title="Enter a valid phone number: starting with 0 or +94 followed by 9 digits"
+                                   required>
                         </div>
                         
                         <div class="form-group">
@@ -284,13 +310,18 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="edit_email">Email:</label>
-                            <input type="email" class="form-control" name="email" id="edit_email" required>
+                            <input type="email" class="form-control" name="email" id="edit_email"
+                                   pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                                   title="Enter a valid email address"
+                                   required>
                             <span id="emailError" class="error-message"></span>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="edit_password">Password (Leave blank to keep unchanged):</label>
-                            <input type="password" class="form-control" name="password" id="edit_password">
+                            <input type="password" class="form-control" name="password" id="edit_password"
+                                   pattern=".{8,}"
+                                   title="Password must be at least 8 characters long">
                         </div>
                     </div>
                     
