@@ -62,12 +62,18 @@ class SysAdmin extends Controller {
     }
 
     public function employeeManagement() {
-        $employees = $this->sysAdminModel->getAllEmployees();
-        $branches = $this->sysAdminModel->getAllBranches(); // Add this line to fetch branches
+        // Process search parameters
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $branchId = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
+        $status = isset($_GET['status']) ? $_GET['status'] : 'active'; // Default to active employees
+        
+        // Get filtered employees
+        $employees = $this->sysAdminModel->searchEmployees($search, $branchId, $status);
+        $branches = $this->sysAdminModel->getAllBranches();
         
         $data = [
             'employees' => $employees,
-            'branches' => $branches // Add branches to the data array
+            'branches' => $branches
         ];
         
         $this->view('SysAdmin/EmployeeManagement', $data);
@@ -383,6 +389,28 @@ class SysAdmin extends Controller {
         // Return JSON response
         header('Content-Type: application/json');
         echo json_encode(['exists' => !empty($exists)]);
+    }
+
+    public function deactivateEmployee($id = null) {
+        if ($id) {
+            if ($this->sysAdminModel->deactivateEmployee($id)) {
+                flash('employee_message', 'Employee deactivated successfully');
+            } else {
+                flash('employee_message', 'Failed to deactivate employee', 'alert alert-danger');
+            }
+        }
+        redirect('sysadmin/employeeManagement');
+    }
+
+    public function reactivateEmployee($id = null) {
+        if ($id) {
+            if ($this->sysAdminModel->reactivateEmployee($id)) {
+                flash('employee_message', 'Employee reactivated successfully');
+            } else {
+                flash('employee_message', 'Failed to reactivate employee', 'alert alert-danger');
+            }
+        }
+        redirect('sysadmin/employeeManagement');
     }
 }
 ?>

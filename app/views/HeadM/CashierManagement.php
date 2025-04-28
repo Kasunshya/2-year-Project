@@ -48,7 +48,7 @@
                         <table style="border-collapse: separate; border-spacing: 0; border-radius: 10px;">
                             <thead>
                                 <tr>
-                                    <th>Cashier ID</th>
+                            
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Contact No</th>
@@ -62,7 +62,7 @@
                                 <?php if (!empty($data['cashiers'])): ?>
                                     <?php foreach ($data['cashiers'] as $cashier): ?>
                                         <tr>
-                                            <td><?php echo $cashier->employee_id; ?></td>
+                                            
                                             <td><?php echo $cashier->full_name; ?></td>
                                             <td><?php echo $cashier->email; ?></td>
                                             <td><?php echo $cashier->contact_no; ?></td>

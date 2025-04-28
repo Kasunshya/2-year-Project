@@ -27,25 +27,42 @@
                 <i class="fas fa-user-tie"></i>
                 <span>Employee Management</span>
             </div>
-
-            <span>System Administrator</span>
         </div>
     </header>
 
     <div class="content">
         <?php flash('employee_message'); ?>
         
-        <div class="search-bar">
-            <form onsubmit="searchEmployee(); return false;">
-                <input type="text" 
-                       class="form-control"
-                       id="searchEmployeeInput" 
-                       placeholder="Search by employee ID..." 
-                       value="">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </form>
+        <div class="search-section">
+            <div class="search-bar">
+                <form method="GET" action="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="search-form">
+                    <div class="search-field">
+                        <input type="text" name="search" placeholder="Search by Name or ID" 
+                               value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    </div>
+                    <div class="search-field">
+                        <select name="branch_id">
+                            <option value="">All Branches</option>
+                            <?php foreach ($data['branches'] as $branch): ?>
+                                <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($branch->branch_name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <select name="status">
+                            <option value="active" <?php echo (!isset($_GET['status']) || $_GET['status'] == 'active') ? 'selected' : ''; ?>>Active</option>
+                            <option value="inactive" <?php echo (isset($_GET['status']) && $_GET['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive</option>
+                            <option value="">All Status</option>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                        <a href="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="btn reset-btn"><i class="fas fa-times"></i> Reset</a>
+                    </div>
+                </form>
+            </div>
         </div>
         
         <button class="btn" onclick="openAddModal()">
@@ -56,7 +73,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Employee ID</th>
+                        <
                         <th>Full Name</th>
                         <th>NIC</th>
                         <th>Address</th>
@@ -66,12 +83,13 @@
                         <th>User Role</th>
                         <th>CV</th>
                         <th>Actions</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="employeeTable">
                     <?php foreach($data['employees'] as $employee): ?>
                     <tr data-dob="<?php echo $employee->dob; ?>" data-join-date="<?php echo $employee->join_date; ?>">
-                        <td><?php echo $employee->employee_id; ?></td>
+                        
                         <td><?php echo htmlspecialchars($employee->full_name); ?></td>
                         <td><?php echo htmlspecialchars($employee->nic); ?></td>
                         <td><?php echo htmlspecialchars($employee->address); ?></td>
@@ -96,10 +114,22 @@
                             <button class="btn btn-sm" onclick="openEditModal(<?php echo $employee->employee_id; ?>)">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee(<?php echo $employee->employee_id; ?>)">
-                                <i class="fas fa-trash"></i> Delete
+                            <?php if($employee->status === 'active'): ?>
+                            <button class="btn btn-sm btn-danger" onclick="deactivateEmployee(<?php echo $employee->employee_id; ?>)">
+                                <i class="fas fa-user-slash"></i> Deactivate
                             </button>
+                                <?php else: ?>
+                                    <button class="btn btn-sm btn-success" onclick="reactivateEmployee(<?php echo $employee->employee_id; ?>)">
+                                        <i class="fas fa-user-check"></i> Reactivate
+                                    </button>
+                                <?php endif; ?>
                         </td>
+                        <td>
+                            <span class="status-badge <?php echo $employee->status; ?>">
+                            <?php echo ucfirst(htmlspecialchars($employee->status ?? 'active')); ?>
+                            </span>
+                        </td>
+                        
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -503,6 +533,7 @@
     // Search function
     function searchEmployee() {
         const input = document.getElementById('searchEmployeeInput').value.trim();
+        const branch = document.getElementById('branchFilter').value;
         const table = document.getElementById('employeeTable');
         const rows = table.getElementsByTagName('tr');
         let found = false;
@@ -511,7 +542,10 @@
             const cells = rows[i].getElementsByTagName('td');
             if (cells.length > 0) {
                 const employeeId = cells[0].textContent || cells[0].innerText;
-                if (employeeId === input) {
+                const employeeName = cells[1].textContent || cells[1].innerText;
+                const employeeBranch = cells[6].textContent || cells[6].innerText;
+                if ((employeeId === input || employeeName.toLowerCase().includes(input.toLowerCase())) && 
+                    (branch === "" || employeeBranch === branch)) {
                     rows[i].style.display = '';
                     found = true;
                 } else {
@@ -521,13 +555,19 @@
         }
 
         if (!found && input !== '') {
-            alert('No employee found with the given ID.');
+            alert('No employee found with the given ID or name.');
         } else if (input === '') {
             // Show all rows if search input is empty
             for (let i = 0; i < rows.length; i++) {
                 rows[i].style.display = '';
             }
         }
+    }
+
+    function resetSearch() {
+        document.getElementById('searchEmployeeInput').value = '';
+        document.getElementById('branchFilter').value = '';
+        searchEmployee();
     }
 
     // Modal handling functions
@@ -593,16 +633,50 @@
             });
     }
 
-    function deleteEmployee(employeeId) {
-        // Set up the confirm delete button
-        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-        confirmDeleteButton.onclick = function() {
-            window.location.href = `<?php echo URLROOT; ?>/sysadmin/deleteEmployee/${employeeId}`;
-        };
-        
-        // Display the modal
-        document.getElementById('deleteEmployeeModal').style.display = 'flex';
-    }
+    // 
+    // Replace deleteEmployee function with this
+function deactivateEmployee(employeeId) {
+    // Set up the confirm deactivate button
+    const confirmDeactivateButton = document.getElementById('confirmDeleteButton');
+    
+    // Update modal title and content
+    document.querySelector('#deleteEmployeeModal .modal-title').innerHTML = 
+        '<i class="fas fa-user-slash" style="color: var(--error-main);"></i> <span style="color:var(--primary-main);">Confirm Deactivate</span>';
+    document.querySelector('#deleteEmployeeModal p').textContent = 
+        'This action will deactivate the employee. They will no longer have access to the system but their records will be preserved. Do you want to proceed?';
+    document.getElementById('confirmDeleteButton').innerHTML = 
+        '<i class="fas fa-user-slash"></i> Yes, Deactivate';
+    
+    confirmDeactivateButton.onclick = function() {
+        window.location.href = `<?php echo URLROOT; ?>/sysadmin/deactivateEmployee/${employeeId}`;
+    };
+    
+    // Display the modal
+    document.getElementById('deleteEmployeeModal').style.display = 'flex';
+}
+
+// Add reactivateEmployee function
+function reactivateEmployee(employeeId) {
+    // Set up the confirm reactivate button
+    const confirmReactivateButton = document.getElementById('confirmDeleteButton');
+    
+    // Update modal title and content
+    document.querySelector('#deleteEmployeeModal .modal-title').innerHTML = 
+        '<i class="fas fa-user-check" style="color: var(--success-main);"></i> Confirm Reactivate';
+    document.querySelector('#deleteEmployeeModal p').textContent = 
+        'This action will reactivate the employee. They will regain access to the system. Do you want to proceed?';
+    document.getElementById('confirmDeleteButton').innerHTML = 
+        '<i class="fas fa-user-check"></i> Yes, Reactivate';
+    
+    confirmReactivateButton.className = 'btn btn-success';
+    
+    confirmReactivateButton.onclick = function() {
+        window.location.href = `<?php echo URLROOT; ?>/sysadmin/reactivateEmployee/${employeeId}`;
+    };
+    
+    // Display the modal
+    document.getElementById('deleteEmployeeModal').style.display = 'flex';
+}
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
