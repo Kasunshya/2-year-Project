@@ -213,7 +213,15 @@
             gap: 1rem;
             justify-content: center;
         }
-
+        button {
+    width: 80%; 
+    padding: 5px;
+    background: #783b31;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+        }
         .btn-icon {
             background: none;
             border: none;
@@ -290,50 +298,80 @@
             margin: 5px 0;
         }
 
-        .cart-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .continue-btn, .clear-btn, .proceed-btn {
+        .continue-btn{
             padding: 1rem 2rem;
             border: none;
             border-radius: 5px;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: var(--primary-color);  /* Changed from var(--bg) */
+            color: var(--white);              /* Changed from var(--secondary) */
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;                /* Added for consistency */
+            box-shadow: var(--box-shadow);
+            width: 30%; 
+               /* Added for depth */
         }
 
-        .continue-btn {
-            background: var(--bg);
-            color: var(--secondary);
-        }
-
-        .clear-btn {
-            background: var(--bg);
-            color: var(--secondary);
+        .clear-btn{
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary-color);  /* Changed from var(--bg) */
+            color: var(--white);              /* Changed from var(--secondary) */
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;                /* Added for consistency */
+            box-shadow: var(--box-shadow);
+            width: 80%;
+            left margin: 200px; 
+        
         }
 
         .proceed-btn {
-            background: var(--primary-color);
-            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary-color);  /* Changed from var(--bg) */
+            color: var(--white);              /* Changed from var(--secondary) */
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;                /* Added for consistency */
+            box-shadow: var(--box-shadow);
+            width: 80%;
+            right margin: -2000px;
         }
 
-        .continue-btn:hover {
-            background: var(--primary-color);
+        .continue-btn:hover, .clear-btn:hover, .proceed-btn:hover {
+            background: var(--secondary);    /* Changed from var(--primary-color) */
             color: var(--white);
+            transform: translateY(-2px);     /* Added subtle lift effect */
         }
 
-        .clear-btn:hover {
-            background: var(--primary-color);
-            color: var(--white);
+        .cart-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 0 1rem; 
+            width: 80%; 
+                           /* Added padding for better spacing */
         }
 
-        .proceed-btn:hover {
-            background: var(--secondary);
+        .cart-buttons form {
+            margin: 0;
+            padding: 0;
+            flex: 1;                        /* Added to ensure equal button widths */
+            text-align: center;             /* Center the buttons */
         }
     </style>
 </head>

@@ -311,7 +311,10 @@
 
         <div class="order-container">
             <div class="order-form">
-                <form action="<?php echo URLROOT; ?>/Branch/submitDailyOrder" method="POST">
+                <form action="<?php echo URLROOT; ?>/Branch/submitDailyOrder" method="POST" id="orderForm">
+                    <!-- Add a hidden input for form submission verification -->
+                    <input type="hidden" name="submit_daily_order" value="1">
+                    
                     <div class="form-header">
                         <div class="form-group">
                             <label for="orderDate">Order Date:</label>
@@ -372,20 +375,28 @@
                                 <th>Order ID</th>
                                 <th>Description</th>
                                 <th>Order Date</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(isset($data['orders']) && !empty($data['orders'])): ?>
-                                <?php foreach($data['orders'] as $order): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($order->dailybranchorder_id); ?></td>
-                                        <td><?php echo htmlspecialchars($order->description); ?></td>
-                                        <td><?php echo htmlspecialchars($order->orderdate); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr><td colspan="3">No orders found for today</td></tr>
-                            <?php endif; ?>
+                        <?php if(isset($data['orders']) && !empty($data['orders'])): ?>
+                            <?php foreach($data['orders'] as $order): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($order->dailybranchorder_id); ?></td>
+                                    <td><?php echo htmlspecialchars($order->description); ?></td>
+                                    <td><?php echo htmlspecialchars(date('Y-m-d', strtotime($order->orderdate))); ?></td>
+                                    <td>
+                                        <span class="status-<?php echo strtolower($order->status); ?>">
+                                            <?php echo htmlspecialchars(ucfirst($order->status)); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No orders found for today</td>
+                            </tr>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

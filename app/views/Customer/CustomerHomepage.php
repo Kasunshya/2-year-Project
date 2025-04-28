@@ -30,7 +30,7 @@
         <a href="#order">Enquiry</a>
         <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a>
         <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a>
-        <a href="<?php echo URLROOT ?>/Login/logout">Log Out</a>
+        <a href="<?php echo URLROOT ?>/Login/indexx">Log Out</a>
     </nav>
     <div id="menu-btn" class="fas fa-bars"></div>
 </header>

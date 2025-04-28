@@ -350,31 +350,52 @@ class Branch extends Controller {
     public function submitDailyOrder() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             redirect('Branch/dailyOrder');
-        }
-
-        $userId = $_SESSION['user_id'];
-        $branch = $this->branchModel->getBranchByManager($userId);
-        
-        if (!$branch) {
-            die('Error: No branch association found');
-        }
-
-        $description = $_POST['description'];
-        $orderDate = $_POST['orderDate'] ?? date('Y-m-d');
-        $quantities = $_POST['quantities'] ?? [];
-
-        // Filter out zero quantities
-        $quantities = array_filter($quantities, function($qty) {
-            return (int)$qty > 0;
-        });
-
-        if (empty($quantities)) {
-            flash('order_message', 'Please enter at least one product quantity', 'alert alert-danger');
-            redirect('Branch/dailyOrder');
             return;
         }
 
-      
+        try {
+            $userId = $_SESSION['user_id'];
+            $branch = $this->branchModel->getBranchByManager($userId);
+            
+            if (!$branch) {
+                throw new Exception('No branch association found');
+            }
+
+            // Create order description from quantities
+            $quantities = $_POST['quantities'] ?? [];
+            $products = $this->branchModel->getAllProducts();
+            $description = '';
+            
+            foreach ($products as $product) {
+                $qty = isset($quantities[$product->product_id]) ? (int)$quantities[$product->product_id] : 0;
+                if ($qty > 0) {
+                    $description .= $product->product_name . ': ' . $qty . ', ';
+                }
+            }
+            
+            $description = rtrim($description, ', ');
+            
+            if (empty($description)) {
+                flash('order_message', 'Please enter at least one product quantity', 'alert alert-danger');
+                redirect('Branch/dailyOrder');
+                return;
+            }
+
+            $orderDate = $_POST['orderDate'] ?? date('Y-m-d');
+            
+            // Add the order to the database
+            $orderId = $this->branchModel->addDailyBranchOrder($branch->branch_id, $description, $orderDate);
+            
+            if ($orderId) {
+                flash('order_message', 'Daily order submitted successfully', 'alert alert-success');
+            } else {
+                throw new Exception('Error submitting order');
+            }
+
+        } catch (Exception $e) {
+            flash('order_message', 'Error: ' . $e->getMessage(), 'alert alert-danger');
+        }
+
         redirect('Branch/dailyOrder');
     }
 

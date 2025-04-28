@@ -10,26 +10,21 @@ class HeadM extends Controller
 {
     private $cashierModel;
     private $headManagerModel;
+    private $employeeModel;
+    private $branchModel;
+    private $notificationModel;
 
     public function __construct()
     {
+        if (!isLoggedIn() || $_SESSION['user_role'] !== 'headmanager') {
+            redirect('users/login');
+        }
         $this->cashierModel = $this->model('M_Cashier');
         $this->headManagerModel = $this->model('M_HeadM');
+        $this->employeeModel = $this->model('M_Employee');
+        $this->branchModel = $this->model('M_Branch');
+        $this->notificationModel = $this->model('M_Notification');
     }
-
-    /*public function index()
-    {
-        $totalCashiers = $this->headManagerModel->getTotalCashiers();
-        $totalCustomers = $this->headManagerModel->getTotalCustomers();
-
-        $data = [
-            'totalCashiers' => $totalCashiers,
-            'totalCustomers' => $totalCustomers,
-        ];
-
-
-        $this->view('HeadM/dashboard');
-    }*/
 
     public function supplierManagement()
     {
@@ -735,48 +730,50 @@ class HeadM extends Controller
             return;
         }
 
-        $orderId = isset($_POST['order_id']) ? $_POST['order_id'] : null;
-        $status = isset($_POST['status']) ? $_POST['status'] : null;
+        try {
+            $orderId = $_POST['order_id'] ?? null;
+            $status = $_POST['status'] ?? null;
 
-        if (!$orderId || !$status) {
-            echo json_encode(['success' => false, 'message' => 'Missing required data']);
-            return;
-        }
+            if (!$orderId || !$status) {
+                throw new Exception('Missing required parameters');
+            }
 
-        // Load required models
-        $this->orderModel = $this->model('M_DailyBranchOrder');
-        $this->notificationModel = $this->model('M_Notification');
-
-        // Get the branch ID for this order
-        $order = $this->orderModel->getOrderById($orderId);
-        if (!$order) {
-            echo json_encode(['success' => false, 'message' => 'Order not found']);
-            return;
-        }
-
-        // Update the order status
-        $success = $this->orderModel->updateStatus($orderId, $status);
-
-        if ($success) {
-            // Create notification for the branch
-            $this->notificationModel->createNotification(
-                $order->branch_id, 
-                $orderId, 
-                $status
-            );
-
+            // Update the order status
+            $success = $this->headManagerModel->updateDailyOrderStatus($orderId, $status);
+            
+            if ($success) {
+                // Get the branch ID for notification
+                $order = $this->headManagerModel->getDailyOrderById($orderId);
+                if ($order) {
+                    // Create notification
+                    $this->notificationModel->createNotification($order->branch_id, $orderId, $status);
+                }
+                
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'Order status updated successfully'
+                ]);
+            } else {
+                throw new Exception('Failed to update order status');
+            }
+        } catch (Exception $e) {
+            error_log("Error in updateOrderStatus: " . $e->getMessage());
             echo json_encode([
-                'success' => true,
-                'message' => 'Order status updated successfully'
-            ]);
-        } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Failed to update order status'
+                'success' => false, 
+                'message' => 'Error updating order status: ' . $e->getMessage()
             ]);
         }
     }
 
+    public function orders() {
+        // Get all pending orders
+        $pendingOrders = $this->branchModel->getPendingOrders();
+        $data = [
+            'title' => 'Branch Orders',
+            'orders' => $pendingOrders
+        ];
+        $this->view('HeadM/v_Orders', $data);
+    }
 }
 
 ?>

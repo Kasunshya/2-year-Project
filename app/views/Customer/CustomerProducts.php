@@ -49,15 +49,30 @@
             max-width: 1200px;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            align-items: center;
+            gap: 15px;
         }
 
-        .filter-bar select, 
+        .filter-bar form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .filter-bar select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+
         .filter-bar input {
             padding: 10px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            min-width: 150px;
+            width: 250px; /* Made search inputs wider */
         }
 
         .filter-bar button {
@@ -68,10 +83,8 @@
             border-radius: 5px;
             cursor: pointer;
             transition: var(--transition);
-        }
-
-        .filter-bar button:hover {
-            background: var(--secondary-color);
+            height: 41px; /* Match the height of inputs */
+            align-self: stretch; /* Align button height with inputs */
         }
 
         /* Products Container */
@@ -125,16 +138,19 @@
             background: var(--primary-color);
             color: var(--white);
             border: none;
-            padding: 12px 25px;
+            padding: 8px 20px;  /* Reduced padding */
             border-radius: 5px;
             cursor: pointer;
             transition: var(--transition);
-            width: 100%;
-            font-size: 1rem;
+            width: 60%;        /* Reduced width from 100% */
+            font-size: 0.9rem; /* Slightly smaller font */
+            margin: 0 auto;    /* Center the button */
+            display: block;    /* Ensure margin auto works */
         }
 
         .add-to-cart-btn:hover {
             background: var(--secondary-color);
+            transform: translateY(-2px);
         }
 
         /* Cart Count Badge */
@@ -153,11 +169,18 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .filter-bar {
+            .filter-bar form {
                 flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-                margin: 20px;
+                width: 100%;
+            }
+
+            .filter-bar select,
+            .filter-bar input {
+                width: 100%;
+            }
+
+            .filter-bar button {
+                width: 100%;
             }
 
             .products-container {
