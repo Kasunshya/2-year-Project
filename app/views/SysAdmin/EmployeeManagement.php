@@ -68,7 +68,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Employee ID</th>
+                        <
                         <th>Full Name</th>
                         <th>NIC</th>
                         <th>Address</th>
@@ -83,7 +83,7 @@
                 <tbody id="employeeTable">
                     <?php foreach($data['employees'] as $employee): ?>
                     <tr data-dob="<?php echo $employee->dob; ?>" data-join-date="<?php echo $employee->join_date; ?>">
-                        <td><?php echo $employee->employee_id; ?></td>
+                        
                         <td><?php echo htmlspecialchars($employee->full_name); ?></td>
                         <td><?php echo htmlspecialchars($employee->nic); ?></td>
                         <td><?php echo htmlspecialchars($employee->address); ?></td>

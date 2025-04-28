@@ -625,6 +625,7 @@ class M_HeadM
             FROM branchstock bs
             JOIN branch b ON bs.branch_id = b.branch_id
             JOIN product p ON bs.product_id = p.product_id
+            WHERE bs.quantity > 0 
         ';
 
         $conditions = [];
