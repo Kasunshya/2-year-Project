@@ -308,17 +308,12 @@ class SysAdmin extends Controller {
         echo json_encode($branches);
     }
 
-    public function checkEmailExists($email)
-    {
-        // URL decode the email
+    public function checkEmailExists($email) {
         $email = urldecode($email);
+        $exists = $this->sysAdminModel->findEmployeeByEmail($email);
         
-        // Check if email exists
-        $exists = $this->employeeModel->findEmployeeByEmail($email);
-        
-        // Return JSON response
         header('Content-Type: application/json');
-        echo json_encode(['exists' => !empty($exists)]);
+        echo json_encode(['exists' => $exists]);
     }
 
     public function checkNicExists($nic)
@@ -346,7 +341,8 @@ class SysAdmin extends Controller {
 
     public function checkEmailExistsExcept($email, $employeeId) {
         $email = urldecode($email);
-        $exists = !$this->sysAdminModel->isEmailUnique($email, $employeeId);
+        $exists = $this->sysAdminModel->findEmployeeByEmailExcept($email, $employeeId);
+        
         header('Content-Type: application/json');
         echo json_encode(['exists' => $exists]);
     }
