@@ -224,8 +224,10 @@ class M_Branch {
 
     public function getDailySalesSummary($branchId, $date) {
         $this->db->query("SELECT 
+                 COUNT(*) as transaction_count,
                  COALESCE(SUM(total), 0) as total_sales,
-                 COUNT(*) as transaction_count
+                 COALESCE(SUM(CASE WHEN payment_method = 'Cash' THEN total ELSE 0 END), 0) as cash_sales,
+                 COALESCE(SUM(CASE WHEN payment_method != 'Cash' THEN total ELSE 0 END), 0) as card_sales
                  FROM orders
                  WHERE branch_id = :branch_id 
                  AND DATE(order_date) = :date

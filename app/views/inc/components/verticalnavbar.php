@@ -16,6 +16,7 @@
                 <li><a href="<?php echo URLROOT;?>/Branch/products"><i class="fas fa-cookie"></i></a></li>
                 <li><a href="<?php echo URLROOT;?>/Branch/dailyOrder"><i class="fas fa-tasks"></i></a></li>
                 <li><a href="<?php echo URLROOT;?>/Branch/salesReport"><i class="fas fa-chart-bar"></i></a></li>
+
                 <li>
                     <a href="<?php echo URLROOT; ?>/Branch/notifications" class="nav-link">
                         <i class="fas fa-bell"></i>
@@ -23,6 +24,7 @@
                     </a>
                 </li>
                 <li><a href="<?php echo URLROOT; ?>/Login/indexx" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+
             </ul>
         </div>
        

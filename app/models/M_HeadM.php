@@ -1038,13 +1038,16 @@ class M_HeadM
                 f.feedback_id,
                 f.feedback_text,
                 f.created_at AS feedback_date,
-                p.product_id,
                 p.product_name,
-                p.image_path AS product_image
+                p.image_path AS product_image,
+                c.customer_name
             FROM feedback f
-            JOIN product p ON f.order_id = p.product_id
+            JOIN customer c ON f.customer_id = c.customer_id
+            JOIN orders o ON f.order_id = o.order_id
+            JOIN orderdetails od ON o.order_id = od.order_id
+            JOIN product p ON od.product_id = p.product_id
             ORDER BY f.created_at DESC
-            LIMIT 5
+            LIMIT 2
         ');
 
         return $this->db->resultSet();

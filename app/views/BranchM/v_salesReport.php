@@ -277,15 +277,7 @@
                             <p>Contact: <?php echo $data['branch']->branch_contact; ?></p>
                         </div>
                         <div class="report-info">
-                            <p><strong>Date:</strong> <?php 
-                                if (isset($data['date'])) {
-                                    echo date('d F Y', strtotime($data['date']));
-                                } elseif (isset($data['startDate']) && isset($data['endDate'])) {
-                                    echo date('d F Y', strtotime($data['startDate'])) . ' to ' . date('d F Y', strtotime($data['endDate']));
-                                } else {
-                                    echo date('d F Y');
-                                }
-                            ?></p>
+                            <p><strong>Date:</strong> <?php echo date('d F Y', strtotime($data['date'] ?? 'now')); ?></p>
                             <p><strong>Branch ID:</strong> <?php echo $data['branch']->branch_id; ?></p>
                             <p><strong>Report Generated:</strong> <?php echo date('d F Y, h:i A'); ?></p>
                         </div>
@@ -306,7 +298,7 @@
                             <?php if (!empty($data['transactions'])) : ?>
                                 <?php foreach ($data['transactions'] as $transaction) : ?>
                                     <tr>
-                                        <td>OID<?php echo $transaction->order_id; ?></td>
+                                        <td>OID<?php echo str_pad($transaction->order_id, 3, '0', STR_PAD_LEFT); ?></td>
                                         <td><?php echo date('h:i A', strtotime($transaction->order_date)); ?></td>
                                         <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
                                         <td><?php echo $transaction->payment_method; ?></td>
@@ -328,7 +320,7 @@
                         <h3>Transaction Summary</h3>
                         <div class="print-summary-row">
                             <span>Total Transactions</span>
-                            <span><?php echo $data['summary']->total_orders ?? 0; ?></span>
+                            <span><?php echo $data['summary']->transaction_count ?? 0; ?></span>
                         </div>
                         <div class="print-summary-row">
                             <span>Cash Sales</span>
@@ -427,7 +419,7 @@
                             <?php if (!empty($data['transactions'])) : ?>
                                 <?php foreach ($data['transactions'] as $transaction) : ?>
                                     <tr>
-                                        <td>#<?php echo $transaction->order_id; ?></td>
+                                        <td>OID<?php echo $transaction->order_id; ?></td>
                                         <td><?php echo date('Y-m-d', strtotime($transaction->order_date)); ?></td>
                                         <td><?php echo date('h:i A', strtotime($transaction->order_date)); ?></td>
                                         <td>LKR <?php echo number_format($transaction->total, 2); ?></td>
@@ -450,11 +442,21 @@
                         <h3>Period Summary</h3>
                         <div class="print-summary-row">
                             <span>Total Days</span>
-                            <span><?php echo $data['summary']->total_days ?? 0; ?></span>
+                            <span><?php 
+                                if (isset($data['startDate']) && isset($data['endDate'])) {
+                                    $start = new DateTime($data['startDate']);
+                                    $end = new DateTime($data['endDate']);
+                                    $end->modify('+1 day'); // Include the end date
+                                    $interval = $start->diff($end);
+                                    echo $interval->days;
+                                } else {
+                                    echo '0';
+                                }
+                            ?></span>
                         </div>
                         <div class="print-summary-row">
                             <span>Total Transactions</span>
-                            <span><?php echo $data['summary']->total_orders ?? 0; ?></span>
+                            <span><?php echo isset($data['transactions']) ? count($data['transactions']) : 0; ?></span>
                         </div>
                         <div class="print-summary-row">
                             <span>Cash Sales</span>

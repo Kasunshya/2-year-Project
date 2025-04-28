@@ -374,12 +374,7 @@ class Branch extends Controller {
             return;
         }
 
-        if ($this->branchModel->addDailyBranchOrder($branch->branch_id, $description, $orderDate, $quantities)) {
-            flash('order_message', 'Daily order submitted successfully');
-        } else {
-            flash('order_message', 'Error submitting daily order', 'alert alert-danger');
-        }
-        
+      
         redirect('Branch/dailyOrder');
     }
 

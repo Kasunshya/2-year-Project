@@ -131,7 +131,9 @@
   width: 40px;
   height: 40px;
   background-color: #5d2e46;
- 
+
+  color: var(--white);
+
   border-radius: 50%;
   display: flex;
   justify-content: center;

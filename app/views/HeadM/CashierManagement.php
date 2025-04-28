@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>Frostine Cashier Management</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -19,9 +20,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-cash-register icon-cashier"></i>&nbsp Cashiers</h1>
-                <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+                
             </header>
             <div class="content">
                 <div class="employee-list">
@@ -45,8 +44,8 @@
                             </div>
                         </form>
                     </div>
-                    <div class="table-container">
-                        <table>
+                    <div class="table-container" style="border-radius: 10px; overflow: hidden;">
+                        <table style="border-collapse: separate; border-spacing: 0; border-radius: 10px;">
                             <thead>
                                 <tr>
                                     <th>Cashier ID</th>

@@ -26,17 +26,13 @@
           font-size: 2.5rem;
           text-transform: uppercase;
           margin-top: 10px;
-          margin-left: 120px;
+          margin-left: 20px;
           margin-right: 20px;
           border-radius: 5px;
-          width: 90%;
+          width: 95%;
 }
 
-        /* Dashboard-specific styles */
-        .dashboard-content {
-            padding: var(--space-md);
-            width: 100%;
-        }
+        
         
         .time-calendar-container {
             display: grid;
@@ -253,12 +249,12 @@
                     <i class="fas fa-th-large"></i>
                     <span>Dashboard Overview</span>
                 </div>
-                <div class="header-role">
+                <a href="<?php echo URLROOT; ?>/sysadmin/profile" class="header-role" style="text-decoration: none; color: inherit; cursor: pointer;">
                     <div class="header-role-avatar">
                         <i class="fas fa-user"></i>
                     </div>
                     <span>System Administrator</span>
-                </div>
+                </a>
             </header>
 
             <div class="content">

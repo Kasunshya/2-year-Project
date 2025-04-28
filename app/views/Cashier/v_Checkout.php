@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/checkout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add SweetAlert2 library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary-dark: #5d2e46;    /* Deep plum */
@@ -320,7 +323,11 @@
                 const amountTendered = parseFloat(document.getElementById('cashAmount').value);
                 
                 if (isNaN(amountTendered) || amountTendered < total) {
-                    alert('Please enter a valid amount that covers the total');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Amount',
+                        text: 'Please enter a valid amount that covers the total'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Process Payment';
@@ -337,7 +344,11 @@
                 
                 // Basic validation
                 if (!/^\d{16}$/.test(cardNumber)) {
-                    alert('Please enter a valid 16-digit card number');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Card Number',
+                        text: 'Please enter a valid 16-digit card number'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Process Payment';
@@ -345,7 +356,11 @@
                     return;
                 }
                 if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
-                    alert('Please enter a valid expiry date (MM/YY)');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Expiry Date',
+                        text: 'Please enter a valid expiry date (MM/YY)'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Process Payment';
@@ -353,7 +368,11 @@
                     return;
                 }
                 if (!/^\d{3}$/.test(cvv)) {
-                    alert('Please enter a valid 3-digit CVV');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid CVV',
+                        text: 'Please enter a valid 3-digit CVV'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Process Payment';
@@ -381,7 +400,11 @@
                         window.location.href = data.approvalUrl;
                     } else {
                         document.getElementById('paypalProcessingOverlay').style.display = 'none';
-                        alert(data.message || 'Failed to initiate PayPal payment');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'PayPal Error',
+                            text: data.message || 'Failed to initiate PayPal payment'
+                        });
                         processBtns.forEach(btn => {
                             btn.disabled = false;
                             btn.textContent = 'Pay with PayPal';
@@ -391,7 +414,11 @@
                 .catch(error => {
                     document.getElementById('paypalProcessingOverlay').style.display = 'none';
                     console.error('PayPal Error:', error);
-                    alert('Failed to initiate PayPal payment. Please try again.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'PayPal Error',
+                        text: 'Failed to initiate PayPal payment. Please try again.'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Pay with PayPal';
@@ -420,7 +447,11 @@
                 if (data.success) {
                     window.location.href = '<?php echo URLROOT; ?>/Cashier/generateBill';
                 } else {
-                    alert(data.message || 'Payment failed. Please try again.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Failed',
+                        text: data.message || 'Payment failed. Please try again.'
+                    });
                     processBtns.forEach(btn => {
                         btn.disabled = false;
                         btn.textContent = 'Process Payment';
@@ -429,7 +460,11 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Payment processing failed. Please try again.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: 'Payment processing failed. Please try again.'
+                });
                 processBtns.forEach(btn => {
                     btn.disabled = false;
                     btn.textContent = 'Process Payment';
@@ -515,13 +550,21 @@
                     window.location.href = '<?php echo URLROOT; ?>/Cashier/generateBill';
                 } else {
                     overlay.style.display = 'none';
-                    alert(data.message || 'Failed to complete PayPal payment');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'PayPal Error',
+                        text: data.message || 'Failed to complete PayPal payment'
+                    });
                 }
             })
             .catch(error => {
                 overlay.style.display = 'none';
                 console.error('Error:', error);
-                alert('Failed to complete PayPal payment. Please try again.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'PayPal Error',
+                    text: 'Failed to complete PayPal payment. Please try again.'
+                });
             });
         }
       });

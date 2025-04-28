@@ -11,6 +11,11 @@ class SysAdmin extends Controller {
         if (!file_exists(UPLOADROOT)) {
             mkdir(UPLOADROOT, 0755, true);
         }
+
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
     }
 
     public function dashboard() {
@@ -30,6 +35,30 @@ class SysAdmin extends Controller {
         ];
 
         $this->view('SysAdmin/Dashboard', $data);
+    }
+
+    public function profile() {
+        // Get the user_id from session
+        $user_id = $_SESSION['user_id'] ?? null;
+        
+        if (!$user_id) {
+            flash('profile_message', 'User not found', 'alert alert-danger');
+            redirect('sysadmin/dashboard');
+        }
+
+        // Get employee data by user_id
+        $employee = $this->sysAdminModel->getEmployeeByUserId($user_id);
+        
+        if (!$employee) {
+            flash('profile_message', 'Employee data not found', 'alert alert-danger');
+            redirect('sysadmin/dashboard');
+        }
+
+        $data = [
+            'employee' => $employee
+        ];
+
+        $this->view('SysAdmin/Profile', $data);
     }
 
     public function employeeManagement() {
@@ -76,6 +105,14 @@ class SysAdmin extends Controller {
                 'branch_id' => trim($_POST['branch_id']), // Ensure branch_id is included
                 'user_role' => trim($_POST['user_role'])
             ];
+
+            // Check for duplicate email BEFORE trying to insert
+            $emailExists = !$this->sysAdminModel->isEmailUnique($data['email']);
+            if ($emailExists) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+                return; // Important: Stop execution here
+            }
 
             if ($this->sysAdminModel->addEmployee($data)) {
                 flash('employee_message', 'Employee added successfully');
@@ -129,6 +166,12 @@ class SysAdmin extends Controller {
                 'user_id' => trim($_POST['user_id'])
             ];
 
+            // Check if the email is unique for other employees (excluding current employee)
+            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+            }
+
             if ($this->sysAdminModel->updateEmployee($data)) {
                 // Update related table based on user_role
                 if ($data['user_role'] === 'cashier') {
@@ -152,6 +195,7 @@ class SysAdmin extends Controller {
 
     public function updateEmployee() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Existing code to process POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $cvFileName = '';
@@ -176,6 +220,14 @@ class SysAdmin extends Controller {
                 'user_role' => trim($_POST['user_role']),
                 'user_id' => $userId
             ];
+            
+            // After creating the $data array, add this check:
+            // Check if the email is unique for other employees (excluding current employee)
+            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+                return; // Important: Stop execution here to prevent the update
+            }
             
             if ($this->sysAdminModel->updateEmployee($data)) {
                 flash('employee_message', 'Employee updated successfully');
@@ -271,17 +323,12 @@ class SysAdmin extends Controller {
         echo json_encode($branches);
     }
 
-    public function checkEmailExists($email)
-    {
-        // URL decode the email
+    public function checkEmailExists($email) {
         $email = urldecode($email);
+        $exists = $this->sysAdminModel->findEmployeeByEmail($email);
         
-        // Check if email exists
-        $exists = $this->employeeModel->findEmployeeByEmail($email);
-        
-        // Return JSON response
         header('Content-Type: application/json');
-        echo json_encode(['exists' => !empty($exists)]);
+        echo json_encode(['exists' => $exists]);
     }
 
     public function checkNicExists($nic)
@@ -307,17 +354,12 @@ class SysAdmin extends Controller {
         echo json_encode(['exists' => !empty($exists)]);
     }
 
-    public function checkEmailExistsExcept($email, $employeeId)
-    {
-        // URL decode the email
+    public function checkEmailExistsExcept($email, $employeeId) {
         $email = urldecode($email);
+        $exists = $this->sysAdminModel->findEmployeeByEmailExcept($email, $employeeId);
         
-        // Check if email exists except for this employee
-        $exists = $this->employeeModel->findEmployeeByEmailExcept($email, $employeeId);
-        
-        // Return JSON response
         header('Content-Type: application/json');
-        echo json_encode(['exists' => !empty($exists)]);
+        echo json_encode(['exists' => $exists]);
     }
 
     public function checkNicExistsExcept($nic, $employeeId)

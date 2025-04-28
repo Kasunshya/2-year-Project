@@ -336,7 +336,7 @@ textarea:focus {
 
 .main-content {
     margin-left: 100px;
-    padding: 20px;
+ 
 }
 
 .header-container h1 {
@@ -371,7 +371,7 @@ textarea:focus {
 
 .form-group input[type="date"],
 .form-group textarea {
-    width: 100%;
+    width: 90%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;

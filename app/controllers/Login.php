@@ -157,11 +157,21 @@ class Login extends Controller {
                         exit;
                     } else {
                         error_log("LOGIN: Password verification failed");
-                        $data['errors']['general'] = 'Invalid password';
+                        // Replace inline error with SweetAlert
+                        $_SESSION['sweet_alert'] = [
+                            'type' => 'error',
+                            'title' => 'Authentication Failed',
+                            'text' => 'Invalid password. Please try again.'
+                        ];
                     }
                 } else {
                     error_log("LOGIN: Email not found");
-                    $data['errors']['general'] = 'Email not found';
+                    // Also convert email not found error to SweetAlert for consistency
+                    $_SESSION['sweet_alert'] = [
+                        'type' => 'error',
+                        'title' => 'Authentication Failed',
+                        'text' => 'Email not found. Please check your credentials.'
+                    ];
                 }
             }
         }
@@ -194,15 +204,4 @@ class Login extends Controller {
         exit;
     }
     
-    public function logout() {
-        // No need to start session again, just unset and destroy
-        error_log("Logging out user: " . ($_SESSION['user_email'] ?? 'Unknown'));
-        
-        session_unset();
-        session_destroy();
-        
-        // Redirect to the login page
-        header('Location: ' . URLROOT . '/Login/indexx');
-        exit;
-    }
 }

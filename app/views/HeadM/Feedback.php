@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>Feedback View - Head Manager</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
@@ -78,9 +79,7 @@
         <main>
             <header class="header">
                 <h1><i class="fas fa-comments"></i>&nbsp Feedback View</h1>
-                <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
-                </div>
+                
             </header>
             <div class="content">
                 <div class="search-bar">

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>Frostine Dashboard</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
@@ -27,7 +28,10 @@
             <header class="header">
                 <h1><i class="fas fa-tachometer-alt"></i>&nbsp Dashboard</h1>
                 <div class="user-info">
-                    <span><b>HEAD MANAGER</b></span>
+                    <div class="user-profile-header" onclick="window.location.href='<?php echo URLROOT; ?>/headmanager/profile'">
+                        <i class="fas fa-user avatar"></i>
+                        <span class="role" style="font-weight: normal;">Head Manager</span>
+                    </div>
                 </div>
             </header>
             <section class="dashboard-content">
@@ -61,7 +65,7 @@
 
                 <!-- Top Widgets: Clock, Calendar, Sales Chart -->
                 <div class="dashboard-top">
-                    <!-- Left Column: Clock + Branch Performance -->
+                    <!-- Left Column: Clock + Latest Product Feedback -->
                     <div class="left-column">
                         <!-- Clock Widget -->
                         <div class="clock-widget">
@@ -81,27 +85,7 @@
                             <div id="current-date"></div>
                         </div>
 
-                        <!-- Branch Performance Chart -->
-                        <div class="branch-performance">
-                            <h2>Branch Performance</h2>
-                            <canvas id="branchPerformanceChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Calendar Widget (Middle) -->
-                    <div class="calendar-widget">
-                        <div id="calendar"></div>
-                    </div>
-
-                    <!-- Right Column: Sales Analysis + Latest Feedback -->
-                    <div class="right-column">
-                        <!-- Sales Analysis -->
-                        <div class="sales-widget">
-                            <h3 style="color: #5d2e46; margin-bottom: 15px;">Sales Analysis</h3>
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                        
-                        <!-- Latest Product Feedbacks -->
+                        <!-- Latest Product Feedback -->
                         <div class="feedback-widget">
                             <h3>Latest Product Feedback</h3>
                             <div class="feedback-container">
@@ -112,19 +96,10 @@
                                                 <img src="<?php echo URLROOT; ?>/public/img/products/<?php echo $feedback->product_image ?? 'default.jpg'; ?>" alt="<?php echo $feedback->product_name; ?>">
                                             </div>
                                             <div class="feedback-content">
-                                                <div class="feedback-product-name"><?php echo $feedback->product_name; ?></div>
+                                                <div class="feedback-product-name"><strong>Product:</strong> <?php echo $feedback->product_name; ?></div>
+                                                <div class="feedback-customer-name"><strong>Customer:</strong> <?php echo $feedback->customer_name; ?></div>
                                                 <div class="feedback-text"><?php echo $feedback->feedback_text; ?></div>
                                                 <div class="feedback-meta">
-                                                    <div class="feedback-rating">
-                                                        <?php 
-                                                        for($i = 0; $i < $feedback->rating; $i++) {
-                                                            echo '<i class="fas fa-star"></i>';
-                                                        }
-                                                        for($i = $feedback->rating; $i < 5; $i++) {
-                                                            echo '<i class="far fa-star"></i>';
-                                                        }
-                                                        ?>
-                                                    </div>
                                                     <div class="feedback-date"><?php echo date('M d, Y', strtotime($feedback->feedback_date)); ?></div>
                                                 </div>
                                             </div>
@@ -138,6 +113,26 @@
                                     </div>
                                 <?php endif; ?>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Widget (Middle) -->
+                    <div class="calendar-widget">
+                        <div id="calendar"></div>
+                    </div>
+
+                    <!-- Right Column: Sales Analysis + Branch Performance -->
+                    <div class="right-column">
+                        <!-- Sales Analysis -->
+                        <div class="sales-widget">
+                            <h3 style="color: #5d2e46; margin-bottom: 15px;">Sales Analysis</h3>
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                        
+                        <!-- Branch Performance Chart -->
+                        <div class="branch-performance">
+                            <h2>Branch Performance</h2>
+                            <canvas id="branchPerformanceChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -187,7 +182,7 @@
                             <?php if(isset($data['recentOrders']) && !empty($data['recentOrders'])): ?>
                                 <?php foreach($data['recentOrders'] as $order): ?>
                                     <tr>
-                                        <td>#<?php echo $order->order_id; ?></td>
+                                        <td>OID<?php echo $order->order_id; ?></td>
                                         <td><?php echo date('M d, H:i', strtotime($order->order_date)); ?></td>
                                         <td><?php echo $order->items; ?></td>
                                         <td><?php echo $order->branch_name ?? 'N/A'; ?></td>
