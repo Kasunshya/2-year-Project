@@ -279,21 +279,30 @@
         }
 
         .btn {
-            display: inline-block;
-            padding: 0.5rem 2rem;  /* Reduced from 0.8rem 3rem */
-            font-size: 1.2rem;     /* Reduced from 1.7rem */
-            border-radius: 0.5rem;
             background: var(--primary-color);
             color: var(--white);
-            cursor: pointer;
-            text-decoration: none;
             border: none;
-            transition: background 0.3s ease;
+            padding: 8px 20px;  /* Reduced padding */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;        /* Reduced width from 100% */
+            font-size: 0.9rem; /* Slightly smaller font */
+            margin: 0 auto;    /* Center the button */
+            display: block;    /* Ensure margin auto works */
+            text-decoration: none; /* Remove underline from links */
         }
 
         .btn:hover {
             background: var(--secondary-color);
-            letter-spacing: 1px;
+            transform: translateY(-2px);
+        }
+
+        /* Update modal button styles to override width for login/signup buttons */
+        .modal-buttons .btn {
+            width: auto;  /* Override width for modal buttons */
+            display: inline-block;
+            margin: 0 10px;
         }
 
         .product-info {

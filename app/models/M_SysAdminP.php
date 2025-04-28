@@ -290,26 +290,42 @@ class M_SysAdminP {
     }
 
     public function updatePromotion($data) {
-        $this->db->query('UPDATE promotions 
-                         SET title = :title, 
-                             description = :description, 
-                             discount_percentage = :discount_percentage, 
-                             start_date = :start_date, 
-                             end_date = :end_date, 
-                             image_path = :image_path, 
-                             is_active = :is_active 
-                         WHERE id = :promotion_id');
-        
-        $this->db->bind(':promotion_id', $data['promotion_id']);
-        $this->db->bind(':title', $data['title']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':discount_percentage', $data['discount_percentage']);
-        $this->db->bind(':start_date', $data['start_date']);
-        $this->db->bind(':end_date', $data['end_date']);
-        $this->db->bind(':image_path', $data['image_path']);
-        $this->db->bind(':is_active', $data['is_active']);
-
-        return $this->db->execute();
+        try {
+            // Always update these fields
+            $sql = 'UPDATE promotions SET 
+                    title = :title, 
+                    description = :description, 
+                    discount_percentage = :discount_percentage, 
+                    start_date = :start_date, 
+                    end_date = :end_date';
+            
+            // Add image_path to update if it's changed
+            if ($data['image_path']) {
+                $sql .= ', image_path = :image_path';
+            }
+            
+            $sql .= ' WHERE id = :id';
+            
+            $this->db->query($sql);
+            
+            // Bind all the regular parameters
+            $this->db->bind(':id', $data['id']);
+            $this->db->bind(':title', $data['title']);
+            $this->db->bind(':description', $data['description']);
+            $this->db->bind(':discount_percentage', $data['discount_percentage']);
+            $this->db->bind(':start_date', $data['start_date']);
+            $this->db->bind(':end_date', $data['end_date']);
+            
+            // Bind image path if it exists
+            if ($data['image_path']) {
+                $this->db->bind(':image_path', $data['image_path']);
+            }
+            
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log('Update Promotion Error: ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function deletePromotion($id) {
@@ -322,6 +338,35 @@ class M_SysAdminP {
         $this->db->query('SELECT * FROM promotions WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
+    }
+
+    public function updatePromotionStatus($id, $status) {
+        try {
+            $this->db->query('UPDATE promotions SET is_active = :is_active WHERE id = :id');
+            $this->db->bind(':id', $id);
+            $this->db->bind(':is_active', $status);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log('Update Promotion Status Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getEmployeeById($id) {
+        try {
+            $this->db->query('SELECT * FROM employee WHERE employee_id = :id');
+            $this->db->bind(':id', $id);
+            
+            $result = $this->db->single();
+            
+            if ($this->db->rowCount() > 0) {
+                return $result;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log("Error in getEmployeeById: " . $e->getMessage());
+            return false;
+        }
     }
 
 }

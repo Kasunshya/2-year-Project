@@ -71,8 +71,8 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn approve" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'approved')">Approve</button>
-                                            <button class="btn reject" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'rejected')">Reject</button>
+                                            <button class="btn btn-success btn-sm" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'approved')">Accept</button>
+                                            <button class="btn btn-danger btn-sm" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'rejected')">Reject</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -102,22 +102,10 @@
             confirmButtonText: 'Yes, proceed'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Show loading indicator
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Updating order status',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-                
-                // Create form data
                 const formData = new FormData();
                 formData.append('order_id', orderId);
                 formData.append('status', status);
-                
-                // Send AJAX request
+
                 fetch('<?php echo URLROOT; ?>/HeadM/updateOrderStatus', {
                     method: 'POST',
                     body: formData
@@ -128,27 +116,19 @@
                         Swal.fire({
                             title: 'Success!',
                             text: data.message,
-                            icon: 'success',
-                            confirmButtonColor: '#a26b98'
+                            icon: 'success'
                         }).then(() => {
-                            location.reload(); // Reload to show updated status
+                            location.reload();
                         });
                     } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: data.message || 'An error occurred',
-                            icon: 'error',
-                            confirmButtonColor: '#a26b98'
-                        });
+                        throw new Error(data.message || 'Failed to update status');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
                     Swal.fire({
                         title: 'Error!',
-                        text: 'An error occurred while processing your request',
-                        icon: 'error',
-                        confirmButtonColor: '#a26b98'
+                        text: error.message,
+                        icon: 'error'
                     });
                 });
             }

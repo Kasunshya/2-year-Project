@@ -435,8 +435,16 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
+    public function getDailyOrderById($orderId) {
+        $this->db->query('SELECT * FROM dailybranchorder WHERE dailybranchorder_id = :id');
+        $this->db->bind(':id', $orderId);
+        return $this->db->single();
+    }
+
     public function updateDailyOrderStatus($orderId, $status) {
-        $this->db->query('UPDATE dailybranchorder SET status = :status WHERE dailybranchorder_id = :id');
+        $this->db->query('UPDATE dailybranchorder 
+                          SET status = :status 
+                          WHERE dailybranchorder_id = :id');
         $this->db->bind(':status', $status);
         $this->db->bind(':id', $orderId);
         return $this->db->execute();

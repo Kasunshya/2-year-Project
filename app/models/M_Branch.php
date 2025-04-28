@@ -392,28 +392,24 @@ class M_Branch {
         return $this->db->resultSet();
     }
 
-    public function addDailyBranchOrder($branchId, $description, $orderDate, $quantities) {
-        $this->db->beginTransaction();
-
+    public function addDailyBranchOrder($branchId, $description, $orderDate) {
         try {
-            // Insert main order with default pending status
-            $this->db->query('INSERT INTO dailybranchorder 
-                             (branch_id, description, orderdate, status) 
-                             VALUES (:branch_id, :description, :orderdate, :status)');
+            // Insert the main order
+            $this->db->query('INSERT INTO dailybranchorder (branch_id, description, orderdate) 
+                             VALUES (:branch_id, :description, :orderdate)');
             
             $this->db->bind(':branch_id', $branchId);
             $this->db->bind(':description', $description);
             $this->db->bind(':orderdate', $orderDate);
-            $this->db->bind(':status', 'pending'); // Always set initial status to pending
             
-            $this->db->execute();
-            $orderId = $this->db->lastInsertId();
+            if ($this->db->execute()) {
+                return $this->db->lastInsertId();
+            }
+            
+            return false;
 
-            $this->db->commit();
-            return true;
         } catch (Exception $e) {
-            $this->db->rollBack();
-            error_log("Error in addDailyBranchOrder: " . $e->getMessage());
+            error_log("Error adding daily branch order: " . $e->getMessage());
             return false;
         }
     }
@@ -595,18 +591,51 @@ class M_Branch {
                         dailybranchorder_id, 
                         description, 
                         orderdate, 
-                        COALESCE(status, "pending") as status 
+                        status 
                         FROM dailybranchorder 
                         WHERE branch_id = :branch_id 
                         AND DATE(orderdate) = :date
                         ORDER BY dailybranchorder_id DESC');
-    
+
         $this->db->bind(':branch_id', $branchId);
         $this->db->bind(':date', $date);
-    
-        return $this->db->resultSet();
+
+        $result = $this->db->resultSet();
+        return $result ?: [];
     }
 
-    
+    public function updateOrderStatus($orderId, $status) {
+        try {
+            $this->db->beginTransaction();
+
+            // Update the order status
+            $this->db->query('UPDATE dailybranchorder 
+                             SET status = :status 
+                             WHERE dailybranchorder_id = :order_id');
+            
+            $this->db->bind(':status', $status);
+            $this->db->bind(':order_id', $orderId);
+            
+            $result = $this->db->execute();
+
+            if ($result) {
+                // Get branch_id for notification
+                $this->db->query('SELECT branch_id FROM dailybranchorder WHERE dailybranchorder_id = :order_id');
+                $this->db->bind(':order_id', $orderId);
+                $order = $this->db->single();
+
+                $this->db->commit();
+                return $order->branch_id;
+            }
+
+            $this->db->rollBack();
+            return false;
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error updating order status: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

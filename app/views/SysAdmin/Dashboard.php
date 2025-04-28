@@ -4,346 +4,354 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Admin Dashboard</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/SysAdmin/sidebar.css">
+    <?php require APPROOT.'/views/SysAdmin/SideNavBar.php'?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    
-    <style>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
-.header {
-          background-color: #5d2e46;
-          padding: 2rem;
-          text-align: center;
-          color: var(--white);
-          font-size: 2.5rem;
-          text-transform: uppercase;
-          margin-top: 10px;
-          margin-left: 20px;
-          margin-right: 20px;
-          border-radius: 5px;
-          width: 95%;
+    <style>
+        body {
+            background-color: #f8e5f4;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            width: 90%;
+            margin-left: 120px;
+            margin-right: 30px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #5d2e46;
+            padding: 2rem;
+            margin-left: 120px;
+            margin-right: 20px;
+            border-radius: 5px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2.5rem;
+        }
+   
 }
 
-        
-        
-        .time-calendar-container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: var(--space-lg);
-            margin-bottom: var(--space-lg);
-            min-width: 1000px;
-        }
-        
-        .overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: var(--space-lg);
-            min-width: 1000px;
-        }
-        
-        .card {
-            background-color: var(--neutral-white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .stats-card {
+        .header-container {
             display: flex;
-            padding: var(--space-lg);
-            position: relative;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
-        
+
+        .user-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-profile-header:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-profile-header .avatar {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .user-profile-header .role {
+            font-size: 1rem;
+            color: #e8d7e5;  /* Changed from white to #e8d7e5 */
+            text-transform: none;
+        }
+
+        .dashboard-top {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 2rem;
+            padding: 0;
+        }
+
+        .clock-widget {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03),
+                        -5px -5px 10px rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            text-align: center;
+            width: 320px;
+            height: 320px;
+        }
+
+        .clock-face {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f0e6e3, #fff);
+            box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.05),
+                        inset -5px -5px 10px rgba(255, 255, 255, 0.8),
+                        5px 5px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        #calendar {
+            flex: 1;
+            min-width: 400px;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            height: 320px !important;
+        }
+
+        .analysis-widget {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            height: 320px;
+            width: 320px;
+        }
+
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 20px 140px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .metric {
+            background: linear-gradient(135deg, #fff 0%, #e8d7e5 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 6px solid #a26b98;
+            transition: all 0.3s ease;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .metric:hover {
+            transform: translateY(-10px);
+            border-left: 6px solid #f1c778;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .metric h3 {
+            color: #5d2e46;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .metric p {
+            color: #b06f42;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0 0;
+        }
+
+        .metric i {
+            font-size: 2rem;
+            color: #a26b98;
+            margin-bottom: 15px;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
         .card-icon {
+            background-color: #a26b98;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: var(--radius-lg);
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            font-size: 1.5rem;
-            margin-right: var(--space-md);
-            flex-shrink: 0;
+            margin-right: 15px;
+            color: white;
         }
-        
-        .card-content {
-            flex: 1;
+
+        .overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 140px;
         }
-        
-        .card-title {
-            font-size: 0.875rem;
-            color: var(--neutral-dark);
-            margin-bottom: var(--space-xs);
+
+        /* Clock hand styles */
+        .clock-hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            z-index: 5;
         }
-        
-        .card-content h2 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin: var(--space-xs) 0;
+
+        .hour-hand {
+            width: 6px;
+            height: 50px;
+            background: #783b31;
+            border-radius: 3px;
         }
-        
-        .card-subtitle {
-            font-size: 0.75rem;
-            color: var(--neutral-gray);
+
+        .minute-hand {
+            width: 4px;
+            height: 70px;
+            background: #a96c60;
+            border-radius: 2px;
         }
-        
-        .time-card {
-            padding: var(--space-lg);
-            display: flex;
-            align-items: center;
+
+        .second-hand {
+            width: 2px;
+            height: 80px;
+            background: #c98d83;
+            border-radius: 1px;
         }
-        
-        .clock-display {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin: var(--space-sm) 0;
+
+        .clock-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: #c98d83;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
         }
-        
-        .calendar-card {
-            padding: var(--space-lg);
+
+        #digital-clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #5d2e46;
+            margin: 10px 0;
         }
-        
-        .calendar-container h2 {
-            margin-top: 0;
-            margin-bottom: var(--space-md);
-            color: var(--primary-dark);
-            font-size: 1.25rem;
-            font-weight: 600;
+
+        #current-date {
+            color: #666;
+            font-size: 1rem;
         }
-        
-        /* Customize flatpickr calendar */
-        .flatpickr-calendar {
-            box-shadow: none !important;
-            border: 1px solid var(--neutral-light);
-            border-radius: var(--radius-md);
-            width: 100% !important;
-            padding: var(--space-sm);
+
+        @media (max-width: 1200px) {
+            .metrics-container {
+                margin: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
         }
-        
-        .flatpickr-day.selected {
-            background: var(--primary-main) !important;
-            border-color: var(--primary-main) !important;
-        }
-        
-        .flatpickr-day.today {
-            border-color: var(--primary-light) !important;
-        }
-        
-        .flatpickr-day:hover {
-            background: var(--primary-light) !important;
-        }
-        
-        /* Responsive adjustments */
+
         @media (max-width: 992px) {
-            .time-calendar-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .overview {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .stats-card {
+            .dashboard-top {
                 flex-direction: column;
                 align-items: center;
-                text-align: center;
             }
-            
-            .card-icon {
-                margin-right: 0;
-                margin-bottom: var(--space-md);
+
+            .metrics-container {
+                flex-direction: column;
+                margin: 20px;
             }
-        }
-        
-        /* Add entrance animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .metric {
+                width: auto;
             }
         }
-        
-        .animate-fadeIn {
-            animation: fadeInUp 0.5s ease forwards;
-        }
-        
-        .stats-card:nth-child(1) { animation-delay: 0.1s; }
-        .stats-card:nth-child(2) { animation-delay: 0.2s; }
-        .stats-card:nth-child(3) { animation-delay: 0.3s; }
-        .stats-card:nth-child(4) { animation-delay: 0.4s; }
-        .stats-card:nth-child(5) { animation-delay: 0.5s; }
 
-        /* Fix content width to match other pages */
-        .content {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            padding: var(--space-md);
-        }
-
-        /* Add container with overflow for mobile responsiveness */
-        .table-container {
-            margin: var(--space-lg) 0;
-            overflow-x: auto;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Fix container padding and margin */
-        .container {
-            width: 100%;
-            min-height: 100vh;
-            position: relative;
-            padding-left: 65px;
-            transition: padding-left 0.3s ease;
-        }
-
-        .sidebar.expanded + .container {
-            padding-left: 220px;
-        }
-
-        /* Add this media query for better mobile support */
         @media (max-width: 768px) {
-            .container {
-                padding-left: 0;
+            .metric {
+                padding: 1.5rem;
+                min-height: 150px;
             }
             
-            .sidebar.expanded + .container {
-                padding-left: 0;
+            .metric h3 {
+                font-size: 1.2rem;
+            }
+            
+            .metric p {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Add this right after <body> in each SysAdmin page -->
-    <div class="sysadmin-page-container">
-        <div class="container">
-            <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+    <header>
+        <div class="title">
+            <h7><i class="fas fa-th-large"></i>Dashboard</h7>
+        </div>
+        <div class="user-profile-header" onclick="window.location.href='<?php echo URLROOT; ?>/SysAdminP/profile'" style="cursor: pointer;">
+            <i class="fas fa-user-shield avatar"></i>
+            <h7 class="role">SYSTEM ADMINISTRATOR</h7>
+        </div>
+    </header>
 
-            <header class="header">
-                <div class="header-left">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard Overview</span>
+    <div class="dashboard-container">
+        <div class="dashboard-top">
+            <div class="clock-widget">
+                <div class="clock-face">
+                    <div class="clock-hand hour-hand"></div>
+                    <div class="clock-hand minute-hand"></div>
+                    <div class="clock-hand second-hand"></div>
+                    <div class="clock-center"></div>
                 </div>
-                <a href="<?php echo URLROOT; ?>/sysadmin/profile" class="header-role" style="text-decoration: none; color: inherit; cursor: pointer;">
-                    <div class="header-role-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span>System Administrator</span>
-                </a>
-            </header>
+                <div id="digital-clock">00:00:00</div>
+                <p id="current-date"></p>
+            </div>
+            <div id="calendar"></div>
+        </div>
 
-            <div class="content">
-                <section class="dashboard-content">
-                    <!-- Time and Calendar Section -->
-                    <div class="time-calendar-container">
-                        <div class="card time-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Current Time</p>
-                                <h2 id="digital-clock" class="clock-display">00:00:00</h2>
-                                <p class="card-subtitle">Local Time</p>
-                            </div>
-                        </div>
-
-                        <div class="card calendar-card animate-fadeIn">
-                            <div class="calendar-container">
-                                <h2>Calendar</h2>
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Statistics Cards -->
-                    <div class="overview">
-                        <div class="card stats-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Total Customers</p>
-                                <h2><?php echo isset($data['totalCustomers']) ? number_format($data['totalCustomers']) : '0'; ?></h2>
-                                <p class="card-subtitle">Registered Users</p>
-                            </div>
-                        </div>
-
-                        <div class="card stats-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Active Staff</p>
-                                <h2><?php echo isset($data['totalEmployees']) ? number_format($data['totalEmployees']) : '0'; ?></h2>
-                                <p class="card-subtitle">Active Employees</p>
-                            </div>
-                        </div>
-
-                        <div class="card stats-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-tags"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Categories</p>
-                                <h2><?php echo isset($data['totalCategories']) ? number_format($data['totalCategories']) : '0'; ?></h2>
-                                <p class="card-subtitle">Product Categories</p>
-                            </div>
-                        </div>
-
-                        <div class="card stats-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Products</p>
-                                <h2><?php echo isset($data['totalProducts']) ? number_format($data['totalProducts']) : '0'; ?></h2>
-                                <p class="card-subtitle">Active Products</p>
-                            </div>
-                        </div>
-
-                        <div class="card stats-card animate-fadeIn">
-                            <div class="card-icon">
-                                <i class="fas fa-store"></i>
-                            </div>
-                            <div class="card-content">
-                                <p class="card-title">Branches</p>
-                                <h2><?php echo isset($data['activeBranches']) ? number_format($data['activeBranches']) : '0'; ?></h2>
-                                <p class="card-subtitle">Active Locations</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <div class="metrics-container">
+            <div class="metric">
+                <i class="fas fa-users"></i>
+                <h3>Total Customers</h3>
+                <p><?php echo number_format($data['totalCustomers']); ?></p>
+            </div>
+            <div class="metric">
+                <i class="fas fa-user-tie"></i>
+                <h3>Active Staff</h3>
+                <p><?php echo number_format($data['totalEmployees']); ?></p>
+            </div>
+            <div class="metric">
+                <i class="fas fa-tags"></i>
+                <h3>Categories</h3>
+                <p><?php echo number_format($data['totalCategories']); ?></p>
+            </div>
+            <div class="metric">
+                <i class="fas fa-box"></i>
+                <h3>Products</h3>
+                <p><?php echo number_format($data['totalProducts']); ?></p>
+            </div>
+            <div class="metric">
+                <i class="fas fa-store"></i>
+                <h3>Active Branches</h3>
+                <p><?php echo number_format($data['activeBranches']); ?></p>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // Initialize clock
         function updateClock() {
@@ -355,28 +363,41 @@
                 second: '2-digit'
             });
             document.getElementById('digital-clock').textContent = time;
+            
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const secondHand = document.querySelector('.second-hand');
+            const minuteHand = document.querySelector('.minute-hand');
+            const hourHand = document.querySelector('.hour-hand');
+
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
+
+            const secondDegree = ((seconds / 60) * 360) + 90;
+            const minuteDegree = ((minutes / 60) * 360) + ((seconds / 60) * 6) + 90;
+            const hourDegree = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+
+            secondHand.style.transform = `rotate(${secondDegree}deg)`;
+            minuteHand.style.transform = `rotate(${minuteDegree}deg)`;
+            hourHand.style.transform = `rotate(${hourDegree}deg)`;
         }
 
         setInterval(updateClock, 1000);
         updateClock();
 
         // Initialize calendar
-        flatpickr("#calendar", {
-            inline: true,
-            enableTime: false,
-            dateFormat: "Y-m-d",
-            defaultDate: "today"
-        });
-        
-        // Apply staggered animations
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth'
             });
+            calendar.render();
         });
     </script>
 </body>

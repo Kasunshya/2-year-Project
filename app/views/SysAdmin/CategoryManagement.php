@@ -4,449 +4,496 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Management</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/sidebar.css">
+    <?php require APPROOT.'/views/SysAdmin/SideNavBar.php'?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+
     <style>
-
-.header {
-          background-color: #5d2e46;
-          padding: 2rem;
-          text-align: center;
-          color: var(--white);
-          font-size: 2.5rem;
-          text-transform: uppercase;
-          margin-top: 10px;
-          margin-left: 20px;
-          margin-right: 20px;
-          border-radius: 5px;
-          width: 109%;
-}
-
-        /* Page-specific styles only */
-        .table-container {
-            margin: var(--space-lg) 0;
+        .category-container {
+            width: 90%;
+            margin-left: 120px;
+            margin-right: 30px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .category-badge {
+
+        header {
+            background-color: #5d2e46;
+            padding: 2rem;
+            color: white;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            margin-left: 120px;
+            margin-right: 0px;
+            border-radius: 5px;
+            z-index: 1;
+            text-align: left;
+        }
+
+        header i {
+            margin-right: 10px;
+            text-align: left;
             display: inline-block;
-            padding: 4px 12px;
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
-            font-weight: 500;
+            vertical-align: middle;
         }
-        
+
+        body {
+            background-color: #e8d7e5;
+        }
+
+        .category-table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .category-table th {
+            background-color: #a26b98;
+            color: white;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .category-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .category-table tbody tr:hover {
+            background-color: #f9f5f0;
+        }
+
+        .add-category-btn {
+            background-color: #a26b98;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .add-category-btn:hover {
+            background-color: #5d2e46;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .action-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .action-btn:hover {
+            background-color: #5d2e46;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #5d2e46;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #5d2e46;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5d2e46;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .modal-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            margin-left: 10px;
+        }
+
+        .save-btn {
+            background-color: #a26b98;
+            color: white;
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
         .category-image img {
             width: 80px;
             height: 80px;
             object-fit: cover;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.3s ease;
+            border-radius: 4px;
         }
-        
-        .category-image img:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* File upload container */
-        .file-input-container {
-            background-color: var(--neutral-light);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-md);
-            border: 1px solid var(--neutral-gray);
-        }
-        
-        .image-preview {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: var(--radius-md);
+
+        #imagePreview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
             display: none;
-            margin-top: var(--space-md);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* Enhanced alert overlay */
-        .alert-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .alert-box {
-            background-color: var(--neutral-white);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl);
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-            animation: alertFadeIn 0.3s ease;
-        }
-        
-        .alert-box h3 {
-            color: var(--primary-dark);
-            margin-bottom: var(--space-md);
-        }
-        
-        .alert-actions {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-top: var(--space-lg);
-        }
-        
-        .error-message {
-            color: var(--error-dark);
-            background-color: var(--error-light);
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-md);
-            margin-top: var(--space-sm);
-            display: none;
-        }
-        
-        #currentImageText {
-            font-size: var(--font-size-sm);
-            color: var(--neutral-dark);
-            margin-top: var(--space-xs);
-        }
-        
-        @keyframes alertFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
 <body>
-<div class="sysadmin-page-container">
-    <div class="container">
-        <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+    <header>
+        <h7><i class="fas fa-th-list"></i>Category Management</h7>
+    </header>
 
-        <header class="header">
-            <div class="header-left">
-                <i class="fas fa-th-list"></i>
-                <span>Category Management</span>
-            </div>
-            
-        </header>
+    <div class="category-container">
+        <?php flash('category_message'); ?>
 
-        <div class="content">
-            <?php flash('category_message'); ?>
-            
-            <div class="search-bar">
-                <form onsubmit="searchCategory(); return false;">
-                    <input type="text" 
-                           class="form-control"
-                           id="searchCategoryInput" 
-                           placeholder="Search by category name..." 
-                           value="">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Search
-                    </button>
-                </form>
-            </div>
-            
-            <button class="btn" onclick="openAddCategoryModal()">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchCategory" placeholder="Search category...">
+            <button class="add-category-btn" onclick="openAddModal()">
                 <i class="fas fa-plus"></i> Add Category
             </button>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="categoryTable">
-                        <?php if (isset($data['categories']) && !empty($data['categories'])) : ?>
-                            <?php foreach($data['categories'] as $category) : ?>
-                                <tr id="category-<?php echo $category->category_id; ?>">
-                                    <td class="category-image">
-                                        <?php if (!empty($category->image_path)): ?>
-                                            <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
-                                                 alt="<?php echo htmlspecialchars($category->name); ?>"
-                                                 onerror="this.src='<?php echo URLROOT; ?>/public/img/default-category.jpg'">
-                                        <?php else: ?>
-                                            <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
-                                                 alt="Default category image">
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="category-badge">
-                                            <?php echo htmlspecialchars($category->name); ?>
-                                        </span>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($category->description); ?></td>
-                                    <td class="actions">
-                                        <button class="btn edit-btn" onclick="openEditCategoryModal(
-                                            <?php echo $category->category_id; ?>, 
-                                            '<?php echo htmlspecialchars(addslashes($category->name)); ?>', 
-                                            '<?php echo htmlspecialchars(addslashes($category->description)); ?>',
-                                            '<?php echo htmlspecialchars($category->image_path ?? ''); ?>'
-                                        )">
-                                            <i class="fas fa-edit"></i> 
-                                        </button>
-                                        <button class="btn delete-btn" onclick="deleteCategory(<?php echo $category->category_id; ?>)">
-                                            <i class="fas fa-trash"></i> 
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <tr>
-                                <td colspan="4" style="text-align: center;">No categories found</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
         </div>
 
-        <!-- Category Modal (used for both Add and Edit) -->
-        <div class="modal" id="categoryModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modalTitle" class="modal-title">Add New Category</h3>
-                    <button type="button" class="close" onclick="closeModal('categoryModal')">&times;</button>
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($data['categories'] as $category) : ?>
+                    <tr>
+                        <td class="category-image">
+                            <?php if($category->image_path): ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo $category->image_path; ?>" 
+                                     alt="<?php echo $category->name; ?>">
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo $category->name; ?></td>
+                        <td><?php echo $category->description; ?></td>
+                        <td>
+                            <button class="action-btn" 
+                                    data-id="<?php echo $category->category_id; ?>" 
+                                    onclick='openEditModal(<?php echo json_encode($category, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addCategoryModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Add New Category</h2>
+            </div>
+            <form id="addCategoryForm" method="POST" action="<?php echo URLROOT; ?>/SysAdminP/addCategory" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Category Name</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
-                
-                <form id="categoryForm" action="<?php echo URLROOT; ?>/SysAdminP/addCategory" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" id="category_id" name="category_id" value="0">
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="name">Category Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                        <div id="nameError" class="error-message"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="description">Description:</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="file-input-container">
-                        <label class="form-label" for="category_image">Category Image:</label>
-                        <input type="file" class="form-control" id="category_image" name="category_image" accept="image/*" onchange="previewImage(this, 'imagePreview')">
-                        <p class="form-text">Recommended size: 400x400px, Max: 2MB</p>
-                        <img id="imagePreview" class="image-preview">
-                        <p id="currentImageText"></p>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" onclick="closeModal('categoryModal')">Cancel</button>
-                        <button type="submit" id="submitBtn" class="btn">
-                            <i class="fas fa-save"></i> <span id="submitBtnText">Add Category</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation Alert -->
-        <div class="alert-overlay" id="deleteAlert">
-            <div class="alert-box">
-                <h3>Confirm Delete</h3>
-                <p>Are you sure you want to delete this category? This action cannot be undone.</p>
-                <div class="alert-actions">
-                    <button class="btn btn-outline" onclick="closeDeleteAlert()">Cancel</button>
-                    <button class="btn btn-danger" id="confirmDeleteBtn">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required></textarea>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="category_image">Image</label>
+                    <input type="file" id="category_image" name="category_image" accept="image/*" onchange="previewImage(this)">
+                    <img id="imagePreview">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn cancel-btn" onclick="closeModal('addCategoryModal')">Cancel</button>
+                    <button type="submit" class="modal-btn save-btn">Save Category</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <script>
-            let editingCategoryId = null;
-            let currentImagePath = '';
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('editCategoryModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Edit Category</h2>
+            </div>
+            <form id="editCategoryForm" method="POST" action="<?php echo URLROOT; ?>/SysAdminP/updateCategory" enctype="multipart/form-data">
+                <input type="hidden" id="edit_category_id" name="category_id">
+                <div class="form-group">
+                    <label for="edit_name">Category Name</label>
+                    <input type="text" id="edit_name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit_description">Description</label>
+                    <textarea id="edit_description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit_category_image">Image</label>
+                    <input type="file" id="edit_category_image" name="category_image" accept="image/*" onchange="previewImage(this, 'edit_imagePreview')">
+                    <img id="edit_imagePreview" class="image-preview">
+                    <div id="current_image"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn cancel-btn" onclick="closeModal('editCategoryModal')">Cancel</button>
+                    <button type="submit" class="modal-btn save-btn">Update Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            function openAddCategoryModal() {
-                document.getElementById('modalTitle').textContent = 'Add New Category';
-                document.getElementById('submitBtnText').textContent = 'Add Category';
-                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> Add Category';
-                
-                document.getElementById('categoryForm').action = '<?php echo URLROOT; ?>/SysAdminP/addCategory';
-                document.getElementById('category_id').value = '0';
-                document.getElementById('name').value = '';
-                document.getElementById('description').value = '';
-                document.getElementById('nameError').style.display = 'none';
-                document.getElementById('imagePreview').style.display = 'none';
-                document.getElementById('currentImageText').textContent = '';
-                document.getElementById('category_image').value = '';
-                
-                currentImagePath = '';
-                document.getElementById('categoryModal').style.display = 'flex';
-            }
+    <script>
+        // Add this at the top of your script section
+        const URLROOT = '<?php echo URLROOT; ?>';
+        
+        function openAddModal() {
+            document.getElementById('addCategoryModal').style.display = 'block';
+            document.getElementById('imagePreview').style.display = 'none';
+        }
 
-            function openEditCategoryModal(categoryId, name, description, imagePath) {
-                document.getElementById('modalTitle').textContent = 'Edit Category';
-                document.getElementById('submitBtnText').textContent = 'Update Category';
-                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Category';
+        function openEditModal(category) {
+            try {
+                console.log('Category data:', category); // Debug log
                 
-                document.getElementById('categoryForm').action = '<?php echo URLROOT; ?>/SysAdminP/updateCategory';
-                document.getElementById('category_id').value = categoryId;
-                document.getElementById('name').value = name;
-                document.getElementById('description').value = description;
-                document.getElementById('nameError').style.display = 'none';
-                document.getElementById('category_image').value = '';
+                // Populate form fields with correct property names
+                document.getElementById('edit_category_id').value = category.category_id;
+                document.getElementById('edit_name').value = category.name;
+                document.getElementById('edit_description').value = category.description;
                 
                 // Handle image preview
-                const imagePreview = document.getElementById('imagePreview');
-                if (imagePath) {
-                    imagePreview.src = '<?php echo URLROOT; ?>/public/img/categories/' + imagePath;
-                    imagePreview.style.display = 'block';
-                    document.getElementById('currentImageText').textContent = 'Current image: ' + imagePath;
-                } else {
+                const imagePreview = document.getElementById('edit_imagePreview');
+                const currentImageDiv = document.getElementById('current_image');
+                
+                if (category.image_path) {
+                    currentImageDiv.innerHTML = `
+                        <img src="${URLROOT}/public/img/categories/${category.image_path}" 
+                             style="max-width: 100px; margin: 10px 0;" />
+                        <p>Current image</p>`;
                     imagePreview.style.display = 'none';
-                    document.getElementById('currentImageText').textContent = 'No image currently uploaded';
+                } else {
+                    currentImageDiv.innerHTML = '<p>No current image</p>';
+                    imagePreview.style.display = 'none';
                 }
                 
-                currentImagePath = imagePath;
-                editingCategoryId = categoryId;
-                document.getElementById('categoryModal').style.display = 'flex';
-            }
-
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-                editingCategoryId = null;
-            }
-
-            function searchCategory() {
-                const input = document.getElementById('searchCategoryInput').value.toLowerCase();
-                const table = document.getElementById('categoryTable');
-                const rows = table.getElementsByTagName('tr');
-
-                for (let i = 0; i < rows.length; i++) {
-                    const nameCell = rows[i].getElementsByTagName('td')[1]; // Name is in second column
-                    if (nameCell) {
-                        const name = nameCell.textContent.toLowerCase();
-                        rows[i].style.display = name.includes(input) ? '' : 'none';
-                    }
-                }
-            }
-
-            function deleteCategory(categoryId) {
-                document.getElementById('deleteAlert').style.display = 'flex';
-                document.getElementById('confirmDeleteBtn').onclick = function() {
-                    window.location.href = '<?php echo URLROOT; ?>/SysAdminP/deleteCategory/' + categoryId;
-                }
-            }
-
-            function closeDeleteAlert() {
-                document.getElementById('deleteAlert').style.display = 'none';
-            }
-
-            function previewImage(input, previewId) {
-                const preview = document.getElementById(previewId);
-                
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                        document.getElementById('currentImageText').textContent = 'New image selected';
-                    }
-                    
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
-            // Add this function to display error messages
-            function showError(message) {
-                const errorElement = document.getElementById('nameError');
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
-            }
-
-            // Update the form submission to use AJAX for validation
-            document.getElementById('categoryForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const nameInput = document.getElementById('name');
-                const name = nameInput.value.trim();
-                
-                if (!name) {
-                    showError('Category name is required');
-                    return;
-                }
-                
-                // Clear any previous errors
-                document.getElementById('nameError').style.display = 'none';
-                
-                // Check if name already exists (except for editing category)
-                const existingCategories = <?php echo json_encode(array_column($data['categories'] ?? [], 'name')); ?>;
-                const isDuplicate = existingCategories.some(category => 
-                    category.toLowerCase() === name.toLowerCase() && 
-                    (!editingCategoryId || !document.querySelector(`tr#category-${editingCategoryId} .category-badge`)?.textContent?.trim().toLowerCase() === name.toLowerCase())
-                );
-                
-                if (isDuplicate) {
-                    showError('Category name already exists');
-                    return;
-                }
-                
-                // Submit the form if validation passes
-                this.submit();
-            });
-
-            // Close modals when clicking outside
-            window.onclick = function(event) {
-                const modal = document.getElementById('categoryModal');
-                const deleteAlert = document.getElementById('deleteAlert');
-                
-                if (event.target == modal) {
-                    closeModal('categoryModal');
-                }
-                
-                if (event.target == deleteAlert) {
-                    closeDeleteAlert();
-                }
-            }
-
-            // Auto-hide alerts after 5 seconds
-            document.addEventListener('DOMContentLoaded', function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    setTimeout(function() {
-                        alert.classList.add('fade-out');
-                        setTimeout(function() {
-                            alert.remove();
-                        }, 500);
-                    }, 5000);
+                // Show the modal
+                document.getElementById('editCategoryModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error in openEditModal:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to open edit modal: ' + error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#a26b98'
                 });
+            }
+        }
+
+        function closeModal(modalId) {
+            Swal.fire({
+                title: 'Close Form',
+                text: 'Are you sure you want to close? Any unsaved changes will be lost.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#a26b98',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, close it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(modalId).style.display = 'none';
+                }
             });
-        </script>
-    </div>
-</div>
+        }
+
+        function previewImage(input, previewId = 'imagePreview') {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Form submissions with SweetAlert
+        document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Add Category',
+                text: 'Are you sure you want to add this category?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#a26b98',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, add it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+
+        document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Update Category',
+                text: 'Are you sure you want to update this category?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#a26b98',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData(this);
+                    
+                    fetch(`${URLROOT}/SysAdminP/updateCategory`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('editCategoryModal').style.display = 'none';
+                            updateTableRow(data.category);
+                            
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Category updated successfully',
+                                icon: 'success',
+                                confirmButtonColor: '#a26b98'
+                            }).then(() => {
+                                // Optional: Refresh the page after success
+                                // window.location.reload();
+                            });
+                        } else {
+                            throw new Error(data.message || 'Failed to update category');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message || 'Failed to update category',
+                            icon: 'error',
+                            confirmButtonColor: '#a26b98'
+                        });
+                    });
+                }
+            });
+        });
+
+        // Add this function to update the table row
+        function updateTableRow(category) {
+            const rows = document.querySelectorAll('.category-table tbody tr');
+            rows.forEach(row => {
+                const categoryId = row.querySelector('button').getAttribute('data-id');
+                if (categoryId === category.category_id.toString()) {
+                    row.cells[0].innerHTML = category.image_path ? 
+                        `<div class="category-image">
+                            <img src="${URLROOT}/public/img/categories/${category.image_path}" 
+                                 alt="${category.name}">
+                        </div>` : 
+                        '';
+                    row.cells[1].textContent = category.name;
+                    row.cells[2].textContent = category.description;
+                }
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchCategory').addEventListener('keyup', function() {
+            let searchText = this.value.toLowerCase();
+            let rows = document.querySelectorAll('.category-table tbody tr');
+            
+            rows.forEach(row => {
+                let name = row.cells[1].textContent.toLowerCase();
+                let description = row.cells[2].textContent.toLowerCase();
+                
+                if (name.includes(searchText) || description.includes(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
