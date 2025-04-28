@@ -561,9 +561,7 @@ $checkout = new CustomerCheckout();
             </div>
         </form>
         
-        <div class="secure-info">
-            <p><i class="fas fa-lock"></i> Your payment is secure and encrypted.</p>
-        </div>
+        
     </div>
 
     <!-- Add this JavaScript before closing body tag -->

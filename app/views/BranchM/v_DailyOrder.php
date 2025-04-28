@@ -206,6 +206,24 @@
             font-weight: 500;
         }
         
+        .status-approved {
+            background-color: #79c879;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-rejected {
+            background-color: #e27979;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
         /* Quantity input styling */
         .quantity-input {
             width: 80px;
@@ -243,13 +261,58 @@
                 width: 100%;
             }
         }
+
+        .current-orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .current-orders-table th,
+        .current-orders-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .current-orders-table th {
+            background-color: #a26b98;
+            color: white;
+        }
+
+        .current-orders-table tr:hover {
+            background-color: #f5f5f5;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="main-content">
         <header><h7><i class="fas fa-tasks"></i> Daily Orders</h7></header>
 
         <?php flash('order_message'); ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Detect flash messages and show with SweetAlert instead
+            const flashMessage = document.querySelector('.alert');
+            if (flashMessage) {
+                const isError = flashMessage.classList.contains('alert-danger');
+                const message = flashMessage.textContent.trim();
+                
+                if (message) {
+                    Swal.fire({
+                        title: isError ? 'Error!' : 'Success!',
+                        text: message,
+                        icon: isError ? 'error' : 'success',
+                        confirmButtonColor: '#a26b98'
+                    });
+                    
+                    // Hide the original flash message
+                    flashMessage.style.display = 'none';
+                }
+            }
+        });
+        </script>
 
         <div class="order-container">
             <div class="order-form">
@@ -305,31 +368,33 @@
                 </form>
             </div>
 
-            <?php if(!empty($data['currentOrders'])): ?>
             <div class="current-orders">
                 <h2>Today's Orders</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($data['currentOrders'] as $order): ?>
-                        <tr>
-                            <td><?php echo $order->dailybranchorder_id; ?></td>
-                            <td><?php echo $order->description; ?></td>
-                            <td><?php echo $order->orderdate; ?></td>
-                            <td><span class="status-pending">Pending</span></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <div id="orders-container">
+                    <table class="current-orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Description</th>
+                                <th>Order Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(isset($data['orders']) && !empty($data['orders'])): ?>
+                                <?php foreach($data['orders'] as $order): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($order->dailybranchorder_id); ?></td>
+                                        <td><?php echo htmlspecialchars($order->description); ?></td>
+                                        <td><?php echo htmlspecialchars($order->orderdate); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="3">No orders found for today</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 
@@ -389,11 +454,85 @@
             
             if (!hasQuantity) {
                 e.preventDefault();
-                alert('Please enter at least one product quantity');
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please enter at least one product quantity',
+                    icon: 'warning',
+                    confirmButtonColor: '#a26b98'
+                });
                 return false;
             }
             return true;
         };
+
+        // Replace the existing setupAutoRefresh and updateOrdersTable functions
+
+        function setupAutoRefresh() {
+            fetchUpdatedOrders(); // Initial load
+            setInterval(fetchUpdatedOrders, 2000); // Check every 2 seconds
+        }
+
+        function fetchUpdatedOrders() {
+            fetch(`${URLROOT}/Branch/getUpdatedOrders`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received orders:', data); // Debug log
+                    if (data.orders) {
+                        updateOrdersTable(data.orders);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching orders:', error);
+                });
+        }
+
+        function updateOrdersTable(orders) {
+            const tbody = document.querySelector('.current-orders table tbody');
+            if (!tbody) return;
+
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No orders found for today</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => {
+                // Ensure status has a value, default to 'pending'
+                const status = (order.status || 'pending').toLowerCase();
+                const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+                
+                return `
+                    <tr>
+                        <td>${escapeHtml(order.dailybranchorder_id)}</td>
+                        <td>${escapeHtml(order.description)}</td>
+                        <td>${escapeHtml(order.orderdate)}</td>
+                        <td>
+                            <span class="status-${escapeHtml(status)}">
+                                ${escapeHtml(statusText)}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Add this helper function for HTML escaping
+        function escapeHtml(unsafe) {
+            return unsafe
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Add this line at the bottom of your script section
+        document.addEventListener('DOMContentLoaded', setupAutoRefresh);
     </script>
 </body>
 </html>

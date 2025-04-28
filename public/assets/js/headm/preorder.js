@@ -7,15 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Preorder script loaded');
 
     // Make showReplyModal globally accessible so it can be called from inline onclick
-    window.showReplyModal = function(enquiry_id, customerName, customerEmail) {
-        console.log('Modal triggered for:', enquiry_id, customerName, customerEmail);
-        
-        // Set values in the modal
-        document.getElementById('enquiry_id').value = enquiry_id;
+    window.showReplyModal = function(enquiryId, customerName, customerEmail) {
+        document.getElementById('enquiry_id').value = enquiryId;
         document.getElementById('customer_name').textContent = customerName;
         document.getElementById('customer_email').textContent = customerEmail;
-        
-        // Show modal with jQuery
         $('#replyModal').modal('show');
     };
 
@@ -23,42 +18,76 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('replyForm')) {
         document.getElementById('replyForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Form submitted');
             
-            const enquiry_id = document.getElementById('enquiry_id').value;
-            const reply_message = document.getElementById('reply_message').value;
-            
-            // Use absolute URL for fetch
-            fetch(window.location.origin + '/Bakery/HeadM/sendEnquiryReply', {
+            const formData = {
+                enquiry_id: document.getElementById('enquiry_id').value,
+                reply_message: document.getElementById('reply_message').value
+            };
+
+            fetch(`${URLROOT}/HeadM/sendReply`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: `enquiry_id=${encodeURIComponent(enquiry_id)}&reply_message=${encodeURIComponent(reply_message)}`
+                body: JSON.stringify(formData)
             })
-            .then(response => {
-                console.log('Response received:', response);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Data received:', data);
-                if (data.status === 'success') {
-                    alert('Reply sent successfully!');
-                    $('#replyModal').modal('hide');
-                    // Clear the textarea for next use
-                    document.getElementById('reply_message').value = '';
+                $('#replyModal').modal('hide');
+                
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Reply sent successfully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
                 } else {
-                    alert('Failed to send reply: ' + data.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message || 'Something went wrong!'
+                    });
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while sending the reply');
+                $('#replyModal').modal('hide');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to send reply. Please try again.'
+                });
             });
         });
     } else {
         console.error('Reply form not found in the document');
     }
+
+    // Add confirmation for closing modal with unsaved changes
+    $('#replyModal').on('hide.bs.modal', function (e) {
+        const replyMessage = document.getElementById('reply_message').value;
+        if (replyMessage.trim() !== '') {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Discard changes?',
+                text: 'Your reply message will be lost.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, discard',
+                cancelButtonText: 'No, keep editing'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('reply_message').value = '';
+                    $('#replyModal').modal('hide');
+                }
+            });
+        }
+    });
 
     // For debugging: check if Bootstrap and jQuery are properly loaded
     console.log('jQuery version:', typeof $ !== 'undefined' ? $.fn.jquery : 'not loaded');

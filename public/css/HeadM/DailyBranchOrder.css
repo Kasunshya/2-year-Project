@@ -147,3 +147,31 @@ ul li {
 .btn.confirm:hover {
     background-color: #449d44;
 }
+
+/* Status indicator styles */
+.status-pending {
+    background-color: #f1c778;
+    color: #5d2e46;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-approved {
+    background-color: #79c879;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-rejected {
+    background-color: #e27979;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}

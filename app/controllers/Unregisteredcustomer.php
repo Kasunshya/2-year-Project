@@ -13,24 +13,39 @@ class Unregisteredcustomer extends Controller {
     }
 
     public function unregisteredcustomerhomepage() {
-        $latestProducts = $this->unregisteredCustomerModel->getLatestProducts();
-        $activePromotions = $this->unregisteredCustomerModel->getActivePromotions();
+        $unregisteredcustomerModel = $this->model('UnregisteredCustomerModel');
+        
+        // Get products, promotions, and categories
+        $products = $unregisteredcustomerModel->getProducts();
+        $promotions = $unregisteredcustomerModel->getPromotions();
+        $categories = $unregisteredcustomerModel->getCategories();
+        
+        // Get reviews and use the correct key name
+        $reviews = $unregisteredcustomerModel->getPostedReviews();
         
         $data = [
-            'products' => $latestProducts,
-            'promotions' => $activePromotions
+            'title' => 'Frostine Bakery',
+            'products' => $products,
+            'promotions' => $promotions,
+            'categories' => $categories,
+            'postedFeedbacks' => $reviews  // Make sure this key matches what's checked in the view
         ];
-
+        
         $this->view('UnregisteredCustomer/unregisteredcustomerhomepage', $data);
     }
 
     public function unregisteredcustomerproducts() {
+        // Sanitize and validate filter inputs
         $filters = [
-            'category' => isset($_GET['category']) ? $_GET['category'] : null,
-            'min_price' => isset($_GET['min_price']) ? $_GET['min_price'] : null,
-            'max_price' => isset($_GET['max_price']) ? $_GET['max_price'] : null
+            'category' => isset($_GET['category']) && $_GET['category'] !== '' ? 
+                filter_var($_GET['category'], FILTER_SANITIZE_STRING) : null,
+            'min_price' => isset($_GET['min_price']) && $_GET['min_price'] !== '' ? 
+                filter_var($_GET['min_price'], FILTER_VALIDATE_FLOAT) : null,
+            'max_price' => isset($_GET['max_price']) && $_GET['max_price'] !== '' ? 
+                filter_var($_GET['max_price'], FILTER_VALIDATE_FLOAT) : null
         ];
         
+        // Get filtered products and categories
         $products = $this->unregisteredCustomerModel->getAllProducts($filters);
         $categories = $this->unregisteredCustomerModel->getCategories();
         

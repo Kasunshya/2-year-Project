@@ -379,15 +379,14 @@ class M_Branch {
     }
 
     public function getDailyBranchOrders($branchId, $date) {
-        $this->db->query('SELECT dbo.*, b.branch_name 
-                         FROM dailybranchorder dbo
-                         JOIN branch b ON dbo.branch_id = b.branch_id
-                         WHERE dbo.branch_id = :branch_id 
-                         AND dbo.orderdate = :date
-                         ORDER BY dbo.dailybranchorder_id DESC');
+        $this->db->query('SELECT * FROM dailybranchorder 
+                      WHERE branch_id = :branch_id 
+                      AND DATE(orderdate) = :orderdate
+                      ORDER BY dailybranchorder_id DESC');
         
         $this->db->bind(':branch_id', $branchId);
-        $this->db->bind(':date', $date);
+        $this->db->bind(':orderdate', $date);
+        
         return $this->db->resultSet();
     }
 
@@ -395,22 +394,24 @@ class M_Branch {
         $this->db->beginTransaction();
 
         try {
-            // Insert main order
+            // Insert main order with default pending status
             $this->db->query('INSERT INTO dailybranchorder 
-                             (branch_id, description, orderdate) 
-                             VALUES (:branch_id, :description, :orderdate)');
+                             (branch_id, description, orderdate, status) 
+                             VALUES (:branch_id, :description, :orderdate, :status)');
             
             $this->db->bind(':branch_id', $branchId);
             $this->db->bind(':description', $description);
             $this->db->bind(':orderdate', $orderDate);
+            $this->db->bind(':status', 'pending'); // Always set initial status to pending
             
             $this->db->execute();
+            $orderId = $this->db->lastInsertId();
 
             $this->db->commit();
             return true;
         } catch (Exception $e) {
             $this->db->rollBack();
-            error_log($e->getMessage());
+            error_log("Error in addDailyBranchOrder: " . $e->getMessage());
             return false;
         }
     }
@@ -586,5 +587,24 @@ class M_Branch {
         }
         return $result;
     }
+
+    public function getTodaysOrders($branchId, $date) {
+        $this->db->query('SELECT 
+                        dailybranchorder_id, 
+                        description, 
+                        orderdate, 
+                        COALESCE(status, "pending") as status 
+                        FROM dailybranchorder 
+                        WHERE branch_id = :branch_id 
+                        AND DATE(orderdate) = :date
+                        ORDER BY dailybranchorder_id DESC');
+    
+        $this->db->bind(':branch_id', $branchId);
+        $this->db->bind(':date', $date);
+    
+        return $this->db->resultSet();
+    }
+
+    
 }
 ?>

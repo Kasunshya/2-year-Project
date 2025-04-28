@@ -84,22 +84,29 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: .5rem;
         }
+
+        
     </style>
 </head>
 <body>
     
     <!-- Header -->
-    <header class="header">
-        <a href="#" class="logo">FROSTINE</a>
+    
+       
+            <header class="header">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="<?php echo URLROOT; ?>/public/img/HeadM/frostinelogo2.png" alt="FROSTINE" style="height: 60px; width: auto; margin-right: 0;">
+                    <a href="#" style="text-decoration: none; color: #783b31; margin-left: -10px; font-weight: 600;">FROSTINE</a>
+                </div>
+                    
         <nav class="navbar">
-            <a href="<?php echo URLROOT;?>/UnregisteredCustomer/unregisteredcustomerhomepage">Home</a></li>
+            <a href="<?php echo URLROOT;?>/UnregisteredCustomer/unregisteredcustomerhomepage">Home</a>
             <a href="#about">about</a>
             <a href="<?php echo URLROOT ?>/UnregisteredCustomer/unregisteredcustomerproducts">product</a>
             <a href="#gallery">gallery</a>
             <a href="#review">review</a>
             <a href="#order">enquiry</a>
-            </nav>
-       
+        </nav>
     </header>
 
     <!-- Home Section -->
@@ -203,33 +210,7 @@
 </section>
     <!-- product end-->
 
-<!-- Add this after your existing sections -->
-<section class="categories" id="categories">
-    <h1 class="heading">our <span>categories</span></h1>
-    
-    <div class="box-container">
-        <?php foreach ($data['categories'] as $category): ?>
-            <div class="box">
-                <div class="image">
-                    <?php if (!empty($category->image_path)): ?>
-                        <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
-                             alt="<?php echo htmlspecialchars($category->name); ?>"
-                             onerror="this.src='<?php echo URLROOT; ?>/public/img/default-category.jpg'">
-                    <?php else: ?>
-                        <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
-                             alt="Default category image">
-                    <?php endif; ?>
-                </div>
-                <div class="content">
-                    <h3><?php echo htmlspecialchars($category->name); ?></h3>
-                    <p><?php echo htmlspecialchars($category->description); ?></p>
-                    <a href="<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomerproducts?category=<?php echo urlencode($category->name); ?>" 
-                       class="btn">view products</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
+
 
     <!-- gallery -->
 
@@ -313,104 +294,83 @@
     <!-- weekly promotions ends -->
 
     <!-- parallax -->
+<section class="parallax">
+    <h1 class="heading">range of <span>categories</span></h1>
 
-    <section class="parallax">
-
-        <h1 class="heading">range of <span>products</span></h1>
-
-        <div class="box-container">
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/parallax-1.png" alt="">
+    <div class="swiper category-slider">
+        <div class="swiper-wrapper">
+            <?php if (!empty($data['categories'])): ?>
+                <?php foreach ($data['categories'] as $category): ?>
+                    <div class="swiper-slide box">
+                        <div class="image">
+                            <?php if (!empty($category->image_path)): ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/categories/<?php echo htmlspecialchars($category->image_path); ?>" 
+                                     alt="<?php echo htmlspecialchars($category->name); ?>">
+                            <?php else: ?>
+                                <img src="<?php echo URLROOT; ?>/public/img/default-category.jpg" 
+                                     alt="Default category image">
+                            <?php endif; ?>
+                        </div>
+                        <div class="content">
+                            <h3><?php echo htmlspecialchars($category->name); ?></h3>
+                            <p><?php echo htmlspecialchars($category->description); ?></p>
+                            <a href="<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomerproducts?category=<?php echo urlencode($category->category_id); ?>" 
+                               class="btn">view products</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="swiper-slide box">
+                    <div class="content">
+                        <h3>No Categories Available</h3>
+                        <p>Please check back later for our product categories.</p>
+                    </div>
                 </div>
-                <div class="content">
-                    <h3>bread</h3>
-                    <p>Explore our selection of freshly baked breads, crafted daily with the finest ingredients. From classic sourdough to soft brioche, each loaf promises exceptional taste and quality.</p>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/parallax-2.png" alt="">
-                </div>
-                <div class="content">
-                    <h3>cakes</h3>
-                    <p>Indulge in our exquisite cakes, crafted with the finest ingredients and decorated to perfection. From classic favorites to unique creations, each slice is a celebration of flavor and artistry.
-                   </p>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="image">
-                    <img src="../public/img/Customer/parallax-3.png" alt="">
-                </div>
-                <div class="content">
-                    <h3>donuts</h3>
-                    <p>Delight in our delectable donuts, freshly made and bursting with flavor. From classic glazed to creative flavors, each bite is pure indulgence.</p>
-                </div>
-            </div>
-
+            <?php endif; ?>
         </div>
-
-    </section>
-
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
     <!-- parallax -->
 
 
 
-    <!-- review -->
-
-    <section class="review" id="review">
-
+   <!-- Review Section -->
+   <section class="review" id="review">
         <h1 class="heading"> customer's <span>review</span> </h1>
 
         <div class="box-container">
-
-            <div class="box">
-                <img src="../public/img/Customer/review-1.png" class="user" alt="">
-                <h3>Pasindu Takeshi</h3>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+            <?php 
+            if (isset($data['postedFeedbacks']) && !empty($data['postedFeedbacks'])):
+                // Get only the latest three feedbacks
+                $latestFeedbacks = array_slice($data['postedFeedbacks'], 0, 3);
+                foreach ($latestFeedbacks as $feedback):
+            ?>
+                <div class="box">
+                    <h3><?php echo htmlspecialchars($feedback->customer_name ?? 'Happy Customer'); ?></h3>
+                    <p><?php echo htmlspecialchars($feedback->feedback_text); ?></p>
                 </div>
-                <p>Absolutely delightful experience at Frostine! The pastries are always fresh and the variety is incredible. Highly recommend their croissants and coffee for a perfect start to your day.</p>
-            </div>
-
-            <div class="box">
-                <img src="../public/img/Customer/review-2.png" class="user" alt="">
-                <h3>Kasunshya Pabodi</h3>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+            <?php 
+                endforeach; 
+            else:
+            ?>
+                <!-- Default testimonials if no posted feedback -->
+                <div class="box">
+                    <h3>Pasindu Takeshi</h3>
+                    <p>Absolutely delightful experience at Frostine! The pastries are always fresh and the variety is incredible. Highly recommend their croissants and coffee for a perfect start to your day.</p>
                 </div>
-                <p>Amazing bakery with a warm, inviting atmosphere. The staff is friendly, and their cakes are to die for. You can't go wrong with their chocolate fudge cake!</p>
-            </div>
-
-            <div class="box">
-                <img src="../public/img/Customer/review-3.png" class="user" alt="">
-                <h3>Kavindu Sheshan</h3>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+                <div class="box">
+                    <h3>Elena Rodriguez</h3>
+                    <p>The cakes here are works of art! I ordered my daughter's birthday cake and it was not only beautiful but delicious too. Everyone at the party asked where it was from.</p>
                 </div>
-                <p>Fantastic bakery that never disappoints! Their bread is always baked to perfection, and the sandwiches are delicious. A must-visit spot for any bakery lover.</p>
-            </div>
-
+                <div class="box">
+                    <h3>Michael Chang</h3>
+                    <p>I've been coming to Frostine for years and they never disappoint. Their sourdough bread is perfect and their seasonal pastries are always something to look forward to.</p>
+                </div>
+            <?php endif; ?>
         </div>
-
     </section>
-
-    <!-- review -->
 
     <!-- enquiry -->
 
@@ -451,7 +411,9 @@
         <div class="box-container">
             <div class="box">
                 <h3>address</h3>
-                <p>No.UCSC Building Complex, 35 Reid Ave, Colombo 00700</p>
+                <p>No.789,Oak Street,Colombo</p>
+                <p>No.76/B,Horana Road,Horana</p>
+                <p>No.456,Gampaha Road,Gampaha</p>
                 <div class="share">
                     <a href="#" class="fab fa-facebook-f"></a>
                     <a href="#" class="fab fa-twitter"></a>
@@ -487,6 +449,31 @@
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
+            },
+        });
+
+        var categorySwiper = new Swiper(".category-slider", {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                991: {
+                    slidesPerView: 3,
+                },
             },
         });
 
@@ -549,5 +536,7 @@
             alert('Please log in to add items to your cart.');
         }
     </script>
+    <!-- Chat Widget -->
+    <?php require_once APPROOT . '/views/chat/index.php'; ?>
 </body>
 </html>

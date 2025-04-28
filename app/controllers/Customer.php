@@ -1,12 +1,14 @@
 <?php
 class Customer extends Controller {
     private $customerModel;
+    private $chatModel;
 
     public function __construct() {
         if (!isset($_SESSION)) {
             session_start();
         }
         $this->customerModel = $this->model('M_Customer');
+        $this->chatModel = $this->model('M_Chat');
         
         // Debug which method is being called
         error_log('Customer controller method called: ' . $_SERVER['REQUEST_URI']);

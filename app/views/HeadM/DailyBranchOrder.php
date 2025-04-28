@@ -8,6 +8,7 @@
     <title>Frostine Head Manager - Daily Branch Orders</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -54,27 +55,33 @@
                                     <th>Branch Name</th>
                                     <th>Description</th>
                                     <th>Order Date</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php if (!empty($data['orders'])): ?>
                                 <?php foreach ($data['orders'] as $order): ?>
-                                        <tr>
-                                            <td><?php echo $order->branch_name; ?></td>
-                                            <td><?php echo $order->description; ?></td>
-                                            <td><?php echo $order->orderdate; ?></td>
-                                            <td>
-                                                <button class="btn approve">Approve</button>
-                                                <button class="btn reject">Reject</button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
                                     <tr>
-                                        <td colspan="4">No orders found.</td>
+                                        <td><?php echo $order->branch_name; ?></td>
+                                        <td><?php echo $order->description; ?></td>
+                                        <td><?php echo $order->orderdate; ?></td>
+                                        <td>
+                                            <span class="status-<?php echo isset($order->status) ? $order->status : 'pending'; ?>">
+                                                <?php echo isset($order->status) ? ucfirst($order->status) : 'Pending'; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn approve" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'approved')">Approve</button>
+                                            <button class="btn reject" onclick="updateOrderStatus(<?php echo $order->dailybranchorder_id; ?>, 'rejected')">Reject</button>
+                                        </td>
                                     </tr>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5">No orders found.</td>
+                                </tr>
+                            <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -82,6 +89,73 @@
             </div>
         </main>
     </div>
+
+    <!-- Add JavaScript for approve/reject functionality -->
+    <script>
+    function updateOrderStatus(orderId, status) {
+        Swal.fire({
+            title: 'Confirm Action',
+            text: `Are you sure you want to ${status} this order?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#a26b98',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, proceed'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading indicator
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Updating order status',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('order_id', orderId);
+                formData.append('status', status);
+                
+                // Send AJAX request
+                fetch('<?php echo URLROOT; ?>/HeadM/updateOrderStatus', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonColor: '#a26b98'
+                        }).then(() => {
+                            location.reload(); // Reload to show updated status
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'An error occurred',
+                            icon: 'error',
+                            confirmButtonColor: '#a26b98'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while processing your request',
+                        icon: 'error',
+                        confirmButtonColor: '#a26b98'
+                    });
+                });
+            }
+        });
+    }
+    </script>
 </body>
 
 </html>

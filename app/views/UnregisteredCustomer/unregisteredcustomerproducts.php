@@ -428,24 +428,40 @@
 
     <script>
         function filterProducts() {
-            const category = document.getElementById('category').value;
+            const categorySelect = document.getElementById('category');
+            const category = categorySelect.value;
             const minPrice = document.getElementById('min-price').value;
             const maxPrice = document.getElementById('max-price').value;
             
-            // Redirect with filter parameters
-            let url = '<?php echo URLROOT; ?>/UnregisteredCustomer/unregisteredcustomerproducts';
-            let params = [];
+            let url = new URL(window.location.href);
             
-            if (category) params.push(`category=${category}`);
-            if (minPrice) params.push(`min_price=${minPrice}`);
-            if (maxPrice) params.push(`max_price=${maxPrice}`);
+            // Clear existing parameters
+            url.searchParams.delete('category');
+            url.searchParams.delete('min_price');
+            url.searchParams.delete('max_price');
             
-            if (params.length > 0) {
-                url += '?' + params.join('&');
+            // Add new parameters only if they have values
+            if (category) {
+                url.searchParams.append('category', category);
+            }
+            if (minPrice) {
+                url.searchParams.append('min_price', minPrice);
+            }
+            if (maxPrice) {
+                url.searchParams.append('max_price', maxPrice);
             }
             
-            window.location.href = url;
+            window.location.href = url.toString();
         }
+
+        // Add event listeners for enter key on price inputs
+        document.getElementById('min-price').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') filterProducts();
+        });
+
+        document.getElementById('max-price').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') filterProducts();
+        });
 
         function addToCart(productId) {
             // Implement cart functionality here
@@ -486,5 +502,7 @@
             }
         }
     </script>
+    <!-- Chat Widget -->
+    <?php require_once APPROOT . '/views/chat/index.php'; ?>
 </body>
 </html>

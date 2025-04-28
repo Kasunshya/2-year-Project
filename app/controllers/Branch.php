@@ -1,9 +1,21 @@
 <?php
 class Branch extends Controller {
     private $branchModel;
+    private $notificationModel;
     
     public function __construct() {
         $this->branchModel = $this->model('M_Branch');
+        $this->notificationModel = $this->model('M_Notification');
+        
+        // Make sure user is logged in with correct role
+        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
+            redirect('Login/indexx');
+        }
+    }
+
+    private function isLoggedIn() {
+        return isset($_SESSION['user_id']) && isset($_SESSION['user_type']) 
+               && $_SESSION['user_type'] === 'branch_manager';
     }
 
     public function stock() {
@@ -307,7 +319,7 @@ class Branch extends Controller {
     }
 
     public function dailyOrder() {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
+        if (!isLoggedIn()) {
             redirect('Login/indexx');
         }
 
@@ -318,17 +330,21 @@ class Branch extends Controller {
             die('Error: No branch association found');
         }
 
+        // Get today's date
+        $today = date('Y-m-d');
+        
+        // Get all products for ordering
         $products = $this->branchModel->getAllProducts();
-        $currentOrders = $this->branchModel->getDailyBranchOrders($branch->branch_id, date('Y-m-d'));
+        
+        // Get today's orders
+        $todayOrders = $this->branchModel->getTodaysOrders($branch->branch_id, $today);
 
         $data = [
-            'branch' => $branch,
             'products' => $products,
-            'currentOrders' => $currentOrders,
-            'title' => 'Daily Branch Order'
+            'orders' => $todayOrders  // Add this line
         ];
         
-        $this->view('BranchM/v_dailyOrder', $data);
+        $this->view('BranchM/v_DailyOrder', $data);
     }
 
     public function submitDailyOrder() {
@@ -367,6 +383,39 @@ class Branch extends Controller {
         redirect('Branch/dailyOrder');
     }
 
+    public function getUpdatedOrders() {
+        try {
+            if (!isLoggedIn()) {
+                redirect('Login/indexx');
+                return;
+            }
+
+            $userId = $_SESSION['user_id'];
+            $branch = $this->branchModel->getBranchByManager($userId);
+            
+            if (!$branch) {
+                die('Error: Branch not found');
+            }
+
+            $today = date('Y-m-d');
+            $orders = $this->branchModel->getTodaysOrders($branch->branch_id, $today);
+            
+            // Set header for auto-refresh
+            header("Refresh: 5"); 
+            
+            $data = [
+                'orders' => $orders
+            ];
+            
+            // Load only the orders table partial view
+            $this->view('BranchM/partials/orders_table', $data);
+            
+        } catch (Exception $e) {
+            error_log('Error in getUpdatedOrders: ' . $e->getMessage());
+            echo '<div class="alert alert-danger">Error fetching orders</div>';
+        }
+    }
+
     public function dashboard() {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
             redirect('Login/indexx');
@@ -384,30 +433,20 @@ class Branch extends Controller {
         $today = date('Y-m-d');
         $yesterday = date('Y-m-d', strtotime('-1 day'));
         $weekStart = date('Y-m-d', strtotime('-6 days'));
-        
+
         // Collect all dashboard metrics
         $data = [
             'title' => 'Branch Manager Dashboard',
             'branch' => $branch,
-            
-            // Sales metrics
             'todaySales' => $this->branchModel->getDailySalesSummary($branch->branch_id, $today),
             'yesterdaySales' => $this->branchModel->getDailySalesSummary($branch->branch_id, $yesterday),
             'weeklySales' => $this->branchModel->getDateRangeSummary($branch->branch_id, $weekStart, $today),
-            
-            // Order metrics
+            'stockMetrics' => $this->branchModel->getStockMetrics($branch->branch_id),
             'todayOrders' => $this->branchModel->getDailyOrderCount($branch->branch_id, $today),
             'pendingOrders' => $this->branchModel->getPendingOrdersCount($branch->branch_id),
-            
-            // Stock metrics
-            'stockMetrics' => $this->branchModel->getStockMetrics($branch->branch_id),
             'lowStock' => $this->branchModel->getLowStockCount($branch->branch_id),
             'expiringStock' => $this->branchModel->getExpiringStockCount($branch->branch_id),
-            
-            // Product performance
             'topProducts' => $this->branchModel->getTopSellingProducts($branch->branch_id, $weekStart),
-            
-            // Charts data
             'salesChartData' => $this->branchModel->getDailySalesForLastDays($branch->branch_id, 7),
             'categoryPerformance' => $this->branchModel->getCategoryPerformance($branch->branch_id, $weekStart, $today)
         ];
@@ -420,22 +459,19 @@ class Branch extends Controller {
             redirect('Login/indexx');
         }
 
-        // Get branch ID of the logged-in manager
         $userId = $_SESSION['user_id'];
         $branch = $this->branchModel->getBranchByManager($userId);
         
         if (!$branch) {
             die('Error: No branch association found.');
         }
-        
-        $branchId = $branch->branch_id;
-        
+
         // Get today's and yesterday's date
         $today = date('Y-m-d');
         $yesterday = date('Y-m-d', strtotime('-1 day'));
         $weekStart = date('Y-m-d', strtotime('-6 days'));
-        
-        // Add stockMetrics to the data array
+        $branchId = $branch->branch_id;
+
         $data = [
             'branch' => $branch,
             'todaySales' => $this->branchModel->getDailySalesSummary($branchId, $today),
@@ -444,22 +480,86 @@ class Branch extends Controller {
             'weeklySales' => $this->branchModel->getWeeklySalesSummary($branchId, $weekStart, $today),
             'stockMetrics' => $this->branchModel->getStockMetrics($branchId)
         ];
-        
+
         $this->view('BranchM/v_BranchMdashboard', $data);
     }
-    
+
+    public function notifications() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
+            redirect('Login/indexx');
+        }
+
+        $userId = $_SESSION['user_id'];
+        $branch = $this->branchModel->getBranchByManager($userId);
+        
+        if (!$branch) {
+            die('Error: No branch association found');
+        }
+
+        // Fetch notifications for this branch
+        $notifications = $this->notificationModel->getNotifications($branch->branch_id);
+
+        $data = [
+            'notifications' => $notifications,
+            'branch' => $branch,
+            'title' => 'Notifications'
+        ];
+        
+        $this->view('BranchM/v_notifications', $data);
+    }
+
+    public function markNotificationRead() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('HTTP/1.1 405 Method Not Allowed');
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'));
+        
+        if (!isset($data->notification_id)) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['success' => false, 'message' => 'Notification ID required']);
+            return;
+        }
+
+        $success = $this->notificationModel->markAsRead($data->notification_id);
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => $success]);
+    }
+
+    public function getUnreadCount() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'branchmanager') {
+            header('Content-Type: application/json');
+            echo json_encode(['count' => 0]);
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $branch = $this->branchModel->getBranchByManager($userId);
+        
+        if (!$branch) {
+            header('Content-Type: application/json');
+            echo json_encode(['count' => 0]);
+            return;
+        }
+
+        $count = $this->notificationModel->getUnreadCount($branch->branch_id);
+        
+        header('Content-Type: application/json');
+        echo json_encode(['count' => $count]);
+    }
+
     private function cleanupDuplicateBranchmanagerEntries($userId) {
         try {
             $db = new Database();
-            
             // Check if there are duplicates
             $db->query("SELECT COUNT(*) as count FROM branchmanager WHERE user_id = :user_id");
             $db->bind(':user_id', $userId);
             $result = $db->single();
-            
             if ($result && $result->count > 1) {
                 error_log("Found {$result->count} duplicate entries for user {$userId}. Cleaning up...");
-                
                 // Keep only the first entry (with the lowest ID)
                 $db->query("DELETE FROM branchmanager 
                            WHERE user_id = :user_id 
@@ -473,13 +573,12 @@ class Branch extends Controller {
             }
         } catch (Exception $e) {
             error_log("Error cleaning up duplicates: " . $e->getMessage());
-        }
+        }   
     }
-    
+
     private function createBranchAssociationIfNeeded($userId) {
         try {
             $db = new Database();
-            
             // Check if branchmanager table has the needed columns
             $db->query("SHOW COLUMNS FROM branchmanager LIKE 'user_id'");
             $columnExists = $db->single();
@@ -489,11 +588,10 @@ class Branch extends Controller {
                 $db->query("ALTER TABLE branchmanager ADD COLUMN user_id INT(11) AFTER branch_id");
                 $db->execute();
             }
-            
+
             // Associate user with branch if possible
             $db->query("SELECT branch_id FROM branch LIMIT 1");
             $branch = $db->single();
-            
             if ($branch) {
                 $db->query("INSERT IGNORE INTO branchmanager (user_id, branch_id) VALUES (:user_id, :branch_id)");
                 $db->bind(':user_id', $userId);
@@ -507,7 +605,5 @@ class Branch extends Controller {
             return false;
         }
     }
-
-
 }
 ?>

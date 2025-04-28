@@ -148,9 +148,11 @@
     <header class="header">
       
         <!-- Navigation Bar HTML -->
+        
+        
         <nav class="navbar">
             <a href="<?php echo URLROOT; ?>/customer/customerhomepage" class="logo">
-                <img src="<?php echo URLROOT; ?>/public/img/Customer/frostinelogo.png" alt="FROSTINE" class="logo-img">
+                <img src="<?php echo URLROOT; ?>/public/img/HeadM/frostinelogo2.png" alt="FROSTINE" style="height: 60px; width: auto;">
                 FROSTINE
             </a>
             <ul>
