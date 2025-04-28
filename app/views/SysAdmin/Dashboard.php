@@ -37,9 +37,10 @@
             justify-content: space-between;
             align-items: center;
             font-size: 2.5rem;
+            margin-top:10px;
         }
    
-}
+
 
         .header-container {
             display: flex;
@@ -56,6 +57,8 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            text-decoration: none;  /* Add this */
+            color: inherit;         /* Add this */
         }
 
         .user-profile-header:hover {
@@ -69,7 +72,7 @@
 
         .user-profile-header .role {
             font-size: 1rem;
-            color: #e8d7e5;  /* Changed from white to #e8d7e5 */
+            color: #e8d7e5;
             text-transform: none;
         }
 
@@ -106,12 +109,11 @@
 
         #calendar {
             flex: 1;
-            min-width: 400px;
             max-width: 500px;
             background: white;
             padding: 20px;
             border-radius: 15px;
-            height: 320px !important;
+            height: 370px !important;
         }
 
         .analysis-widget {
@@ -302,10 +304,10 @@
         <div class="title">
             <h7><i class="fas fa-th-large"></i>Dashboard</h7>
         </div>
-        <div class="user-profile-header" onclick="window.location.href='<?php echo URLROOT; ?>/SysAdminP/profile'" style="cursor: pointer;">
+        <a href="<?php echo URLROOT; ?>/SysAdmin/profile" class="user-profile-header" style="text-decoration: none;">
             <i class="fas fa-user-shield avatar"></i>
-            <h7 class="role">SYSTEM ADMINISTRATOR</h7>
-        </div>
+            <span class="role">SYSTEM ADMINISTRATOR</span>
+        </a>
     </header>
 
     <div class="dashboard-container">
