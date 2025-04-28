@@ -103,9 +103,12 @@ class SysAdmin extends Controller {
                 'user_role' => trim($_POST['user_role'])
             ];
 
-            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+            // Check for duplicate email BEFORE trying to insert
+            $emailExists = !$this->sysAdminModel->isEmailUnique($data['email']);
+            if ($emailExists) {
                 flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
                 redirect('sysadmin/employeeManagement');
+                return; // Important: Stop execution here
             }
 
             if ($this->sysAdminModel->addEmployee($data)) {
@@ -160,7 +163,7 @@ class SysAdmin extends Controller {
                 'user_id' => trim($_POST['user_id'])
             ];
 
-            // Check if the email is unique for other employees
+            // Check if the email is unique for other employees (excluding current employee)
             if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
                 flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
                 redirect('sysadmin/employeeManagement');
@@ -189,6 +192,7 @@ class SysAdmin extends Controller {
 
     public function updateEmployee() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Existing code to process POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $cvFileName = '';
@@ -213,6 +217,14 @@ class SysAdmin extends Controller {
                 'user_role' => trim($_POST['user_role']),
                 'user_id' => $userId
             ];
+            
+            // After creating the $data array, add this check:
+            // Check if the email is unique for other employees (excluding current employee)
+            if (!$this->sysAdminModel->isEmailUnique($data['email'], $data['user_id'])) {
+                flash('employee_message', 'Email already exists. Please use a different email.', 'alert alert-danger');
+                redirect('sysadmin/employeeManagement');
+                return; // Important: Stop execution here to prevent the update
+            }
             
             if ($this->sysAdminModel->updateEmployee($data)) {
                 flash('employee_message', 'Employee updated successfully');

@@ -233,7 +233,7 @@
                     <button type="button" class="close" onclick="closeModal('editEmployeeModal')">&times;</button>
                 </div>
                 
-                <form action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateEditEmployeeForm()">
+                <form action="<?php echo URLROOT; ?>/sysadmin/updateEmployee" method="POST" enctype="multipart/form-data" onsubmit="return validateEditForm()">
                     <input type="hidden" name="employee_id" id="edit_employee_id">
 
                     <div class="form-row">
@@ -284,8 +284,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="edit_email">Email:</label>
-                            <input type="email" class="form-control" name="email" id="edit_email" 
-                                   onblur="validateEmailUniqueness(this.value, document.getElementById('edit_employee_id').value)" required>
+                            <input type="email" class="form-control" name="email" id="edit_email" required>
                             <span id="emailError" class="error-message"></span>
                         </div>
                         
@@ -450,81 +449,23 @@
         return true;
     }
     
-    function validateEditEmployeeForm() {
+    function validateEditForm() {
+        const email = document.getElementById('edit_email').value;
         const employeeId = document.getElementById('edit_employee_id').value;
-        const fullName = document.getElementById('edit_full_name').value.trim();
-        const address = document.getElementById('edit_address').value.trim();
-        const contactNo = document.getElementById('edit_contact_no').value.trim();
-        const nic = document.getElementById('edit_nic').value.trim();
-        const dob = document.getElementById('edit_dob').value;
-        const email = document.getElementById('edit_email').value.trim();
-        const password = document.getElementById('edit_password').value;
-        const joinDate = document.getElementById('edit_join_date').value;
-        const branchId = document.getElementById('edit_branch_id').value;
-        const userRole = document.getElementById('edit_user_role').value;
         
-        // Basic field validations (exclude password as it can be empty on edit)
-        if (fullName === '' || address === '' || contactNo === '' || nic === '' || 
-            dob === '' || email === '' || joinDate === '' || 
-            branchId === '' || userRole === '') {
-            alert('All fields except password are required');
-            return false;
+        // Check email uniqueness before submission
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `<?php echo URLROOT; ?>/sysadmin/checkEmailExistsExcept/${encodeURIComponent(email)}/${employeeId}`, false); // Synchronous request
+        xhr.send();
+        
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.exists) {
+                alert('This email is already in use by another employee. Please use a different email.');
+                return false;
+            }
         }
         
-        // Email format validation
-        if (!isValidEmail(email)) {
-            alert('Please enter a valid email address');
-            return false;
-        }
-        
-        // NIC format validation
-        if (!isValidNIC(nic)) {
-            alert('Please enter a valid NIC number');
-            return false;
-        }
-        
-        // Phone number validation
-        if (!isValidPhone(contactNo)) {
-            alert('Please enter a valid contact number (format: 0XXXXXXXXX or +94XXXXXXXXX)');
-            return false;
-        }
-        
-        // Password strength validation (only if password is being changed)
-        if (password !== '' && password.length < 8) {
-            alert('Password must be at least 8 characters long');
-            return false;
-        }
-        
-        // Date validations
-        const currentDate = new Date();
-        const dobDate = new Date(dob);
-        const joinDateObj = new Date(joinDate);
-        
-        // Check if person is at least 18 years old
-        const minAge = 18;
-        const ageDate = new Date(currentDate - dobDate);
-        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-        
-        if (age < minAge) {
-            alert(`Employee must be at least ${minAge} years old`);
-            return false;
-        }
-        
-        // Join date cannot be in the future
-        if (joinDateObj > currentDate) {
-            alert('Join date cannot be in the future');
-            return false;
-        }
-        
-        // Join date should be after birth date + 18 years
-        const minJoinDate = new Date(dobDate);
-        minJoinDate.setFullYear(minJoinDate.getFullYear() + minAge);
-        
-        if (joinDateObj < minJoinDate) {
-            alert('Join date must be after person is 18 years old');
-            return false;
-        }
-
         return true;
     }
     
