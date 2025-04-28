@@ -369,15 +369,13 @@ class HeadM extends Controller
 
     public function feedback()
     {
-        // Enable error reporting for debugging
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-
-        $productName = isset($_GET['product_name']) ? trim($_GET['product_name']) : '';
-        $data['feedbacks'] = $this->headManagerModel->getFeedbacks($productName);
+        $searchTerm = isset($_GET['order_id']) ? $_GET['order_id'] : '';
+        $feedbacks = $this->headManagerModel->getFeedbacks($searchTerm);
         
-        // Debug data
-        error_log("Feedback Data: " . print_r($data, true));
+        $data = [
+            'title' => 'Feedback Management',
+            'feedbacks' => $feedbacks
+        ];
         
         $this->view('HeadM/Feedback', $data);
     }
@@ -711,6 +709,71 @@ class HeadM extends Controller
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        }
+    }
+
+    public function unpostFeedback() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $feedback_id = isset($_POST['feedback_id']) ? $_POST['feedback_id'] : null;
+            
+            if ($feedback_id) {
+                if ($this->headManagerModel->unpostFeedback($feedback_id)) {
+                    echo json_encode(['status' => 'success', 'message' => 'Feedback removed from homepage']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to remove feedback']);
+                }
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid feedback ID']);
+            }
+            exit;
+        }
+    }
+
+    public function updateOrderStatus() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            return;
+        }
+
+        $orderId = isset($_POST['order_id']) ? $_POST['order_id'] : null;
+        $status = isset($_POST['status']) ? $_POST['status'] : null;
+
+        if (!$orderId || !$status) {
+            echo json_encode(['success' => false, 'message' => 'Missing required data']);
+            return;
+        }
+
+        // Load required models
+        $this->orderModel = $this->model('M_DailyBranchOrder');
+        $this->notificationModel = $this->model('M_Notification');
+
+        // Get the branch ID for this order
+        $order = $this->orderModel->getOrderById($orderId);
+        if (!$order) {
+            echo json_encode(['success' => false, 'message' => 'Order not found']);
+            return;
+        }
+
+        // Update the order status
+        $success = $this->orderModel->updateStatus($orderId, $status);
+
+        if ($success) {
+            // Create notification for the branch
+            $this->notificationModel->createNotification(
+                $order->branch_id, 
+                $orderId, 
+                $status
+            );
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Order status updated successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to update order status'
+            ]);
         }
     }
 

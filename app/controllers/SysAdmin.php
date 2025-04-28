@@ -19,6 +19,9 @@ class SysAdmin extends Controller {
     }
 
     public function dashboard() {
+        if(!isset($_SESSION['user_id'])) {
+            redirect('users/login');
+        }
         // Get all dashboard statistics
         $stats = $this->sysAdminModel->getDashboardStats();
         

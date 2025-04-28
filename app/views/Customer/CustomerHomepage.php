@@ -9,58 +9,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/Customer/CustomerHomepage.css">
 
-    <style>
-    
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<?php require_once APPROOT . '/views/Customer/RegisteredCustomerNav.php'; ?>
+ <!-- Header -->
+ <header class="header">
+ <div class="logo">
+ <img src="<?php echo URLROOT; ?>/public/img/HeadM/frostinelogo2.png" alt="FROSTINE" style="height: 60px; width: auto; align-items:left;">
+</div>
+    <a href="#" class="logo">FROSTINE</a>
     
-    <!-- Debug output -->
-    <div style="display: none;">
-        <?php 
-        echo "<pre>";
-        echo "Data array contents:\n";
-        print_r($data);
-        echo "\nPosted Feedbacks:\n";
-        if (isset($data['postedFeedbacks'])) {
-            print_r($data['postedFeedbacks']);
-            echo "Count: " . count($data['postedFeedbacks']);
-        } else {
-            echo "postedFeedbacks key does not exist in data array";
-        }
-        echo "</pre>";
-        ?>
-    </div>
-    
+    <nav class="navbar">
+
+        <a href="<?php echo URLROOT;?>/customer/customerhomepage">Home</a>
+        <a href="#about">About</a>
+        <a href="<?php echo URLROOT ?>/customer/customerproducts">Products</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#review">Review</a>
+        <a href="#order">Enquiry</a>
+        <a href="<?php echo URLROOT ?>/customer/customercustomisation">Customization</a>
+        <a href="<?php echo URLROOT ?>/customer/customerprofile">Profile</a>
+        <a href="<?php echo URLROOT ?>/Login/logout">Log Out</a>
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+
     <!-- Home Section -->
     <section class="home" id="home">
-        <div class="swiper home-slider">
-            <div class="swiper-wrapper">
-                <!-- First Slider -->
-                <div class="swiper-slide slide" style="background: url(../public/img/Customer/slider1.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>we bake the world a better place</h3>
-                        <h2 class="welcome-text" style="color: #fff; font-family: 'Vidaloka', sans-serif; font-size:20px;">
+    <div class="swiper home-slider">
+        <div class="swiper-wrapper">
+            <!-- First Slider -->
+            <div class="swiper-slide slide" style="background: url(../public/img/Customer/slider1.jpg) no-repeat;">
+                <div class="content">
+                    <h3>we bake the world a better place</h3>
+                    <h2 class="welcome-text" style="color: #fff; font-family: 'Vidaloka', sans-serif; font-size:20px;">
                             Welcome to FROSTINE Bakery! Your One-Stop Destination for Freshly Baked Delights!
                         </h2>
-                    </div>
-                </div>
-
-                <!-- Second Slider -->
-                <div class="swiper-slide slide" style="background: url(../public/img/Customer/slider2.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>we bake the world a better place</h3>
-                    </div>
+                    <!-- Welcome Section -->
+                   
                 </div>
             </div>
 
-            <!-- Slider Buttons -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            <!-- Second Slider -->
+            <div class="swiper-slide slide" style="background: url(../public/img/Customer/slider2.jpg) no-repeat;">
+                <div class="content">
+                    <h3>we bake the world a better place</h3>
+                </div>
+            </div>
         </div>
-    </section>
+
+        <!-- Slider Buttons -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
+
 
     <!-- About Us Section -->
     <section class="about" id="about">
@@ -285,7 +289,10 @@
         <div class="box-container">
             <div class="box">
                 <h3>address</h3>
-                <p>No.UCSC Building Complex, 35 Reid Ave, Colombo 00700</p>
+                <p>No.789,Oak Street,Colombo</p>
+                <p>No.76/B,Horana Road,Horana</p>
+                <p>No.456,Gampaha Road,Gampaha</p>
+            
                 <div class="share">
                     <a href="#" class="fab fa-facebook-f"></a>
                     <a href="#" class="fab fa-twitter"></a>
@@ -357,6 +364,21 @@
         }
     </script>
 
+    <script>
+        let navbar = document.querySelector('.navbar');
+        let menuBtn = document.querySelector('#menu-btn');
+
+        menuBtn.onclick = () => {
+            navbar.classList.toggle('active');
+            menuBtn.classList.toggle('fa-times');
+        }
+
+        window.onscroll = () => {
+            navbar.classList.remove('active');
+            menuBtn.classList.remove('fa-times');
+        }
+    </script>
+
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         var categorySwiper = new Swiper(".category-slider", {
@@ -384,5 +406,22 @@
             },
         });
     </script>
+    <script>
+        var homeSwiper = new Swiper(".home-slider", {
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>
+
+    <!-- Chat Widget -->
+    <?php require_once APPROOT . '/views/chat/index.php'; ?>
 </body>
 </html>

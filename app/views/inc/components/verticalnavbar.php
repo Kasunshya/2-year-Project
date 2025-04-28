@@ -16,7 +16,15 @@
                 <li><a href="<?php echo URLROOT;?>/Branch/products"><i class="fas fa-cookie"></i></a></li>
                 <li><a href="<?php echo URLROOT;?>/Branch/dailyOrder"><i class="fas fa-tasks"></i></a></li>
                 <li><a href="<?php echo URLROOT;?>/Branch/salesReport"><i class="fas fa-chart-bar"></i></a></li>
-                <li><a href="<?php echo URLROOT; ?>/users/logout" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+
+                <li>
+                    <a href="<?php echo URLROOT; ?>/Branch/notifications" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        <span class="nav-text">Notifications</span>
+                    </a>
+                </li>
+                <li><a href="<?php echo URLROOT; ?>/Login/indexx" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+
             </ul>
         </div>
        
@@ -43,7 +51,8 @@
                 'fa-cookie': 'Products',
                 'fa-tasks': 'Daily Order',
                 'fa-chart-bar': 'Sales Report',
-                'fa-sign-out-alt': 'Logout'
+                'fa-sign-out-alt': 'Logout',
+                'fa-bell': 'Notifications'
             };
 
             // Find the corresponding label
@@ -97,6 +106,62 @@
                 alert('Logout functionality to be implemented');
             });
         }
-});
+
+        // Update notification count
+        function updateNotificationCount() {
+            fetch('<?php echo URLROOT; ?>/Branch/getUnreadCount')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.notification-badge');
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+        }
+
+        // Update count every 30 seconds
+        updateNotificationCount();
+        setInterval(updateNotificationCount, 30000);
+    });
 </script>
+
+<style>
+.nav-link {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Add to your existing CSS file or style section */
+
+.notification-counter {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    display: none;
+}
+
+.notification-counter.active {
+    display: inline-block;
+}
+</style>
 

@@ -415,7 +415,8 @@ class M_HeadM
                 dbo.dailybranchorder_id, 
                 b.branch_name, 
                 dbo.description, 
-                dbo.orderdate 
+                dbo.orderdate,
+                dbo.status 
             FROM dailybranchorder dbo
             JOIN branch b ON dbo.branch_id = b.branch_id
         ';
@@ -432,6 +433,13 @@ class M_HeadM
         }
 
         return $this->db->resultSet();
+    }
+
+    public function updateDailyOrderStatus($orderId, $status) {
+        $this->db->query('UPDATE dailybranchorder SET status = :status WHERE dailybranchorder_id = :id');
+        $this->db->bind(':status', $status);
+        $this->db->bind(':id', $orderId);
+        return $this->db->execute();
     }
 
     public function getAllFeedbacks($search = '')
@@ -718,39 +726,27 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getFeedbacks($productName = '')
-    {
-        $sql = '
-            SELECT 
-                f.*,
-                c.customer_name,
-                p.product_name
-            FROM feedback f
-            LEFT JOIN customer c ON f.customer_id = c.customer_id
-            LEFT JOIN orders o ON f.order_id = o.order_id
-            LEFT JOIN orderdetails od ON o.order_id = od.order_id
-            LEFT JOIN product p ON od.product_id = p.product_id
-        ';
-
-        if (!empty($productName)) {
-            $sql .= ' WHERE p.product_name LIKE :product_name';
+    public function getFeedbacks($searchTerm = '') {
+        $sql = 'SELECT f.feedback_id, f.order_id, f.feedback_text, f.created_at, f.is_posted,
+                c.customer_name, o.order_id as order_number 
+                FROM feedback f
+                INNER JOIN customer c ON f.customer_id = c.customer_id
+                INNER JOIN orders o ON f.order_id = o.order_id
+                WHERE 1=1';
+        
+        if (!empty($searchTerm)) {
+            $sql .= ' AND o.order_id LIKE :searchTerm';
         }
-
-        // Debug query
-        error_log("SQL Query: " . $sql);
-
+        
+        $sql .= ' ORDER BY f.created_at DESC';
+        
         $this->db->query($sql);
-
-        if (!empty($productName)) {
-            $this->db->bind(':product_name', '%' . $productName . '%');
+        
+        if (!empty($searchTerm)) {
+            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
         }
-
-        $result = $this->db->resultSet();
-
-        // Debug result
-        error_log("Query Result: " . print_r($result, true));
-
-        return $result;
+        
+        return $this->db->resultSet();
     }
 
     public function getPreOrders($search = '')
@@ -1086,6 +1082,12 @@ class M_HeadM
         ');
 
         return $this->db->resultSet();
+    }
+
+    public function unpostFeedback($feedback_id) {
+        $this->db->query('UPDATE feedback SET is_posted = 0 WHERE feedback_id = :feedback_id');
+        $this->db->bind(':feedback_id', $feedback_id);
+        return $this->db->execute();
     }
 }
 ?>

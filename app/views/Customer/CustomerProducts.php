@@ -281,5 +281,7 @@
             updateCartCount(initialCount);
         });
     </script>
+    <!-- Chat Widget -->
+    <?php require_once APPROOT . '/views/chat/index.php'; ?>
 </body>
 </html>

@@ -8,6 +8,25 @@
     <title>Frostine Head Manager - View Enquiries</title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/HeadM/Customization.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* SweetAlert2 Customization */
+        .swal2-popup {
+            font-size: 1.2rem;
+        }
+        
+        .swal2-title {
+            color: #333;
+        }
+        
+        .swal2-confirm {
+            background-color: #28a745 !important;
+        }
+        
+        .swal2-cancel {
+            background-color: #dc3545 !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
