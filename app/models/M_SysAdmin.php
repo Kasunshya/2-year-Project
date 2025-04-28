@@ -431,6 +431,54 @@ if (!class_exists('M_SysAdmin')) {
             return $result->count == 0;
         }
 
+public function searchEmployees($search = '', $branchId = '') {
+    $sql = 'SELECT 
+                e.employee_id, 
+                e.full_name, 
+                e.address, 
+                e.contact_no, 
+                e.nic, 
+                e.dob, 
+                e.gender, 
+                e.email, 
+                e.join_date, 
+                e.cv_upload, 
+                e.user_id, 
+                e.user_role,
+                b.branch_name AS branch_name
+            FROM 
+                employee e
+            LEFT JOIN 
+                branch b ON e.branch = b.branch_id
+            WHERE 1=1';
+    
+    $params = [];
+    
+    // Add search conditions
+    if (!empty($search)) {
+        $sql .= ' AND (e.employee_id LIKE :search OR e.full_name LIKE :search_name)';
+        $params[':search'] = $search . '%';
+        $params[':search_name'] = '%' . $search . '%';
+    }
+    
+    // Add branch filter
+    if (!empty($branchId)) {
+        $sql .= ' AND e.branch = :branch_id';
+        $params[':branch_id'] = $branchId;
+    }
+    
+    $sql .= ' ORDER BY e.employee_id DESC';
+    
+    $this->db->query($sql);
+    
+    // Bind parameters
+    foreach ($params as $key => $value) {
+        $this->db->bind($key, $value);
+    }
+    
+    return $this->db->resultSet();
+}
+
 
         public function getAllBranches() {
             $this->db->query('SELECT branch_id, branch_name FROM branch');

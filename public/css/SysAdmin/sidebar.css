@@ -150,3 +150,105 @@ input:focus:invalid {
 input:focus:valid {
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
+
+
+/* Updated Search Bar Styling */
+.search-bar {
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to keep everything on one line */
+    gap: 10px;
+    align-items: center;
+}
+
+.search-field {
+    flex: 1;
+}
+
+/* Specific width adjustments */
+.search-field:nth-child(1) {
+    flex: 2; /* Make the search input wider */
+}
+
+.search-field:nth-child(2) {
+    flex: 1.5; /* Make the dropdown slightly narrower */
+}
+
+.search-field:nth-child(3) {
+    flex: none; /* Don't grow the button container */
+    white-space: nowrap;
+    display: flex;
+    gap: 8px;
+}
+
+.search-field input, 
+.search-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+/* Updated button styles */
+.search-btn {
+    background-color: #a26b98;;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background-color: #4a2438;
+}
+
+.reset-btn {
+    background-color: #dc3545; /* Changed to red */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.reset-btn:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .search-field {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .search-field:nth-child(3) {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .search-btn, .reset-btn {
+        flex: 1;
+        text-align: center;
+    }
+}
+

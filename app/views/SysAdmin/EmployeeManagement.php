@@ -35,17 +35,29 @@
     <div class="content">
         <?php flash('employee_message'); ?>
         
-        <div class="search-bar">
-            <form onsubmit="searchEmployee(); return false;">
-                <input type="text" 
-                       class="form-control"
-                       id="searchEmployeeInput" 
-                       placeholder="Search by employee ID..." 
-                       value="">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </form>
+        <div class="search-section">
+            <div class="search-bar">
+                <form method="GET" action="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="search-form">
+                    <div class="search-field">
+                        <input type="text" name="search" placeholder="Search by Name or ID" 
+                               value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    </div>
+                    <div class="search-field">
+                        <select name="branch_id">
+                            <option value="">All Branches</option>
+                            <?php foreach ($data['branches'] as $branch): ?>
+                                <option value="<?php echo $branch->branch_id; ?>" <?php echo (isset($_GET['branch_id']) && $_GET['branch_id'] == $branch->branch_id) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($branch->branch_name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+                        <a href="<?php echo URLROOT; ?>/sysadmin/employeeManagement" class="btn reset-btn"><i class="fas fa-times"></i> Reset</a>
+                    </div>
+                </form>
+            </div>
         </div>
         
         <button class="btn" onclick="openAddModal()">
@@ -503,6 +515,7 @@
     // Search function
     function searchEmployee() {
         const input = document.getElementById('searchEmployeeInput').value.trim();
+        const branch = document.getElementById('branchFilter').value;
         const table = document.getElementById('employeeTable');
         const rows = table.getElementsByTagName('tr');
         let found = false;
@@ -511,7 +524,10 @@
             const cells = rows[i].getElementsByTagName('td');
             if (cells.length > 0) {
                 const employeeId = cells[0].textContent || cells[0].innerText;
-                if (employeeId === input) {
+                const employeeName = cells[1].textContent || cells[1].innerText;
+                const employeeBranch = cells[6].textContent || cells[6].innerText;
+                if ((employeeId === input || employeeName.toLowerCase().includes(input.toLowerCase())) && 
+                    (branch === "" || employeeBranch === branch)) {
                     rows[i].style.display = '';
                     found = true;
                 } else {
@@ -521,13 +537,19 @@
         }
 
         if (!found && input !== '') {
-            alert('No employee found with the given ID.');
+            alert('No employee found with the given ID or name.');
         } else if (input === '') {
             // Show all rows if search input is empty
             for (let i = 0; i < rows.length; i++) {
                 rows[i].style.display = '';
             }
         }
+    }
+
+    function resetSearch() {
+        document.getElementById('searchEmployeeInput').value = '';
+        document.getElementById('branchFilter').value = '';
+        searchEmployee();
     }
 
     // Modal handling functions
