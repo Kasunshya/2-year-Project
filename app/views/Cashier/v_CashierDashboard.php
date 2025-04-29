@@ -8,26 +8,6 @@
 </head>
 <body>
  
-    <!-- Sidebar >
-    <aside class="sidebar">
-        <div class="logo-container">
-            <img src="<--?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
-        </div>
-        <nav>
-        <ul>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/cashierdashboard"><i class="fas fa-home"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-edit"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-chart-bar"></i></a></li>
-            </ul>
-        </nav>
-
-        
-        <div class="logout">
-            <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-        </div>
-    </aside-->
-
     <header>
       <div class="header-container">
         <h7><i class="fas fa-home">&nbsp</i> Dashboard</h7>
@@ -40,12 +20,12 @@
     
     <main class="main-content">
         <div class="dashboard-top">
-            <!-- Clock Widget -->
+            
             <div class="clock-widget">
-                <!-- Analog Clock Face -->
+                
                 <div class="clock-face">
                     <div class="clock-marking" id="hour-marks">
-                        <!-- Hour marks will be added via JavaScript -->
+                       
                     </div>
                     <div class="clock-hand hour-hand" id="hour-hand"></div>
                     <div class="clock-hand minute-hand" id="minute-hand"></div>
@@ -53,22 +33,22 @@
                     <div class="clock-center"></div>
                 </div>
                 
-                <!-- Digital Clock Display -->
+                
                 <div id="digital-clock"></div>
                 <div id="current-date"></div>
             </div>
 
-            <!-- Calendar Widget - Single div structure -->
+            
             <div id="calendar"></div>
 
-            <!-- Analysis Widget -->
+            
             <div class="analysis-widget">
                 <h3>Sales Analysis</h3>
                 <canvas id="salesChart"></canvas>
             </div>
         </div>
 
-        <!-- Metrics Container -->
+        
         <div class="metrics-container">
             <div class="metric">
                 <h3>Today's Orders</h3>
@@ -85,7 +65,7 @@
             </div>
         </div>
 
-        <!-- Best Sellers Box -->
+        
         <div class="best-sellers-container">
             <h2>Best Selling Products</h2>
             <div class="best-sellers-grid">
@@ -104,7 +84,7 @@
             </div>
         </div>
 
-        <!-- Recent Orders Table -->
+       
         <div class="recent-orders">
             <h2>Recent Orders</h2>
             <table>
@@ -138,7 +118,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Create hour markers for analog clock
+                
                 const hourMarksContainer = document.getElementById('hour-marks');
                 for (let i = 0; i < 12; i++) {
                     const span = document.createElement('span');
@@ -146,7 +126,7 @@
                     hourMarksContainer.appendChild(span);
                 }
                 
-                // Clock Function
+                
                 function updateClock() {
                     const now = new Date();
                     const hours = now.getHours();
@@ -154,7 +134,7 @@
                     const seconds = now.getSeconds();
                     const milliseconds = now.getMilliseconds();
                     
-                    // Update digital clock
+                    
                     const period = hours >= 12 ? 'PM' : 'AM';
                     const hours12 = hours % 12 || 12;
                     
@@ -169,12 +149,12 @@
                             day: 'numeric'
                         });
                     
-                    // Calculate rotations for analog clock hands
+                    
                     const hourRotation = 30 * hours + minutes / 2;
                     const minuteRotation = 6 * minutes + seconds / 10;
                     const secondRotation = 6 * seconds + milliseconds / 166.67;
                     
-                    // Apply rotations to clock hands
+                    
                     document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourRotation}deg)`;
                     document.getElementById('minute-hand').style.transform = `translateX(-50%) rotate(${minuteRotation}deg)`;
                     
@@ -182,7 +162,7 @@
                     secondHand.style.setProperty('--rotation', `${secondRotation}deg`);
                     secondHand.style.transform = `translateX(-50%) rotate(${secondRotation}deg)`;
                     
-                    // Add pulse animation to second hand at start of each second
+                    
                     if (milliseconds < 100) {
                         secondHand.style.animation = 'pulse 0.5s ease-in-out';
                         setTimeout(() => {
@@ -191,10 +171,10 @@
                     }
                 }
 
-                // Initialize Calendar
+                
                 var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
                     initialView: 'dayGridMonth',
-                    height: 350, // Reduced height
+                    height: 350, 
                     headerToolbar: {
                         left: 'prev',
                         center: 'title',
@@ -206,14 +186,14 @@
                 
                 calendar.render();
                 updateClock();
-                setInterval(updateClock, 50); // Update more frequently for smoother second hand
+                setInterval(updateClock, 50); 
 
-                // Process sales data
+                
                 const salesData = <?php echo json_encode($data['salesAnalytics']); ?>;
                 const labels = salesData.map(item => item.day);
                 const values = salesData.map(item => parseFloat(item.daily_total));
 
-                // Initialize Sales Chart
+                
                 const ctx = document.getElementById('salesChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'line',

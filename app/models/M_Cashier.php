@@ -9,18 +9,17 @@
      public function addCashier($data) {
         $this->db->query("INSERT INTO cashier (id, cashier_name, contacts, address, join_date, branch_name) 
                           VALUES (:id, :cashier_name, :contacts, :address, :join_date, :branch_name)");
-        $this->db->bind(':id', $data['id']); // Use id from users table
+        $this->db->bind(':id', $data['id']);
         $this->db->bind(':cashier_name', $data['cashier_name']);
         $this->db->bind(':contacts', $data['contacts']);
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':join_date', $data['join_date']);
         $this->db->bind(':branch_name', $data['branch_name']);
 
-        return $this->db->execute(); // Return true if successful
+        return $this->db->execute();
      }
 
      public function getProducts() {
-        // If branch_id is available in session, show only products with stock for that branch
         if (isset($_SESSION['branch_id'])) {
             $branch_id = $_SESSION['branch_id'];
             $this->db->query("SELECT p.*, c.name as category_name, p.image_path,
@@ -32,7 +31,6 @@
             $this->db->bind(':branch_id', $branch_id);
             error_log("Getting available products for branch_id: " . $branch_id);
         } else {
-            // Fallback to showing products with stock in any branch
             $this->db->query("SELECT p.*, c.name as category_name, p.image_path,
                               p.available_quantity as branch_quantity
                               FROM product p 
@@ -45,7 +43,6 @@
 
      public function getTotalOrderCount() {
         try {
-            // Build query with branch and employee filters if available
             $whereClause = "WHERE 1=1";
             $params = [];
             
@@ -75,7 +72,6 @@
 
      public function calculateTotalRevenue() {
         try {
-            // Check for branch_id and employee_id in session
             $whereClause = "WHERE 1=1";
             $params = [];
             
@@ -105,7 +101,6 @@
 
     public function calculateTodaysRevenue() {
         try {
-            // Build query with branch and employee filters if available
             $whereClause = "WHERE DATE(order_date) = CURDATE()";
             $params = [];
             
@@ -135,7 +130,6 @@
 
     public function calculateAverageOrderValue() {
         try {
-            // Build query with branch and employee filters if available
             $whereClause = "WHERE DATE(order_date) = CURDATE()";
             $params = [];
             
@@ -167,14 +161,11 @@
         try {
             $this->db->beginTransaction();
             
-            // Show all data we're working with
             error_log("createOrder data: " . print_r($data, true));
             
-            // Check if we have a PayPal transaction ID
             $transactionIdField = isset($data['transaction_id']) ? ', transaction_id' : '';
             $transactionIdValue = isset($data['transaction_id']) ? ', :transaction_id' : '';
             
-            // Use the SQL query with all required fields
             $sql = "INSERT INTO orders (
                 customer_id, total, order_date, order_type, payment_method, 
                 payment_status, discount, employee_id, branch_id,
@@ -187,7 +178,6 @@
             
             $this->db->query($sql);
             
-            // Bind all parameters including employee_id and branch_id
             $this->db->bind(':customer_id', (int)$data['customer_id']);
             $this->db->bind(':total', (float)$data['total']);
             $this->db->bind(':order_type', $data['order_type']);
@@ -198,12 +188,10 @@
             $this->db->bind(':amount_tendered', (float)$data['amount_tendered']);
             $this->db->bind(':change_amount', (float)$data['change_amount']);
             
-            // Bind transaction_id if available
             if (isset($data['transaction_id'])) {
                 $this->db->bind(':transaction_id', $data['transaction_id']);
             }
             
-            // Debug the final values being used
             error_log("SQL execution with employee_id=" . $data['employee_id'] . ", branch_id=" . $data['branch_id']);
             
             if (!$this->db->execute()) {
@@ -213,8 +201,6 @@
             $orderId = $this->db->lastInsertId();
             error_log("Created order with ID: " . $orderId);
             
-            // We commit here so the order is created even if stock update fails
-            // This ensures we don't lose orders but can detect inventory issues
             $this->db->commit();
             return $orderId;
             
@@ -250,7 +236,6 @@
     }
 
     public function searchProducts($searchTerm) {
-        // If branch_id is available in session, show only products with stock for that branch
         if (isset($_SESSION['branch_id'])) {
             $branch_id = $_SESSION['branch_id'];
             $this->db->query("SELECT p.*, c.name as category_name, 
@@ -265,7 +250,6 @@
             $this->db->bind(':branch_id', $branch_id);
             $this->db->bind(':search', '%' . $searchTerm . '%');
         } else {
-            // Fallback to showing products with stock in any branch
             $this->db->query("SELECT p.*, c.name as category_name,
                               p.available_quantity as branch_quantity
                               FROM product p 
@@ -279,7 +263,6 @@
         return $this->db->resultSet();
     }
 
-    // Add a new method to check branch stock
     public function getBranchStock($branch_id, $product_id) {
         $this->db->query("SELECT quantity FROM branchstock 
                           WHERE branch_id = :branch_id AND product_id = :product_id");
@@ -290,10 +273,8 @@
     }
 
     public function getDailyTransactions() {
-        // Debug log to check employee_id
         error_log('Employee ID from session: ' . ($_SESSION['employee_id'] ?? 'not set'));
         
-        // Modify query to show all orders for today if employee_id is not set
         $this->db->query("SELECT o.order_id, o.order_date, o.total, o.payment_method, o.payment_status 
                          FROM orders o 
                          WHERE DATE(o.order_date) = CURDATE() 
@@ -305,7 +286,6 @@
         }
         
         $result = $this->db->resultSet();
-        // Debug log to check results
         error_log('Number of transactions found: ' . count($result));
         
         return $result;
@@ -321,7 +301,6 @@
                 $params[':employee_id'] = $_SESSION['employee_id'];
             }
             
-            // Get total transactions and sales first
             $this->db->query("SELECT COUNT(*) as transaction_count, 
                             SUM(total) as total_sales 
                             FROM orders 
@@ -333,7 +312,6 @@
             
             $summary = $this->db->single() ?: (object)['transaction_count' => 0, 'total_sales' => 0];
             
-            // Get Cash sales
             $this->db->query("SELECT SUM(total) as cash_sales 
                             FROM orders 
                             $whereBase AND payment_method = 'Cash'");
@@ -345,7 +323,6 @@
             $cashResult = $this->db->single();
             $summary->cash_sales = $cashResult->cash_sales ?? 0;
             
-            // Get Card/Credit sales
             $this->db->query("SELECT SUM(total) as card_sales 
                             FROM orders 
                             $whereBase AND payment_method != 'Cash'");
@@ -379,7 +356,7 @@
                          WHERE o.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                          GROUP BY p.product_id
                          ORDER BY quantity_sold DESC
-                         LIMIT 8");  // Changed from 5 to 8
+                         LIMIT 8");
         return $this->db->resultSet();
     }
 
@@ -413,12 +390,9 @@
         return $this->db->resultSet();
     }
     
-    // Update getCashierByUserId to search deeper
     public function getCashierByUserId($userId) {
-        // Log the lookup process
         error_log("Looking up cashier with user_id: " . $userId);
         
-        // First check the cashier table
         $this->db->query("SELECT c.cashier_id, c.employee_id, c.branch_id, c.user_id 
                          FROM cashier c 
                          WHERE c.user_id = :user_id");
@@ -430,7 +404,6 @@
             return $result;
         }
         
-        // Not found in cashier, try employee table
         $this->db->query("SELECT e.employee_id, b.branch_id 
                          FROM employee e
                          LEFT JOIN branch b ON e.branch = b.branch_name
@@ -456,7 +429,7 @@
             return $result->branch_id;
         }
         
-        return null; // Return null if not found
+        return null;
     }
 
     public function updateBranchStock($branch_id, $product_id, $quantity) {
@@ -474,7 +447,6 @@
             $rowsAffected = $this->db->rowCount();
             
             if ($rowsAffected === 0) {
-                // Check if it failed because there's not enough stock
                 $this->db->query("SELECT quantity FROM branchstock 
                                  WHERE branch_id = :branch_id 
                                  AND product_id = :product_id");
@@ -497,7 +469,6 @@
 
     public function getTodayOrderCount() {
         try {
-            // Build query with branch and employee filters if available
             $whereClause = "WHERE DATE(order_date) = CURDATE()";
             $params = [];
             

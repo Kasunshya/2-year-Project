@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/Cashiercss/checkout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Add SweetAlert2 library -->
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -151,7 +151,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(93, 46, 70, 0.8); /* Using primary-dark with opacity */
+            background: rgba(93, 46, 70, 0.8);  
             display: flex;
             justify-content: center;
             align-items: center;
@@ -220,7 +220,7 @@
                 </button>
             </div>
 
-            <!-- Cash Payment Form -->
+            
             <form id="cashPaymentForm" class="payment-form" style="display:none;">
                 <div class="form-group">
                     <label>Amount Tendered:</label>
@@ -233,7 +233,7 @@
                 <button type="submit" class="process-btn">Process Payment</button>
             </form>
 
-            <!-- Card Payment Form -->
+            
             <form id="cardPaymentForm" class="payment-form" style="display:none;">
                 <div class="form-group">
                     <label>Card Number:</label>
@@ -252,7 +252,7 @@
                 <button type="submit" class="process-btn">Process Payment</button>
             </form>
 
-            <!-- PayPal Payment Form -->
+            
             <form id="paypalPaymentForm" class="payment-form" style="display:none;">
                 <div class="form-group paypal-info">
                     <p>You will be redirected to PayPal to complete your payment securely.</p>
@@ -263,7 +263,7 @@
         </div>
     </div>
 
-    <!-- PayPal Processing Overlay -->
+    
     <div id="paypalProcessingOverlay">
         <div class="spinner"></div>
         <p>Processing your PayPal payment...</p>
@@ -279,7 +279,7 @@
             document.getElementById(method + 'PaymentForm').style.display = 'block';
         }
 
-        // Calculate change for cash payment
+        
         document.getElementById('cashAmount').addEventListener('input', function() {
             const total = parseFloat(document.getElementById('total').textContent.replace(/,/g, ''));
             const tendered = parseFloat(this.value) || 0;
@@ -290,7 +290,7 @@
             });
         });
 
-        // Handle form submissions
+        
         document.getElementById('cashPaymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             processPayment('cash');
@@ -307,7 +307,7 @@
         });
 
         function processPayment(method) {
-            // Show loading indicator
+            
             const processBtns = document.querySelectorAll('.process-btn');
             processBtns.forEach(btn => {
                 btn.disabled = true;
@@ -337,12 +337,12 @@
                 
                 formData.append('amount_tendered', amountTendered);
             } else if (method === 'card') {
-                // Validate card details
+                
                 const cardNumber = document.getElementById('cardNumber').value;
                 const expiryDate = document.getElementById('expiryDate').value;
                 const cvv = document.getElementById('cvv').value;
                 
-                // Basic validation
+                
                 if (!/^\d{16}$/.test(cardNumber)) {
                     Swal.fire({
                         icon: 'error',
@@ -380,10 +380,10 @@
                     return;
                 }
                 
-                // For card payments, amount tendered equals total
+                
                 formData.append('amount_tendered', total);
             } else if (method === 'paypal') {
-                // For PayPal, show overlay and initiate PayPal process
+                
                 document.getElementById('paypalProcessingOverlay').style.display = 'flex';
                 formData.append('amount', total);
                 
@@ -394,9 +394,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.approvalUrl) {
-                        // Store the PayPal order ID in session
+                        
                         localStorage.setItem('paypal_order_id', data.orderId);
-                        // Redirect to PayPal
+                        
                         window.location.href = data.approvalUrl;
                     } else {
                         document.getElementById('paypalProcessingOverlay').style.display = 'none';
@@ -425,13 +425,13 @@
                     });
                 });
                 
-                return; // Early return for PayPal as it redirects
+                return; 
             }
             
-            // Add customer_id (using a valid ID from the database)
+            
             formData.append('customer_id', 1);
 
-            // Make AJAX request for cash & card methods
+            
             fetch('<?php echo URLROOT; ?>/Cashier/processPayment', {
                 method: 'POST',
                 body: formData
@@ -475,7 +475,7 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Debug employee and branch info with more detail
+       
         const employeeId = <?php echo isset($_SESSION["employee_id"]) ? $_SESSION["employee_id"] : "null"; ?>;
         const branchId = <?php 
           if (isset($_SESSION["branch_id"])) {
@@ -494,18 +494,18 @@
         console.log('Branch ID:', branchId);
         console.log('Cashier ID:', cashierId);
         
-        // Add hidden fields with corrected values
+       
         const paymentForms = document.querySelectorAll('.payment-form');
         if (paymentForms.length) {
             paymentForms.forEach(form => {
-                // Add employee_id field
+                
                 const employeeIdField = document.createElement('input');
                 employeeIdField.type = 'hidden';
                 employeeIdField.name = 'employee_id';
-                employeeIdField.value = employeeId || 6; // Default to 6 if not set
+                employeeIdField.value = employeeId || 6; 
                 form.appendChild(employeeIdField);
                 
-                // Add cashier_id field if available
+                
                 if (cashierId !== null) {
                     const cashierIdField = document.createElement('input');
                     cashierIdField.type = 'hidden';
@@ -514,11 +514,11 @@
                     form.appendChild(cashierIdField);
                 }
                 
-                // Add branch_id field - use the one from session or default
+                
                 const branchIdField = document.createElement('input');
                 branchIdField.type = 'hidden';
                 branchIdField.name = 'branch_id';
-                branchIdField.value = branchId || 1; // Default to 1 if not set
+                branchIdField.value = branchId || 1; 
                 form.appendChild(branchIdField);
                 
                 console.log('Added hidden fields - employee_id:', employeeIdField.value, 
@@ -526,13 +526,13 @@
             });
         }
         
-        // Check if we're coming back from PayPal
+       
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('paypal_success') && localStorage.getItem('paypal_order_id')) {
             const overlay = document.getElementById('paypalProcessingOverlay');
             overlay.style.display = 'flex';
             
-            // Complete the PayPal payment
+           
             const formData = new FormData();
             formData.append('payment_method', 'paypal');
             formData.append('paypal_order_id', localStorage.getItem('paypal_order_id'));

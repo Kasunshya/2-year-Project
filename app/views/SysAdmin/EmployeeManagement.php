@@ -11,23 +11,328 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/bakery-design-system.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/SysAdmin/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     
-    
+    <style>
+        .employee-container {
+            width: 90%;
+            margin-left: 120px;
+            margin-right: 30px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #5d2e46;
+            padding: 2rem;
+            color: white;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            margin-left: 120px;
+            margin-right: 0px;
+            border-radius: 5px;
+            z-index: 1;
+            text-align: left;
+        }
+
+        header i {
+            margin-right: 10px;
+            text-align: left;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        body {
+            background-color: #e8d7e5;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        table th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        table tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+        }
+
+        table tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+        }
+
+        table th {
+            background-color: #a26b98;
+            color: white;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f5f0;
+        }
+
+        .btn {
+            background-color: #a26b98;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            
+            font-size: 14px;
+            margin-left: 100px
+        }
+
+        .btn:hover {
+            background-color: #5d2e46;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            width: 300px;
+            margin-right: 0;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            margin: 0 5px;
+            background-color: #a26b98;
+            color: white;
+            min-width: 100px; /* Set a minimum width */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            
+            margin-left: 100px
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 8px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #5d2e46;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #5d2e46;
+        }
+
+        .modal-title {
+            color: #5d2e46;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5d2e46;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-outline {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            background-color: #a26b98;
+            color: white;
+        }
+
+        .cv-download {
+            color: #a26b98;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .cv-download i {
+            margin-right: 5px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .content {
+            margin: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .status-badge.active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-badge.inactive {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .search-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            margin-left: 100px
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .search-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-field input,
+        .search-field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .search-btn {
+            background-color: #a26b98;
+            margin: 0;
+        }
+
+        .reset-btn {
+            background-color: #6c757d;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-<div class="sysadmin-page-container">
-    <div class="container">
-        <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
+    <?php require_once APPROOT . '/views/SysAdmin/SideNavBar.php'; ?>
 
-        <header class="header">
-            <div class="header-left">
-                <i class="fas fa-user-tie"></i>
-                <span>Employee Management</span>
-            </div>
-        </div>
+    <header>
+        <h7><i class="fas fa-user-tie"></i>Employee Management</h7>
     </header>
 
     <div class="content">
@@ -73,7 +378,6 @@
             <table>
                 <thead>
                     <tr>
-                        <
                         <th>Full Name</th>
                         <th>NIC</th>
                         <th>Address</th>
@@ -118,11 +422,11 @@
                             <button class="btn btn-sm btn-danger" onclick="deactivateEmployee(<?php echo $employee->employee_id; ?>)">
                                 <i class="fas fa-user-slash"></i> Deactivate
                             </button>
-                                <?php else: ?>
-                                    <button class="btn btn-sm btn-success" onclick="reactivateEmployee(<?php echo $employee->employee_id; ?>)">
-                                        <i class="fas fa-user-check"></i> Reactivate
-                                    </button>
-                                <?php endif; ?>
+                            <?php else: ?>
+                            <button class="btn btn-sm btn-success" onclick="reactivateEmployee(<?php echo $employee->employee_id; ?>)">
+                                <i class="fas fa-user-check"></i> Activate
+                            </button>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <span class="status-badge <?php echo $employee->status; ?>">

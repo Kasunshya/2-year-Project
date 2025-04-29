@@ -225,9 +225,7 @@
         <button class="tab-btn" data-tab="range">
             <i class="fas fa-calendar-week"></i>Date Range
         </button>
-        <button class="tab-btn" data-tab="product">
-            <i class="fas fa-chart-line"></i>Product Performance
-        </button>
+        
     </div>
 
     <!-- Report Content -->
