@@ -472,80 +472,89 @@ class HeadM extends Controller
     $this->view('HeadM/Branch', $data);
 }
 
-    public function sendEnquiryReply() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get the form data
-            $enquiry_id = $_POST['enquiry_id'];
-            $reply_message = $_POST['reply_message'];
-            
-            // Get enquiry details from database
+    public function sendEnquiryReply()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+            return;
+        }
+
+        $enquiry_id = isset($_POST['enquiry_id']) ? $_POST['enquiry_id'] : null;
+        $reply_message = isset($_POST['reply_message']) ? $_POST['reply_message'] : null;
+
+        if (!$enquiry_id || !$reply_message) {
+            echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
+            return;
+        }
+
+        try {
             $enquiry = $this->headManagerModel->getEnquiryById($enquiry_id);
             
             if (!$enquiry) {
                 echo json_encode(['status' => 'error', 'message' => 'Enquiry not found']);
                 return;
             }
-            
+
             // Create a new PHPMailer instance
             $mail = new PHPMailer(true);
-            
-            try {
-                // Server settings - using the same config as password reset
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = '2022is042@stu.ucsc.cmb.ac.lk'; 
-                $mail->Password = 'wgcj mhtk gbwc eviv'; 
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = 587;
-                
-                // Recipients
-                $mail->setFrom('2022is042@stu.ucsc.cmb.ac.lk', 'Frostine Bakery');
-                $mail->addAddress($enquiry->email_address); 
-                
-                // Content
-                $mail->isHTML(true);
-                $mail->Subject = 'Response to Your Bakery Enquiry';
-                $mail->Body = "
-                    <html>
-                    <head>
-                        <style>
-                            body { font-family: Arial, sans-serif; line-height: 1.6; }
-                            .container { max-width: 600px; margin: 0 auto; }
-                            .header { background-color: #f5f5f5; padding: 15px; text-align: center; }
-                            .content { padding: 20px; }
-                            .footer { font-size: 12px; text-align: center; margin-top: 30px; color: #777; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class='container'>
-                            <div class='header'>
-                                <h2>Frostine Bakery</h2>
-                            </div>
-                            <div class='content'>
-                                <p>Dear {$enquiry->first_name},</p>
-                                <p>Thank you for your enquiry (#$enquiry_id). Below is our response:</p>
-                                <p>" . nl2br(htmlspecialchars($reply_message)) . "</p>
-                                <p>If you have any further questions, please don't hesitate to contact us.</p>
-                            </div>
-                            <div class='footer'>
-                                <p>Best regards,<br>Frostine Bakery Management Team</p>
+
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = '2022is042@stu.ucsc.cmb.ac.lk';
+            $mail->Password = 'wgcj mhtk gbwc eviv'; // Use your App Password here
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Recipients
+            $mail->setFrom('2022is042@stu.ucsc.cmb.ac.lk', 'Frostine Bakery');
+            $mail->addAddress($enquiry->email_address, $enquiry->first_name . ' ' . $enquiry->last_name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = "Response to Your Enquiry - Frostine Bakery";
+            $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; }
+                        .container { max-width: 600px; margin: 0 auto; }
+                        .header { background-color: #f5f5f5; padding: 15px; text-align: center; }
+                        .content { padding: 20px; }
+                        .footer { font-size: 12px; text-align: center; margin-top: 30px; color: #777; }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h2>Frostine Bakery</h2>
+                        </div>
+                        <div class='content'>
+                            <p>Dear {$enquiry->first_name} {$enquiry->last_name},</p>
+                            <div class='message'>
+                                " . nl2br(htmlspecialchars($reply_message)) . "
                             </div>
                         </div>
-                    </body>
-                    </html>
-                ";
-                
-                $mail->AltBody = "Dear {$enquiry->first_name},\n\nThank you for your enquiry (#$enquiry_id). Below is our response:\n\n$reply_message\n\nBest regards,\nFrostine Bakery Management Team";
-                
-                $mail->send();
+                        <div class='footer'>
+                            <p>Best regards,<br>Frostine Bakery Team</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";
+            $mail->AltBody = strip_tags($reply_message);
+
+            if ($mail->send()) {
+                // Update enquiry with headmanager_id
+                $this->headManagerModel->updateEnquiryStatus($enquiry_id, $_SESSION['user_id']);
                 echo json_encode(['status' => 'success', 'message' => 'Reply sent successfully']);
-                
-            } catch (Exception $e) {
-                echo json_encode(['status' => 'error', 'message' => 'Email could not be sent. Error: ' . $mail->ErrorInfo]);
+            } else {
+                throw new Exception('Failed to send email: ' . $mail->ErrorInfo);
             }
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+        } catch (Exception $e) {
+            error_log('Error in sendEnquiryReply: ' . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
 
