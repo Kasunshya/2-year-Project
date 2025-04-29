@@ -713,12 +713,15 @@ class M_Customer {
                 :delivery_charge
             )");
 
+            // Calculate delivery charge based on delivery type
+            $deliveryCharge = ($orderData['delivery_type'] === 'delivery') ? 500.00 : 0.00;
+
             $this->db->bind(':customer_id', $orderData['customer_id']);
             $this->db->bind(':total', $orderData['total']);
             $this->db->bind(':payment_method', $orderData['payment_method']);
             $this->db->bind(':payment_status', $orderData['payment_status']);
             $this->db->bind(':discount', $orderData['discount']);
-            $this->db->bind(':delivery_charge', $orderData['delivery_type'] === 'delivery' ? 500.00 : 0.00);
+            $this->db->bind(':delivery_charge', $deliveryCharge);
 
             if (!$this->db->execute()) {
                 throw new Exception("Failed to create order record");

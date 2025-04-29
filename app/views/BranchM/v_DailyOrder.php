@@ -375,7 +375,7 @@
                                 <th>Order ID</th>
                                 <th>Description</th>
                                 <th>Order Date</th>
-                                <th>Status</th>
+                               
                             </tr>
                         </thead>
                         <tbody>

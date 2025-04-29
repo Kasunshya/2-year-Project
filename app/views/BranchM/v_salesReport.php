@@ -222,9 +222,7 @@
         <button class="tab-btn active" data-tab="daily">
             <i class="fas fa-calendar-day"></i>Daily Sales
         </button>
-        <button class="tab-btn" data-tab="range">
-            <i class="fas fa-calendar-week"></i>Date Range
-        </button>
+      
         
     </div>
 
