@@ -785,11 +785,23 @@ class M_HeadM
         return $this->db->resultSet();
     }
 
-    public function getEnquiryById($enquiry_id)
+    public function getEnquiryById($enquiryId) 
     {
-        $this->db->query('SELECT * FROM enquiry WHERE enquiry_id = :enquiry_id');
-        $this->db->bind(':enquiry_id', $enquiry_id);
+        $this->db->query('SELECT enquiry_id, first_name, last_name, email_address, phone_number, message 
+                          FROM enquiry 
+                          WHERE enquiry_id = :enquiry_id');
+        $this->db->bind(':enquiry_id', $enquiryId);
         return $this->db->single();
+    }
+
+    public function updateEnquiryStatus($enquiryId, $headmanagerId) 
+    {
+        $this->db->query('UPDATE enquiry 
+                          SET headmanager_id = :headmanager_id 
+                          WHERE enquiry_id = :enquiry_id');
+        $this->db->bind(':enquiry_id', $enquiryId);
+        $this->db->bind(':headmanager_id', $headmanagerId);
+        return $this->db->execute();
     }
 
     public function getOrders($filters = [])

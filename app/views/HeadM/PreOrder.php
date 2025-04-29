@@ -26,6 +26,72 @@
         .swal2-cancel {
             background-color: #dc3545 !important;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .customer-info {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .modal-buttons {
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .modal-buttons button {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -76,13 +142,13 @@
                                             <td><?php echo htmlspecialchars($enquiry->phone_number); ?></td>
                                             <td><?php echo htmlspecialchars($enquiry->description); ?></td>
                                             <td>
-                                                <button class="btn btn-primary btn-sm" 
+                                                <button class="btn btn-primary" 
                                                         onclick="showReplyModal(
                                                             '<?php echo $enquiry->enquiry_id; ?>', 
                                                             '<?php echo htmlspecialchars($enquiry->first_name . ' ' . $enquiry->last_name); ?>', 
                                                             '<?php echo htmlspecialchars($enquiry->email); ?>'
                                                         )">
-                                                    Reply
+                                                    <i class="fas fa-reply"></i> Reply
                                                 </button>
                                             </td>
                                         </tr>
@@ -100,34 +166,25 @@
         </main>
     </div>
 
-    <!-- Add this modal HTML at the bottom of your PreOrder view -->
-    <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="replyModalLabel">Reply to Enquiry</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <div class="modal" id="replyModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Reply to Enquiry</h2>
+            <form id="replyForm">
+                <input type="hidden" id="enquiry_id" name="enquiry_id">
+                <div class="customer-info">
+                    <p><strong>Customer:</strong> <span id="customer_name"></span></p>
+                    <p><strong>Email:</strong> <span id="customer_email"></span></p>
                 </div>
-                <form id="replyForm">
-                    <div class="modal-body">
-                        <input type="hidden" id="enquiry_id" name="enquiry_id">
-                        <div class="customer-info">
-                            <p><i class="fas fa-user"></i><span id="customer_name"></span></p>
-                            <p><i class="fas fa-envelope"></i><span id="customer_email"></span></p>
-                        </div>
-                        <div class="form-group">
-                            <label for="reply_message">Your Reply:</label>
-                            <textarea class="form-control" id="reply_message" name="reply_message" rows="5" required placeholder="Type your response here..."></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Send Reply</button>
-                    </div>
-                </form>
-            </div>
+                <div class="form-group">
+                    <label for="reply_message">Your Reply:</label>
+                    <textarea id="reply_message" name="reply_message" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Send Reply</button>
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -137,5 +194,71 @@
     
     <!-- Your custom JavaScript file -->
     <script src="<?php echo URLROOT; ?>/public/assets/js/headm/preorder.js"></script>
+
+    <script>
+        function showReplyModal(enquiryId, customerName, customerEmail) {
+            const modal = document.getElementById('replyModal');
+            document.getElementById('enquiry_id').value = enquiryId;
+            document.getElementById('customer_name').textContent = customerName;
+            document.getElementById('customer_email').textContent = customerEmail;
+            modal.style.display = 'block';
+        }
+
+        // Close modal when clicking the close button or outside
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('replyModal').style.display = 'none';
+        }
+
+        document.querySelector('.close-modal').onclick = function() {
+            document.getElementById('replyModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('replyModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('replyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('enquiry_id', document.getElementById('enquiry_id').value);
+            formData.append('reply_message', document.getElementById('reply_message').value);
+
+            fetch('<?php echo URLROOT; ?>/HeadM/sendEnquiryReply', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Reply sent successfully',
+                        confirmButtonColor: '#a26b98'
+                    }).then(() => {
+                        document.getElementById('replyModal').style.display = 'none';
+                        document.getElementById('replyForm').reset();
+                        location.reload();
+                    });
+                } else {
+                    throw new Error(data.message || 'Failed to send reply');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: error.message || 'Failed to send reply',
+                    confirmButtonColor: '#a26b98'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
