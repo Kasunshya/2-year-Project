@@ -25,7 +25,7 @@
             <div class="content">
                 <div class="employee-list">
                     <!-- Search Bar -->
-                    <div class="search-bar">
+                    <!--div class="search-bar">
                         <form method="GET" action="" class="search-form">
                             <div class="search-field">
                                 <input type="text" name="product_name" placeholder="Search by Product Name" value="<?php echo isset($_GET['product_name']) ? htmlspecialchars($_GET['product_name']) : ''; ?>">
@@ -44,7 +44,7 @@
                                 <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
                             </div>
                         </form>
-                    </div>
+                    </div -->
                     <div class="table-container">
                         <table>
                             <thead>

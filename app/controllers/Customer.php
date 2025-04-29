@@ -430,12 +430,14 @@ class Customer extends Controller {
             
             // Add product_id to cart items if missing
             foreach ($cartItems as $key => $item) {
-                $cartItems[$key]['product_id'] = $key; // Set product_id from array key
+                if (!isset($item['product_id'])) {
+                    $cartItems[$key]['product_id'] = $key; // Set product_id from array key
+                }
             }
 
             // Calculate delivery charge based on delivery type
             $deliveryCharge = ($_POST['delivery_type'] === 'delivery') ? 500.00 : 0.00;
-            $subtotal = floatval($_POST['total']);
+            $subtotal = floatval($_POST['subtotal']); // Use subtotal not total here
             $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : 0;
             $orderTotal = $subtotal + $deliveryCharge - $discount;
 
@@ -446,15 +448,17 @@ class Customer extends Controller {
             $orderData = [
                 'customer_id' => $_SESSION['customer_id'],
                 'cart_items' => $cartItems,
+                'subtotal' => $subtotal,
                 'total' => $orderTotal,
                 'discount' => $discount,
                 'delivery_type' => $_POST['delivery_type'],
                 'contact_number' => $_POST['contact_number'],
                 'delivery_address' => $_POST['delivery_type'] === 'delivery' ? $_POST['delivery_address'] : null,
-                'district' => $_POST['delivery_type'] === 'delivery' ? $_POST['district'] : null,
+                'district' => $_POST['delivery_type'] === 'delivery' ? $_POST['delivery_district'] : null,
                 'branch_id' => $_POST['delivery_type'] === 'pickup' ? $_POST['branch'] : null,
                 'payment_method' => 'Credit Card',
-                'payment_status' => 'Paid'
+                'payment_status' => 'Paid',
+                'delivery_charge' => $deliveryCharge
             ];
 
             // Create the complete order

@@ -10,7 +10,7 @@ class UnregisteredCustomerModel {
         $this->db->query('SELECT p.* FROM product p 
                          WHERE p.status = :status 
                          ORDER BY p.product_id DESC');  // Changed from date_added to product_id
-        $this->db->bind(':status', 'active');
+        $this->db->bind(':status', '1');
         return $this->db->resultSet();
     }
 
@@ -21,7 +21,7 @@ class UnregisteredCustomerModel {
                           WHERE is_active = :status 
                           AND start_date <= CURRENT_DATE 
                           AND end_date >= CURRENT_DATE');
-        $this->db->bind(':status', 1);
+        $this->db->bind(':status', 'active');
         return $this->db->resultSet();
     }
 

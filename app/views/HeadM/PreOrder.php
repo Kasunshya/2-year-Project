@@ -122,7 +122,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Enquiry ID</th>
+                                    <!-- <th>Enquiry ID</th> -->
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
@@ -135,7 +135,7 @@
                                 <?php if (!empty($data['preOrders'])): ?>
                                     <?php foreach ($data['preOrders'] as $enquiry): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($enquiry->enquiry_id); ?></td>
+                                            <!-- <td><?php echo htmlspecialchars($enquiry->enquiry_id); ?></td> -->
                                             <td><?php echo htmlspecialchars($enquiry->first_name); ?></td>
                                             <td><?php echo htmlspecialchars($enquiry->last_name); ?></td>
                                             <td><?php echo htmlspecialchars($enquiry->email); ?></td>
