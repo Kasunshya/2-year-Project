@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Desk</title>
     <?php
-    // Keep the workaround in case it's needed, but remove debugging
+    
     if (!isset($products) && isset($data) && is_array($data) && isset($data['products'])) {
         $products = $data['products'];
     }
     
     require APPROOT.'/views/inc/components/cverticalbar.php';
     ?>
-    <!-- Add Google Fonts for Poppins -->
+   
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -82,11 +82,11 @@
         <?php if (isset($products) && (is_array($products) || is_object($products)) && count($products) > 0): ?>
             <?php foreach ($products as $product): ?>
               <?php 
-                // Use branch_quantity if available, otherwise use general availability
+                
                 $stockQuantity = isset($product->branch_quantity) ? $product->branch_quantity : $product->available_quantity;
                 $outOfStock = $stockQuantity <= 0;
                 
-                // Debug the image path
+                
                 error_log("Product: " . $product->product_name . ", Image path: " . ($product->image_path ?? 'No image'));
               ?>
               <tr data-product-id="<?php echo $product->product_id; ?>" class="<?php echo $outOfStock ? 'out-of-stock' : ''; ?>">
@@ -137,7 +137,7 @@
         const quantity = parseInt(quantityInput.value);
         const maxQuantity = parseInt(quantityInput.getAttribute('max'));
 
-        // Check if product is in stock
+        
         if (maxQuantity <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -147,7 +147,7 @@
             return;
         }
 
-        // Check if requested quantity is available
+        
         if (quantity > maxQuantity) {
             Swal.fire({
                 icon: 'warning',
@@ -185,7 +185,7 @@
         });
     }
 
-    // Add quantity controls
+    
     document.querySelectorAll('.quantity-selector').forEach(selector => {
         const decrementBtn = selector.querySelector('.decrement-btn');
         const incrementBtn = selector.querySelector('.increment-btn');
@@ -212,7 +212,7 @@
             }
         });
 
-        // Validate manual input
+        
         input.addEventListener('change', () => {
             let value = parseInt(input.value);
             if (value < 1) input.value = 1;
@@ -227,7 +227,7 @@
         });
     });
 
-    // Search functionality
+    
     document.getElementById('searchInput').addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
         const rows = document.querySelectorAll('#productTable tbody tr');
@@ -244,9 +244,9 @@
         });
     });
 
-    // Initialize cart count from session
+    
     window.addEventListener('load', function() {
-        // Use AJAX to get cart count
+        
         fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/getCartCount`, {
             method: 'GET'
         })

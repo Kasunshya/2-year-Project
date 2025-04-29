@@ -6,8 +6,18 @@
     <title>Customer Management</title>
     <?php require APPROOT.'/views/SysAdmin/SideNavBar.php'?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* Typography */
+        :root {
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            font-family: var(--font-family);
+        }
+
         .customer-container {
             width: 90%;
             margin-left: 120px;

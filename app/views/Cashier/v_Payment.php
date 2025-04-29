@@ -9,26 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
- 
-    <!-- Sidebar >
-    <aside class="sidebar">
-        <div class="logo-container">
-            <img src="<--?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
-        </div>
-        <nav>
-        <ul>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/cashierdashboard"><i class="fas fa-home"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-edit"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-chart-bar"></i></a></li>
-            </ul>
-        </nav>
-        <div class="logout">
-            <a href="<--?php echo URLROOT; ?>/Login/logout" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-        </div>
-    </aside-->
 
-    <!-- Header Banner -->
     <header><i class="fas fa-edit">&nbsp</i>Payment</header>
     <table class="cart-table">
       <thead>

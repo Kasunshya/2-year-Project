@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         @media print {
-            /* Hide everything except print section */
+            
             body > *:not(.print-section) {
                 display: none;
             }
@@ -31,7 +31,7 @@
             }
         }
         
-        /* Hide print-section by default */
+        
         .print-section {
             display: none;
             margin: 0;
@@ -44,14 +44,14 @@
             margin: 0 auto;
         }
 
-        /* Invoice styling */
+       
         .invoice-container {
             padding: 40px;
             position: relative;
             border: 1px solid #eaeaea;
         }
         
-        /* Header with Logo */
+        
         .invoice-header {
             display: flex;
             justify-content: space-between;
@@ -67,7 +67,7 @@
         }
         
         .invoice-logo img {
-            height: 60px; /* Adjust logo size as needed */
+            height: 60px; 
         }
         
         .invoice-logo-text {
@@ -105,7 +105,7 @@
             color: #666;
         }
         
-        /* Company and Report Info */
+        
         .company-info {
             text-align: left;
             margin-bottom: 30px;
@@ -146,7 +146,7 @@
             color: #783b31;
         }
         
-        /* Transactions Table */
+        
         .print-table {
             width: 100%;
             border-collapse: collapse;
@@ -177,7 +177,7 @@
             background-color: #f1f1f1;
         }
         
-        /* Summary Box */
+        
         .print-summary {
             margin: 30px 0;
             background: #f9f9f9;
@@ -214,7 +214,7 @@
             color: #783b31;
         }
         
-        /* Footer */
+        
         .invoice-footer {
             clear: both;
             text-align: center;
@@ -229,7 +229,7 @@
             font-size: 14px;
         }
         
-        /* Watermark */
+        
         .watermark {
             position: absolute;
             top: 50%;
@@ -242,7 +242,7 @@
             pointer-events: none;
         }
         
-        /* QR Code spot */
+        
         .qr-code {
             position: absolute;
             bottom: 40px;
@@ -261,7 +261,7 @@
             text-align: center;
         }
 
-        /* Status colors */
+        
         .status-paid {
             color: #28a745;
             font-weight: bold;
@@ -272,7 +272,7 @@
             font-weight: bold;
         }
         
-        /* Print button */
+        
         .invoice-btn {
             background-color:#5d2e46;
             color: #fff;
@@ -289,7 +289,7 @@
             background-color:;
         }
         
-        /* Additional styles to mimic a professional PDF */
+       
         .print-section {
             position: relative;
         }
@@ -297,29 +297,9 @@
 </head>
 <body>
  
-    <!-- Sidebar >
-    <aside class="sidebar">
-        <div class="logo-container">
-            <img src="<--?php echo URLROOT;?>/img/verticalnav/frostineLogo.png" alt="Logo" class="logo">
-        </div>
-        <nav>
-            
-            <ul>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/cashierdashboard"><i class="fas fa-home"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/servicedesk"><i class="fas fa-boxes"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/payment"><i class="fas fa-edit"></i></a></li>
-                <li><a href="<--?php echo URLROOT; ?>/Cashier/transaction"><i class="fas fa-chart-bar"></i></a></li>
-            </ul>
-    
-        </nav>
-        <div class="logout">
-            <a href="#" class="btn"><i class="fas fa-sign-out-alt"></i></a>
-        </div>
-    </aside-->
-
-    <!-- Header Banner -->
+   
     <header><i class="fas fa-chart-bar">&nbsp</i> Daily Transactions</header>
-    <!-- Main Content -->
+    
     <div class="main-content">
         
         
@@ -353,7 +333,7 @@
         </table>
     </div>
 
-    <!-- Summary Box -->
+    
     <div class="summary-box">
         <h3>Summary Box</h3>
         <p>Total Sales: <strong>LKR <?php echo number_format($data['summary']->total_sales ?? 0, 2); ?></strong></p>
@@ -361,13 +341,13 @@
         <button class="invoice-btn" onclick="printDailyReport()">Print Invoice</button>
     </div>
 
-    <!-- Print Section -->
+    
     <div class="print-section">
         <div class="invoice-container">
-            <!-- Watermark -->
+            
             <div class="watermark">FROSTINE</div>
             
-            <!-- Invoice Header with Logo -->
+           
             <div class="invoice-header">
                 <div class="invoice-logo">
                     <!--img src="<?php echo URLROOT; ?>/public/img/frostineLogo.png" alt="Frostine Logo"-->
@@ -383,7 +363,7 @@
                 </div>
             </div>
             
-            <!-- Company and Report Information -->
+            
             <div class="company-info">
                 <div class="company-info-left">
                     <h3>Bakery Information</h3>
@@ -404,7 +384,7 @@
                 </div>
             </div>
 
-            <!-- Transactions Table -->
+            
             <table class="print-table">
                 <thead>
                     <tr>
@@ -436,7 +416,7 @@
                 </tbody>
             </table>
 
-            <!-- Summary Box -->
+           
             <div class="print-summary">
                 <h3>Transaction Summary</h3>
                 <div class="print-summary-row">
@@ -457,12 +437,12 @@
                 </div>
             </div>
 
-            <!-- QR Code placeholder -->
+           
             <div class="qr-code">
                 <span>Scan to verify report</span>
             </div>
 
-            <!-- Footer -->
+            
             <div class="invoice-footer">
                 <p>Thank you for your business!</p>
                 <p>&copy; <?php echo date('Y'); ?> FROSTINE BAKERY - All Rights Reserved</p>
@@ -471,17 +451,17 @@
         </div>
     </div>
 
-    <!-- Modify the print button to use custom print function -->
+    
     <script>
         function printDailyReport() {
-            // Show print section just before printing
+            
             document.querySelector('.print-section').style.display = 'block';
             
-            // Add a slight delay to ensure CSS is applied before printing
+           
             setTimeout(() => {
                 window.print();
                 
-                // Hide print section after printing dialog is closed
+                
                 setTimeout(() => {
                     document.querySelector('.print-section').style.display = 'none';
                 }, 100);

@@ -10,6 +10,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 
     <style>
+        /* Typography */
+        :root {
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        * {
+            font-family: var(--font-family);
+        }
+        
         .category-container {
             width: 90%;
             margin-left: 120px;

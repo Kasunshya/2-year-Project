@@ -18,10 +18,10 @@
         
 
         .status-badge {
-            padding: 8px 15px;  /* Increased padding */
-            border-radius: 15px; /* Increased border radius */
-            font-size: 1.1em;   /* Increased font size */
-            font-weight: 600;    /* Made font slightly bolder */
+            padding: 5px 10px;  /* Increased padding */
+            border-radius: 7px; /* Increased border radius */
+            font-size: 1em;   /* Increased font size */
+            font-weight: 500;    /* Made font slightly bolder */
             display: inline-block;
             min-width: 100px;    /* Set minimum width */
             text-align: center;  /* Center the text */
@@ -82,17 +82,7 @@
                 
             </header>
             <div class="content">
-                <div class="search-bar">
-                    <form method="GET" action="<?php echo URLROOT; ?>/HeadM/feedback" class="search-form">
-                        <div class="search-field">
-                            <input type="text" name="order_id" placeholder="Search by Order ID" 
-                                   value="<?php echo isset($_GET['order_id']) ? htmlspecialchars($_GET['order_id']) : ''; ?>">
-                        </div>
-                        <div class="search-field">
-                            <button class="btn search-btn" type="submit"><i class="fas fa-search"></i> Search</button>
-                        </div>
-                    </form>
-                </div>
+                
                 <div class="table-container">
                     <table>
                         <thead>

@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
+
     <div id="editProfileModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editProfileModal')">&times;</span>
@@ -88,7 +88,6 @@
         </div>
     </div>
 
-    <!-- Change Password Modal -->
     <div id="passwordModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('passwordModal')">&times;</span>
@@ -128,7 +127,7 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-// Password validation
+
 document.querySelector('#passwordModal form').onsubmit = function(e) {
     const newPass = document.getElementById('new_password').value;
     const confirmPass = document.getElementById('confirm_password').value;
@@ -141,7 +140,7 @@ document.querySelector('#passwordModal form').onsubmit = function(e) {
     return true;
 };
 
-// Close modal when clicking outside
+
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';

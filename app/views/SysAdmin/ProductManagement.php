@@ -8,8 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* Typography */
+        :root {
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
         .product-container {
             width: 90%;
             margin-left: 120px;
@@ -29,6 +37,7 @@
             border-radius: 5px;
             z-index: 1;
             text-align: left;
+            font-family: var(--font-family);
         }
 
         header i {
@@ -40,6 +49,7 @@
 
         body {
             background-color: #e8d7e5;
+            font-family: var(--font-family);
         }
 
         .product-table {
@@ -50,6 +60,7 @@
             background-color: white;
             border-radius: 4px;
             overflow: hidden;
+            font-family: var(--font-family);
         }
 
         .product-table th {
@@ -60,11 +71,13 @@
             font-weight: 600;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
+            font-family: var(--font-family);
         }
 
         .product-table td {
             padding: 1rem 1.25rem;
             border-bottom: 1px solid #e0e0e0;
+            font-family: var(--font-family);
         }
 
         .product-table tbody tr:hover {
@@ -152,6 +165,7 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #e0e0e0;
             color: #5d2e46;
+            font-family: var(--font-family);
         }
 
         .form-group {
@@ -162,6 +176,7 @@
             display: block;
             margin-bottom: 5px;
             color: #5d2e46;
+            font-family: var(--font-family);
         }
 
         .form-group input, 
@@ -171,6 +186,7 @@
             padding: 8px;
             border: 1px solid #e0e0e0;
             border-radius: 4px;
+            font-family: var(--font-family);
         }
 
         .modal-footer {
@@ -184,6 +200,7 @@
             cursor: pointer;
             border: none;
             margin-left: 10px;
+            font-family: var(--font-family);
         }
 
         .save-btn {

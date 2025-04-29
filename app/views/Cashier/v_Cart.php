@@ -73,11 +73,11 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update item subtotal
+                    
                     const subtotal = price * newQuantity;
                     subtotalSpan.textContent = `LKR${subtotal.toFixed(2)}`;
                     
-                    // Update cart total
+                    
                     document.getElementById('total-amount').textContent = data.newTotal.toFixed(2);
                 }
             });
@@ -167,7 +167,7 @@
             maximumFractionDigits: 2
         });
         
-        // Store discount in session
+        
         fetch(`${document.querySelector('meta[name="base-url"]').content}/Cashier/applyDiscount`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
